@@ -1,3 +1,4 @@
+import com.typesafe.sbt.SbtGit.{GitKeys => git}
 
 def publishParameters(module: String) = Seq(
   name := s"$module",
@@ -93,9 +94,13 @@ lazy val ModelPack = Project(
   ) ++ publishParameters("alpine-model-pack")
 ).dependsOn(ModelAPI % "compile->compile;test->test")
 
-
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)
+  .settings(site.settings ++ ghpages.settings: _*)
+  .settings(
+    site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
+    git.gitRemoteRepo := "git@github.com:AlpineNow/PluginSDK.git"
+  )
   .aggregate(
     PluginCore,
     PluginSpark,
