@@ -1,4 +1,4 @@
-import com.typesafe.sbt.SbtGit.{GitKeys => git}
+import com.typesafe.sbt.SbtGit.GitKeys
 
 def publishParameters(module: String) = Seq(
   name := s"$module",
@@ -99,7 +99,7 @@ lazy val root = (project in file("."))
   .settings(site.settings ++ ghpages.settings: _*)
   .settings(
     site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
-    git.gitRemoteRepo := "git@github.com:AlpineNow/PluginSDK.git"
+    GitKeys.gitRemoteRepo := "git@github.com:AlpineNow/PluginSDK.git"
   )
   .aggregate(
     PluginCore,
