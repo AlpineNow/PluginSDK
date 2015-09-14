@@ -1,0 +1,331 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>features - com.alpine.features</title>
+          <meta name="description" content="features - com.alpine.features" />
+          <meta name="keywords" content="features com.alpine.features" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.alpine.features.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.alpine">alpine</a></p>
+        <h1>features</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">features</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.features.BooleanType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BooleanTypeextendsDataType[Boolean]withProductwithSerializable"></a>
+      <a id="BooleanType:BooleanType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BooleanType.html"><span class="name">BooleanType</span></a><span class="params">()</span><span class="result"> extends <a href="DataType.html" class="extype" name="com.alpine.features.DataType">DataType</a>[<span class="extype" name="scala.Boolean">Boolean</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.DataParser" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DataParser[A]extendsAnyRef"></a>
+      <a id="DataParser[A]:DataParser[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DataParser.html"><span class="name">DataParser</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Interface used to define a parser,
+which must provide methods for taking
+a data type to and from String representation.</p>
+    </li><li name="com.alpine.features.DataType" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DataType[A]extendsAnyRef"></a>
+      <a id="DataType[A]:DataType[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DataType.html"><span class="name">DataType</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">These are the predefined types of features that can be used with row models.</p>
+    </li><li name="com.alpine.features.DateTimeParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DateTimeParserextendsParserWithTryCatch[org.joda.time.DateTime]withProductwithSerializable"></a>
+      <a id="DateTimeParser:DateTimeParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DateTimeParser.html"><span class="name">DateTimeParser</span></a><span class="params">(<span name="format">format: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>)</span><span class="result"> extends <a href="ParserWithTryCatch.html" class="extype" name="com.alpine.features.ParserWithTryCatch">ParserWithTryCatch</a>[<span class="extype" name="org.joda.time.DateTime">DateTime</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.DateTimeType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DateTimeTypeextendsDataType[org.joda.time.DateTime]withProductwithSerializable"></a>
+      <a id="DateTimeType:DateTimeType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DateTimeType.html"><span class="name">DateTimeType</span></a><span class="params">()</span><span class="result"> extends <a href="DataType.html" class="extype" name="com.alpine.features.DataType">DataType</a>[<span class="extype" name="org.joda.time.DateTime">DateTime</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.DoubleType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoubleTypeextendsDataType[Double]withProductwithSerializable"></a>
+      <a id="DoubleType:DoubleType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DoubleType.html"><span class="name">DoubleType</span></a><span class="params">()</span><span class="result"> extends <a href="DataType.html" class="extype" name="com.alpine.features.DataType">DataType</a>[<span class="extype" name="scala.Double">Double</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.FeatureDesc" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FeatureDesc[T]extendsProductwithSerializable"></a>
+      <a id="FeatureDesc[T]:FeatureDesc[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FeatureDesc.html"><span class="name">FeatureDesc</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dataType">dataType: <a href="DataType.html" class="extype" name="com.alpine.features.DataType">DataType</a>[_ &lt;: <span class="extype" name="com.alpine.features.FeatureDesc.T">T</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.IntType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IntTypeextendsDataType[Int]withProductwithSerializable"></a>
+      <a id="IntType:IntType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IntType.html"><span class="name">IntType</span></a><span class="params">()</span><span class="result"> extends <a href="DataType.html" class="extype" name="com.alpine.features.DataType">DataType</a>[<span class="extype" name="scala.Int">Int</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.LongType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LongTypeextendsDataType[Long]withProductwithSerializable"></a>
+      <a id="LongType:LongType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LongType.html"><span class="name">LongType</span></a><span class="params">()</span><span class="result"> extends <a href="DataType.html" class="extype" name="com.alpine.features.DataType">DataType</a>[<span class="extype" name="scala.Long">Long</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.ParserWithTryCatch" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ParserWithTryCatch[A]extendsDataParser[A]"></a>
+      <a id="ParserWithTryCatch[A]:ParserWithTryCatch[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ParserWithTryCatch.html"><span class="name">ParserWithTryCatch</span></a><span class="tparams">[<span name="A">A</span>]</span><span class="result"> extends <a href="DataParser.html" class="extype" name="com.alpine.features.DataParser">DataParser</a>[<span class="extype" name="com.alpine.features.ParserWithTryCatch.A">A</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.SparseType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SparseTypeextendsDataType[java.util.Map[String,Double]]withProductwithSerializable"></a>
+      <a id="SparseType:SparseType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparseType.html"><span class="name">SparseType</span></a><span class="params">()</span><span class="result"> extends <a href="DataType.html" class="extype" name="com.alpine.features.DataType">DataType</a>[<span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="java.lang.Double">Double</span>]] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.StringType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StringTypeextendsDataType[String]withProductwithSerializable"></a>
+      <a id="StringType:StringType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="StringType.html"><span class="name">StringType</span></a><span class="params">()</span><span class="result"> extends <a href="DataType.html" class="extype" name="com.alpine.features.DataType">DataType</a>[<span class="extype" name="scala.Predef.String">String</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.features.BooleanParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BooleanParser"></a>
+      <a id="BooleanParser:BooleanParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BooleanParser$.html"><span class="name">BooleanParser</span></a><span class="result"> extends <a href="ParserWithTryCatch.html" class="extype" name="com.alpine.features.ParserWithTryCatch">ParserWithTryCatch</a>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.DoubleParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoubleParser"></a>
+      <a id="DoubleParser:DoubleParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DoubleParser$.html"><span class="name">DoubleParser</span></a><span class="result"> extends <a href="ParserWithTryCatch.html" class="extype" name="com.alpine.features.ParserWithTryCatch">ParserWithTryCatch</a>[<span class="extype" name="scala.Double">Double</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.IntParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IntParser"></a>
+      <a id="IntParser:IntParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IntParser$.html"><span class="name">IntParser</span></a><span class="result"> extends <a href="ParserWithTryCatch.html" class="extype" name="com.alpine.features.ParserWithTryCatch">ParserWithTryCatch</a>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.LongParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LongParser"></a>
+      <a id="LongParser:LongParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LongParser$.html"><span class="name">LongParser</span></a><span class="result"> extends <a href="ParserWithTryCatch.html" class="extype" name="com.alpine.features.ParserWithTryCatch">ParserWithTryCatch</a>[<span class="extype" name="scala.Long">Long</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.MapStringDoubleParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MapStringDoubleParser"></a>
+      <a id="MapStringDoubleParser:MapStringDoubleParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MapStringDoubleParser$.html"><span class="name">MapStringDoubleParser</span></a><span class="result"> extends <a href="ParserWithTryCatch.html" class="extype" name="com.alpine.features.ParserWithTryCatch">ParserWithTryCatch</a>[<span class="extype" name="java.util.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="java.lang.Double">Double</span>]]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.features.StringParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StringParser"></a>
+      <a id="StringParser:StringParser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="StringParser$.html"><span class="name">StringParser</span></a><span class="result"> extends <a href="DataParser.html" class="extype" name="com.alpine.features.DataParser">DataParser</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+    </body>
+      </html>
