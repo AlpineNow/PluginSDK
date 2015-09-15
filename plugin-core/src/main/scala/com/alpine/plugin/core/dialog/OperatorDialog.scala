@@ -6,8 +6,6 @@ package com.alpine.plugin.core.dialog
 
 import java.util.regex.Pattern
 
-import scala.collection.mutable
-
 import com.alpine.plugin.core.annotation.{AlpineSdkApi, Disabled}
 import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -328,7 +326,7 @@ trait OperatorDialog {
  * @param acceptedNameRegex Regular expression for accepted column names.
  */
 case class ColumnFilter(
-  acceptedTypes: mutable.Set[ColumnType.TypeValue],
+  acceptedTypes: Set[ColumnType.TypeValue],
   acceptedNameRegex: String = ".+"
 ) {
   /**
@@ -367,7 +365,7 @@ object ColumnFilter {
    */
   def NumericOnly: ColumnFilter = {
     ColumnFilter(
-      mutable.Set[ColumnType.TypeValue](
+      Set[ColumnType.TypeValue](
         ColumnType.Int,
         ColumnType.Long,
         ColumnType.Float,
@@ -385,7 +383,7 @@ object ColumnFilter {
    */
   def CategoricalOnly: ColumnFilter = {
     ColumnFilter(
-      mutable.Set[ColumnType.TypeValue](
+      Set[ColumnType.TypeValue](
         ColumnType.String
       )
     )
@@ -398,7 +396,7 @@ object ColumnFilter {
    */
   def All: ColumnFilter = {
     ColumnFilter(
-      mutable.Set[ColumnType.TypeValue](
+      Set[ColumnType.TypeValue](
         ColumnType.TypeValue("*") // A special type representing all.
       )
     )
@@ -412,14 +410,9 @@ object ColumnFilter {
    *                      accepted types.
    * @return A customized filter.
    */
-  def CustomFilter(
+  def apply(
     acceptedNameRegex: String,
     acceptedTypes: ColumnType.TypeValue*): ColumnFilter = {
-    val at = mutable.Set[ColumnType.TypeValue]()
-    for (acceptedType <- acceptedTypes) {
-      at += acceptedType
-    }
-
-    ColumnFilter(at, acceptedNameRegex)
+    ColumnFilter(acceptedTypes.toSet, acceptedNameRegex)
   }
 }

@@ -12,7 +12,7 @@ import com.alpine.plugin.core.dialog.OperatorDialog
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.spark.utils._
 import com.alpine.plugin.core.spark.{SparkIOTypedPluginJob, SparkRuntimeWithIOTypedJob}
-import com.alpine.plugin.core.utils.{HdfsParameterUtils}
+import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.DataFrame
 
@@ -90,11 +90,6 @@ abstract class TemplatedSparkDataFrameRuntime[JobType <: TemplatedSparkDataFrame
   extends SparkRuntimeWithIOTypedJob[JobType, HdfsTabularDataset, O] {
 }
 
-object DataFrameStorageFormat extends Enumeration {
-  type DataFrameStorageFormat = Value
-  val Parquet, Avro, TSV = Value
-}
-
 /**
  * Job base for Spark plugin jobs taking and returning DataFrames.
  * Note: This WILL NOT work with hive.
@@ -160,32 +155,14 @@ abstract class SparkDataFrameJob extends TemplatedSparkDataFrameJob[DataFrame, H
                            overwrite: Boolean,
                            sourceOperatorInfo: Option[OperatorInfo],
                            addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsTabularDataset = {
-    if (overwrite) {
-      sparkUtils.deleteFilePathIfExists(outputPath)
-    }
-    import DataFrameStorageFormat._
-    try {
-      DataFrameStorageFormat.withName(storageFormat) match {
-        case Parquet => sparkUtils.saveAsParquet(
-          outputPath,
-          transformedDataFrame,
-          sourceOperatorInfo,
-          addendum
-        )
-        case Avro => sparkUtils.saveAsAvro(
-          outputPath,
-          transformedDataFrame,
-          sourceOperatorInfo,
-          addendum
-        )
-        case TSV => sparkUtils.saveAsTSV(
-          outputPath,
-          transformedDataFrame,
-          sourceOperatorInfo,
-          addendum
-        )
-      }
-    }
+    sparkUtils.saveDataFrame(
+      outputPath,
+      transformedDataFrame,
+      HdfsStorageFormat.withName(storageFormat),
+      overwrite,
+      sourceOperatorInfo,
+      addendum
+    )
   }
 }
 
@@ -228,13 +205,7 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
     operatorDataSourceManager: OperatorDataSourceManager,
     operatorSchemaManager: OperatorSchemaManager): Unit = {
 
-    val formats = DataFrameStorageFormat.values.map(_.toString)
-    operatorDialog.addDropdownBox(
-      "storageFormat",
-      "Storage format",
-      formats.toSeq,
-      DataFrameStorageFormat.TSV.toString
-    )
+    HdfsParameterUtils.addHdfsStorageFormatParameter(operatorDialog)
     HdfsParameterUtils.addStandardHdfsOutputParameters(operatorDialog)
   }
 
@@ -261,7 +232,8 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
     inputSchema: TabularSchema,
     params: OperatorParameters) : TabularSchema= {
     val newCols = defineOutputSchemaColumns(inputSchema, params)
-    val newTabularFormatAttributes = getTabularFormatAttributes(params)
+    val storageFormat = HdfsParameterUtils.getHdfsStorageFormat(params)
+    val newTabularFormatAttributes = HdfsParameterUtils.getTabularFormatAttributes(storageFormat)
     TabularSchema(newCols, newTabularFormatAttributes)
   }
 
@@ -274,20 +246,6 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
     if (inputSchemas.size == 1) {
       val outputSchema = defineEntireOutputSchema(inputSchemas.head._2, params)
       operatorSchemaManager.setOutputSchema(outputSchema)
-    }
-  }
-
-  def getTabularFormatAttributes(parameters: OperatorParameters): TabularFormatAttributes = {
-    val storageFormat = parameters.getStringValue("storageFormat")
-    if (storageFormat == null) {
-      null
-    } else if (storageFormat.equals("Parquet")) {
-      TabularFormatAttributes.createParquetFormat()
-    } else if (storageFormat.equals("Avro")) {
-      TabularFormatAttributes.createAvroFormat()
-    } else {
-      // Storage format is TSV.
-      TabularFormatAttributes.createTSVFormat()
     }
   }
 
