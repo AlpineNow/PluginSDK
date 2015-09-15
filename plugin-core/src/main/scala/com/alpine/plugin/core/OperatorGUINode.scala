@@ -24,6 +24,16 @@ case class OperatorStatus(
   msg: Option[String]
 )
 
+object OperatorStatus {
+  def apply(isValid: Boolean): OperatorStatus = {
+    OperatorStatus(isValid = isValid, msg = None)
+  }
+
+  def apply(isValid: Boolean, msg: String): OperatorStatus = {
+    OperatorStatus(isValid = isValid, msg = Some(msg))
+  }
+}
+
 /**
  * :: AlpineSdkApi ::
  * Control the behavior of the operator GUI node within the editor.

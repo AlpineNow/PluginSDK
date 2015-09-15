@@ -5,6 +5,8 @@ package com.alpine.plugin.core.utils
 
 import com.alpine.plugin.core.OperatorParameters
 import com.alpine.plugin.core.dialog._
+import com.alpine.plugin.core.io.TabularFormatAttributes
+import scala.util.{Failure, Success, Try}
 
 /**
  * Utility for the standard parameters for use by operators which use
@@ -14,6 +16,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
 
   val outputDirectoryParameterID = "outputDirectory"
   val outputNameParameterID = "outputName"
+  val storageFormatParameterID = "storageFormat"
 
   /**
    * Adds
@@ -36,6 +39,24 @@ object HdfsParameterUtils extends OutputParameterUtils {
     val outputName = addOutputNameParameter(operatorDialog, defaultOutputName)
     val overwrite = addOverwriteParameter(operatorDialog)
     Seq(outputDirectorySelector, outputName, overwrite)
+  }
+
+  /**
+   * Adds a dropdown menu to select the storage format for a tabular dataset output.
+   * I.e., it'll add a dropdown menu with available selections 'TSV', 'Parquet' and 'Avro'.
+   * @param operatorDialog The operator dialog where you are going to add the dropdown menu.
+   * @param defaultFormat The default format one wants to use.
+   * @return The dropdown dialog element.
+   */
+  def addHdfsStorageFormatParameter(operatorDialog: OperatorDialog,
+                                    defaultFormat: HdfsStorageFormat.HdfsStorageFormat = HdfsStorageFormat.TSV): DialogElement = {
+    val formats = HdfsStorageFormat.values.map(_.toString)
+    operatorDialog.addDropdownBox(
+      storageFormatParameterID,
+      "Storage format",
+      formats.toSeq,
+      defaultFormat.toString
+    )
   }
 
   /**
@@ -108,4 +129,35 @@ object HdfsParameterUtils extends OutputParameterUtils {
     getOutputDirectory(parameters) + '/' + getOutputName(parameters)
   }
 
+  /**
+   * Get the Hdfs storage format from the parameters object.
+   * @param parameters This must contain the format parameter. I.e., the user should've
+   *                   called addHdfsStorageFormatParameter before.
+   * @return The selected Hdfs storage format.
+   */
+  def getHdfsStorageFormat(parameters: OperatorParameters): HdfsStorageFormat.HdfsStorageFormat = {
+    val parameterValue = parameters.getStringValue(storageFormatParameterID)
+    if (parameterValue == null) {
+      HdfsStorageFormat.TSV // Defaults to TSV if this parameter is missing.
+    } else {
+      Try(HdfsStorageFormat.withName(parameterValue)) match {
+        case Success(f) => f
+        case Failure(_) => HdfsStorageFormat.TSV // Defaults to TSV if the parameter value is strange.
+      }
+    }
+  }
+
+  /**
+   * Get default tabular format attributes to use (e.g., delimiter, quote information for CSV/TSV).
+   * This is useful if one wants to define output formats using default values.
+   * @param storageFormat The Hdfs storage format.
+   * @return Tabular format attributes.
+   */
+  def getTabularFormatAttributes(storageFormat: HdfsStorageFormat.HdfsStorageFormat): TabularFormatAttributes = {
+    storageFormat match {
+      case HdfsStorageFormat.Parquet => TabularFormatAttributes.createParquetFormat()
+      case HdfsStorageFormat.Avro => TabularFormatAttributes.createAvroFormat()
+      case HdfsStorageFormat.TSV => TabularFormatAttributes.createTSVFormat()
+    }
+  }
 }

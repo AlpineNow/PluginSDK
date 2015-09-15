@@ -9,6 +9,7 @@ import scala.collection.mutable
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsAvroDatasetDefault, HdfsDelimitedTabularDatasetDefault, HdfsParquetDatasetDefault}
+import com.alpine.plugin.core.utils.HdfsStorageFormat
 import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
@@ -112,6 +113,58 @@ class SparkRuntimeUtils(sc: SparkContext) {
   // ======================================================================
   // Storage util functions.
   // ======================================================================
+
+  /**
+   * Save a data frame to a path using the given storage format, and return
+   * a corresponding HdfsTabularDataset object that points to the path.
+   * @param path The path to which we'll save the data frame.
+   * @param dataFrame The data frame that we want to save.
+   * @param storageFormat The format that we want to store in.
+   * @param overwrite Whether to overwrite any existing file at the path.
+   * @param sourceOperatorInfo Mandatory source operator information to be included
+   *                           in the output object.
+   * @param addendum Mandatory addendum information to be included in the output
+   *                 object.
+   * @return After saving the data frame, returns an HdfsTabularDataset object.
+   */
+  def saveDataFrame(
+    path: String,
+    dataFrame: DataFrame,
+    storageFormat: HdfsStorageFormat.HdfsStorageFormat,
+    overwrite: Boolean,
+    sourceOperatorInfo: Option[OperatorInfo],
+    addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsTabularDataset = {
+
+    if (overwrite) {
+      deleteFilePathIfExists(path)
+    }
+
+    storageFormat match {
+      case HdfsStorageFormat.Parquet =>
+        saveAsParquet(
+          path,
+          dataFrame,
+          sourceOperatorInfo,
+          addendum
+        )
+
+      case HdfsStorageFormat.Avro =>
+        saveAsAvro(
+          path,
+          dataFrame,
+          sourceOperatorInfo,
+          addendum
+        )
+
+      case HdfsStorageFormat.TSV =>
+        saveAsTSV(
+          path,
+          dataFrame,
+          sourceOperatorInfo,
+          addendum
+        )
+    }
+  }
 
   /**
    * Write a DataFrame to HDFS as a Parquet file, and return an instance of the
