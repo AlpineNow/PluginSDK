@@ -489,6 +489,24 @@ the DataFrame schema) and the path to the to the saved data.</p><div class="full
 HDFSParquet type  which contains the Alpine 'TabularSchema' definition (created by converting
 the DataFrame schema) and the path to the to the saved data.</p></div><dl class="paramcmts block"><dt class="param">path</dt><dd class="cmt"></dd><dt class="param">dataFrame</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>
 </p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.spark.utils.SparkRuntimeUtils#saveDataFrame" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="saveDataFrame(path:String,dataFrame:org.apache.spark.sql.DataFrame,storageFormat:com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat,overwrite:Boolean,sourceOperatorInfo:Option[com.alpine.plugin.core.io.OperatorInfo],addendum:Map[String,AnyRef]):com.alpine.plugin.core.io.HdfsTabularDataset"></a>
+      <a id="saveDataFrame(String,DataFrame,HdfsStorageFormat,Boolean,Option[OperatorInfo],Map[String,AnyRef]):HdfsTabularDataset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">saveDataFrame</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dataFrame">dataFrame: <span class="extype" name="org.apache.spark.sql.DataFrame">DataFrame</span></span>, <span name="storageFormat">storageFormat: <a href="../../utils/HdfsStorageFormat$.html#HdfsStorageFormat=com.alpine.plugin.core.utils.HdfsStorageFormat.Value" class="extmbr" name="com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat">HdfsStorageFormat</a></span>, <span name="overwrite">overwrite: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="sourceOperatorInfo">sourceOperatorInfo: <span class="extype" name="scala.Option">Option</span>[<a href="../../io/OperatorInfo.html" class="extype" name="com.alpine.plugin.core.io.OperatorInfo">OperatorInfo</a>]</span>, <span name="addendum">addendum: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>] = <span class="symbol">Map[String, AnyRef]()</span></span>)</span><span class="result">: <a href="../../io/HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Save a data frame to a path using the given storage format, and return
+a corresponding HdfsTabularDataset object that points to the path.</p><div class="fullcomment"><div class="comment cmt"><p>Save a data frame to a path using the given storage format, and return
+a corresponding HdfsTabularDataset object that points to the path.</p></div><dl class="paramcmts block"><dt class="param">path</dt><dd class="cmt"><p>The path to which we'll save the data frame.</p></dd><dt class="param">dataFrame</dt><dd class="cmt"><p>The data frame that we want to save.</p></dd><dt class="param">storageFormat</dt><dd class="cmt"><p>The format that we want to store in.</p></dd><dt class="param">overwrite</dt><dd class="cmt"><p>Whether to overwrite any existing file at the path.</p></dd><dt class="param">sourceOperatorInfo</dt><dd class="cmt"><p>Mandatory source operator information to be included
+                          in the output object.</p></dd><dt class="param">addendum</dt><dd class="cmt"><p>Mandatory addendum information to be included in the output
+                object.</p></dd><dt>returns</dt><dd class="cmt"><p>After saving the data frame, returns an HdfsTabularDataset object.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

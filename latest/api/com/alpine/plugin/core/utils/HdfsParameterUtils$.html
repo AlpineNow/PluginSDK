@@ -152,6 +152,21 @@ HDFS datasets.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.alpine.plugin.core.utils.HdfsParameterUtils#addHdfsStorageFormatParameter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addHdfsStorageFormatParameter(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,defaultFormat:com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat):com.alpine.plugin.core.dialog.DialogElement"></a>
+      <a id="addHdfsStorageFormatParameter(OperatorDialog,HdfsStorageFormat.HdfsStorageFormat):DialogElement"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addHdfsStorageFormatParameter</span><span class="params">(<span name="operatorDialog">operatorDialog: <a href="../dialog/OperatorDialog.html" class="extype" name="com.alpine.plugin.core.dialog.OperatorDialog">OperatorDialog</a></span>, <span name="defaultFormat">defaultFormat: <a href="HdfsStorageFormat$.html#HdfsStorageFormat=com.alpine.plugin.core.utils.HdfsStorageFormat.Value" class="extmbr" name="com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat">HdfsStorageFormat.HdfsStorageFormat</a> = <span class="symbol"><span class="name"><a href="HdfsStorageFormat$.html">HdfsStorageFormat.TSV</a></span></span></span>)</span><span class="result">: <a href="../dialog/DialogElement.html" class="extype" name="com.alpine.plugin.core.dialog.DialogElement">DialogElement</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Adds a dropdown menu to select the storage format for a tabular dataset output.</p><div class="fullcomment"><div class="comment cmt"><p>Adds a dropdown menu to select the storage format for a tabular dataset output.
+I.e., it'll add a dropdown menu with available selections 'TSV', 'Parquet' and 'Avro'.</p></div><dl class="paramcmts block"><dt class="param">operatorDialog</dt><dd class="cmt"><p>The operator dialog where you are going to add the dropdown menu.</p></dd><dt class="param">defaultFormat</dt><dd class="cmt"><p>The default format one wants to use.</p></dd><dt>returns</dt><dd class="cmt"><p>The dropdown dialog element.
+</p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.utils.HdfsParameterUtils#addOutputDirectorySelector" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addOutputDirectorySelector(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog):com.alpine.plugin.core.dialog.DialogElement"></a>
       <a id="addOutputDirectorySelector(OperatorDialog):DialogElement"></a>
@@ -307,6 +322,21 @@ concatenated with a underscore, sanitized to make it a valid file name.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.alpine.plugin.core.utils.HdfsParameterUtils#getHdfsStorageFormat" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getHdfsStorageFormat(parameters:com.alpine.plugin.core.OperatorParameters):com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat"></a>
+      <a id="getHdfsStorageFormat(OperatorParameters):HdfsStorageFormat.HdfsStorageFormat"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getHdfsStorageFormat</span><span class="params">(<span name="parameters">parameters: <a href="../OperatorParameters.html" class="extype" name="com.alpine.plugin.core.OperatorParameters">OperatorParameters</a></span>)</span><span class="result">: <a href="HdfsStorageFormat$.html#HdfsStorageFormat=com.alpine.plugin.core.utils.HdfsStorageFormat.Value" class="extmbr" name="com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat">HdfsStorageFormat.HdfsStorageFormat</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Get the Hdfs storage format from the parameters object.</p><div class="fullcomment"><div class="comment cmt"><p>Get the Hdfs storage format from the parameters object.</p></div><dl class="paramcmts block"><dt class="param">parameters</dt><dd class="cmt"><p>This must contain the format parameter. I.e., the user should've
+                  called addHdfsStorageFormatParameter before.</p></dd><dt>returns</dt><dd class="cmt"><p>The selected Hdfs storage format.
+</p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.utils.HdfsParameterUtils#getOutputPath" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getOutputPath(parameters:com.alpine.plugin.core.OperatorParameters):String"></a>
       <a id="getOutputPath(OperatorParameters):String"></a>
@@ -339,6 +369,21 @@ with a file separator.</p></div><dl class="paramcmts block"><dt>returns</dt><dd 
 false if it is a different value or missing.</p><div class="fullcomment"><div class="comment cmt"><p>Gets the value of the overwrite parameter, returning true if the String value is &quot;true&quot;,
 false if it is a different value or missing.</p></div><dl class="paramcmts block"><dt class="param">parameters</dt><dd class="cmt"><p>OperatorParameters instance [containing the overwrite parameter].</p></dd><dt>returns</dt><dd class="cmt"><p>Boolean representation of the overwrite parameter.
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="OutputParameterUtils.html" class="extype" name="com.alpine.plugin.core.utils.OutputParameterUtils">OutputParameterUtils</a></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.utils.HdfsParameterUtils#getTabularFormatAttributes" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getTabularFormatAttributes(storageFormat:com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat):com.alpine.plugin.core.io.TabularFormatAttributes"></a>
+      <a id="getTabularFormatAttributes(HdfsStorageFormat.HdfsStorageFormat):TabularFormatAttributes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTabularFormatAttributes</span><span class="params">(<span name="storageFormat">storageFormat: <a href="HdfsStorageFormat$.html#HdfsStorageFormat=com.alpine.plugin.core.utils.HdfsStorageFormat.Value" class="extmbr" name="com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat">HdfsStorageFormat.HdfsStorageFormat</a></span>)</span><span class="result">: <a href="../io/TabularFormatAttributes.html" class="extype" name="com.alpine.plugin.core.io.TabularFormatAttributes">TabularFormatAttributes</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Get default tabular format attributes to use (e.</p><div class="fullcomment"><div class="comment cmt"><p>Get default tabular format attributes to use (e.g., delimiter, quote information for CSV/TSV).
+This is useful if one wants to define output formats using default values.</p></div><dl class="paramcmts block"><dt class="param">storageFormat</dt><dd class="cmt"><p>The Hdfs storage format.</p></dd><dt>returns</dt><dd class="cmt"><p>Tabular format attributes.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -456,6 +501,19 @@ false if it is a different value or missing.</p></div><dl class="paramcmts block
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="OutputParameterUtils.html" class="extype" name="com.alpine.plugin.core.utils.OutputParameterUtils">OutputParameterUtils</a></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.utils.HdfsParameterUtils#storageFormatParameterID" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="storageFormatParameterID:String"></a>
+      <a id="storageFormatParameterID:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">storageFormatParameterID</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

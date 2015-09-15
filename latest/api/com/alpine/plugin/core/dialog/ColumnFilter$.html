@@ -187,23 +187,6 @@ Return a filter that only passes categorical types, if the columns are
 coming from a Hadoop dataset. This doesn't necessarily work for DB columns,
 which often have vendor-specific types.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A column filter that accepts categorical types (for Hadoop datasets).
 </p></dd></dl></div>
-    </li><li name="com.alpine.plugin.core.dialog.ColumnFilter#CustomFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="CustomFilter(acceptedNameRegex:String,acceptedTypes:com.alpine.plugin.core.io.ColumnType.TypeValue*):com.alpine.plugin.core.dialog.ColumnFilter"></a>
-      <a id="CustomFilter(String,TypeValue*):ColumnFilter"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">CustomFilter</span><span class="params">(<span name="acceptedNameRegex">acceptedNameRegex: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="acceptedTypes">acceptedTypes: <a href="../io/ColumnType$$TypeValue.html" class="extype" name="com.alpine.plugin.core.io.ColumnType.TypeValue">TypeValue</a>*</span>)</span><span class="result">: <a href="ColumnFilter.html" class="extype" name="com.alpine.plugin.core.dialog.ColumnFilter">ColumnFilter</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">:: AlpineSdkApi ::
-Get a customized filter that accepts the user specified types.</p><div class="fullcomment"><div class="comment cmt"><p>:: AlpineSdkApi ::
-Get a customized filter that accepts the user specified types.</p></div><dl class="paramcmts block"><dt class="param">acceptedNameRegex</dt><dd class="cmt"><p>A regular expression for accepted column names.</p></dd><dt class="param">acceptedTypes</dt><dd class="cmt"><p>A variable argument list that contains all the
-                     accepted types.</p></dd><dt>returns</dt><dd class="cmt"><p>A customized filter.
-</p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.dialog.ColumnFilter#NumericOnly" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="NumericOnly:com.alpine.plugin.core.dialog.ColumnFilter"></a>
       <a id="NumericOnly:ColumnFilter"></a>
@@ -222,6 +205,23 @@ from a Hadoop dataset.</p><div class="fullcomment"><div class="comment cmt"><p>:
 Return a filter that only passes numeric types, if the columns are coming
 from a Hadoop dataset. This doesn't necessarily work for DB columns, which
 often have vendor-specific types.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A column filter that accepts numeric types (for Hadoop datasets).
+</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.dialog.ColumnFilter#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(acceptedNameRegex:String,acceptedTypes:com.alpine.plugin.core.io.ColumnType.TypeValue*):com.alpine.plugin.core.dialog.ColumnFilter"></a>
+      <a id="apply(String,TypeValue*):ColumnFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="acceptedNameRegex">acceptedNameRegex: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="acceptedTypes">acceptedTypes: <a href="../io/ColumnType$$TypeValue.html" class="extype" name="com.alpine.plugin.core.io.ColumnType.TypeValue">TypeValue</a>*</span>)</span><span class="result">: <a href="ColumnFilter.html" class="extype" name="com.alpine.plugin.core.dialog.ColumnFilter">ColumnFilter</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">:: AlpineSdkApi ::
+Get a customized filter that accepts the user specified types.</p><div class="fullcomment"><div class="comment cmt"><p>:: AlpineSdkApi ::
+Get a customized filter that accepts the user specified types.</p></div><dl class="paramcmts block"><dt class="param">acceptedNameRegex</dt><dd class="cmt"><p>A regular expression for accepted column names.</p></dd><dt class="param">acceptedTypes</dt><dd class="cmt"><p>A variable argument list that contains all the
+                     accepted types.</p></dd><dt>returns</dt><dd class="cmt"><p>A customized filter.
 </p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
