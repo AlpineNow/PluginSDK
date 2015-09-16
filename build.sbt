@@ -1,10 +1,15 @@
 import com.typesafe.sbt.SbtGit.GitKeys
 
 def publishParameters(module: String) = Seq(
+  organization := "com.alpinenow",
   name := s"$module",
   version := "0.9.9.11",
-  publishTo := Some(Resolver.file(s"$module", new File("./alpine-maven-repo/releases/"))),
   publishMavenStyle := true,
+  publishTo := {
+    val nexus = "https://oss.sonatype.org/"
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+  },
+  licenses := Seq("Apache License 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
   scalacOptions in(Compile, doc) ++= Seq("-doc-footer", "Copyright (c) 2015 Alpine Data Labs.")
 )
 
@@ -121,6 +126,11 @@ lazy val root = (project in file("."))
     site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
     GitKeys.gitRemoteRepo := "git@github.com:AlpineNow/PluginSDK.git"
   )
+  // No need to publish the root
+  .settings(publish := {}, publishLocal := {}, packagedArtifacts := Map.empty)
+  // Junk publishTo (should not be used)
+  .settings(publishTo :=
+    Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
   .aggregate(
     PluginCore,
     PluginSpark,
