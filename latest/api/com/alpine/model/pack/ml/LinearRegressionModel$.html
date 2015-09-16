@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../../index.html';
-            var hash = 'com.alpine.model.pack.ml.LinearRegressionModel';
+            var hash = 'com.alpine.model.pack.ml.LinearRegressionModel$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,31 +22,26 @@
    	  </script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <a href="LinearRegressionModel$.html" title="Go to companion"><img src="../../../../../lib/class_to_object_big.png" /></a>
+        <a href="LinearRegressionModel.html" title="Go to companion"><img src="../../../../../lib/object_to_class_big.png" /></a>
         <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.model">model</a>.<a href="../package.html" class="extype" name="com.alpine.model.pack">pack</a>.<a href="package.html" class="extype" name="com.alpine.model.pack.ml">ml</a></p>
-        <h1><a href="LinearRegressionModel$.html" title="Go to companion">LinearRegressionModel</a></h1>
+        <h1><a href="LinearRegressionModel.html" title="Go to companion">LinearRegressionModel</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">case class</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">LinearRegressionModel</span><span class="params">(<span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_ &lt;: <span class="extype" name="java.lang.Number">Number</span>]]</span>, <span name="intercept">intercept: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>, <span name="dependentFeatureName">dependentFeatureName: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">LinearRegressionModel</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Representation of the classical linear regression model
-y = intercept + a_0 x_0 + a_1 x_1 + ... + a_n x_n.</p><p>The length of the coefficients must match the length of the inputFeatures.</p><p>We use java.lang.Double for the type of the coefficients, because the scala Double type information
-is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
-</p></div><dl class="paramcmts block"><dt class="param">coefficients</dt><dd class="cmt"><p>Vector of coefficients of the model. Must match the length of inputFeatures.</p></dd><dt class="param">inputFeatures</dt><dd class="cmt"><p>Description of the (numeric) input features. Must match the length of coefficients.</p></dd><dt class="param">intercept</dt><dd class="cmt"><p>Intercept of the model (defaults to 0).</p></dd><dt class="param">dependentFeatureName</dt><dd class="cmt"><p>Name used to identify the dependent feature in an evaluation dataset.</p></dd><dt class="param">identifier</dt><dd class="cmt"><p>Used to identify this model when in a collection of models. Should be simple characters,
-                  so it can be used in a feature name.
-</p></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a>, <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a>, <a href="../../MLModel.html" class="extype" name="com.alpine.model.MLModel">MLModel</a>, <span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -64,7 +59,7 @@ is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. D
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.alpine.model.pack.ml.LinearRegressionModel"><span>LinearRegressionModel</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.alpine.model.RegressionRowModel"><span>RegressionRowModel</span></li><li class="in" name="com.alpine.model.RowModel"><span>RowModel</span></li><li class="in" name="com.alpine.model.MLModel"><span>MLModel</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.alpine.model.pack.ml.LinearRegressionModel"><span>LinearRegressionModel</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -82,25 +77,7 @@ is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. D
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.alpine.model.pack.ml.LinearRegressionModel#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(coefficients:Seq[Double],inputFeatures:Seq[com.alpine.features.FeatureDesc[_&lt;:Number]],intercept:Double,dependentFeatureName:String,identifier:String):com.alpine.model.pack.ml.LinearRegressionModel"></a>
-      <a id="&lt;init&gt;:LinearRegressionModel"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">LinearRegressionModel</span><span class="params">(<span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_ &lt;: <span class="extype" name="java.lang.Number">Number</span>]]</span>, <span name="intercept">intercept: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>, <span name="dependentFeatureName">dependentFeatureName: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">coefficients</dt><dd class="cmt"><p>Vector of coefficients of the model. Must match the length of inputFeatures.</p></dd><dt class="param">inputFeatures</dt><dd class="cmt"><p>Description of the (numeric) input features. Must match the length of coefficients.</p></dd><dt class="param">intercept</dt><dd class="cmt"><p>Intercept of the model (defaults to 0).</p></dd><dt class="param">dependentFeatureName</dt><dd class="cmt"><p>Name used to identify the dependent feature in an evaluation dataset.</p></dd><dt class="param">identifier</dt><dd class="cmt"><p>Used to identify this model when in a collection of models. Should be simple characters,
-                  so it can be used in a feature name.
-</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
 
         
 
@@ -186,23 +163,6 @@ is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. D
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="com.alpine.model.MLModel#classesForLoading" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="classesForLoading:Set[Class[_]]"></a>
-      <a id="classesForLoading:Set[Class[_]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">classesForLoading</span><span class="result">: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="scala.Predef.Class">Class</span>[_]]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">This should return a representative class from every jar that is needed to load
-the object during deserialization.</p><div class="fullcomment"><div class="comment cmt"><p>This should return a representative class from every jar that is needed to load
-the object during deserialization.</p><p>Default implementation returns the class of MLModel,
-and the class of the model implementation.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../MLModel.html" class="extype" name="com.alpine.model.MLModel">MLModel</a></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -222,47 +182,6 @@ and the class of the model implementation.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel#coefficients" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="coefficients:Seq[Double]"></a>
-      <a id="coefficients:Seq[Double]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">coefficients</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Vector of coefficients of the model.</p><div class="fullcomment"><div class="comment cmt"><p>Vector of coefficients of the model. Must match the length of inputFeatures.</p></div></div>
-    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel#dependentFeature" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="dependentFeature:com.alpine.features.FeatureDesc[Double]"></a>
-      <a id="dependentFeature:FeatureDesc[Double]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">dependentFeature</span><span class="result">: <a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[<span class="extype" name="scala.Double">Double</span>]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Used when we are doing model quality evaluation e.</p><div class="fullcomment"><div class="comment cmt"><p>Used when we are doing model quality evaluation e.g. Confusion Matrix,
-so we know what feature in the test dataset to compare the result to.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>Feature description used to identify the dependent feature in an evaluation dataset.
-</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.alpine.model.pack.ml.LinearRegressionModel">LinearRegressionModel</a> → <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a></dd></dl></div>
-    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel#dependentFeatureName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="dependentFeatureName:String"></a>
-      <a id="dependentFeatureName:String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">dependentFeatureName</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Name used to identify the dependent feature in an evaluation dataset.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -276,6 +195,19 @@ so we know what feature in the test dataset to compare the result to.</p></div><
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -308,47 +240,19 @@ so we know what feature in the test dataset to compare the result to.</p></div><
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel#identifier" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="identifier:String"></a>
-      <a id="identifier:String"></a>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">identifier</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Used to identify this model when in a collection of models.</p><div class="fullcomment"><div class="comment cmt"><p>Used to identify this model when in a collection of models. Should be simple characters,
-                  so it can be used in a feature name.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.alpine.model.pack.ml.LinearRegressionModel">LinearRegressionModel</a> → <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></dd></dl></div>
-    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel#inputFeatures" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="inputFeatures:Seq[com.alpine.features.FeatureDesc[_&lt;:Number]]"></a>
-      <a id="inputFeatures:Seq[FeatureDesc[_&lt;:Number]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">inputFeatures</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_ &lt;: <span class="extype" name="java.lang.Number">Number</span>]]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Description of the (numeric) input features.</p><div class="fullcomment"><div class="comment cmt"><p>Description of the (numeric) input features. Must match the length of coefficients.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.alpine.model.pack.ml.LinearRegressionModel">LinearRegressionModel</a> → <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></dd></dl></div>
-    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel#intercept" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="intercept:Double"></a>
-      <a id="intercept:Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">intercept</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Intercept of the model (defaults to 0).</p>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -362,6 +266,22 @@ so we know what feature in the test dataset to compare the result to.</p></div><
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel#make" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="make(coefficients:Seq[Double],inputFeatures:Seq[com.alpine.features.FeatureDesc[_&lt;:Number]],intercept:Double,dependentFeatureName:String,identifier:String):com.alpine.model.pack.ml.LinearRegressionModel"></a>
+      <a id="make(Seq[Double],Seq[FeatureDesc[_&lt;:Number]],Double,String,String):LinearRegressionModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">make</span><span class="params">(<span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_ &lt;: <span class="extype" name="java.lang.Number">Number</span>]]</span>, <span name="intercept">intercept: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>, <span name="dependentFeatureName">dependentFeatureName: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result">: <a href="LinearRegressionModel.html" class="extype" name="com.alpine.model.pack.ml.LinearRegressionModel">LinearRegressionModel</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">An alternative constructor for LinearRegressionModel.</p><div class="fullcomment"><div class="comment cmt"><p>An alternative constructor for LinearRegressionModel.</p><p>Call this &quot;make&quot; instead of &quot;apply&quot; because the constructors need to be distinguishable after type erasure.
+</p></div><dl class="paramcmts block"><dt class="param">coefficients</dt><dd class="cmt"><p>Vector of coefficients of the model. Must match the length of inputFeatures.</p></dd><dt class="param">inputFeatures</dt><dd class="cmt"><p>Description of the (numeric) input features. Must match the length of coefficients.</p></dd><dt class="param">intercept</dt><dd class="cmt"><p>Intercept of the model (defaults to 0).</p></dd><dt class="param">dependentFeatureName</dt><dd class="cmt"><p>Name used to identify the dependent feature in an evaluation dataset.</p></dd><dt class="param">identifier</dt><dd class="cmt"><p>Used to identify this model when in a collection of models. Should be simple characters,
+                  so it can be used in a feature name.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -401,19 +321,6 @@ so we know what feature in the test dataset to compare the result to.</p></div><
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.alpine.model.RegressionRowModel#outputFeatures" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="outputFeatures:Seq[com.alpine.features.FeatureDesc[_]]"></a>
-      <a id="outputFeatures:Seq[FeatureDesc[_]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">outputFeatures</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_]]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a> → <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -427,32 +334,19 @@ so we know what feature in the test dataset to compare the result to.</p></div><
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="com.alpine.model.RowModel#transformationSchema" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="transformationSchema:com.alpine.metadata.DetailedTransformationSchema"></a>
-      <a id="transformationSchema:DetailedTransformationSchema"></a>
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">transformationSchema</span><span class="result">: <a href="../../../metadata/DetailedTransformationSchema.html" class="extype" name="com.alpine.metadata.DetailedTransformationSchema">DetailedTransformationSchema</a></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></dd></dl></div>
-    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel#transformer" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="transformer:com.alpine.model.pack.ml.LinearRegressionTransformer"></a>
-      <a id="transformer:LinearRegressionTransformer"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">transformer</span><span class="result">: <a href="LinearRegressionTransformer.html" class="extype" name="com.alpine.model.pack.ml.LinearRegressionTransformer">LinearRegressionTransformer</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.alpine.model.pack.ml.LinearRegressionModel">LinearRegressionModel</a> → <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a> → <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -519,17 +413,7 @@ so we know what feature in the test dataset to compare the result to.</p></div><
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.Product">
-              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
-            </div><div class="parent" name="scala.Equals">
-              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
-            </div><div class="parent" name="com.alpine.model.RegressionRowModel">
-              <h3>Inherited from <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a></h3>
-            </div><div class="parent" name="com.alpine.model.RowModel">
-              <h3>Inherited from <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></h3>
-            </div><div class="parent" name="com.alpine.model.MLModel">
-              <h3>Inherited from <a href="../../MLModel.html" class="extype" name="com.alpine.model.MLModel">MLModel</a></h3>
-            </div><div class="parent" name="scala.Serializable">
+        <div class="parent" name="scala.Serializable">
               <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>

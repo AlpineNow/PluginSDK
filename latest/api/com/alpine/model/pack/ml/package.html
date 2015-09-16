@@ -67,7 +67,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="ClusterInfo.html"><span class="name">ClusterInfo</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="centroid">centroid: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="ClusterInfo.html"><span class="name">ClusterInfo</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="centroid">centroid: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Representation of a single cluster.</p>
@@ -106,7 +106,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="LinearRegressionModel.html"><span class="name">LinearRegressionModel</span></a><span class="params">(<span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_ &lt;: <span class="extype" name="java.lang.Number">Number</span>]]</span>, <span name="intercept">intercept: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>, <span name="dependentFeatureName">dependentFeatureName: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="LinearRegressionModel.html"><span class="name">LinearRegressionModel</span></a><span class="params">(<span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_ &lt;: <span class="extype" name="java.lang.Number">Number</span>]]</span>, <span name="intercept">intercept: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>, <span name="dependentFeatureName">dependentFeatureName: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Representation of the classical linear regression model
@@ -160,16 +160,32 @@ to a row of numeric data.</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SingleLogisticRegression.html"><span class="name">SingleLogisticRegression</span></a><span class="params">(<span name="dependentValue">dependentValue: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="bias">bias: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="SingleLogisticRegression.html"><span class="name">SingleLogisticRegression</span></a><span class="params">(<span name="dependentValue">dependentValue: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>, <span name="bias">bias: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Represents a SingleLogisticRegression to be used as one of several in a MultiLogisticRegressionModel.</p>
     </li></ol>
             </div>
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.model.pack.ml.LinearRegressionModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LinearRegressionModel"></a>
+      <a id="LinearRegressionModel:LinearRegressionModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LinearRegressionModel$.html"><span class="name">LinearRegressionModel</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
 
         
 

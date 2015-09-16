@@ -35,11 +35,13 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">ClusterInfo</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="centroid">centroid: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">ClusterInfo</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="centroid">centroid: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Representation of a single cluster.</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>Name used to distinguish this cluster from others in the same model.</p></dd><dt class="param">centroid</dt><dd class="cmt"><p>A vector representation of the cluster in orthogonal coordinates.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Representation of a single cluster.</p><p>We use java.lang.Double for the type of the numeric values, because the scala Double type information
+is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>Name used to distinguish this cluster from others in the same model.</p></dd><dt class="param">centroid</dt><dd class="cmt"><p>A vector representation of the cluster in orthogonal coordinates.
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -89,7 +91,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ClusterInfo</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="centroid">centroid: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span>
+        <span class="name">ClusterInfo</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="centroid">centroid: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>Name used to distinguish this cluster from others in the same model.</p></dd><dt class="param">centroid</dt><dd class="cmt"><p>A vector representation of the cluster in orthogonal coordinates.
@@ -190,7 +192,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">centroid</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Double">Double</span>]</span>
+        <span class="name">centroid</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">A vector representation of the cluster in orthogonal coordinates.</p>

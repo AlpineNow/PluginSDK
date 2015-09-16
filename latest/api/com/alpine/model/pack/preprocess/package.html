@@ -171,13 +171,10 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="PolynomialModel.html"><span class="name">PolynomialModel</span></a><span class="params">(<span name="exponents">exponents: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Double">Double</span>]]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_ &lt;: <span class="extype" name="java.lang.Number">Number</span>]]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="PolynomialModel.html"><span class="name">PolynomialModel</span></a><span class="params">(<span name="exponents">exponents: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../features/FeatureDesc.html" class="extype" name="com.alpine.features.FeatureDesc">FeatureDesc</a>[_ &lt;: <span class="extype" name="java.lang.Number">Number</span>]]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">If the exponents are a matrix
-<span class="extype" name="1,2,0],">[0.5,3,2</span>
-Then the transformation of a row (x1, x2, x3) will be
-(y1, y2) = (x1 * x2 pow 2, sqrt(x1) * x2 pow 3 * x3 pow 2).</p>
+      <p class="comment cmt">Model that creates output features that are polynomial combinations of the input features.</p>
     </li><li name="com.alpine.model.pack.preprocess.PolynomialTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="PolynomialTransformerextendsTransformerwithProductwithSerializable"></a>
       <a id="PolynomialTransformer:PolynomialTransformer"></a>
