@@ -4,7 +4,7 @@
  */
 package com.alpine.model.pack.ml
 
-import com.alpine.model.pack.util.CastedDoubleSeq
+import com.alpine.model.pack.util.{TransformerUtil, CastedDoubleSeq}
 import com.alpine.transformer.RegressionTransformer
 
 /**
@@ -14,10 +14,10 @@ import com.alpine.transformer.RegressionTransformer
  * Note that in the input row is wrapped in CastedDoubleSeq, so the input elements
  * must be castable as java.lang.Number.
  */
-class LinearRegressionTransformer(coefficients: Seq[Double], intercept: Double = 0) extends RegressionTransformer {
+class LinearRegressionTransformer(coefficients: Seq[java.lang.Double], intercept: Double = 0) extends RegressionTransformer {
 
   // Use toArray for indexing efficiency.
-  private val coefficientArray = coefficients.toArray
+  private val coefficientArray = TransformerUtil.javaDoubleSeqToArray(coefficients)
 
   override def predict(row: Row): Double = {
     val doubleRow = CastedDoubleSeq(row)

@@ -44,6 +44,14 @@ object TransformerUtil {
       case _: ClassCastException => Double.NaN
     }
   }
+
+  def toJavaDoubleSeq(doubles: Seq[Double]): Seq[java.lang.Double] = {
+    doubles.map(d => d.asInstanceOf[java.lang.Double])
+  }
+
+  def javaDoubleSeqToArray(doubles: Seq[java.lang.Double]): Array[Double] = {
+    doubles.map(d => d.doubleValue()).toArray
+  }
 }
 
 /**

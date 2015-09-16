@@ -23,7 +23,7 @@ class LinearRegressionModelTest extends FunSuite {
     ).map(f => f.asInstanceOf[FeatureDesc[_ <: Number]])
 
     val intercept = 3.4
-    val originalModel = LinearRegressionModel(coefficients, inputFeatures, intercept)
+    val originalModel = LinearRegressionModel.make(coefficients, inputFeatures, intercept)
 
     JsonTestUtil.testJsonization(originalModel)
   }

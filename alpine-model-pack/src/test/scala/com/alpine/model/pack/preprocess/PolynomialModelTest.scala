@@ -14,7 +14,7 @@ import org.scalatest.FunSuite
  */
 class PolynomialModelTest extends FunSuite {
 
-  val exponents = Seq(Seq[Double](1,2,0.0), Seq[Double](0.5,3,2))
+  val exponents = Seq(Seq[java.lang.Double](1.0,2.0,0.0), Seq[java.lang.Double](0.5,3.0,2.0))
   val inputFeatures = {
     Seq(new FeatureDesc("x1", DoubleType()), new FeatureDesc("x2", DoubleType()), new FeatureDesc("x3", DoubleType()))
   }.map(f => f.asInstanceOf[FeatureDesc[_ <: Number]])

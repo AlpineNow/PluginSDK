@@ -10,12 +10,18 @@ import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.transformer.Transformer
 
 /**
+ * Model that creates output features that are polynomial combinations of the input features.
+ *
+ *
+ * We use java.lang.Double for the type of the numeric values, because the scala Double type information
+ * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
+ *
  * If the exponents are a matrix
  * [[1,2,0], [0.5,3,2]]
  * Then the transformation of a row (x1, x2, x3) will be
  * (y1, y2) = (x1 * x2 pow 2, sqrt(x1) * x2 pow 3 * x3 pow 2).
  */
-case class PolynomialModel(exponents: Seq[Seq[Double]], inputFeatures: Seq[FeatureDesc[_ <: Number]], override val identifier: String = "") extends RowModel {
+case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures: Seq[FeatureDesc[_ <: Number]], override val identifier: String = "") extends RowModel {
   override def transformer: Transformer = PolynomialTransformer(this)
 
   def outputFeatures: Seq[FeatureDesc[_]] = {
@@ -28,7 +34,7 @@ case class PolynomialTransformer(model: PolynomialModel) extends Transformer {
 
   private val rowAsDoubleArray = Array.ofDim[Double](model.transformationSchema.inputFeatures.length)
 
-  private val exponents: Array[Array[Double]] = model.exponents.map(v => v.toArray).toArray
+  private val exponents: Array[Array[Double]] = model.exponents.map(v => TransformerUtil.javaDoubleSeqToArray(v)).toArray
 
   override def apply(row: Row): Row = {
     TransformerUtil.fillRowToDoubleArray(row, rowAsDoubleArray)

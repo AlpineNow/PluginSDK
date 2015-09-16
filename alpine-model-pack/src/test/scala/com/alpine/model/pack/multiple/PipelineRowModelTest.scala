@@ -21,7 +21,7 @@ class PipelineRowModelTest extends FunSuite {
   val liRModel = {
     val coefficients = Seq[Double](0.9, 1, 5, -1)
     val lirInputFeatures = oneHotEncoderModel.transformationSchema.outputFeatures.map(f => f.asInstanceOf[FeatureDesc[_ <: Number]])
-    LinearRegressionModel(coefficients, lirInputFeatures)
+    LinearRegressionModel.make(coefficients, lirInputFeatures)
   }
 
   test("Serialization of the Pipeline Model should work") {

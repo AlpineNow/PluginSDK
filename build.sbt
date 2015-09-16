@@ -2,7 +2,7 @@ import com.typesafe.sbt.SbtGit.GitKeys
 
 def publishParameters(module: String) = Seq(
   name := s"$module",
-  version := "0.9.9.10",
+  version := "0.9.9.11",
   publishTo := Some(Resolver.file(s"$module", new File("./alpine-maven-repo/releases/"))),
   publishMavenStyle := true,
   scalacOptions in(Compile, doc) ++= Seq("-doc-footer", "Copyright (c) 2015 Alpine Data Labs.")

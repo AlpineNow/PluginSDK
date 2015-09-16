@@ -25,11 +25,21 @@ case class MultiLogisticRegressionModel(singleLORs: Seq[SingleLogisticRegression
   override def dependentFeature = new FeatureDesc(dependentFeatureName, StringType())
 }
 
-case class SingleLogisticRegression(dependentValue: String, coefficients: Seq[Double], bias: Double = 0)
+/**
+ * Represents a SingleLogisticRegression to be used as one of several in a MultiLogisticRegressionModel.
+ *
+ * We use java.lang.Double for the type of the numeric values, because the scala Double type information
+ * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
+ *
+ * @param dependentValue The dependent value that the coefficients correspond to.
+ * @param coefficients The coefficients for the single Logistic Regression model.
+ * @param bias The constant term, that is added to the dot product of the feature coefficient vectors.
+ */
+case class SingleLogisticRegression(dependentValue: String, coefficients: Seq[java.lang.Double], bias: Double = 0)
 
 case class LogisticRegressionTransformer(model: MultiLogisticRegressionModel) extends ClassificationTransformer {
   
-  private val betaArrays = model.singleLORs.map(l => (l.bias, l.coefficients.toArray)).toArray
+  private val betaArrays = model.singleLORs.map(l => (l.bias, TransformerUtil.javaDoubleSeqToArray(l.coefficients))).toArray
   private val numBetaArrays = betaArrays.length
   
   // Reuse of this means that the scoring method is not thread safe.

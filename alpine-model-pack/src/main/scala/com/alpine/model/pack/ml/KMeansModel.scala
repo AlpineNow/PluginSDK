@@ -32,17 +32,21 @@ case class KMeansModel(clusters: Seq[ClusterInfo],
 
 /**
  * Representation of a single cluster.
+ *
+ * We use java.lang.Double for the type of the numeric values, because the scala Double type information
+ * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
+ *
  * @param name Name used to distinguish this cluster from others in the same model.
  * @param centroid A vector representation of the cluster in orthogonal coordinates.
  */
-case class ClusterInfo(name: String, centroid: Seq[Double])
+case class ClusterInfo(name: String, centroid: Seq[java.lang.Double])
 
 case class KMeansTransformer(model: KMeansModel) extends ClusteringTransformer {
 
   val dim = model.clusters.head.centroid.length
   val numClasses = model.clusters.size
   // Use Arrays for faster indexing.
-  private val clustersArray: Array[Array[Double]] = model.clusters.map(c => c.centroid.toArray).toArray
+  private val clustersArray: Array[Array[Double]] = model.clusters.map(c => TransformerUtil.javaDoubleSeqToArray(c.centroid)).toArray
   // Reuse of this means that the scoring method is not thread safe.
   private val rowAsDoubleArray = Array.ofDim[Double](model.transformationSchema.inputFeatures.length)
 
