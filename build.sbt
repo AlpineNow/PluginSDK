@@ -5,6 +5,21 @@ def publishParameters(module: String) = Seq(
   name := s"$module",
   version := "0.9.9.11",
   publishMavenStyle := true,
+  pomExtra := (
+    <scm>
+    <url>git@github.com:AlpineNow/PluginSDK.git</url>
+    <connection>scm:git@github.com:AlpineNow/PluginSDK.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>alpine</id>
+      <name>alpine</name>
+      <url>http://www.alpinenow.com</url>
+      <email>support@alpinenow.com</email>
+    </developer>
+  </developers>
+  ),
+  homepage := Some(url("https://github.com/AlpineNow/PluginSDK")),
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
