@@ -3,7 +3,7 @@ import com.typesafe.sbt.SbtGit.GitKeys
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "0.9.9.11",
+  version := "0.9.9.12",
   publishMavenStyle := true,
   pomExtra := (
     <scm>
