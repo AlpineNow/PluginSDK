@@ -23,10 +23,19 @@ lazy val sparkDependencies = Seq(
 )
 
 val scalaTestDep = "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test"
+val junitDependency = "junit" % "junit" % "4.11" % "test"
 val gsonDependency = "com.google.code.gson" % "gson" % "2.3.1"
 val jodaTimeDependency = "joda-time" % "joda-time" % "2.1"
 val commonsIODependency = "commons-io" % "commons-io" % "2.4"
 val apacheCommonsDependency = "org.apache.commons" % "commons-lang3" % "3.4"
+
+lazy val miniClusterDependencies = Seq(
+  "org.apache.hadoop" % "hadoop-hdfs" % "2.6.0" % "compile,test" classifier "" classifier "tests",
+  "org.apache.hadoop" % "hadoop-common" % "2.6.0" % "compile,test" classifier "" classifier "tests" ,
+  "org.apache.hadoop" % "hadoop-client" % "2.6.0" % "compile,test" classifier "" classifier "tests" ,
+  "org.apache.hadoop" % "hadoop-mapreduce-client-jobclient" % "2.6.0" % "compile,test" classifier "" classifier "tests",
+  "org.apache.hadoop" % "hadoop-yarn-server-tests" % "2.6.0" % "compile,test" classifier "" classifier "tests"
+)
 
 lazy val PluginCore = Project(
   id = "plugin-core",
@@ -94,6 +103,17 @@ lazy val ModelPack = Project(
   ) ++ publishParameters("alpine-model-pack")
 ).dependsOn(ModelAPI % "compile->compile;test->test")
 
+lazy val PluginTest = Project(
+  id = "plugin-test",
+  base = file("plugin-test"),
+  settings = Seq(
+    libraryDependencies ++= Seq(
+      scalaTestDep,
+      junitDependency
+    ) ++ miniClusterDependencies ++ sparkDependencies
+  ) ++ publishParameters("plugin-test")
+).dependsOn(PluginCore, PluginSpark, PluginIOImpl)
+
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)
   .settings(site.settings ++ ghpages.settings: _*)
@@ -108,5 +128,6 @@ lazy val root = (project in file("."))
     PluginModel,
     PluginSpark,
     ModelAPI,
-    ModelPack
+    ModelPack,
+    PluginTest
   )
