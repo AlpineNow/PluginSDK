@@ -25,7 +25,8 @@ def publishParameters(module: String) = Seq(
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
   },
   licenses := Seq("Apache License 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
-  scalacOptions in(Compile, doc) ++= Seq("-doc-footer", "Copyright (c) 2015 Alpine Data Labs.")
+  scalacOptions in(Compile, doc) ++= Seq("-doc-footer", "Copyright (c) 2015 Alpine Data Labs."),
+  crossPaths := false
 )
 
 lazy val sparkDependencies = Seq(
