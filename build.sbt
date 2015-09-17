@@ -3,7 +3,7 @@ import com.typesafe.sbt.SbtGit.GitKeys
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "0.9.9.14",
+  version := "0.9.9.19",
   publishMavenStyle := true,
   pomExtra := (
     <scm>
@@ -62,7 +62,22 @@ lazy val miniClusterDependencies = excludeJavaxServlet(Seq(
   "org.apache.hadoop" % "hadoop-common" % "2.6.0" % "compile,test" classifier "" classifier "tests" ,
   "org.apache.hadoop" % "hadoop-client" % "2.6.0" % "compile,test" classifier "" classifier "tests" ,
   "org.apache.hadoop" % "hadoop-mapreduce-client-jobclient" % "2.6.0" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-yarn-server-tests" % "2.6.0" % "compile,test" classifier "" classifier "tests"
+  "org.apache.hadoop" % "hadoop-yarn-server-tests" % "2.6.0" % "compile,test" classifier "" classifier "tests",
+  "org.apache.hadoop" % "hadoop-yarn-server-web-proxy" % "2.6.0" % "compile,test" classifier "" classifier "tests",
+  "org.apache.hadoop" % "hadoop-minicluster" % "2.6.0",
+  // spark, not marked as provided
+  "org.apache.spark" % "spark-core_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-mllib_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-catalyst_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-sql_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-hive_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-yarn_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-network-yarn_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-network-common_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-network-shuffle_2.10" % "1.3.1",
+  // test deps as compile deps so they are carried through
+  "org.scalatest" % "scalatest_2.10" % "2.2.4",
+  "junit" % "junit" % "4.11"
 ))
 
 lazy val PluginCore = Project(
@@ -138,7 +153,7 @@ lazy val PluginTest = Project(
     libraryDependencies ++= Seq(
       scalaTestDep,
       junitDependency
-    ) ++ miniClusterDependencies ++ sparkDependencies
+    ) ++ miniClusterDependencies
   ) ++ publishParameters("plugin-test")
 ).dependsOn(PluginCore, PluginSpark, PluginIOImpl)
 
