@@ -3,7 +3,7 @@ import com.typesafe.sbt.SbtGit.GitKeys
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "0.9.9.12",
+  version := "0.9.9.19",
   publishMavenStyle := true,
   pomExtra := (
     <scm>
@@ -29,7 +29,14 @@ def publishParameters(module: String) = Seq(
   crossPaths := false
 )
 
-lazy val sparkDependencies = Seq(
+// javax.servlet signing issues can be tricky, we can just exclude the dep
+def excludeFromAll(items: Seq[ModuleID], group: String, artifact: String) =
+  items.map(_.exclude(group, artifact))
+
+def excludeJavaxServlet(items: Seq[ModuleID]) =
+  excludeFromAll(items, "javax.servlet", "servlet-api")
+
+lazy val sparkDependencies = excludeJavaxServlet(Seq(
   "org.apache.spark" % "spark-core_2.10" % "1.3.1" % "provided",
   "org.apache.spark" % "spark-mllib_2.10" % "1.3.1" % "provided",
   "org.apache.spark" % "spark-catalyst_2.10" % "1.3.1" % "provided",
@@ -41,7 +48,7 @@ lazy val sparkDependencies = Seq(
   "org.apache.spark" % "spark-network-shuffle_2.10" % "1.3.1" % "provided",
   "com.databricks" % "spark-avro_2.10" % "1.0.0",
   "com.databricks" % "spark-csv_2.10" % "1.1.0"
-)
+))
 
 val scalaTestDep = "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test"
 val junitDependency = "junit" % "junit" % "4.11" % "test"
@@ -50,13 +57,28 @@ val jodaTimeDependency = "joda-time" % "joda-time" % "2.1"
 val commonsIODependency = "commons-io" % "commons-io" % "2.4"
 val apacheCommonsDependency = "org.apache.commons" % "commons-lang3" % "3.4"
 
-lazy val miniClusterDependencies = Seq(
+lazy val miniClusterDependencies = excludeJavaxServlet(Seq(
   "org.apache.hadoop" % "hadoop-hdfs" % "2.6.0" % "compile,test" classifier "" classifier "tests",
   "org.apache.hadoop" % "hadoop-common" % "2.6.0" % "compile,test" classifier "" classifier "tests" ,
   "org.apache.hadoop" % "hadoop-client" % "2.6.0" % "compile,test" classifier "" classifier "tests" ,
   "org.apache.hadoop" % "hadoop-mapreduce-client-jobclient" % "2.6.0" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-yarn-server-tests" % "2.6.0" % "compile,test" classifier "" classifier "tests"
-)
+  "org.apache.hadoop" % "hadoop-yarn-server-tests" % "2.6.0" % "compile,test" classifier "" classifier "tests",
+  "org.apache.hadoop" % "hadoop-yarn-server-web-proxy" % "2.6.0" % "compile,test" classifier "" classifier "tests",
+  "org.apache.hadoop" % "hadoop-minicluster" % "2.6.0",
+  // spark, not marked as provided
+  "org.apache.spark" % "spark-core_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-mllib_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-catalyst_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-sql_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-hive_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-yarn_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-network-yarn_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-network-common_2.10" % "1.3.1",
+  "org.apache.spark" % "spark-network-shuffle_2.10" % "1.3.1",
+  // test deps as compile deps so they are carried through
+  "org.scalatest" % "scalatest_2.10" % "2.2.4",
+  "junit" % "junit" % "4.11"
+))
 
 lazy val PluginCore = Project(
   id = "plugin-core",
@@ -131,7 +153,7 @@ lazy val PluginTest = Project(
     libraryDependencies ++= Seq(
       scalaTestDep,
       junitDependency
-    ) ++ miniClusterDependencies ++ sparkDependencies
+    ) ++ miniClusterDependencies
   ) ++ publishParameters("plugin-test")
 ).dependsOn(PluginCore, PluginSpark, PluginIOImpl)
 
