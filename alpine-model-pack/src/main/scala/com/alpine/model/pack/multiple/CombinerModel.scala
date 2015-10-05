@@ -4,8 +4,8 @@
  */
 package com.alpine.model.pack.multiple
 
-import com.alpine.features.FeatureDesc
 import com.alpine.model.RowModel
+import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.transformer.Transformer
 
 import scala.collection.mutable.ListBuffer
@@ -22,12 +22,12 @@ case class CombinerModel(models: Seq[ModelWithID], override val identifier: Stri
   override def transformer: Transformer = CombinerTransformer(this)
 
   // Make this a val so it will be included in the JSON.
-  val inputFeatures: Seq[FeatureDesc[_]] = {
+  val inputFeatures: Seq[ColumnDef] = {
     // Combine input features but remove duplicates.
     models.flatMap(t => t.model.transformationSchema.inputFeatures).distinct
   }
 
-  def outputFeatures: Seq[FeatureDesc[_]] = {
+  def outputFeatures: Seq[ColumnDef] = {
     CombinerModel.getOutputFeaturesWithGroupID(models.map(t => (t.id, t.model.transformationSchema.outputFeatures)))
   }
 
@@ -58,36 +58,36 @@ object CombinerModel {
 
   val sepChar = '_'
 
-  def getOutputFeatures(subOutputFeatures: Seq[Seq[FeatureDesc[_]]]): Seq[FeatureDesc[_]] = {
-    val featureBuilder = ListBuffer[FeatureDesc[_]]()
+  def getOutputFeatures(subOutputFeatures: Seq[Seq[ColumnDef]]): Seq[ColumnDef] = {
+    val featureBuilder = ListBuffer[ColumnDef]()
     for (subFeatures <- subOutputFeatures) {
       val suffix = getSuffixForConcatenation(featureBuilder, subFeatures)
       for (feature <- subFeatures) {
-        featureBuilder.append(new FeatureDesc(feature.name + suffix, feature.dataType))
+        featureBuilder.append(new ColumnDef(feature.columnName + suffix, feature.columnType))
       }
     }
     featureBuilder.toSeq
   }
 
-  def getOutputFeaturesWithGroupID(subOutputFeatures: Seq[(String, Seq[FeatureDesc[_]])]): Seq[FeatureDesc[_]] = {
-    val featureBuilder = ListBuffer[FeatureDesc[_]]()
+  def getOutputFeaturesWithGroupID(subOutputFeatures: Seq[(String, Seq[ColumnDef])]): Seq[ColumnDef] = {
+    val featureBuilder = ListBuffer[ColumnDef]()
     for (subFeatures <- subOutputFeatures) {
       val subFeatureDescs = subFeatures._2
       val groupID = subFeatures._1
       val suffix = getSuffixForConcatenation(featureBuilder, subFeatureDescs, groupID)
       for (feature <- subFeatureDescs) {
-        featureBuilder.append(new FeatureDesc(feature.name + suffix, feature.dataType))
+        featureBuilder.append(new ColumnDef(feature.columnName + suffix, feature.columnType))
       }
     }
     featureBuilder.toSeq
   }
 
-  private def getSuffixForConcatenation(featuresSoFar: ListBuffer[FeatureDesc[_]], newFeatures: Seq[FeatureDesc[_]], groupID: String = ""): String = {
+  private def getSuffixForConcatenation(featuresSoFar: ListBuffer[ColumnDef], newFeatures: Seq[ColumnDef], groupID: String = ""): String = {
     val groupIDWithUnderscore = if (groupID == "") groupID else sepChar + groupID
     var suffix = groupIDWithUnderscore
     var count = 0
-    val featureNamesSoFar = featuresSoFar.map(f => f.name)
-    while (newFeatures.map(s => s.name + suffix).intersect(featureNamesSoFar).nonEmpty) {
+    val featureNamesSoFar = featuresSoFar.map(f => f.columnName)
+    while (newFeatures.map(s => s.columnName + suffix).intersect(featureNamesSoFar).nonEmpty) {
       count += 1
       suffix = groupIDWithUnderscore + sepChar + count.toString
     }

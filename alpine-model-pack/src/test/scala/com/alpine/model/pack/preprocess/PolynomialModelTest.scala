@@ -4,8 +4,8 @@
  */
 package com.alpine.model.pack.preprocess
 
-import com.alpine.features.{DoubleType, FeatureDesc}
 import com.alpine.json.JsonTestUtil
+import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
 import org.scalatest.FunSuite
 
 /**
@@ -16,8 +16,8 @@ class PolynomialModelTest extends FunSuite {
 
   val exponents = Seq(Seq[java.lang.Double](1.0,2.0,0.0), Seq[java.lang.Double](0.5,3.0,2.0))
   val inputFeatures = {
-    Seq(new FeatureDesc("x1", DoubleType()), new FeatureDesc("x2", DoubleType()), new FeatureDesc("x3", DoubleType()))
-  }.map(f => f.asInstanceOf[FeatureDesc[_ <: Number]])
+    Seq(new ColumnDef("x1", ColumnType.Double), new ColumnDef("x2", ColumnType.Double), new ColumnDef("x3", ColumnType.Double))
+  }
 
   val t = new PolynomialModel(exponents, inputFeatures)
 

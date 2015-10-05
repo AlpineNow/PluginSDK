@@ -4,8 +4,8 @@
  */
 package com.alpine.model.pack.preprocess
 
-import com.alpine.features.{StringType, FeatureDesc, IntType}
 import com.alpine.json.JsonTestUtil
+import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
 import org.scalatest.FunSuite
 
 /**
@@ -16,9 +16,9 @@ class NullValueReplacementTest extends FunSuite {
 
   val model = NullValueReplacement(
     Seq[Any](70, "sunny"),
-    Seq[FeatureDesc[_]](
-      FeatureDesc("humidity", IntType()),
-      FeatureDesc("outlook", StringType())
+    Seq(
+      ColumnDef("humidity", ColumnType.Int),
+      ColumnDef("outlook", ColumnType.String)
     )
   )
 

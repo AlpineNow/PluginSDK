@@ -1,4 +1,4 @@
-import com.typesafe.sbt.SbtGit.GitKeys
+//import com.typesafe.sbt.SbtGit.GitKeys
 
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
@@ -80,6 +80,17 @@ lazy val miniClusterDependencies = excludeJavaxServlet(Seq(
   "junit" % "junit" % "4.11"
 ))
 
+lazy val Common = Project(
+  id = "common",
+  base = file("common"),
+  settings = Seq(
+    libraryDependencies ++= Seq(
+      scalaTestDep,
+      gsonDependency
+    )
+  ) ++ publishParameters("common")
+)
+
 lazy val PluginCore = Project(
   id = "plugin-core",
   base = file("plugin-core"),
@@ -88,7 +99,7 @@ lazy val PluginCore = Project(
       scalaTestDep
     )
   ) ++ publishParameters("plugin-core")
-)
+).dependsOn(Common)
 
 lazy val PluginIOImpl = Project(
   id = "plugin-io-impl",
@@ -134,7 +145,7 @@ lazy val ModelAPI = Project(
       scalaTestDep
     )
   ) ++ publishParameters("alpine-model-api")
-)
+).dependsOn(Common)
 
 lazy val ModelPack = Project(
   id = "alpine-model-pack",
@@ -159,17 +170,19 @@ lazy val PluginTest = Project(
 
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)
-  .settings(site.settings ++ ghpages.settings: _*)
-  .settings(
-    site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
-    GitKeys.gitRemoteRepo := "git@github.com:AlpineNow/PluginSDK.git"
-  )
+  // Comment this out in adl, because it is not the official repo.
+//  .settings(site.settings ++ ghpages.settings: _*)
+//  .settings(
+//    site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
+//    GitKeys.gitRemoteRepo := "git@github.com:AlpineNow/PluginSDK.git",
+//  )
   // No need to publish the root
   .settings(publish := {}, publishLocal := {}, packagedArtifacts := Map.empty)
   // Junk publishTo (should not be used)
   .settings(publishTo :=
     Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
   .aggregate(
+    Common,
     PluginCore,
     PluginSpark,
     PluginIOImpl,

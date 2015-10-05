@@ -4,7 +4,7 @@
  */
 package com.alpine.util
 
-import com.alpine.features.{SparseType, DoubleType, StringType, FeatureDesc}
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 
 /**
  * This class is a utility for defining features, in particular the output features of models.
@@ -16,27 +16,27 @@ object FeatureUtil {
   private val DIST = "DIST"
   private val INFO = "INFO"
 
-  val simpleModelOutputFeatures: Seq[FeatureDesc[_]] = {
-    Seq(new FeatureDesc(PRED, StringType()))
+  val simpleModelOutputFeatures: Seq[ColumnDef] = {
+    Seq(new ColumnDef(PRED, ColumnType.String))
   }
 
-  val regressionOutputFeatures: Seq[FeatureDesc[_]] = {
-    Seq(new FeatureDesc(PRED, DoubleType()))
+  val regressionOutputFeatures: Seq[ColumnDef] = {
+    Seq(new ColumnDef(PRED, ColumnType.Double))
   }
 
-  val classificationOutputFeatures: Seq[FeatureDesc[_]] = {
+  val classificationOutputFeatures: Seq[ColumnDef] = {
     Seq(
-      new FeatureDesc(PRED, StringType()),
-      new FeatureDesc(CONF, DoubleType()),
-      new FeatureDesc(INFO, SparseType())
+      new ColumnDef(PRED, ColumnType.String),
+      new ColumnDef(CONF, ColumnType.Double),
+      new ColumnDef(INFO, ColumnType.Sparse)
     )
   }
 
-  val clusteringOutputFeatures: Seq[FeatureDesc[_]] = {
+  val clusteringOutputFeatures: Seq[ColumnDef] = {
     Seq(
-      new FeatureDesc(PRED, StringType()),
-      new FeatureDesc(DIST, DoubleType()),
-      new FeatureDesc(INFO, SparseType())
+      new ColumnDef(PRED, ColumnType.String),
+      new ColumnDef(DIST, ColumnType.Double),
+      new ColumnDef(INFO, ColumnType.Sparse)
     )
   }
 

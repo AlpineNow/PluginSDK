@@ -4,15 +4,15 @@
  */
 package com.alpine.model.pack
 
-import com.alpine.features.FeatureDesc
 import com.alpine.model.RowModel
+import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.transformer.Transformer
 
 /**
  * Represents a model that carries features through without transforming them.
  * Designed to be used in parallel to other models in the CombinerModel.
  */
-case class UnitModel(inputFeatures: Seq[FeatureDesc[_]], override val identifier: String = "") extends RowModel {
+case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
   override def transformer: Transformer = UnitTransformer
   override def outputFeatures = inputFeatures
 }

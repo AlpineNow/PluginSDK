@@ -4,8 +4,8 @@
  */
 package com.alpine.model.pack.ml
 
-import com.alpine.features.{DoubleType, FeatureDesc}
 import com.alpine.json.JsonTestUtil
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.result.ClusteringResult
 import org.scalatest.FunSuite
 
@@ -15,7 +15,7 @@ import org.scalatest.FunSuite
 class KMeansModelTest extends FunSuite {
 
   val clusters = Seq(ClusterInfo("A", Seq(231.5/3, 239.0/3)), ClusterInfo("B", Seq(68.25, 68.75)), ClusterInfo("C", Seq(73.5,92.75)))
-  val inputFeatures = Seq(FeatureDesc("humidity", DoubleType()), FeatureDesc("temperature", DoubleType())).map(f => f.asInstanceOf[FeatureDesc[_ <: Number]])
+  val inputFeatures = Seq(ColumnDef("humidity", ColumnType.Double), ColumnDef("temperature", ColumnType.Double))
   val model = new KMeansModel(clusters, inputFeatures, "KM")
 
   test("Should serialize correctly.") {

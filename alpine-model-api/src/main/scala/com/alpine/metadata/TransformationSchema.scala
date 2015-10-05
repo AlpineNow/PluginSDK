@@ -4,7 +4,7 @@
  */
 package com.alpine.metadata
 
-import com.alpine.features.FeatureDesc
+import com.alpine.plugin.core.io.ColumnDef
 
 /**
  * We need this information to figure out the output structure of the Predictor,
@@ -12,13 +12,13 @@ import com.alpine.features.FeatureDesc
  * if it is RealResult then there is one (double type) column.
  * identifier is used as part of the output column names (we may change how this works in the future).
  */
-class TransformationSchema(val outputFeatures: Seq[FeatureDesc[_]], val identifier: String = "")
+class TransformationSchema(val outputFeatures: Seq[ColumnDef], val identifier: String = "")
 
 /**
  * If the user provides us with the input feature descriptions, then in the Predictor we will be able to verify that
  * the data set for prediction contains all the necessary columns at design-time (not currently implemented but should be easy to do).
  */
-case class DetailedTransformationSchema(inputFeatures: Seq[FeatureDesc[_]],
-                                        override val outputFeatures: Seq[FeatureDesc[_]],
+case class DetailedTransformationSchema(inputFeatures: Seq[ColumnDef],
+                                        override val outputFeatures: Seq[ColumnDef],
                                         override val identifier: String = "")
   extends TransformationSchema(outputFeatures, identifier)

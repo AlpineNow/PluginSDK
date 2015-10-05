@@ -4,10 +4,10 @@
  */
 package com.alpine.model.pack.multiple
 
-import com.alpine.features.{DoubleType, FeatureDesc, LongType}
 import com.alpine.json.JsonTestUtil
 import com.alpine.model.pack.UnitModel
 import com.alpine.model.pack.preprocess.OneHotEncodingModelTest
+import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
 import org.scalatest.FunSuite
 
 /**
@@ -17,7 +17,7 @@ class CombinerModelTest extends FunSuite {
 
   test("Should serialize correctly") {
     val oneHotEncoderModel = (new OneHotEncodingModelTest).oneHotEncoderModel
-    val unit = UnitModel(Seq(new FeatureDesc("temperature", LongType()), new FeatureDesc("humidity", DoubleType())))
+    val unit = UnitModel(Seq(new ColumnDef("temperature", ColumnType.Long), new ColumnDef("humidity", ColumnType.Double)))
     val combinerModel = CombinerModel.make(List(oneHotEncoderModel, unit))
     JsonTestUtil.testJsonization(combinerModel)
 

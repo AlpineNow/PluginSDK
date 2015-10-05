@@ -19,7 +19,8 @@ import org.apache.spark.sql.DataFrame
 /**
  * Templated base for Spark plugin jobs operating on DataFrames.
  * Most jobs will want to use SparkDataFrameJob which takes
- * and returns Spark DataFrames.
+ * and returns Spark DataFrames. This version does not support schema
+ * inference.
  * @tparam ReturnType The return type of the transformation method (most commonly a DataFrame)
  * @tparam OutputType The return type of the actual operator, extending IOBase.
  *                    Most commonly will be an HDFS dataset of some flavor (see SparkDataFrame)
@@ -56,6 +57,7 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
    * In addition return a map of type String -> AnyRef (Object in java) which will be added to
    * the output and used in the GUI node to return additional output or define visualization.
    * Default implementation returns the input DataFrame with no Addendum information.
+   * If you use this version schema inference will not work.
    * @param dataFrame - the input data
    * @param sparkUtils - a sparkUtils object including the Spark context
    * @param listener - the operator listener object which can be used to print messages to the GUI.
@@ -91,7 +93,7 @@ abstract class TemplatedSparkDataFrameRuntime[JobType <: TemplatedSparkDataFrame
 }
 
 /**
- * Job base for Spark plugin jobs taking and returning DataFrames.
+ * Job base for non-inferred Spark plugin jobs taking and returning DataFrames.
  * Note: This WILL NOT work with hive.
  */
 abstract class SparkDataFrameJob extends TemplatedSparkDataFrameJob[DataFrame, HdfsTabularDataset] {
@@ -104,6 +106,7 @@ abstract class SparkDataFrameJob extends TemplatedSparkDataFrameJob[DataFrame, H
    * the data frame as a visualization).
    * dataset). To define an addendum to create additional output use the 'TransformWithAddendum'
    * method.
+   * If you use this version schema inference will not work.
    * @param dataFrame - the input data
    * @param sparkUtils - a sparkUtils object including the Spark context
    * @param listener - the operator listener object which can be used to print messages to the GUI.
@@ -178,6 +181,37 @@ abstract class SparkDataFrameRuntime[JobType <: SparkDataFrameJob]
 }
 
 /**
+ * A class for plugins which will use Schema inference
+ */
+abstract class InferredSparkDataFrameJob extends SparkDataFrameJob {
+  /**
+   * Define the transformation from the input dataset, expressed as a dataframe, where the schema corresponds
+   * to the alpine column header to the output dataset, also as a dataframe.
+   * If you use this version schema inference will not work.
+   *
+   * @param dataFrame - the input data
+   * @param sparkUtils - a sparkUtils object including the spark context
+   * @param listener - the operator listener object which can be used to print messages to the GUI.
+   * @return
+   */
+  override def transform(operatorParameters: OperatorParameters, dataFrame: DataFrame, sparkUtils: SparkRuntimeUtils,
+    listener: OperatorListener): DataFrame = {
+    transform(operatorParameters, dataFrame, listener)
+  }
+
+  /**
+   * Define the transformation from the input dataset, expressed as a dataframe, where the schema corresponds
+   * to the alpine column header to the output dataset, also as a dataframe.
+   *
+   * @param dataFrame - the input data
+   * @param listener - the operator listener object which can be used to print messages to the GUI.
+   * @return
+   */
+  def transform(operatorParameters: OperatorParameters, dataFrame: DataFrame,
+    listener: OperatorListener): DataFrame
+}
+
+/**
  * Control the GUI of your Spark job, through this you can specify any visualization for the
  * output of your job, and what params the user will need to specify.
  */
@@ -188,10 +222,7 @@ abstract class TemplatedSparkDataFrameGUINode[StorageType <: IOBase]
 /**
  * Control the GUI of your Spark job, through this you can specify
  * any visualization for the output of your job, and what params
- * the user will need to specify. Uses the provided operator to generate
- * an updated schema, this should work for most operators but if not
- * (e.g. your operator doesn't handle empty data or output schema depends
- * on input data) then you will have to perform your own schema update.
+ * the user will need to specify.
  */
 abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
   extends TemplatedSparkDataFrameGUINode[HdfsTabularDataset]() {
@@ -267,3 +298,39 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
   }
 }
 
+/**
+ * Control the GUI of your Spark job, through this you can specify
+ * any visualization for the output of your job, and what params
+ * the user will need to specify. Uses the provided operator to generate
+ * an updated schema, this should work for most operators but if not
+ * (e.g. your operator doesn't handle empty data or output schema depends
+ * on input data) then you will have to perform your own schema update.
+ */
+abstract class InferredSparkDataFrameGUINode[Job <: InferredSparkDataFrameJob]()(implicit m: scala.reflect.Manifest[Job]) extends
+    SparkDataFrameGUINode[Job] {
+  private lazy val localSparkContext = SparkContextSingleton.getOrCreate()
+  lazy val localSqlContext = SQLContextSingleton.getOrCreate(localSparkContext)
+  lazy val sparkRuntimeUtils = new SparkRuntimeUtils(localSparkContext)
+
+  private class FakeListener() extends OperatorListener {
+    override def notifyMessage(msg: String): Unit = {}
+    override def notifyError(error: String): Unit = {}
+    override def notifyProgress(id: String, prog: Float): Unit = {}
+  }
+
+  /**
+   * Override this method to define an output schema
+   * instead of using automatic inference.
+   */
+  override def defineEntireOutputSchema(inputSchema: TabularSchema,
+    params: OperatorParameters) : TabularSchema = {
+    val sparkSchema = sparkRuntimeUtils.convertTabularSchemaToSparkSQLSchema(inputSchema)
+    val dataFrame = localSqlContext.createDataFrame(
+      localSparkContext.emptyRDD[org.apache.spark.sql.Row], sparkSchema)
+    // Apply the transformation and extract our resulting schema
+    val operator = m.erasure.newInstance.asInstanceOf[Job]
+    val outputSparkSchema = operator.transform(params, dataFrame, new FakeListener()).schema
+    sparkRuntimeUtils.convertSparkSQLSchemaToTabularSchema(
+      outputSparkSchema)
+  }
+}

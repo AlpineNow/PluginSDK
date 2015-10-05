@@ -4,22 +4,22 @@
  */
 package com.alpine.model.pack.preprocess
 
-import com.alpine.features.{FeatureDesc, IntType}
 import com.alpine.model.RowModel
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.transformer.Transformer
 
 /**
  * Model to apply one-hot encoding to categorical input features.
  * Result will be a sequence of 1s and 0s.
  */
-case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature], inputFeatures: Seq[FeatureDesc[_]],  override val identifier: String = "") extends RowModel {
+case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature], inputFeatures: Seq[ColumnDef],  override val identifier: String = "") extends RowModel {
 
   override def transformer = OneHotEncodingTransformer(oneHotEncodedFeatures)
 
-  def outputFeatures: Seq[FeatureDesc[_]] = {
+  def outputFeatures: Seq[ColumnDef] = {
     inputFeatures.indices.flatMap(i => {
       val p = oneHotEncodedFeatures(i)
-      p.hotValues.indices.map(j => new FeatureDesc(inputFeatures(i).name + "_" + j, IntType()))
+      p.hotValues.indices.map(j => new ColumnDef(inputFeatures(i).columnName + "_" + j, ColumnType.Int))
     })
   }
 
