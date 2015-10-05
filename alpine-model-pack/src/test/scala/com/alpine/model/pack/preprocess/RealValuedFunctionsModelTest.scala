@@ -4,8 +4,9 @@
  */
 package com.alpine.model.pack.preprocess
 
-import com.alpine.features.{DoubleType, FeatureDesc}
-import com.alpine.json.{JsonTestUtil, TypeWrapper}
+import com.alpine.common.serialization.json.TypeWrapper
+import com.alpine.json.JsonTestUtil
+import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
 import org.scalatest.FunSuite
 /**
  * Tests serialization of RealValuedFunctionsModel
@@ -13,7 +14,7 @@ import org.scalatest.FunSuite
  */
 class RealValuedFunctionsModelTest extends FunSuite {
 
-  val inputFeatures = Seq(FeatureDesc("x1", DoubleType()), FeatureDesc("x2", DoubleType()))
+  val inputFeatures = Seq(ColumnDef("x1", ColumnType.Double), ColumnDef("x2", ColumnType.Double))
   val functions = Seq((Exp(), 0), (Exp(), 1), (Log(), 1), (Power(2), 0))
   val model = RealValuedFunctionsModel(functions.map(t => RealFunctionWithIndex(TypeWrapper(t._1), t._2)), inputFeatures)
 

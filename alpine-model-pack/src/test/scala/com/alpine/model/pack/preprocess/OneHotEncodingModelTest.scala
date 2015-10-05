@@ -4,8 +4,8 @@
  */
 package com.alpine.model.pack.preprocess
 
-import com.alpine.features.{FeatureDesc, StringType}
 import com.alpine.json.JsonTestUtil
+import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
 import org.scalatest.FunSuite
 
 /**
@@ -18,7 +18,7 @@ class OneHotEncodingModelTest extends FunSuite {
     OneHotEncodedFeature(List("sunny", "overcast"), "rain"),
     OneHotEncodedFeature(List("true"), "false")
   ),
-    Seq(new FeatureDesc("outlook", StringType()), new FeatureDesc("wind", StringType()))
+    Seq(new ColumnDef("outlook", ColumnType.String), new ColumnDef("wind", ColumnType.String))
   )
 
   test("Serialization of the Pivot transformations should work") {

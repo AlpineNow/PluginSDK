@@ -4,7 +4,6 @@
  */
 package com.alpine.model.pack.multiple
 
-import com.alpine.features.FeatureDesc
 import com.alpine.json.JsonTestUtil
 import com.alpine.model.pack.ml.LinearRegressionModel
 import com.alpine.model.{MLModel, RowModel}
@@ -20,7 +19,7 @@ class PipelineRowModelTest extends FunSuite {
 
   val liRModel = {
     val coefficients = Seq[Double](0.9, 1, 5, -1)
-    val lirInputFeatures = oneHotEncoderModel.transformationSchema.outputFeatures.map(f => f.asInstanceOf[FeatureDesc[_ <: Number]])
+    val lirInputFeatures = oneHotEncoderModel.transformationSchema.outputFeatures
     LinearRegressionModel.make(coefficients, lirInputFeatures)
   }
 

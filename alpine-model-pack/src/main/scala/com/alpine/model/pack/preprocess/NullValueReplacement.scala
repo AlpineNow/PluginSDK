@@ -4,14 +4,14 @@
  */
 package com.alpine.model.pack.preprocess
 
-import com.alpine.features.FeatureDesc
 import com.alpine.model.RowModel
+import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.transformer.Transformer
 
 /**
  * Model that will replace null values in the input row with specified values.
  */
-case class NullValueReplacement(replacementValues: Seq[Any], inputFeatures: Seq[FeatureDesc[_]], override val identifier: String = "") extends RowModel {
+case class NullValueReplacement(replacementValues: Seq[Any], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
   override def transformer: Transformer = NullValueReplacer(this)
   override def outputFeatures = inputFeatures
 }

@@ -4,9 +4,9 @@
  */
 package com.alpine.model.pack.ml
 
-import com.alpine.features.{DoubleType, FeatureDesc}
 import com.alpine.model.RegressionRowModel
 import com.alpine.model.pack.util.TransformerUtil
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 
 /**
  * Representation of the classical linear regression model
@@ -25,14 +25,14 @@ import com.alpine.model.pack.util.TransformerUtil
  *                   so it can be used in a feature name.
  */
 case class LinearRegressionModel(coefficients: Seq[java.lang.Double],
-                                 inputFeatures: Seq[FeatureDesc[_ <: Number]],
+                                 inputFeatures: Seq[ColumnDef],
                                  intercept: Double = 0,
                                  dependentFeatureName: String = "",
                                  override val identifier: String = "") extends RegressionRowModel {
 
   override def transformer = new LinearRegressionTransformer(coefficients, intercept)
 
-  override def dependentFeature = new FeatureDesc(dependentFeatureName, DoubleType())
+  override def dependentFeature = new ColumnDef(dependentFeatureName, ColumnType.Double)
 
 }
 
@@ -52,9 +52,15 @@ object LinearRegressionModel {
    *                   so it can be used in a feature name.
    */
   def make(coefficients: Seq[Double],
-            inputFeatures: Seq[FeatureDesc[_ <: Number]],
+            inputFeatures: Seq[ColumnDef],
             intercept: Double = 0,
             dependentFeatureName: String = "", identifier: String = ""): LinearRegressionModel = {
-    LinearRegressionModel(TransformerUtil.toJavaDoubleSeq(coefficients),inputFeatures, intercept, dependentFeatureName, identifier)
+    LinearRegressionModel(
+      TransformerUtil.toJavaDoubleSeq(coefficients),
+      inputFeatures,
+      intercept,
+      dependentFeatureName,
+      identifier
+    )
   }
 }

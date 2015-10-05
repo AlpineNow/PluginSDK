@@ -4,9 +4,9 @@
  */
 package com.alpine.model.pack.ml
 
-import com.alpine.features.{FeatureDesc, StringType}
 import com.alpine.model.ClassificationRowModel
 import com.alpine.model.pack.util.TransformerUtil
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.transformer.ClassificationTransformer
 
 /**
@@ -16,13 +16,13 @@ import com.alpine.transformer.ClassificationTransformer
 case class MultiLogisticRegressionModel(singleLORs: Seq[SingleLogisticRegression],
                                       baseValue: String,
                                       dependentFeatureName: String,
-                                      inputFeatures: Seq[FeatureDesc[_ <: Number]],
+                                      inputFeatures: Seq[ColumnDef],
                                       override val identifier: String = "") extends ClassificationRowModel {
   override def transformer = LogisticRegressionTransformer(this)
 
   @transient lazy val classLabels: List[String] = (singleLORs.map(l => l.dependentValue) ++ List(baseValue)).toList
 
-  override def dependentFeature = new FeatureDesc(dependentFeatureName, StringType())
+  override def dependentFeature = new ColumnDef(dependentFeatureName, ColumnType.String)
 }
 
 /**

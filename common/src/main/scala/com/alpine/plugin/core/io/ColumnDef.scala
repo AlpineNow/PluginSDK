@@ -17,6 +17,9 @@ object ColumnType {
   val Float = TypeValue("Float")
   val Double = TypeValue("Double")
   val DateTime = TypeValue("DateTime")
+  /**
+   * Map of Strings to Doubles, serialized in standard JSON.
+   */
   val Sparse = TypeValue("Sparse")
 }
 

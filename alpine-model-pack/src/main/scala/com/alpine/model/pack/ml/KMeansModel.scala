@@ -4,9 +4,9 @@
  */
 package com.alpine.model.pack.ml
 
-import com.alpine.features.FeatureDesc
 import com.alpine.model.ClusteringRowModel
 import com.alpine.model.pack.util.TransformerUtil
+import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.transformer.ClusteringTransformer
 
 /**
@@ -22,7 +22,7 @@ import com.alpine.transformer.ClusteringTransformer
  * @param identifier
  */
 case class KMeansModel(clusters: Seq[ClusterInfo],
-                       inputFeatures: Seq[FeatureDesc[_ <: Number]],
+                       inputFeatures: Seq[ColumnDef],
                        override val identifier: String = "") extends ClusteringRowModel {
   override def classLabels: Seq[String] = clusters.map(_.name)
 

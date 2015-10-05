@@ -11,13 +11,13 @@ package com.alpine.json
 object JsonTestUtil {
 
   def testJsonization(p: Any, printJson: Boolean = false): Unit = {
-    val prettyGson = JsonUtil.prettyGsonWithTypeHints
+    val prettyGson = ModelJsonUtil.prettyGson
     val pJson: String = prettyGson.toJson(p)
     if (printJson) {
       println("Pretty json is:")
       println(pJson)
     }
-    val compactGson = JsonUtil.compactGsonWithTypeHints
+    val compactGson = ModelJsonUtil.compactGson
     val cJson = compactGson.toJson(p)
     if (printJson) {
       println()

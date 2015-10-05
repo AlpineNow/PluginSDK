@@ -4,8 +4,8 @@
  */
 package com.alpine.model
 
-import com.alpine.features.FeatureDesc
 import com.alpine.metadata.DetailedTransformationSchema
+import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.result._
 import com.alpine.transformer._
 import com.alpine.util.FeatureUtil
@@ -31,8 +31,8 @@ trait MLModel extends Serializable {
  */
 trait RowModel extends MLModel {
   def transformer: Transformer
-  def inputFeatures: Seq[FeatureDesc[_]]
-  def outputFeatures: Seq[FeatureDesc[_]]
+  def inputFeatures: Seq[ColumnDef]
+  def outputFeatures: Seq[ColumnDef]
   /**
    * Used to identify this model when in a collection of models.
    * Should be simple characters, so it can be used in a feature name.
@@ -64,7 +64,7 @@ trait ClassificationRowModel extends CategoricalRowModel {
    * so we know what feature in the test dataset to compare the result to.
    * @return Feature description used to identify the dependent feature in an evaluation dataset.
    */
-  def dependentFeature: FeatureDesc[_]
+  def dependentFeature: ColumnDef
 }
 
 trait ClusteringRowModel extends CategoricalRowModel {
@@ -80,5 +80,5 @@ trait RegressionRowModel extends RowModel {
    * so we know what feature in the test dataset to compare the result to.
    * @return Feature description used to identify the dependent feature in an evaluation dataset.
    */
-  def dependentFeature: FeatureDesc[_]
+  def dependentFeature: ColumnDef
 }

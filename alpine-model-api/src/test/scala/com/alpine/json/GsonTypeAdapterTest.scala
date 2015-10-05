@@ -4,7 +4,7 @@
  */
 package com.alpine.json
 
-import com.alpine.features._
+import com.alpine.common.serialization.json.TypeWrapper
 import com.google.gson.reflect.TypeToken
 import org.scalatest.FunSuite
 /**
@@ -13,27 +13,9 @@ import org.scalatest.FunSuite
  */
 class GsonTypeAdapterTest extends FunSuite {
 
-  test("Should wrapped types correctly") {
-    val originalStringType = StringType()
-
-    val gson = JsonUtil.prettyGson
-    val stringTypeJson = gson.toJson(TypeWrapper(StringType()))
- //   println(stringTypeJson)
-    val newObj = gson.fromJson(stringTypeJson, classOf[TypeWrapper[DataType[_]]])
-    newObj.value match {
-      case _: StringType => assert(true)
-      case _ => assert(false)
-    }
-    val newObj2 = gson.fromJson(stringTypeJson, classOf[TypeWrapper[DataType[_]]])
-    assert(newObj.value == newObj2.value)
-    assert(StringType() == newObj.value)
-    assert(originalStringType == newObj2.value)
-    assert(originalStringType == newObj.value)
-  }
-
   test("Lists serialize and deserialize properly.") {
 
-    val gson = JsonUtil.compactGson
+    val gson = ModelJsonUtil.compactGson
 
     val l1 = List("a", "c")
     val stringListType = new TypeToken[List[String]] {}.getType
@@ -50,60 +32,8 @@ class GsonTypeAdapterTest extends FunSuite {
     assert(l2 === newL2)
   }
 
-  val features = List[FeatureDesc[Any]](
-    new FeatureDesc("outlook", StringType()),
-    new FeatureDesc("temperature", LongType()),
-    new FeatureDesc("humidity", DoubleType()),
-    new FeatureDesc("wind",StringType())
-  )
-
-  private val featuresObj = new Features(features)
-
-  test("Should serialize known types correctly") {
-    val gson = JsonUtil.prettyGsonWithTypeHints
-    val stringJson = gson.toJson(featuresObj)
- //   println(stringJson)
-    val newFeatures = gson.fromJson(stringJson, classOf[Features[Any]])
-    val newFeaturesList: List[FeatureDesc[_]] = newFeatures.features
-    assert(newFeaturesList.length === features.length)
-    assert(newFeaturesList === features)
-    val expectedJson = """{
-                         |  "features": [
-                         |    {
-                         |      "name": "outlook",
-                         |      "dataType": {
-                         |        "type": "StringType",
-                         |        "data": {}
-                         |      }
-                         |    },
-                         |    {
-                         |      "name": "temperature",
-                         |      "dataType": {
-                         |        "type": "LongType",
-                         |        "data": {}
-                         |      }
-                         |    },
-                         |    {
-                         |      "name": "humidity",
-                         |      "dataType": {
-                         |        "type": "DoubleType",
-                         |        "data": {}
-                         |      }
-                         |    },
-                         |    {
-                         |      "name": "wind",
-                         |      "dataType": {
-                         |        "type": "StringType",
-                         |        "data": {}
-                         |      }
-                         |    }
-                         |  ]
-                         |}""".stripMargin
-    assert(expectedJson === stringJson)
-  }
-
   test("Should serialize unregistered types correctly - by storing class name.") {
-    val gson = JsonUtil.prettyGson
+    val gson = ModelJsonUtil.prettyGson
     val anyValues: List[TypeWrapper[Any]] = List[Any](1.3, true).map(a => TypeWrapper[Any](a))
     val anyListType = new TypeToken[List[TypeWrapper[Any]]] {}.getType
     val stringJson = gson.toJson(anyValues, anyListType)
@@ -123,15 +53,4 @@ class GsonTypeAdapterTest extends FunSuite {
     assert(expectedJson === stringJson)
   }
 
-  test("Known type keys should be unique") {
-    val expectedSize = JsonUtil.defaultKnownTypes.typeToKeyMap.size
-    assert(JsonUtil.defaultKnownTypes.typeToKeyMap.values.toSet.size === expectedSize)
-    assert(JsonUtil.defaultKnownTypes.keyToTypeMap.size === expectedSize)
-  }
-
 }
-
-/**
- * Only used for testing serialization.
- */
-case class Features[S](features: List[FeatureDesc[_ <: S]])
