@@ -53,7 +53,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
     val formats = HdfsStorageFormat.values.map(_.toString)
     operatorDialog.addDropdownBox(
       storageFormatParameterID,
-      "Storage format",
+      "Storage Format",
       formats.toSeq,
       defaultFormat.toString
     )

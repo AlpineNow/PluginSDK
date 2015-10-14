@@ -27,6 +27,7 @@ object ModelJsonUtil {
     classOf[RowModel],
     classOf[CategoricalRowModel],
     classOf[ClassificationRowModel],
+    classOf[ClusteringRowModel],
     classOf[RegressionRowModel]
   )
 
