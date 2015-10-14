@@ -3,7 +3,7 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.2",
+  version := "1.2.1",
   publishMavenStyle := true,
   pomExtra := (
     <scm>
@@ -179,6 +179,7 @@ lazy val PluginTest = Project(
   id = "plugin-test",
   base = file("plugin-test"),
   settings = Seq(
+    publishArtifact in Test := true,
     libraryDependencies ++= Seq(
       scalaTestDep,
       junitDependency
