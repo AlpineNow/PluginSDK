@@ -111,9 +111,11 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         return this.parameterMap.get(parameterId).toString();
     }
 
-    public int getIntValue(String parameterId) {
+    public Integer getIntValue(String parameterId) {
         Object parameterValue = this.parameterMap.get(parameterId);
-        if (parameterValue instanceof Double) {
+        if (parameterValue == null) {
+            return null;
+        } else if (parameterValue instanceof Double) {
             // Gson might parse an integer value as a double.
             return ((Double) parameterValue).intValue();
         } else {
@@ -121,9 +123,11 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         }
     }
 
-    public double getDoubleValue(String parameterId) {
+    public Double getDoubleValue(String parameterId) {
         Object parameterValue = this.parameterMap.get(parameterId);
-        if (parameterValue instanceof Integer) {
+        if (parameterValue == null) {
+            return null;
+        } else if (parameterValue instanceof Integer) {
             return ((Integer) parameterValue).doubleValue();
         } else {
             return (Double) parameterValue;
