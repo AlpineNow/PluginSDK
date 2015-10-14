@@ -140,25 +140,25 @@ abstract class SparkRuntimeWithIOTypedJob[
    */
   def getSparkJobConfiguration(parameters: OperatorParameters, input: I): SparkJobConfiguration = {
     // TODO: Not the best way for determining default values?
-    val numExecutors =
+    val numExecutors: Int =
       if (parameters.contains(SparkParameterUtils.sparkNumExecutorsElementId)) {
         parameters.getIntValue(SparkParameterUtils.sparkNumExecutorsElementId)
       } else {
         3
       }
-    val executorMemoryMB =
+    val executorMemoryMB: Int  =
       if (parameters.contains(SparkParameterUtils.sparkExecutorMBElementId)) {
         parameters.getIntValue(SparkParameterUtils.sparkExecutorMBElementId)
       } else {
         2048
       }
-    val driverMemoryMB =
+    val driverMemoryMB: Int  =
       if (parameters.contains(SparkParameterUtils.sparkDriverMBElementId)) {
         parameters.getIntValue(SparkParameterUtils.sparkDriverMBElementId)
       } else {
         2048
       }
-    val numExecutorCores =
+    val numExecutorCores: Int  =
       if (parameters.contains(SparkParameterUtils.sparkNumExecutorCoresElementId)) {
         parameters.getIntValue(SparkParameterUtils.sparkNumExecutorCoresElementId)
       } else {

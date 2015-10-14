@@ -11,8 +11,8 @@ object JsonTestUtil {
 
   def gsonsToTest: Seq[Gson] = {
     Seq(
-      JsonUtil.simpleGsonBuilder.create(),
-      JsonUtil.simpleGsonBuilder.setPrettyPrinting().create()
+      JsonUtil.simpleGsonBuilder().create(),
+      JsonUtil.simpleGsonBuilder().setPrettyPrinting().create()
     )
   }
   def testJsonization(p: Any, printJson: Boolean = false): Unit = {

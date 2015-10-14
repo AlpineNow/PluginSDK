@@ -48,4 +48,13 @@ trait VisualModelFactory {
    */
   def createDBTableVisualization(dbtable: DBTable): VisualModel
 
+  /**
+   * Create a visualization of an HTML text element.
+   * Use this method rather than the 'createTextVisualization' method if you want to include
+   * HTML formatting elements (like a table, or bold text) in your visualization.
+   * @param text An HTML String
+   * @return A text visualization object, which puts the html text inside of a <text> tag.
+   */
+  def createHtmlTextVisualization(text : String ) : VisualModel
+
 }

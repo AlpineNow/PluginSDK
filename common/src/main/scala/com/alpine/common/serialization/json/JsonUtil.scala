@@ -11,7 +11,7 @@ object JsonUtil {
   val typeKey: String = "type"
   val dataKey: String = "data"
 
-  def simpleGsonBuilder = {
+  def simpleGsonBuilder(classLoaderUtil: Option[ClassLoaderUtil] = None) = {
     new GsonBuilder()
       .serializeSpecialFloatingPointValues
       .addDeserializationExclusionStrategy(new SuperClassExclusionStrategy)
@@ -19,16 +19,16 @@ object JsonUtil {
       .registerTypeHierarchyAdapter(classOf[Seq[_]], new GsonSeqAdapter())
       .registerTypeHierarchyAdapter(classOf[Map[_,_]], new GsonMapAdapter())
       .registerTypeHierarchyAdapter(classOf[Option[_]], new GsonOptionAdapter())
-      .registerTypeHierarchyAdapter(classOf[TypeWrapper[_]], new GsonTypeAdapter())
+      .registerTypeHierarchyAdapter(classOf[TypeWrapper[_]], new GsonTypeAdapter(classLoaderUtil))
       .registerTypeAdapter(classOf[ColumnDef], new ColumnDefTypeAdapter)
   }
 
   def gsonBuilderWithInterfaceAdapters(classes: Seq[java.lang.reflect.Type], classLoaderUtil: Option[ClassLoaderUtil] = None): GsonBuilder = {
-    addInterfaceAdaptersToBuilder(classes, simpleGsonBuilder, classLoaderUtil)
+    addInterfaceAdaptersToBuilder(classes, simpleGsonBuilder(classLoaderUtil), classLoaderUtil)
   }
 
   def gsonBuilderWithInterfaceAdapters(classes: Seq[java.lang.reflect.Type], classLoaderUtil: ClassLoaderUtil): GsonBuilder = {
-    addInterfaceAdaptersToBuilder(classes, simpleGsonBuilder, Some(classLoaderUtil))
+    addInterfaceAdaptersToBuilder(classes, simpleGsonBuilder(Some(classLoaderUtil)), Some(classLoaderUtil))
   }
 
   private def addInterfaceAdaptersToBuilder(classes: Seq[java.lang.reflect.Type], builder: GsonBuilder, classLoaderUtil: Option[ClassLoaderUtil]): GsonBuilder = {

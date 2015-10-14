@@ -62,6 +62,7 @@ trait OperatorDialog {
    * @param dataSourceManager The data source manager that contains the information
    *                          about the available data sources as well as the
    *                          chosen data source.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception It could throw an exception if the user tried to add
    *                   more than one data source selection box to an operator
    *                   dialog object.
@@ -71,7 +72,8 @@ trait OperatorDialog {
   def addDataSourceDropdownBox(
     id: String,
     label: String,
-    dataSourceManager: OperatorDataSourceManager
+    dataSourceManager: OperatorDataSourceManager,
+    required: Boolean = true
   ): DataSourceDropdownBox
 
   /**
@@ -81,11 +83,13 @@ trait OperatorDialog {
    *           the value of this input box.
    * @param label The visual label of this input box.
    * @param defaultPath The default value to be used in the input box.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A Hdfs directory selection box element.
    */
   @throws(classOf[Exception])
-  def addHdfsDirectorySelector(id: String, label: String, defaultPath: String): HdfsFileSelector
+  def addHdfsDirectorySelector(id: String, label: String, defaultPath: String,
+                               required: Boolean = true): HdfsFileSelector
 
   /**
    * Add a Hdfs file selection box. This can be used to select an Hdfs file
@@ -94,6 +98,7 @@ trait OperatorDialog {
    *           the value of this input box.
    * @param label The visual label of this input box.
    * @param defaultPath The default value to be used in the input box.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A Hdfs file selection box element.
    */
@@ -101,8 +106,9 @@ trait OperatorDialog {
   def addHdfsFileSelector(
     id: String,
     label: String,
-    defaultPath: String
-  ): HdfsFileSelector
+    defaultPath: String,
+    required: Boolean = true
+   ): HdfsFileSelector
 
   /**
    * Add a schema selection box. This can be used to select the schema for
@@ -111,6 +117,7 @@ trait OperatorDialog {
    *           the value of this input box.
    * @param label The visual label of this input box.
    * @param defaultSchema The default value to be used in the input box.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A DB schema dropdown box element.
    */
@@ -118,7 +125,8 @@ trait OperatorDialog {
   def addDBSchemaDropdownBox(
     id: String,
     label: String,
-    defaultSchema: String
+    defaultSchema: String,
+    required: Boolean = true
   ): DBSchemaDropdownBox
 
   /**
@@ -128,13 +136,16 @@ trait OperatorDialog {
    *           the value of this input box.
    * @param label The visual label of this input box.
    * @param defaultTable The default value to be used in the input box.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A DB table dropdown box element.
    */
   @throws(classOf[Exception])
   def addDBTableDropdownBox(id: String,
     label: String,
-    defaultTable: String): DBTableDropdownBox
+    defaultTable: String,
+    required: Boolean = true
+   ): DBTableDropdownBox
 
   /**
    * Add an integer text box.
@@ -143,6 +154,7 @@ trait OperatorDialog {
    * @param min The minimum accepted value for the integer.
    * @param max The maximum accepted value for the integer.
    * @param defaultValue The default value for the integer.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return An integer box element.
    */
@@ -152,7 +164,8 @@ trait OperatorDialog {
     label: String,
     min: Int,
     max: Int,
-    defaultValue: Int
+    defaultValue: Int,
+    required: Boolean = true
   ): IntegerBox
 
   /**
@@ -164,6 +177,7 @@ trait OperatorDialog {
    * @param inclusiveMin Whether the minimum is an inclusive value.
    * @param inclusiveMax Whether the maximum is an inclusive value.
    * @param defaultValue The default value for the double.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A double box element.
    */
@@ -175,7 +189,8 @@ trait OperatorDialog {
     max: Double,
     inclusiveMin: Boolean,
     inclusiveMax: Boolean,
-    defaultValue: Double
+    defaultValue: Double,
+    required: Boolean = true
   ): DoubleBox
 
   /**
@@ -184,6 +199,7 @@ trait OperatorDialog {
    * @param label The visual label of this input box.
    * @param values Available checkbox values.
    * @param defaultSelections Default selected checkboxes.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A checkboxes element.
    */
@@ -192,7 +208,8 @@ trait OperatorDialog {
     id: String,
     label: String,
     values: Seq[String],
-    defaultSelections: Seq[String]
+    defaultSelections: Seq[String],
+    required: Boolean = true
   ): Checkboxes
 
   /**
@@ -201,6 +218,7 @@ trait OperatorDialog {
    * @param label The visual label of this input box.
    * @param values Available checkbox values.
    * @param defaultSelection Default selected button.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A radio button element.
    */
@@ -209,7 +227,8 @@ trait OperatorDialog {
     id: String,
     label: String,
     values: Seq[String],
-    defaultSelection: String
+    defaultSelection: String,
+    required: Boolean = true
   ): RadioButtons
 
   /**
@@ -218,6 +237,7 @@ trait OperatorDialog {
    * @param label The visual label of this input box.
    * @param values Available checkbox values.
    * @param defaultSelection Default selected vale.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A dropdown box element.
    */
@@ -226,7 +246,8 @@ trait OperatorDialog {
     id: String,
     label: String,
     values: Seq[String],
-    defaultSelection: String
+    defaultSelection: String,
+    required: Boolean = true
   ): DropdownBox
 
   /**
@@ -237,6 +258,7 @@ trait OperatorDialog {
    * @param regex The regular expression constraint for the input box.
    * @param width  Number of pixels for the width. 0 will use a default value.
    * @param height Number of pixels for the height. 0 will use a default value.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A string box element.
    */
@@ -247,7 +269,8 @@ trait OperatorDialog {
     defaultValue: String,
     regex: String,
     width: Int,
-    height: Int
+    height: Int,
+    required: Boolean = true
   ): StringBox
 
   /**
@@ -256,11 +279,13 @@ trait OperatorDialog {
    * use.
    * @param id String id of this input box.
    * @param label The visual label of this input box.
+   * @param required Whether the user is required to select a value for this parameter.
    * @return A parent operator dropdown box.
    */
   def addParentOperatorDropdownBox(
     id: String,
-    label: String
+    label: String,
+    required: Boolean = true
   ): ParentOperatorDropdownBox
 
   /**
@@ -279,6 +304,7 @@ trait OperatorDialog {
    *                         that there's no duplicate selections, one could
    *                         put multiple column selectors (checkboxes and/or
    *                         dropboxes) in the same group.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return An input column checkboxes element.
    */
@@ -287,7 +313,8 @@ trait OperatorDialog {
     id: String,
     label: String,
     columnFilter: ColumnFilter,
-    selectionGroupId: String
+    selectionGroupId: String,
+    required: Boolean = true
   ): TabularDatasetColumnCheckboxes
 
   /**
@@ -305,6 +332,7 @@ trait OperatorDialog {
    *                         that there's no duplicate selections, one could
    *                         put multiple column selectors (checkboxes and/or
    *                         dropboxes) in the same group.
+   * @param required Whether the user is required to select a value for this parameter.
    * @throws Exception
    * @return A single column selector dropdown box element.
    */
@@ -313,7 +341,8 @@ trait OperatorDialog {
     id: String,
     label: String,
     columnFilter: ColumnFilter,
-    selectionGroupId: String
+    selectionGroupId: String,
+    required: Boolean = true
   ): TabularDatasetColumnDropdownBox
 }
 
