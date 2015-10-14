@@ -3,7 +3,7 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.1",
+  version := "1.2",
   publishMavenStyle := true,
   pomExtra := (
     <scm>
