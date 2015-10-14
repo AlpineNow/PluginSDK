@@ -40,6 +40,8 @@ def excludeJavaxServlet(items: Seq[ModuleID]) =
 lazy val scalaMajorVersion = "2.10"
 lazy val sparkVersion = "1.5.1"
 
+useGpg := true
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 def excludeFromAll(items: Seq[ModuleID], group: String, artifacts: Seq[String]) =
   items.flatMap(x => artifacts.map(x.exclude(group, _)))
