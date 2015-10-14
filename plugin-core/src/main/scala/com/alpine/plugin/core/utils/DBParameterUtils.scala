@@ -57,7 +57,8 @@ object DBParameterUtils extends TableOutputParameterUtils {
     operatorDialog.addDBSchemaDropdownBox(
       outputSchemaParameterId,
       "Output Schema",
-      defaultSchema
+      defaultSchema,
+      required = true
     )
   }
 

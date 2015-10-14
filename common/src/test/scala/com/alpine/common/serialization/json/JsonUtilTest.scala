@@ -15,7 +15,7 @@ class JsonUtilTest extends FunSuite {
 
   test("Lists serialize and deserialize properly.") {
 
-    val gson = JsonUtil.simpleGsonBuilder.create()
+    val gson = JsonUtil.simpleGsonBuilder().create()
 
     val l1 = List("a", "c")
     val stringListType = new TypeToken[List[String]] {}.getType
@@ -33,7 +33,7 @@ class JsonUtilTest extends FunSuite {
   }
 
   test("Should serialize unregistered types correctly - by storing class name.") {
-    val gson = JsonUtil.simpleGsonBuilder.setPrettyPrinting().create()
+    val gson = JsonUtil.simpleGsonBuilder().setPrettyPrinting().create()
     val anyValues: List[TypeWrapper[Any]] = List[Any](1.3, true).map(a => TypeWrapper[Any](a))
     val anyListType = new TypeToken[List[TypeWrapper[Any]]] {}.getType
     val stringJson = gson.toJson(anyValues, anyListType)

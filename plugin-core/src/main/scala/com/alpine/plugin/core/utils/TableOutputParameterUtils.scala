@@ -10,7 +10,7 @@ import com.alpine.plugin.core.dialog.{DialogElement, OperatorDialog}
  * This is a utility class which handles adding output parameters which are standard
  * to Hive and Database plugins.
  */
-trait TableOutputParameterUtils extends OutputParameterUtils{
+trait TableOutputParameterUtils extends OutputParameterUtils {
 
   val defaultTableName = "alp@user_id_@flow_id_" + operatorNameUUIDVariable
   val resultTableNameParameterID = "resultTableName"
@@ -29,7 +29,7 @@ trait TableOutputParameterUtils extends OutputParameterUtils{
 
   def addViewOrTableRadioButton(operatorDialog: OperatorDialog): DialogElement = {
     operatorDialog.addRadioButtons(viewOrTableParameterKey,
-      "Output Type ", Seq(viewKey, tableKey), tableKey)
+      "Output Type ", Seq(viewKey, tableKey), tableKey, required = true)
   }
 
   /**
