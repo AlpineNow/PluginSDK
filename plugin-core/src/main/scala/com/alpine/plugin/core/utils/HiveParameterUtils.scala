@@ -39,9 +39,7 @@ object HiveParameterUtils extends TableOutputParameterUtils {
 
   def addResultDatabaseNameParameter(operatorDialog: OperatorDialog,
                                      defaultDatabaseName: String = defaultDatabaseName): DialogElement = {
-    val databaseName = operatorDialog.addStringBox(
-      resultDBNameParameterID, "Result Database Name", defaultDatabaseName, ".*", 0, 0
-    )
+    val databaseName = operatorDialog.addStringBox(resultDBNameParameterID, "Result Database Name", defaultDatabaseName, ".*", 0, 0)
     databaseName
   }
 

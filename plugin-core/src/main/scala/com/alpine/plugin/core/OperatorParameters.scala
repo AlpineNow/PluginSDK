@@ -69,7 +69,7 @@ trait OperatorParameters {
    *                    in the OperatorDialog object.
    * @return The parameter value as an integer.
    */
-  def getIntValue(parameterId: String): java.lang.Integer
+  def getIntValue(parameterId: String): Int
 
   /**
    * Get the value of a parameter as a double.
@@ -77,7 +77,7 @@ trait OperatorParameters {
    *                    in the OperatorDialog object.
    * @return The parameter value as a double.
    */
-  def getDoubleValue(parameterId: String): java.lang.Double
+  def getDoubleValue(parameterId: String): Double
 
   /**
    * Get an iterator of parameter Ids.

@@ -24,8 +24,7 @@ trait OutputParameterUtils {
       overwriteParameterID,
       "Overwrite Output",
       Array(trueStr, falseStr).toSeq,
-      defaultValue.toString,
-      required = true
+      defaultValue.toString
     )
     overwrite
   }

@@ -54,12 +54,7 @@ object DBParameterUtils extends TableOutputParameterUtils {
   def addDBSchemaDropDown(operatorDialog: OperatorDialog,
                           operatorDataSourceManager: OperatorDataSourceManager,
                           defaultSchema: String = defaultDatabaseName): DialogElement = {
-    operatorDialog.addDBSchemaDropdownBox(
-      outputSchemaParameterId,
-      "Output Schema",
-      defaultSchema,
-      required = true
-    )
+    operatorDialog.addDBSchemaDropdownBox(outputSchemaParameterId, "Output Schema", defaultSchema)
   }
 
   /**
