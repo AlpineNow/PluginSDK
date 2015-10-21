@@ -20,16 +20,14 @@ object SparkParameterUtils {
     defaultNumExecutors: Int,
     defaultExecutorMemoryMB: Int,
     defaultDriverMemoryMB: Int,
-    defaultNumExecutorCores: Int,
-    required: Boolean = true
+    defaultNumExecutorCores: Int
   ) {
     operatorDialog.addIntegerBox(
       sparkNumExecutorsElementId,
       "Number of Executors",
       1,
       Int.MaxValue,
-      defaultNumExecutors,
-      required
+      defaultNumExecutors
     )
 
     operatorDialog.addIntegerBox(
@@ -37,8 +35,7 @@ object SparkParameterUtils {
       "Executor Memory in MB",
       1,
       Int.MaxValue,
-      defaultExecutorMemoryMB,
-      required
+      defaultExecutorMemoryMB
     )
     
     operatorDialog.addIntegerBox(
@@ -46,8 +43,7 @@ object SparkParameterUtils {
       "Driver Memory in MB",
       1,
       Int.MaxValue,
-      defaultDriverMemoryMB,
-      required
+      defaultDriverMemoryMB
     )
     
     operatorDialog.addIntegerBox(
@@ -55,8 +51,7 @@ object SparkParameterUtils {
       "Number of Executor Cores",
       1,
       Int.MaxValue,
-      defaultNumExecutorCores,
-      required
+      defaultNumExecutorCores
     )
   }
 }
