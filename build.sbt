@@ -3,7 +3,7 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.3",
+  version := "1.4",
   publishMavenStyle := true,
   pomExtra := (
     <scm>
@@ -52,16 +52,16 @@ def excludeJPMML(items: Seq[ModuleID]) : Seq[ModuleID] = {
 
 def sparkDependencies = excludeJPMML({
   Seq(
-    "org.apache.spark" % s"spark-core_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-mllib_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-catalyst_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-sql_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-hive_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-yarn_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-unsafe_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-network-yarn_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-network-common_$scalaMajorVersion" % sparkVersion % "provided",
-    "org.apache.spark" % s"spark-network-shuffle_$scalaMajorVersion" % sparkVersion % "provided",
+    "org.apache.spark" % s"spark-core_$scalaMajorVersion" % sparkVersion,
+    "org.apache.spark" % s"spark-mllib_$scalaMajorVersion" % sparkVersion,
+    "org.apache.spark" % s"spark-catalyst_$scalaMajorVersion" % sparkVersion,
+    "org.apache.spark" % s"spark-sql_$scalaMajorVersion" % sparkVersion ,
+    "org.apache.spark" % s"spark-hive_$scalaMajorVersion" % sparkVersion,
+    "org.apache.spark" % s"spark-yarn_$scalaMajorVersion" % sparkVersion,
+    "org.apache.spark" % s"spark-unsafe_$scalaMajorVersion" % sparkVersion,
+    "org.apache.spark" % s"spark-network-yarn_$scalaMajorVersion" % sparkVersion,
+    "org.apache.spark" % s"spark-network-common_$scalaMajorVersion" % sparkVersion,
+    "org.apache.spark" % s"spark-network-shuffle_$scalaMajorVersion" % sparkVersion,
     "com.databricks" % "spark-avro_2.10" % "1.0.0",
     "com.databricks" % "spark-csv_2.10" % "1.1.0"
   )
