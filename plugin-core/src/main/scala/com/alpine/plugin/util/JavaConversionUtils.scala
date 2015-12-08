@@ -3,6 +3,8 @@
  */
 package com.alpine.plugin.util
 
+import java.util
+
 import scala.collection.JavaConversions
 
 /**
@@ -17,6 +19,46 @@ object JavaConversionUtils {
   
   def toImmutableMap[U,V](m: collection.mutable.Map[U, V]): Map[U,V] = {
     m.toMap
+  }
+
+  /**
+   * Builds a scala list natively in Java.
+   * @param javaList  objects or collection
+   * @return A Scala list containing args
+   */
+  def toSeq[T](javaList : java.util.List[T]): Seq[T] = {
+    JavaConversions.asScalaBuffer(javaList)
+  }
+
+  def toList[T](javaList: java.util.List[T]): List[T] = {
+    javaList.toArray.toList.asInstanceOf[List[T]]
+  }
+
+  def toList[T](scalaList: Seq[T]): util.Collection[T] = {
+    JavaConversions.asJavaCollection(scalaList)
+  }
+
+  /**
+   * Build a scala sequence natively in Java.
+   * Using the syntax : Seq(a1, a2, a3... )
+   * @param args Java objects or collections
+   */
+  def scalaSeq[T](args: T*): Seq[T] = {
+    args
+  }
+
+  /**
+   * Utility Function to create the scala option type None in Java
+   */
+  def None[T]: Option[T] = {
+    Option.empty
+  }
+
+  /**
+   * Utility function to create scala option type Some(Value) in Java.
+   */
+  def Some[T](value: T): Option[T] = {
+    Option.apply(value)
   }
 
 }

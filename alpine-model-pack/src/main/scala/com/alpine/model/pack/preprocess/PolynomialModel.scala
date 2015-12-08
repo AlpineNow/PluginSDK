@@ -17,9 +17,9 @@ import com.alpine.transformer.Transformer
  * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
  *
  * If the exponents are a matrix
- * [[1,2,0], [0.5,3,2]]
+ * {{{[[1,2,0], [0.5,3,2]]}}}
  * Then the transformation of a row (x1, x2, x3) will be
- * (y1, y2) = (x1 * x2 pow 2, sqrt(x1) * x2 pow 3 * x3 pow 2).
+ * {{{(y1, y2) = (x1 * x2 pow 2, sqrt(x1) * x2 pow 3 * x3 pow 2).}}}
  */
 case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
   override def transformer: Transformer = PolynomialTransformer(this)

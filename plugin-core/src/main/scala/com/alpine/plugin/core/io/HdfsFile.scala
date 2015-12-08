@@ -12,5 +12,9 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
  */
 @AlpineSdkApi
 trait HdfsFile extends IOBase {
+  /**
+    * Path specifying the location of the file in HDFS.
+    * @return Path of the file in HDFS.
+    */
   def path: String
 }

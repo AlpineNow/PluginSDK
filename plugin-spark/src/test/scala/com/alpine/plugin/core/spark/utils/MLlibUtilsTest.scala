@@ -6,11 +6,12 @@ package com.alpine.plugin.core.spark.utils
 import org.apache.spark.mllib.linalg.DenseVector
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.sql.Row
+import org.apache.spark.sql.types._
 import org.scalatest.FunSuite
 import MLlibUtils._
 
 
-class MLlibUtilsTest extends FunSuite {
+class MLlibUtilsTest extends FunSuite with SparkContextTest {
 
   test("testToLabeledPoint") {
     val toLabeledPointFunc = toLabeledPoint(dependentColumnIndex = 2 , independentColumnIndices = Array(1, 3))
@@ -27,4 +28,30 @@ class MLlibUtilsTest extends FunSuite {
     assert(anyToDouble("Help").isNaN)
   }
 
+  test("mapSeqToCorrectType") {
+    val schema = StructType(Array(
+      StructField("StringType", StringType),
+      StructField("IntType", IntegerType),
+      StructField("LongType", LongType),
+      StructField("DoubleType", DoubleType)))
+
+    val sequence = Seq(
+      Seq("thing1", 5.0, 4.0, 3.3),
+      Seq("thing2", "badValue", "badValue", "badValue"),
+      Seq("thing3", null, null, null)
+    )
+
+    val expectedRow = Set(
+      Row("thing1", 5, 4L, 3.3).mkString(" "),
+      Row("thing2", null, null, Double.NaN).mkString(" "),
+      Row("thing3", null, null, Double.NaN).mkString(" ")
+    )
+
+    val parallelSequence = sc.parallelize(sequence)
+    val newRDD = MLlibUtils.mapSeqToCorrectType(parallelSequence, schema)
+    val newDF = sqlContext.createDataFrame(newRDD, schema)
+    val result = newDF.collect().map(_.mkString(" "))
+    assert(result.length == sequence.length)
+    assert(result.toSet == expectedRow)
+  }
 }

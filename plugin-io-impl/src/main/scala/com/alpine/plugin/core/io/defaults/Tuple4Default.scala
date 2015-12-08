@@ -4,12 +4,23 @@
 
 package com.alpine.plugin.core.io.defaults
 
-import com.alpine.plugin.core.io.{IOBase, OperatorInfo, Tuple4}
+import com.alpine.plugin.core.io.{Tuple3, IOBase, OperatorInfo, Tuple4}
 
 /**
- * Default implementation.
- * Developers wanting to change behaviour can extend Tuple4.
- */
+  * Abstract implementation of [[Tuple3]].
+  * Can be extended by developers who want custom behaviour not provided by [[Tuple3Default]].
+  * @param displayName The name used to display this object in the UI.
+  * @param _1 The first element of the tuple.
+  * @param _2 The second element of the tuple.
+  * @param _3 The third element of the tuple.
+  * @param _4 The fourth element of the tuple.
+  * @param sourceOperatorInfo Information about the operator that generated this object as output.
+  * @param addendum Map containing additional information.
+  * @tparam T1 Type of the first element of the tuple.
+  * @tparam T2 Type of the second element of the tuple.
+  * @tparam T3 Type of the third element of the tuple.
+  * @tparam T4 Type of the fourth element of the tuple.
+  */
 abstract class AbstractTuple4[
 T1 <: IOBase,
 T2 <: IOBase,
@@ -26,6 +37,20 @@ T4 <: IOBase
   def elements: Seq[IOBase] = Seq(_1, _2, _3, _4)
 }
 
+/**
+  * Default implementation of [[Tuple4]].
+  * @param displayName The name used to display this object in the UI.
+  * @param _1 The first element of the tuple.
+  * @param _2 The second element of the tuple.
+  * @param _3 The third element of the tuple.
+  * @param _4 The fourth element of the tuple.
+  * @param sourceOperatorInfo Information about the operator that generated this object as output.
+  * @param addendum Map containing additional information.
+  * @tparam T1 Type of the first element of the tuple.
+  * @tparam T2 Type of the second element of the tuple.
+  * @tparam T3 Type of the third element of the tuple.
+  * @tparam T4 Type of the fourth element of the tuple.
+  */
 case class Tuple4Default[
 T1 <: IOBase,
 T2 <: IOBase,

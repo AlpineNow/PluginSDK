@@ -39,6 +39,14 @@ trait IOBase extends Serializable {
    */
   def sourceOperatorInfo: Option[OperatorInfo]
 
+  /**
+    * Used to store additional information, for example information needed for visualization.
+    *
+    * For serialization purposes, the values in the map must be simple objects -
+    * Numbers, Strings, Lists, with no custom classes.
+    *
+    * @return Map containing additional information.
+    */
   def addendum: Map[String, AnyRef]
 
 }
