@@ -1,4 +1,4 @@
-package com.alpine.plugin.test
+package com.alpine.plugin.test.mock
 
 import com.alpine.plugin.core.OperatorListener
 

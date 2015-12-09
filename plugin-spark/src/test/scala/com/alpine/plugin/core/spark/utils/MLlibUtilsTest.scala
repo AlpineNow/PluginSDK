@@ -3,15 +3,15 @@
  */
 package com.alpine.plugin.core.spark.utils
 
+import com.alpine.plugin.core.spark.utils.MLlibUtils._
 import org.apache.spark.mllib.linalg.DenseVector
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 import org.scalatest.FunSuite
-import MLlibUtils._
 
 
-class MLlibUtilsTest extends FunSuite with SparkContextTest {
+class MLlibUtilsTest extends FunSuite {
 
   test("testToLabeledPoint") {
     val toLabeledPointFunc = toLabeledPoint(dependentColumnIndex = 2 , independentColumnIndices = Array(1, 3))
@@ -29,6 +29,8 @@ class MLlibUtilsTest extends FunSuite with SparkContextTest {
   }
 
   test("mapSeqToCorrectType") {
+    import TestSparkContexts._
+
     val schema = StructType(Array(
       StructField("StringType", StringType),
       StructField("IntType", IntegerType),
@@ -54,4 +56,5 @@ class MLlibUtilsTest extends FunSuite with SparkContextTest {
     assert(result.length == sequence.length)
     assert(result.toSet == expectedRow)
   }
+
 }
