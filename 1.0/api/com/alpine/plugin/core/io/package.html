@@ -1,0 +1,552 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>io - com.alpine.plugin.core.io</title>
+          <meta name="description" content="io - com.alpine.plugin.core.io" />
+          <meta name="keywords" content="io com.alpine.plugin.core.io" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.alpine.plugin.core.io.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.plugin">plugin</a>.<a href="../package.html" class="extype" name="com.alpine.plugin.core">core</a></p>
+        <h1>io</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">io</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.plugin.core.io.ColumnDef" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ColumnDefextendsProductwithSerializable"></a>
+      <a id="ColumnDef:ColumnDef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ColumnDef.html"><span class="name">ColumnDef</span></a><span class="params">(<span name="columnName">columnName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="columnType">columnType: <a href="ColumnType$$TypeValue.html" class="extype" name="com.alpine.plugin.core.io.ColumnType.TypeValue">TypeValue</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+</p>
+    </li><li name="com.alpine.plugin.core.io.DBTable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DBTableextendsIOBase"></a>
+      <a id="DBTable:DBTable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DBTable.html"><span class="name">DBTable</span></a><span class="result"> extends <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Represents a Database Table.</p>
+    </li><li name="com.alpine.plugin.core.io.HdfsAvroDataset" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HdfsAvroDatasetextendsHdfsTabularDataset"></a>
+      <a id="HdfsAvroDataset:HdfsAvroDataset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HdfsAvroDataset.html"><span class="name">HdfsAvroDataset</span></a><span class="result"> extends <a href="HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Avro.</p>
+    </li><li name="com.alpine.plugin.core.io.HdfsDelimitedTabularDataset" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HdfsDelimitedTabularDatasetextendsHdfsTabularDataset"></a>
+      <a id="HdfsDelimitedTabularDataset:HdfsDelimitedTabularDataset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HdfsDelimitedTabularDataset.html"><span class="name">HdfsDelimitedTabularDataset</span></a><span class="result"> extends <a href="HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+</p>
+    </li><li name="com.alpine.plugin.core.io.HdfsFile" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HdfsFileextendsIOBase"></a>
+      <a id="HdfsFile:HdfsFile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HdfsFile.html"><span class="name">HdfsFile</span></a><span class="result"> extends <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+A Hdfs input/output file.</p>
+    </li><li name="com.alpine.plugin.core.io.HdfsHtmlDataset" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HdfsHtmlDatasetextendsHdfsFile"></a>
+      <a id="HdfsHtmlDataset:HdfsHtmlDataset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HdfsHtmlDataset.html"><span class="name">HdfsHtmlDataset</span></a><span class="result"> extends <a href="HdfsFile.html" class="extype" name="com.alpine.plugin.core.io.HdfsFile">HdfsFile</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+An HTML formatted dataset stored in HDFS.</p>
+    </li><li name="com.alpine.plugin.core.io.HdfsParquetDataset" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HdfsParquetDatasetextendsHdfsTabularDataset"></a>
+      <a id="HdfsParquetDataset:HdfsParquetDataset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HdfsParquetDataset.html"><span class="name">HdfsParquetDataset</span></a><span class="result"> extends <a href="HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Parquet.</p>
+    </li><li name="com.alpine.plugin.core.io.HdfsRawTextDataset" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HdfsRawTextDatasetextendsHdfsFile"></a>
+      <a id="HdfsRawTextDataset:HdfsRawTextDataset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HdfsRawTextDataset.html"><span class="name">HdfsRawTextDataset</span></a><span class="result"> extends <a href="HdfsFile.html" class="extype" name="com.alpine.plugin.core.io.HdfsFile">HdfsFile</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+An unformatted text file stored on HDFS.</p>
+    </li><li name="com.alpine.plugin.core.io.HdfsTabularDataset" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HdfsTabularDatasetextendsHdfsFilewithTabularDataset"></a>
+      <a id="HdfsTabularDataset:HdfsTabularDataset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HdfsTabularDataset.html"><span class="name">HdfsTabularDataset</span></a><span class="result"> extends <a href="HdfsFile.html" class="extype" name="com.alpine.plugin.core.io.HdfsFile">HdfsFile</a> with <a href="TabularDataset.html" class="extype" name="com.alpine.plugin.core.io.TabularDataset">TabularDataset</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Tabular dataset refers to table format datasets, such as CSV/TSV/
+Parquet/Avro, etc.</p>
+    </li><li name="com.alpine.plugin.core.io.HiveTable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HiveTableextendsIOBasewithTabularDataset"></a>
+      <a id="HiveTable:HiveTable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="HiveTable.html"><span class="name">HiveTable</span></a><span class="result"> extends <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a> with <a href="TabularDataset.html" class="extype" name="com.alpine.plugin.core.io.TabularDataset">TabularDataset</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Used to represent a Hive table.</p>
+    </li><li name="com.alpine.plugin.core.io.IOBase" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IOBaseextendsSerializable"></a>
+      <a id="IOBase:IOBase"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IOBase.html"><span class="name">IOBase</span></a><span class="result"> extends <span class="extype" name="java.io.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+All inputs and outputs to the operators should extend this class.</p>
+    </li><li name="com.alpine.plugin.core.io.IOList" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IOList[T&lt;:com.alpine.plugin.core.io.IOBase]extendsIOBase"></a>
+      <a id="IOList[T&lt;:IOBase]:IOList[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IOList.html"><span class="name">IOList</span></a><span class="tparams">[<span name="T">T &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+A list of IOBase objects.</p>
+    </li><li name="com.alpine.plugin.core.io.IONone" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IONoneextendsIOBase"></a>
+      <a id="IONone:IONone"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IONone.html"><span class="name">IONone</span></a><span class="result"> extends <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Use this to define None (no input or output).</p>
+    </li><li name="com.alpine.plugin.core.io.IOString" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="IOStringextendsIOBase"></a>
+      <a id="IOString:IOString"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IOString.html"><span class="name">IOString</span></a><span class="result"> extends <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+A simple string output.</p>
+    </li><li name="com.alpine.plugin.core.io.LocalTable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="LocalTableextendsIOBase"></a>
+      <a id="LocalTable:LocalTable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LocalTable.html"><span class="name">LocalTable</span></a><span class="result"> extends <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Local in-memory table for storing small tabular data.</p>
+    </li><li name="com.alpine.plugin.core.io.OperatorInfo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OperatorInfoextendsProductwithSerializable"></a>
+      <a id="OperatorInfo:OperatorInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorInfo.html"><span class="name">OperatorInfo</span></a><span class="params">(<span name="uuid">uuid: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.io.OperatorSchemaManager" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="OperatorSchemaManagerextendsAnyRef"></a>
+      <a id="OperatorSchemaManager:OperatorSchemaManager"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorSchemaManager.html"><span class="name">OperatorSchemaManager</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+</p>
+    </li><li name="com.alpine.plugin.core.io.Row" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RowextendsProductwithSerializable"></a>
+      <a id="Row:Row"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Row.html"><span class="name">Row</span></a><span class="params">(<span name="values">values: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Used to represent a row in a local table.</p>
+    </li><li name="com.alpine.plugin.core.io.TSVAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TSVAttributesextendsProductwithSerializable"></a>
+      <a id="TSVAttributes:TSVAttributes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TSVAttributes.html"><span class="name">TSVAttributes</span></a><span class="params">(<span name="delimiter">delimiter: <span class="extype" name="scala.Char">Char</span></span>, <span name="escapeStr">escapeStr: <span class="extype" name="scala.Char">Char</span></span>, <span name="quoteStr">quoteStr: <span class="extype" name="scala.Char">Char</span></span>, <span name="containsHeader">containsHeader: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.io.TabularDataset" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TabularDatasetextendsAnyRef"></a>
+      <a id="TabularDataset:TabularDataset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="TabularDataset.html"><span class="name">TabularDataset</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+A tabular dataset trait for Hadoop-based datasets.</p>
+    </li><li name="com.alpine.plugin.core.io.TabularFormatAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TabularFormatAttributesextendsProductwithSerializable"></a>
+      <a id="TabularFormatAttributes:TabularFormatAttributes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TabularFormatAttributes.html"><span class="name">TabularFormatAttributes</span></a><span class="params">(<span name="format">format: <a href="TabularFormat$.html#TabularFormat=com.alpine.plugin.core.io.TabularFormat.Value" class="extmbr" name="com.alpine.plugin.core.io.TabularFormat.TabularFormat">TabularFormat.TabularFormat</a></span>, <span name="attributes">attributes: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::</p>
+    </li><li name="com.alpine.plugin.core.io.TabularSchema" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TabularSchemaextendsProductwithSerializable"></a>
+      <a id="TabularSchema:TabularSchema"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TabularSchema.html"><span class="name">TabularSchema</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+</p>
+    </li><li name="com.alpine.plugin.core.io.Tuple" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TupleextendsIOBase"></a>
+      <a id="Tuple:Tuple"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Tuple.html"><span class="name">Tuple</span></a><span class="result"> extends <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+</p>
+    </li><li name="com.alpine.plugin.core.io.Tuple2" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Tuple2[T1&lt;:com.alpine.plugin.core.io.IOBase,T2&lt;:com.alpine.plugin.core.io.IOBase]extendsTuple"></a>
+      <a id="Tuple2[T1&lt;:IOBase,T2&lt;:IOBase]:Tuple2[T1,T2]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Tuple2.html"><span class="name">Tuple2</span></a><span class="tparams">[<span name="T1">T1 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="T2">T2 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="Tuple.html" class="extype" name="com.alpine.plugin.core.io.Tuple">Tuple</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+This is the interface for a pair input/output.</p>
+    </li><li name="com.alpine.plugin.core.io.Tuple3" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Tuple3[T1&lt;:com.alpine.plugin.core.io.IOBase,T2&lt;:com.alpine.plugin.core.io.IOBase,T3&lt;:com.alpine.plugin.core.io.IOBase]extendsTuple"></a>
+      <a id="Tuple3[T1&lt;:IOBase,T2&lt;:IOBase,T3&lt;:IOBase]:Tuple3[T1,T2,T3]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Tuple3.html"><span class="name">Tuple3</span></a><span class="tparams">[<span name="T1">T1 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="T2">T2 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="T3">T3 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="Tuple.html" class="extype" name="com.alpine.plugin.core.io.Tuple">Tuple</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+This is the interface for a triple input/output.</p>
+    </li><li name="com.alpine.plugin.core.io.Tuple4" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Tuple4[T1&lt;:com.alpine.plugin.core.io.IOBase,T2&lt;:com.alpine.plugin.core.io.IOBase,T3&lt;:com.alpine.plugin.core.io.IOBase,T4&lt;:com.alpine.plugin.core.io.IOBase]extendsTuple"></a>
+      <a id="Tuple4[T1&lt;:IOBase,T2&lt;:IOBase,T3&lt;:IOBase,T4&lt;:IOBase]:Tuple4[T1,T2,T3,T4]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Tuple4.html"><span class="name">Tuple4</span></a><span class="tparams">[<span name="T1">T1 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="T2">T2 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="T3">T3 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="T4">T4 &lt;: <a href="IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="Tuple.html" class="extype" name="com.alpine.plugin.core.io.Tuple">Tuple</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+This is the interface for the quadruplet input/output.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.plugin.core.io.ColumnType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ColumnType"></a>
+      <a id="ColumnType:ColumnType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ColumnType$.html"><span class="name">ColumnType</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.io.HiveTable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="HiveTable"></a>
+      <a id="HiveTable:HiveTable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="HiveTable$.html"><span class="name">HiveTable</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Contains helper methods for HiveTable.</p>
+    </li><li name="com.alpine.plugin.core.io.TSVAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TSVAttributes"></a>
+      <a id="TSVAttributes:TSVAttributes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TSVAttributes$.html"><span class="name">TSVAttributes</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.io.TabularFormat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TabularFormat"></a>
+      <a id="TabularFormat:TabularFormat"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TabularFormat$.html"><span class="name">TabularFormat</span></a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+This is used to provide the format hint to the next operator during the
+design time (within the editor workflow).</p>
+    </li><li name="com.alpine.plugin.core.io.TabularFormatAttributes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TabularFormatAttributes"></a>
+      <a id="TabularFormatAttributes:TabularFormatAttributes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TabularFormatAttributes$.html"><span class="name">TabularFormatAttributes</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+</p>
+    </li><li name="com.alpine.plugin.core.io.TabularSchema" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TabularSchema"></a>
+      <a id="TabularSchema:TabularSchema"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TabularSchema$.html"><span class="name">TabularSchema</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.io.defaults" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="defaults"></a>
+      <a id="defaults:defaults"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="defaults/package.html"><span class="name">defaults</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../../lib/template.js"></script>
+    </body>
+      </html>
