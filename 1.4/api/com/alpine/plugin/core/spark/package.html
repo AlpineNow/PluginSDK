@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>spark - com.alpine.plugin.core.spark</title>
+          <meta name="description" content="spark - com.alpine.plugin.core.spark" />
+          <meta name="keywords" content="spark com.alpine.plugin.core.spark" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.alpine.plugin.core.spark.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.plugin">plugin</a>.<a href="../package.html" class="extype" name="com.alpine.plugin.core">core</a></p>
+        <h1>spark</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">spark</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.plugin.core.spark.SparkExecutionContext" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SparkExecutionContextextendsExecutionContext"></a>
+      <a id="SparkExecutionContext:SparkExecutionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkExecutionContext.html"><span class="name">SparkExecutionContext</span></a><span class="result"> extends <a href="../ExecutionContext.html" class="extype" name="com.alpine.plugin.core.ExecutionContext">ExecutionContext</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+</p>
+    </li><li name="com.alpine.plugin.core.spark.SparkIOTypedPluginJob" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SparkIOTypedPluginJob[I,O]extendsAnyRef"></a>
+      <a id="SparkIOTypedPluginJob[I,O]:SparkIOTypedPluginJob[I,O]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkIOTypedPluginJob.html"><span class="name">SparkIOTypedPluginJob</span></a><span class="tparams">[<span name="I">I</span>, <span name="O">O</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::</p>
+    </li><li name="com.alpine.plugin.core.spark.SparkJobConfiguration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SparkJobConfigurationextendsProductwithSerializable"></a>
+      <a id="SparkJobConfiguration:SparkJobConfiguration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkJobConfiguration.html"><span class="name">SparkJobConfiguration</span></a><span class="params">(<span name="numExecutors">numExecutors: <span class="extype" name="scala.Int">Int</span></span>, <span name="executorMemoryMB">executorMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="driverMemoryMB">driverMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="numExecutorCores">numExecutorCores: <span class="extype" name="scala.Int">Int</span></span>, <span name="additionalParameters">additionalParameters: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="defval" name="scala.collection.mutable.Map.apply[String, String]()">...</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Spark job configuration.</p>
+    </li><li name="com.alpine.plugin.core.spark.SparkPluginJob" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SparkPluginJobextendsAnyRef"></a>
+      <a id="SparkPluginJob:SparkPluginJob"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkPluginJob.html"><span class="name">SparkPluginJob</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+This is the Spark Job base class.</p>
+    </li><li name="com.alpine.plugin.core.spark.SparkRuntime" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SparkRuntime[I&lt;:com.alpine.plugin.core.io.IOBase,O&lt;:com.alpine.plugin.core.io.IOBase]extendsOperatorRuntime[com.alpine.plugin.core.spark.SparkExecutionContext,I,O]"></a>
+      <a id="SparkRuntime[I&lt;:IOBase,O&lt;:IOBase]:SparkRuntime[I,O]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkRuntime.html"><span class="name">SparkRuntime</span></a><span class="tparams">[<span name="I">I &lt;: <a href="../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="O">O &lt;: <a href="../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="../OperatorRuntime.html" class="extype" name="com.alpine.plugin.core.OperatorRuntime">OperatorRuntime</a>[<a href="SparkExecutionContext.html" class="extype" name="com.alpine.plugin.core.spark.SparkExecutionContext">SparkExecutionContext</a>, <span class="extype" name="com.alpine.plugin.core.spark.SparkRuntime.I">I</span>, <span class="extype" name="com.alpine.plugin.core.spark.SparkRuntime.O">O</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Defines the behavior of your plugin after the end user 'runs' it from the GUI.</p>
+    </li><li name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SparkRuntimeWithIOTypedJob[J&lt;:com.alpine.plugin.core.spark.SparkIOTypedPluginJob[I,O],I&lt;:com.alpine.plugin.core.io.IOBase,O&lt;:com.alpine.plugin.core.io.IOBase]extendsOperatorRuntime[com.alpine.plugin.core.spark.SparkExecutionContext,I,O]"></a>
+      <a id="SparkRuntimeWithIOTypedJob[J&lt;:SparkIOTypedPluginJob[I,O],I&lt;:IOBase,O&lt;:IOBase]:SparkRuntimeWithIOTypedJob[J,I,O]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkRuntimeWithIOTypedJob.html"><span class="name">SparkRuntimeWithIOTypedJob</span></a><span class="tparams">[<span name="J">J &lt;: <a href="SparkIOTypedPluginJob.html" class="extype" name="com.alpine.plugin.core.spark.SparkIOTypedPluginJob">SparkIOTypedPluginJob</a>[<span class="extype" name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob.I">I</span>, <span class="extype" name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob.O">O</span>]</span>, <span name="I">I &lt;: <a href="../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="O">O &lt;: <a href="../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="../OperatorRuntime.html" class="extype" name="com.alpine.plugin.core.OperatorRuntime">OperatorRuntime</a>[<a href="SparkExecutionContext.html" class="extype" name="com.alpine.plugin.core.spark.SparkExecutionContext">SparkExecutionContext</a>, <span class="extype" name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob.I">I</span>, <span class="extype" name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob.O">O</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A descendant of SparkRuntime which handles the most straightforward runtime behavior,
+submitting a Spark job with the input of your plugin and returning the output type.</p>
+    </li><li name="com.alpine.plugin.core.spark.SubmittedSparkJob" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SubmittedSparkJob[O]extendsAnyRef"></a>
+      <a id="SubmittedSparkJob[O]:SubmittedSparkJob[O]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SubmittedSparkJob.html"><span class="name">SubmittedSparkJob</span></a><span class="tparams">[<span name="O">O</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.plugin.core.spark.templates" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="templates"></a>
+      <a id="templates:templates"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="templates/package.html"><span class="name">templates</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.spark.utils" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="utils"></a>
+      <a id="utils:utils"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="utils/package.html"><span class="name">utils</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../../lib/template.js"></script>
+    </body>
+      </html>

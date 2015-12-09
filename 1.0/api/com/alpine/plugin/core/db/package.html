@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>db - com.alpine.plugin.core.db</title>
+          <meta name="description" content="db - com.alpine.plugin.core.db" />
+          <meta name="keywords" content="db com.alpine.plugin.core.db" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.alpine.plugin.core.db.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.plugin">plugin</a>.<a href="../package.html" class="extype" name="com.alpine.plugin.core">core</a></p>
+        <h1>db</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">db</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.plugin.core.db.DBConnectionInfo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DBConnectionInfoextendsProductwithSerializable"></a>
+      <a id="DBConnectionInfo:DBConnectionInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DBConnectionInfo.html"><span class="name">DBConnectionInfo</span></a><span class="params">(<span name="connection">connection: <span class="extype" name="java.sql.Connection">Connection</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="userName">userName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="password">password: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+DB connection and related info.</p>
+    </li><li name="com.alpine.plugin.core.db.DBExecutionContext" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DBExecutionContextextendsExecutionContext"></a>
+      <a id="DBExecutionContext:DBExecutionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="DBExecutionContext.html"><span class="name">DBExecutionContext</span></a><span class="result"> extends <a href="../ExecutionContext.html" class="extype" name="com.alpine.plugin.core.ExecutionContext">ExecutionContext</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+For Database operators.</p>
+    </li><li name="com.alpine.plugin.core.db.DBRuntime" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DBRuntime[I&lt;:com.alpine.plugin.core.io.IOBase,O&lt;:com.alpine.plugin.core.io.IOBase]extendsOperatorRuntime[com.alpine.plugin.core.db.DBExecutionContext,I,O]"></a>
+      <a id="DBRuntime[I&lt;:IOBase,O&lt;:IOBase]:DBRuntime[I,O]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DBRuntime.html"><span class="name">DBRuntime</span></a><span class="tparams">[<span name="I">I &lt;: <a href="../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="O">O &lt;: <a href="../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="../OperatorRuntime.html" class="extype" name="com.alpine.plugin.core.OperatorRuntime">OperatorRuntime</a>[<a href="DBExecutionContext.html" class="extype" name="com.alpine.plugin.core.db.DBExecutionContext">DBExecutionContext</a>, <span class="extype" name="com.alpine.plugin.core.db.DBRuntime.I">I</span>, <span class="extype" name="com.alpine.plugin.core.db.DBRuntime.O">O</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">:: AlpineSdkApi ::
+Defines a database operators runtime behavior.</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../../lib/template.js"></script>
+    </body>
+      </html>
