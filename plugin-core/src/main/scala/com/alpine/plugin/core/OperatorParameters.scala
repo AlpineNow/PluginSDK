@@ -42,6 +42,8 @@ trait OperatorParameters {
 
   /**
    * Get the selected columns from a tabular dataset output of an input operator.
+   * NOTE: If the parameter was not required and the user did not input a value then this method
+   * will return and empty array.
    * @param parameterId The parameter Id of the column checkboxes dialog element.
    * @return A tuple of a source operator name and an array of selected column
    *         names.
@@ -50,6 +52,8 @@ trait OperatorParameters {
 
   /**
    * Get the selected column from a tabular dataset output of an input operator.
+   * NOTE: If the parameter was not required and the user didn't select a column this will return
+   * an empty string.
    * @param parameterId The parameter Id of the column dropdown dialog element.
    * @return A tuple of a source operator name and a selected column name.
    */

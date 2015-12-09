@@ -189,7 +189,6 @@ lazy val PluginTest = Project(
 
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)
-  // Comment this out in adl, because it is not the official repo.
 //  .settings(site.settings ++ ghpages.settings: _*)
 //  .settings(
 //    site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),

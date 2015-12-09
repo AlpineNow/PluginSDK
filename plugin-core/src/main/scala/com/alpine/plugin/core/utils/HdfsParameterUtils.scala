@@ -2,7 +2,6 @@
  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
  */
 package com.alpine.plugin.core.utils
-
 import com.alpine.plugin.core.OperatorParameters
 import com.alpine.plugin.core.dialog._
 import com.alpine.plugin.core.io.TabularFormatAttributes
@@ -92,6 +91,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
     outputDirectorySelector
   }
 
+
   /**
    * Returns the String parameter value corresponding to id "outputDirectory", or empty String
    * if that parameter is not present.
@@ -159,5 +159,38 @@ object HdfsParameterUtils extends OutputParameterUtils {
       case HdfsStorageFormat.Avro => TabularFormatAttributes.createAvroFormat()
       case HdfsStorageFormat.TSV => TabularFormatAttributes.createTSVFormat()
     }
+  }
+
+  //bad data Reporting:
+  val badDataReportParameterID = "badData"
+  val badDataReportNO = "No"
+  val badDataReportALL = "All data"
+  val DEFAULT_NUMBER_ROWS = 1000
+  val badDataReportNROWS = "First " + DEFAULT_NUMBER_ROWS +" rows"
+  val badDataParameterOptions = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL)
+
+  val badDataLocation = "_BadData"
+
+  def addBadDataReportParameter(operatorDialog: OperatorDialog) : DialogElement = {
+    val badDataSelector = operatorDialog.addDropdownBox(badDataReportParameterID,
+      "Write bad data to file", badDataParameterOptions, badDataReportNO)
+    badDataSelector
+  }
+
+  def getAmountOfBadDataToWrite(parameters: OperatorParameters) : Option[Long] = {
+    val paramValue = parameters.getStringValue(badDataReportParameterID)
+    if(paramValue.equals(badDataReportNO)) {
+      None
+    } else if(paramValue.equals(badDataReportNROWS)){
+      Some(DEFAULT_NUMBER_ROWS)
+    } else {
+      Some(Long.MaxValue)
+    }
+
+  }
+
+  def getBadDataPath(parameters: OperatorParameters) : String = {
+    val outputPath = HdfsParameterUtils.getOutputPath(parameters)
+    outputPath + badDataLocation
   }
 }
