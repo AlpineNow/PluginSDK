@@ -14,7 +14,7 @@ import com.alpine.result.{ClusteringResult, CategoricalResult, RealResult, MLRes
 trait Transformer extends Serializable {
 
   /**
-   * Shorthand for the input / output type of the [[apply(row: Row)]] method.
+   * Shorthand for the input / output type of the apply method.
    * Equivalent to Seq[Any].
    */
   type Row = Seq[Any]

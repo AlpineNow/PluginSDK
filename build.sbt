@@ -185,7 +185,7 @@ lazy val PluginTest = Project(
       junitDependency
     ) ++ miniClusterDependencies
   ) ++ publishParameters("plugin-test")
-).dependsOn(PluginCore, PluginSpark, PluginIOImpl)
+).dependsOn(PluginCore, PluginSpark % "test->compile;test->test", PluginIOImpl)
 
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)

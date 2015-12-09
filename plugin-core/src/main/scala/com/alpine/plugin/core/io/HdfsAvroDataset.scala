@@ -6,6 +6,7 @@ package com.alpine.plugin.core.io
 
 /**
  * :: AlpineSdkApi ::
- * Avro.
+ * Represents a tabular dataset stored in HDFS using
+ * Avro serialization.
  */
 trait HdfsAvroDataset extends HdfsTabularDataset

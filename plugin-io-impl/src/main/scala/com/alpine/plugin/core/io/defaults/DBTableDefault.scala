@@ -7,9 +7,17 @@ package com.alpine.plugin.core.io.defaults
 import com.alpine.plugin.core.io.{DBTable, OperatorInfo, TabularSchema}
 
 /**
- * Default implementation is DBTableDefault.
- * Developers wanting to change behaviour can extend AbstractDBTable.
- */
+  * Abstract implementation of [[DBTable]].
+  * Can be extended by developers who want custom behaviour not provided by [[DBTableDefault]].
+  * @param schemaName Name of the schema containing the table.
+  * @param tableName Name of the table.
+  * @param tabularSchema Description of the column structure of the file.
+  * @param isView Boolean indicating whether this is a view (not materialised). Otherwise, taken to be a table.
+  * @param dbName Name of the database.
+  * @param dbURL URL of the database.
+  * @param sourceOperatorInfo Information about the operator that generated this object as output.
+  * @param addendum Map containing additional information.
+  */
 abstract class AbstractDBTable(val schemaName: String,
                                val tableName: String,
                                val tabularSchema: TabularSchema,
@@ -22,6 +30,17 @@ abstract class AbstractDBTable(val schemaName: String,
   override def displayName: String = tableName
 }
 
+/**
+  * Default implementation of [[DBTable]].
+  * @param schemaName Name of the schema containing the table.
+  * @param tableName Name of the table.
+  * @param tabularSchema Description of the column structure of the file.
+  * @param isView Boolean indicating whether this is a view (not materialised). Otherwise, taken to be a table.
+  * @param dbName Name of the database.
+  * @param dbURL URL of the database.
+  * @param sourceOperatorInfo Information about the operator that generated this object as output.
+  * @param addendum Map containing additional information.
+  */
 case class DBTableDefault(override val schemaName: String,
                           override val tableName: String,
                           override val tabularSchema: TabularSchema,

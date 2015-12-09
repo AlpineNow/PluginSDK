@@ -122,7 +122,7 @@ abstract class SparkRuntimeWithIOTypedJob[
 
   /**
    * The default implementation looks for the parameter values that would be included
-   * by [[com.alpine.plugin.core.utils.SparkParameterUtils.addStandardSparkOptions()]].
+   * by [[com.alpine.plugin.core.utils.SparkParameterUtils.addStandardSparkOptions]].
    * This covers:
    * -- Number of Spark Executors
    * -- Memory per Executor in MB.

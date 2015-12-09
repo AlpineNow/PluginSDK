@@ -7,9 +7,13 @@ package com.alpine.plugin.core.io.defaults
 import com.alpine.plugin.core.io.{HdfsAvroDataset, OperatorInfo, TabularSchema}
 
 /**
- * Default implementation.
- * Developers wanting to change behaviour can extend HdfsAvroDataset.
- */
+  * Abstract implementation of [[HdfsAvroDataset]].
+  * Can be extended by developers who want custom behaviour not provided by [[HdfsAvroDatasetDefault]].
+  * @param path Path of the file in HDFS.
+  * @param tabularSchema Description of the column structure of the file.
+  * @param sourceOperatorInfo Information about the operator that generated this object as output.
+  * @param addendum Map containing additional information.
+  */
 abstract class AbstractHdfsAvroDataset(
   val path: String,
   val tabularSchema: TabularSchema,
@@ -19,6 +23,13 @@ abstract class AbstractHdfsAvroDataset(
     override def displayName: String = path
 }
 
+/**
+  * Default implementation of [[HdfsAvroDataset]].
+  * @param path Path of the file in HDFS.
+  * @param tabularSchema Description of the column structure of the file.
+  * @param sourceOperatorInfo Information about the operator that generated this object as output.
+  * @param addendum Map containing additional information.
+  */
 case class HdfsAvroDatasetDefault(
   override val path: String,
   override val tabularSchema: TabularSchema,

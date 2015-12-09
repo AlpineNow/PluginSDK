@@ -7,9 +7,15 @@ package com.alpine.plugin.core.io.defaults
 import com.alpine.plugin.core.io.{HiveTable, OperatorInfo, TabularSchema}
 
 /**
- * Default implementation.
- * Developers wanting to change behaviour can extend HiveTable.
- */
+  * Abstract implementation of [[HiveTable]].
+  * Can be extended by developers who want custom behaviour not provided by [[HiveTableDefault]].
+  *
+  * @param tableName Name of the table.
+  * @param dbName Name of the database (sometimes referred to as "schema") containing the table.
+  * @param tabularSchema Description of the column structure of the file.
+  * @param sourceOperatorInfo Information about the operator that generated this object as output.
+  * @param addendum Map containing additional information.
+  */
 abstract class AbstractHiveTable(
   val tableName: String,
   val dbName: Option[String],
@@ -20,6 +26,15 @@ abstract class AbstractHiveTable(
   def getConcatenatedName: String = HiveTable.getConcatenatedName(tableName, dbName)
   def displayName: String = getConcatenatedName
 }
+
+/**
+  * Default implementation of [[HiveTable]].
+  * @param tableName Name of the table.
+  * @param dbName Name of the database (sometimes referred to as "schema") containing the table.
+  * @param tabularSchema Description of the column structure of the file.
+  * @param sourceOperatorInfo Information about the operator that generated this object as output.
+  * @param addendum Map containing additional information.
+  */
 case class HiveTableDefault(
   override val tableName: String,
   override val dbName: Option[String],
