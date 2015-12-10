@@ -3,22 +3,20 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.4",
+  version := "1.4.1-alpha",
   publishMavenStyle := true,
-  pomExtra := (
-    <scm>
+  pomExtra := <scm>
     <url>git@github.com:AlpineNow/PluginSDK.git</url>
     <connection>scm:git@github.com:AlpineNow/PluginSDK.git</connection>
   </scm>
-  <developers>
-    <developer>
-      <id>alpine</id>
-      <name>alpine</name>
-      <url>http://www.alpinenow.com</url>
-      <email>support@alpinenow.com</email>
-    </developer>
-  </developers>
-  ),
+    <developers>
+      <developer>
+        <id>alpine</id>
+        <name>alpine</name>
+        <url>http://www.alpinenow.com</url>
+        <email>support@alpinenow.com</email>
+      </developer>
+    </developers>,
   homepage := Some(url("https://github.com/AlpineNow/PluginSDK")),
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
@@ -185,7 +183,7 @@ lazy val PluginTest = Project(
       junitDependency
     ) ++ miniClusterDependencies
   ) ++ publishParameters("plugin-test")
-).dependsOn(PluginCore, PluginSpark % "test->compile;test->test", PluginIOImpl)
+).dependsOn(PluginCore, PluginSpark % "test->test", PluginIOImpl)
 
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)
