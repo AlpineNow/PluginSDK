@@ -1,4 +1,4 @@
-/**
+/*
  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
  */
 
@@ -7,7 +7,6 @@ package com.alpine.plugin.test.mock;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import com.alpine.plugin.core.io.OperatorInfo;
 import scala.Tuple2;
