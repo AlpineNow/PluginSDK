@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>ml - com.alpine.model.pack.ml</title>
+          <meta name="description" content="ml - com.alpine.model.pack.ml" />
+          <meta name="keywords" content="ml com.alpine.model.pack.ml" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.alpine.model.pack.ml.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.model">model</a>.<a href="../package.html" class="extype" name="com.alpine.model.pack">pack</a></p>
+        <h1>ml</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ml</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.model.pack.ml.ClusterInfo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClusterInfoextendsProductwithSerializable"></a>
+      <a id="ClusterInfo:ClusterInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ClusterInfo.html"><span class="name">ClusterInfo</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="centroid">centroid: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Representation of a single cluster.</p>
+    </li><li name="com.alpine.model.pack.ml.KMeansModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="KMeansModelextendsClusteringRowModelwithProductwithSerializable"></a>
+      <a id="KMeansModel:KMeansModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="KMeansModel.html"><span class="name">KMeansModel</span></a><span class="params">(<span name="clusters">clusters: <span class="extype" name="scala.Seq">Seq</span>[<a href="ClusterInfo.html" class="extype" name="com.alpine.model.pack.ml.ClusterInfo">ClusterInfo</a>]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a>]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../ClusteringRowModel.html" class="extype" name="com.alpine.model.ClusteringRowModel">ClusteringRowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A model representing results of the K-Means clustering algorithm.</p>
+    </li><li name="com.alpine.model.pack.ml.KMeansTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="KMeansTransformerextendsClusteringTransformerwithProductwithSerializable"></a>
+      <a id="KMeansTransformer:KMeansTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="KMeansTransformer.html"><span class="name">KMeansTransformer</span></a><span class="params">(<span name="model">model: <a href="KMeansModel.html" class="extype" name="com.alpine.model.pack.ml.KMeansModel">KMeansModel</a></span>)</span><span class="result"> extends <a href="../../../transformer/ClusteringTransformer.html" class="extype" name="com.alpine.transformer.ClusteringTransformer">ClusteringTransformer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.ml.LinearRegressionModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LinearRegressionModelextendsRegressionRowModelwithProductwithSerializable"></a>
+      <a id="LinearRegressionModel:LinearRegressionModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LinearRegressionModel.html"><span class="name">LinearRegressionModel</span></a><span class="params">(<span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a>]</span>, <span name="intercept">intercept: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>, <span name="dependentFeatureName">dependentFeatureName: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Representation of the classical linear regression model
+y = intercept + a_0 x_0 + a_1 x_1 + .</p>
+    </li><li name="com.alpine.model.pack.ml.LinearRegressionTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LinearRegressionTransformerextendsRegressionTransformer"></a>
+      <a id="LinearRegressionTransformer:LinearRegressionTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="LinearRegressionTransformer.html"><span class="name">LinearRegressionTransformer</span></a><span class="result"> extends <a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Applies a Linear Regression model specified by the coefficients and intercept
+to a row of numeric data.</p>
+    </li><li name="com.alpine.model.pack.ml.LogisticRegressionTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LogisticRegressionTransformerextendsClassificationTransformerwithProductwithSerializable"></a>
+      <a id="LogisticRegressionTransformer:LogisticRegressionTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LogisticRegressionTransformer.html"><span class="name">LogisticRegressionTransformer</span></a><span class="params">(<span name="model">model: <a href="MultiLogisticRegressionModel.html" class="extype" name="com.alpine.model.pack.ml.MultiLogisticRegressionModel">MultiLogisticRegressionModel</a></span>)</span><span class="result"> extends <a href="../../../transformer/ClassificationTransformer.html" class="extype" name="com.alpine.transformer.ClassificationTransformer">ClassificationTransformer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.ml.MultiLogisticRegressionModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MultiLogisticRegressionModelextendsClassificationRowModelwithProductwithSerializable"></a>
+      <a id="MultiLogisticRegressionModel:MultiLogisticRegressionModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MultiLogisticRegressionModel.html"><span class="name">MultiLogisticRegressionModel</span></a><span class="params">(<span name="singleLORs">singleLORs: <span class="extype" name="scala.Seq">Seq</span>[<a href="SingleLogisticRegression.html" class="extype" name="com.alpine.model.pack.ml.SingleLogisticRegression">SingleLogisticRegression</a>]</span>, <span name="baseValue">baseValue: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dependentFeatureName">dependentFeatureName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a>]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../ClassificationRowModel.html" class="extype" name="com.alpine.model.ClassificationRowModel">ClassificationRowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt"></p>
+    </li><li name="com.alpine.model.pack.ml.SingleLogisticRegression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SingleLogisticRegressionextendsProductwithSerializable"></a>
+      <a id="SingleLogisticRegression:SingleLogisticRegression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SingleLogisticRegression.html"><span class="name">SingleLogisticRegression</span></a><span class="params">(<span name="dependentValue">dependentValue: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="coefficients">coefficients: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="java.lang.Double">Double</span>]</span>, <span name="bias">bias: <span class="extype" name="scala.Double">Double</span> = <span class="symbol">0</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a SingleLogisticRegression to be used as one of several in a MultiLogisticRegressionModel.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.model.pack.ml.LinearRegressionModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LinearRegressionModel"></a>
+      <a id="LinearRegressionModel:LinearRegressionModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="LinearRegressionModel$.html"><span class="name">LinearRegressionModel</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../../lib/template.js"></script>
+    </body>
+      </html>
