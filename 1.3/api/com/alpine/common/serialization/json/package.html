@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>json - com.alpine.common.serialization.json</title>
+          <meta name="description" content="json - com.alpine.common.serialization.json" />
+          <meta name="keywords" content="json com.alpine.common.serialization.json" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.alpine.common.serialization.json.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.common">common</a>.<a href="../package.html" class="extype" name="com.alpine.common.serialization">serialization</a></p>
+        <h1>json</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">json</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.common.serialization.json.ClassLoaderUtil" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClassLoaderUtilextendsAnyRef"></a>
+      <a id="ClassLoaderUtil:ClassLoaderUtil"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassLoaderUtil.html"><span class="name">ClassLoaderUtil</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.common.serialization.json.ColumnDefTypeAdapter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ColumnDefTypeAdapterextendsJsonSerializer[com.alpine.plugin.core.io.ColumnDef]withJsonDeserializer[com.alpine.plugin.core.io.ColumnDef]"></a>
+      <a id="ColumnDefTypeAdapter:ColumnDefTypeAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ColumnDefTypeAdapter.html"><span class="name">ColumnDefTypeAdapter</span></a><span class="result"> extends <span class="extype" name="com.google.gson.JsonSerializer">JsonSerializer</span>[<a href="../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a>] with <span class="extype" name="com.google.gson.JsonDeserializer">JsonDeserializer</span>[<a href="../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.common.serialization.json.GsonMapAdapter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GsonMapAdapterextendsJsonSerializer[Map[_,_]]withJsonDeserializer[Map[_,_]]"></a>
+      <a id="GsonMapAdapter:GsonMapAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="GsonMapAdapter.html"><span class="name">GsonMapAdapter</span></a><span class="result"> extends <span class="extype" name="com.google.gson.JsonSerializer">JsonSerializer</span>[<span class="extype" name="scala.Predef.Map">Map</span>[_, _]] with <span class="extype" name="com.google.gson.JsonDeserializer">JsonDeserializer</span>[<span class="extype" name="scala.Predef.Map">Map</span>[_, _]]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gson adapter used to serialize and serialize <span class="extype" name="scala.collection.Map">scala.collection.Map</span> to and from JSON.</p>
+    </li><li name="com.alpine.common.serialization.json.GsonOptionAdapter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GsonOptionAdapterextendsJsonSerializer[Option[_]]withJsonDeserializer[Option[_]]withProductwithSerializable"></a>
+      <a id="GsonOptionAdapter:GsonOptionAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GsonOptionAdapter.html"><span class="name">GsonOptionAdapter</span></a><span class="params">()</span><span class="result"> extends <span class="extype" name="com.google.gson.JsonSerializer">JsonSerializer</span>[<span class="extype" name="scala.Option">Option</span>[_]] with <span class="extype" name="com.google.gson.JsonDeserializer">JsonDeserializer</span>[<span class="extype" name="scala.Option">Option</span>[_]] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gson adapter to be used to serialize and serialize scala.</p>
+    </li><li name="com.alpine.common.serialization.json.GsonSeqAdapter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GsonSeqAdapterextendsJsonSerializer[Seq[_]]withJsonDeserializer[Seq[_]]withProductwithSerializable"></a>
+      <a id="GsonSeqAdapter:GsonSeqAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GsonSeqAdapter.html"><span class="name">GsonSeqAdapter</span></a><span class="params">()</span><span class="result"> extends <span class="extype" name="com.google.gson.JsonSerializer">JsonSerializer</span>[<span class="extype" name="scala.Seq">Seq</span>[_]] with <span class="extype" name="com.google.gson.JsonDeserializer">JsonDeserializer</span>[<span class="extype" name="scala.Seq">Seq</span>[_]] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gson adapter to be used to serialize and serialize <span class="extype" name="scala.collection.Seq">scala.collection.Seq</span> to and from JSON
+with Gson.</p>
+    </li><li name="com.alpine.common.serialization.json.GsonTypeAdapter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GsonTypeAdapterextendsJsonSerializer[com.alpine.common.serialization.json.TypeWrapper[_]]withJsonDeserializer[com.alpine.common.serialization.json.TypeWrapper[_]]"></a>
+      <a id="GsonTypeAdapter:GsonTypeAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="GsonTypeAdapter.html"><span class="name">GsonTypeAdapter</span></a><span class="result"> extends <span class="extype" name="com.google.gson.JsonSerializer">JsonSerializer</span>[<a href="TypeWrapper.html" class="extype" name="com.alpine.common.serialization.json.TypeWrapper">TypeWrapper</a>[_]] with <span class="extype" name="com.google.gson.JsonDeserializer">JsonDeserializer</span>[<a href="TypeWrapper.html" class="extype" name="com.alpine.common.serialization.json.TypeWrapper">TypeWrapper</a>[_]]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Gson adapter to be used to serialize and serialize <a href="TypeWrapper.html" class="extype" name="com.alpine.common.serialization.json.TypeWrapper">TypeWrapper</a> to and from JSON
+with Gson.</p>
+    </li><li name="com.alpine.common.serialization.json.InterfaceAdapter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="InterfaceAdapter[T]extendsJsonSerializer[T]withJsonDeserializer[T]"></a>
+      <a id="InterfaceAdapter[T]:InterfaceAdapter[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="InterfaceAdapter.html"><span class="name">InterfaceAdapter</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="com.google.gson.JsonSerializer">JsonSerializer</span>[<span class="extype" name="com.alpine.common.serialization.json.InterfaceAdapter.T">T</span>] with <span class="extype" name="com.google.gson.JsonDeserializer">JsonDeserializer</span>[<span class="extype" name="com.alpine.common.serialization.json.InterfaceAdapter.T">T</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">For serializing/deserializing arbitrary interface types.</p>
+    </li><li name="com.alpine.common.serialization.json.SuperClassExclusionStrategy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SuperClassExclusionStrategyextendsExclusionStrategy"></a>
+      <a id="SuperClassExclusionStrategy:SuperClassExclusionStrategy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SuperClassExclusionStrategy.html"><span class="name">SuperClassExclusionStrategy</span></a><span class="result"> extends <span class="extype" name="com.google.gson.ExclusionStrategy">ExclusionStrategy</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Taken from Stackoverflow (and translated to scala).</p>
+    </li><li name="com.alpine.common.serialization.json.TypeWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TypeWrapper[T]extendsProductwithSerializable"></a>
+      <a id="TypeWrapper[T]:TypeWrapper[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TypeWrapper.html"><span class="name">TypeWrapper</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="value">value: <span class="extype" name="com.alpine.common.serialization.json.TypeWrapper.T">T</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">To be used as a wrapper for interfaces.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.common.serialization.json.InterfaceAdapter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="InterfaceAdapter"></a>
+      <a id="InterfaceAdapter:InterfaceAdapter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="InterfaceAdapter$.html"><span class="name">InterfaceAdapter</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.common.serialization.json.JsonUtil" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JsonUtil"></a>
+      <a id="JsonUtil:JsonUtil"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonUtil$.html"><span class="name">JsonUtil</span></a>
+      </span>
+      </h4>
+      <p class="comment cmt">Utility for Json used to serialize / deserialize IOBase and MLModel types.</p>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../../lib/template.js"></script>
+    </body>
+      </html>
