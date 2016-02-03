@@ -1,0 +1,366 @@
+package scala.com.alpine.plugin.test.mock
+
+
+import com.alpine.plugin.core.annotation.Disabled
+import com.alpine.plugin.core.datasource.OperatorDataSourceManager
+import com.alpine.plugin.core.dialog._
+import com.alpine.plugin.core.io.{ColumnDef, IOBase, TabularSchema}
+import com.alpine.plugin.test.mock.OperatorParametersMock
+import com.alpine.plugin.test.utils.OperatorParametersMockUtils
+
+import scala.util.{Success, Try}
+
+abstract class DefaultDialogElementMock(override val getId: String,
+                                        override val getLabel: String,
+                                        override val isRequired: Boolean = true) extends DialogElement {}
+
+abstract class SingleElementSelectorMock(availableValues: Seq[String],
+                                         override val getSelectedValue: String,
+                                         override val getId: String,
+                                         override val getLabel: String,
+                                         override val isRequired: Boolean = true) extends SingleItemSelector {
+
+  assert(availableValues.distinct.length.equals(availableValues.length),
+    "The available values for the parameters " + getLabel + "are not distinct")
+  assert(availableValues.contains(getSelectedValue), "The value " + getSelectedValue +
+    " is not one of the available values for the parameter " + getLabel)
+
+  override def addValue(value: String): Unit = {}
+
+  override def setSelectedValue(value: String): Unit = {}
+
+  override def getValues: Iterator[String] = availableValues.toIterator
+}
+
+abstract class AbstractCheckboxMock(availableValues: Seq[String],
+                                    selected: Seq[String],
+                                    override val getId: String,
+                                    override val getLabel: String,
+                                    override val isRequired: Boolean = true) extends Checkboxes {
+
+  //validation logic
+  selected.foreach(v =>
+    assert(availableValues.contains(v), "The value " + v +
+      " is not one of the available values for the parameter " + getLabel))
+  assert(availableValues.distinct.length == availableValues.length,
+    "The available values for the parameters " + getLabel + "are not distinct")
+  override val getValues: Iterator[String] = availableValues.toIterator
+
+  override def setCheckboxSelection(value: String, selected: Boolean): Unit = {
+  }
+
+  override def addValue(value: String): Unit = {}
+
+  override def getSelectedValues: Iterator[String] = selected.toIterator
+}
+
+class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
+                         inputSchema: Option[TabularSchema]) extends OperatorDialog {
+
+  private val dialogElements = scala.collection.mutable.Map[String, DialogElement]()
+  private val selectionGroupIdMap = scala.collection.mutable.Map[String, Set[String]]()
+  private val nameTypeMap = inputSchema.getOrElse(TabularSchema(Seq())).getDefinedColumns.map(x => (x.columnName, x.columnType)).toMap
+  private val inputColumns = nameTypeMap.keySet
+
+  private val operatorParametersMock = new OperatorParametersMock(overrideParams.operatorInfo().name,
+    overrideParams.operatorInfo().uuid)
+
+  private def updateDialogElements[T <: DialogElement](id: String, de: T): T = {
+    assert(!dialogElements.contains(id), " You have already added a dialog element with key " + id)
+    dialogElements.update(id, de)
+    de
+  }
+
+  private def setStringValue(id: String, defaultSelection: String): String = {
+    val selection = Try(overrideParams.getStringValue(id)) match {
+      case Success(s) => s
+      case _ => defaultSelection
+    }
+
+    operatorParametersMock.setValue(id, selection)
+    selection
+  }
+
+  private def validateColumnSelectionAndUpdateSelectionGroup(column: String, selectionGroupId: String, filter: ColumnFilter): String = {
+    assert(inputColumns.contains(column), "Column: " + column + " is not present in input schema.")
+
+    val group = selectionGroupIdMap.getOrElseUpdate(selectionGroupId, Set())
+    assert(!group.contains(column), "The selection group id: " + selectionGroupId +
+      " already contains the column " + column)
+    assert(column.matches(filter.acceptedNameRegex))
+    val t = nameTypeMap.get(column).get
+    assert(filter.accepts(ColumnDef(column, t)), "The column, " + column + " has type " + t.name +
+      " which is not one of the accepted type for the column filter which accepts: ")
+    selectionGroupIdMap.update(selectionGroupId, group.union(Set(column)))
+    column
+  }
+
+  /**
+    * Returns a new mock parameters object with all the parameters that were added to this dialog object.
+    */
+  def getNewParameters = operatorParametersMock
+
+  override def getLabel(): String = "Label"
+
+  override def addStringBox(id: String, label: String, defaultValue: String, regex: String, width: Int, height: Int): StringBox = {
+    val selected = setStringValue(id, defaultValue)
+
+    class StringBoxImpl extends DefaultDialogElementMock(id, label) with StringBox {
+      // var value : String = null
+      assert(getValue.matches(getRegex), "The string: " + getValue + "does not conform to regex: " + regex)
+
+      override def setValue(v: String): Unit = {}
+
+      override def getValue: String = selected
+
+      override def getRegex: String = regex
+    }
+
+    val de = new StringBoxImpl()
+    updateDialogElements(id, de)
+  }
+
+  override def getDialogElement(id: String): DialogElement = dialogElements.get(id).get
+
+  @Disabled
+  override def addChildOperatorDialog(label: String): OperatorDialog = new OperatorDialogMock(overrideParams, input, inputSchema)
+
+  override def getDialogElements(): Iterator[DialogElement] = dialogElements.values.toIterator
+
+  override def addCheckboxes(id: String, label: String, values: Seq[String], defaultSelections: Seq[String], required: Boolean): Checkboxes = {
+    val selections: Seq[String] = Try(overrideParams.getStringArrayValue(id)) match {
+      case Success(s) => s
+      case _ => defaultSelections
+    }
+
+    OperatorParametersMockUtils.addCheckBoxSelections(operatorParametersMock, id, selections: _ *)
+
+    class CheckBoxImpl extends AbstractCheckboxMock(values,
+      selections, id, label, required) {}
+
+    val de = new CheckBoxImpl
+    updateDialogElements(id, de)
+  }
+
+  override def addDropdownBox(id: String, label: String, values: Seq[String], defaultSelection: String): DropdownBox = {
+    val s = setStringValue(id, defaultSelection)
+    class DropDownBoxImpl extends SingleElementSelectorMock(values, s, id, label) with
+    DropdownBox {
+    }
+    //toDo: ditch this sequence, do validaiton at object creation --> less mutable
+    val de = new DropDownBoxImpl
+    updateDialogElements(id, de)
+  }
+
+
+  override def addHdfsDirectorySelector(id: String, label: String, defaultPath: String): HdfsFileSelector = {
+    val path = setStringValue(id, defaultPath)
+
+    class HdfsFileSelectorImp extends DefaultDialogElementMock(id, label) with HdfsFileSelector {
+      private var p: String = null
+
+      override def getSelectedPath: String = p
+
+      override def setSelectedPath(path: String): Unit = {
+        p = path
+      }
+
+      override def isDirectorySelector: Boolean = true
+    }
+
+    val de = new HdfsFileSelectorImp
+    de.setSelectedPath(path)
+    updateDialogElements(id, de)
+  }
+
+
+  override def addDataSourceDropdownBox(id: String, label: String,
+                                        dataSourceManager: OperatorDataSourceManager): DataSourceDropdownBox = {
+    val selectedValue = setStringValue(id, dataSourceManager.getRuntimeDataSource().getName)
+    val allSources = dataSourceManager.getDataSources.map(_.getName)
+    class DataSourceDropdownBoxImpl extends
+    SingleElementSelectorMock(allSources.toSeq, selectedValue, id,
+      dataSourceManager.getRuntimeDataSource().getName) with DataSourceDropdownBox {
+    }
+
+    val de = new DataSourceDropdownBoxImpl
+    updateDialogElements(id, de)
+  }
+
+
+  override def addTabularDatasetColumnDropdownBox(id: String, label: String,
+                                                  columnFilter: ColumnFilter,
+                                                  selectionGroupId: String,
+                                                  required: Boolean): TabularDatasetColumnDropdownBox = {
+    assert(inputSchema.isDefined, "Cannot create tabular dataset column drop down " + label + " for " +
+      "non tabular input")
+
+    val selection: String = Try(overrideParams.getTabularDatasetSelectedColumn(id)) match {
+      case Success(s) =>
+        val column = s._2
+        validateColumnSelectionAndUpdateSelectionGroup(column, selectionGroupId, columnFilter)
+      case _ => ""
+    }
+
+    assert(!(required && selection.equals("")))
+
+    OperatorParametersMockUtils.addTabularColumn(operatorParametersMock, id, selection)
+
+    class TabularDatasetColumnDropdownBoxImpl extends
+    SingleElementSelectorMock(inputColumns.toSeq, selection, id, label, required) with
+    TabularDatasetColumnDropdownBox {
+      assert(inputColumns.contains(selection),
+        "The input of this operator does not contain the column " + selection +
+          "in the input schema.")
+    }
+
+    val de = new TabularDatasetColumnDropdownBoxImpl
+    updateDialogElements(id, de)
+  }
+
+  override def addDBSchemaDropdownBox(id: String, label: String, defaultSchema: String): DBSchemaDropdownBox = {
+    val selected = setStringValue(id, defaultSchema)
+    class DBSchemaDropdownBoxImpl extends SingleElementSelectorMock(Seq(selected), selected, id, label)
+    with DBSchemaDropdownBox {}
+
+    val de = new DBSchemaDropdownBoxImpl
+    updateDialogElements(id, de)
+
+  }
+
+  override def addRadioButtons(id: String, label: String, values: Seq[String], defaultSelection: String): RadioButtons = {
+    val selected = setStringValue(id, defaultSelection)
+
+    class RadioButtonImpl extends SingleElementSelectorMock(values, selected, id, label) with RadioButtons
+
+    val de = new RadioButtonImpl
+    updateDialogElements(id, de)
+  }
+
+  override def addIntegerBox(id: String, label: String, min: Int, max: Int, defaultValue: Int): IntegerBox = {
+    val selection = Try(overrideParams.getIntValue(id)) match {
+      case Success(s) => s
+      case _ => defaultValue
+    }
+    require(selection >= min || selection <= max, "Selection:" + selection + " is not in range for integer parameter " + label)
+    operatorParametersMock.setValue(id, selection)
+
+    class IntegerBoxImpl extends DefaultDialogElementMock(id, label) with IntegerBox {
+
+      override def getValue: Int = selection
+
+      override def getMin: Int = min
+
+      override def getMax: Int = max
+    }
+
+    val de = new IntegerBoxImpl
+    updateDialogElements(id, de)
+  }
+
+  override def addHdfsFileSelector(id: String, label: String, defaultPath: String): HdfsFileSelector = {
+    val selection = setStringValue(id, defaultPath)
+
+    class HdfsFileSelectorImpl extends DefaultDialogElementMock(id, label) with HdfsFileSelector {
+
+      override def getSelectedPath: String = selection
+
+      override def setSelectedPath(path: String): Unit = {}
+
+      override def isDirectorySelector: Boolean = false
+    }
+
+    val de = new HdfsFileSelectorImpl
+    updateDialogElements(id, de)
+  }
+
+  //toDo: Refactor to use column checkboxes
+  override def addTabularDatasetColumnCheckboxes(id: String, label: String,
+                                                 columnFilter: ColumnFilter,
+                                                 selectionGroupId: String,
+                                                 required: Boolean): TabularDatasetColumnCheckboxes = {
+
+    assert(inputSchema.isDefined, "Cannot create tabular dataset column dropdown " + label + " for " +
+      "non tabular input")
+
+    val inputColumns = inputSchema.get.definedColumns.map(_.columnName).toSet
+    val selection: Array[String] = Try(overrideParams.getTabularDatasetSelectedColumns(id)) match {
+      case Success(s) =>
+        val columns = s._2.filter(_.length > 0)
+        columns.map(col => this.validateColumnSelectionAndUpdateSelectionGroup(col, selectionGroupId, columnFilter))
+
+      case _ => Array[String]()
+    }
+    assert(!(required && selection.isEmpty), "Multiple Column Selection Parameter:  " +
+      label + " is required. But no values for " +
+      " the id  \"" + id + "\" were found.")
+
+    OperatorParametersMockUtils.addTabularColumns(operatorParametersMock, id, selection: _ *)
+
+    class TabularDatasetColumnCheckboxesImpl extends AbstractCheckboxMock(selection,
+      inputColumns.toSeq, id, label, required) with TabularDatasetColumnCheckboxes {}
+
+    val de = new TabularDatasetColumnCheckboxesImpl
+    updateDialogElements(id, de)
+  }
+
+  override def addDBTableDropdownBox(id: String, label: String, defaultTable: String): DBTableDropdownBox = {
+
+    val selection = setStringValue(id, defaultTable)
+
+    class DBTableDropdownBoxImpl extends SingleElementSelectorMock(Seq(selection), selection,
+      id, label) with DBTableDropdownBox {}
+
+    val de = new DBTableDropdownBoxImpl
+    updateDialogElements(id, de)
+  }
+
+  override def getChildOperatorDialogs(): Iterator[OperatorDialog] = null
+
+  override def addParentOperatorDropdownBox(id: String, label: String): ParentOperatorDropdownBox = null
+
+  override def addDoubleBox(id: String, label: String, min: Double, max: Double,
+                            inclusiveMin: Boolean, inclusiveMax: Boolean, defaultValue: Double): DoubleBox = {
+
+    val selection: Double = Try(overrideParams.getDoubleValue(id)) match {
+      case Success(s) => s
+      case _ => defaultValue
+    }
+    //toDo: Move this to the
+
+    operatorParametersMock.setValue(id, selection)
+
+    class DoubleBoxImpl extends DefaultDialogElementMock(id, label) with DoubleBox {
+      assert(getValue >= getMin && getValue <= getMax, "Selection:" +
+        getValue + " is not in range for integer parameter " + label)
+      assert(getInclusiveMin || getValue > getMin, "Selection : " +
+        getValue + " is not in range for integer parameter " + label +
+        " since the min is exclusive.")
+      assert(getInclusiveMax || getValue < getMax, "Selection : " +
+        getValue + " is not in range for integer parameter " + label +
+        " since the max is exclusive.")
+
+      override def getValue: Double = selection
+
+      override def getInclusiveMin: Boolean = inclusiveMin
+
+      override def getMin: Double = min
+
+      override def getInclusiveMax: Boolean = inclusiveMax
+
+      override def getMax: Double = max
+    }
+
+    val de = new DoubleBoxImpl
+    updateDialogElements(id, de)
+  }
+}
+
+object OperatorDialogMock {
+  def apply(params: OperatorParametersMock, input: IOBase, tabularSchema: TabularSchema) =
+    new OperatorDialogMock(params, input, Some(tabularSchema))
+
+  def apply(params: OperatorParametersMock, input: IOBase) =
+    new OperatorDialogMock(params, input, None)
+}
+

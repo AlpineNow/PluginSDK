@@ -22,7 +22,7 @@ import com.alpine.transformer.sql.{ColumnName, ClusteringModelSQLExpressions, Cl
  * @param clusters The clusters of the model. These should have distinct names.
  * @param inputFeatures A seq of numeric feature descriptions describing the input
  *                      to the model.
- * @param identifier
+ * @param identifier String used to identify the output when combined with other models.
  */
 case class KMeansModel(clusters: Seq[ClusterInfo],
                        inputFeatures: Seq[ColumnDef],
