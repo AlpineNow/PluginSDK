@@ -6,6 +6,8 @@ package com.alpine.model.pack.preprocess
 
 import com.alpine.json.JsonTestUtil
 import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
+import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
+import com.alpine.util.SimpleSQLGenerator
 import org.scalatest.FunSuite
 
 /**
@@ -38,6 +40,22 @@ class OneHotEncodingModelTest extends FunSuite {
     intercept[Exception] {
       t.apply(Seq[Any]("stormy,true"))
     }
+  }
+
+  test("Should generate the correct SQL") {
+    val model = (new OneHotEncodingModelTest).oneHotEncoderModel
+    val transformer = OneHotEncodingSQLTransformer(model, new SimpleSQLGenerator)
+    val sql = transformer.getSQL
+    val expected = LayeredSQLExpressions(
+      Seq(
+        Seq(
+          (ColumnarSQLExpression("(CASE WHEN (\"outlook\" = 'sunny') THEN 1 ELSE 0 END)"), ColumnName("outlook_0")),
+          (ColumnarSQLExpression("(CASE WHEN (\"outlook\" = 'overcast') THEN 1 ELSE 0 END)"), ColumnName("outlook_1")),
+          (ColumnarSQLExpression("(CASE WHEN (\"wind\" = 'true') THEN 1 ELSE 0 END)"), ColumnName("wind_0"))
+        )
+      )
+    )
+    assert(expected === sql)
   }
 
 }

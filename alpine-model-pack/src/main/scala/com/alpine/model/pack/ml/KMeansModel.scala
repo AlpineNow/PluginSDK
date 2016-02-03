@@ -7,7 +7,9 @@ package com.alpine.model.pack.ml
 import com.alpine.model.ClusteringRowModel
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.ColumnDef
+import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.ClusteringTransformer
+import com.alpine.transformer.sql.{ColumnName, ClusteringModelSQLExpressions, ClusteringSQLTransformer, ColumnarSQLExpression}
 
 /**
  * A model representing results of the K-Means clustering algorithm.
@@ -16,10 +18,11 @@ import com.alpine.transformer.ClusteringTransformer
  *
  * The clusters should all be of the same dimension, which should be equal to the
  * number of input features.
+ *
  * @param clusters The clusters of the model. These should have distinct names.
  * @param inputFeatures A seq of numeric feature descriptions describing the input
  *                      to the model.
- * @param identifier
+ * @param identifier String used to identify the output when combined with other models.
  */
 case class KMeansModel(clusters: Seq[ClusterInfo],
                        inputFeatures: Seq[ColumnDef],
@@ -28,6 +31,7 @@ case class KMeansModel(clusters: Seq[ClusterInfo],
 
   override def transformer = KMeansTransformer(this)
 
+  override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(new KMeansSQLTransformer(this, sqlGenerator))
 }
 
 /**
@@ -75,8 +79,33 @@ case class KMeansTransformer(model: KMeansModel) extends ClusteringTransformer {
 
   /**
    * The result must always return the labels in the order specified here.
+ *
    * @return The class labels in the order that they will be returned by the result.
    */
   lazy val classLabels: Seq[String] = model.classLabels
+
+}
+
+class KMeansSQLTransformer(val model: KMeansModel, sqlGenerator: SQLGenerator) extends ClusteringSQLTransformer {
+
+  override def getClusteringSQL: ClusteringModelSQLExpressions = {
+
+    val clusterExpressions = model.clusters.map(cluster => {
+      val s = (cluster.centroid zip inputColumnNames).map {
+        case (coordinate, name) =>
+          val diff = coordinate + " - " + name.escape(sqlGenerator)
+          "(" + diff + ") * (" + diff + ")"
+      }.mkString(" + ")
+      ColumnarSQLExpression("POWER(" + s + ", 0.5)")
+    })
+
+    val temporaryDistanceNames = clusterExpressions.indices.map(i => ColumnName("DIST_" + i))
+
+    ClusteringModelSQLExpressions(
+      model.clusters.map(cluster => cluster.name) zip temporaryDistanceNames,
+      Seq(clusterExpressions zip temporaryDistanceNames),
+      sqlGenerator
+    )
+  }
 
 }

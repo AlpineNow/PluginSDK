@@ -5,9 +5,11 @@
 package com.alpine.model
 
 import com.alpine.metadata.DetailedTransformationSchema
-import com.alpine.plugin.core.io.ColumnDef
+import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
 import com.alpine.result._
+import com.alpine.sql.SQLGenerator
 import com.alpine.transformer._
+import com.alpine.transformer.sql.{ClassificationSQLTransformer, ClusteringSQLTransformer, RegressionSQLTransformer, SQLTransformer}
 import com.alpine.util.FeatureUtil
 
 /**
@@ -33,9 +35,12 @@ trait RowModel extends MLModel {
   def transformer: Transformer
   def inputFeatures: Seq[ColumnDef]
   def outputFeatures: Seq[ColumnDef]
+  def sqlOutputFeatures: Seq[ColumnDef] = outputFeatures
+  def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = None
   /**
    * Used to identify this model when in a collection of models.
    * Should be simple characters, so it can be used in a feature name.
+   *
    * @return identifier for the model.
    */
   def identifier: String = ""
@@ -50,10 +55,15 @@ trait RowModel extends MLModel {
 trait CategoricalRowModel extends RowModel {
   /**
    * The total set of classes that the predicted value can take on.
-   * @return The set of possible values for the predicted value.
+    *
+    * @return The set of possible values for the predicted value.
    */
   def classLabels: Seq[String]
   def transformer: CategoricalTransformer[_ <: CategoricalResult]
+
+  override def sqlOutputFeatures: Seq[ColumnDef] = {
+    Seq(ColumnDef(FeatureUtil.PRED, ColumnType.String))
+  }
 }
 
 trait ClassificationRowModel extends CategoricalRowModel {
@@ -62,23 +72,31 @@ trait ClassificationRowModel extends CategoricalRowModel {
   /**
    * Used when we are doing model quality evaluation e.g. Confusion Matrix,
    * so we know what feature in the test dataset to compare the result to.
-   * @return Feature description used to identify the dependent feature in an evaluation dataset.
+    *
+    * @return Feature description used to identify the dependent feature in an evaluation dataset.
    */
   def dependentFeature: ColumnDef
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[ClassificationSQLTransformer] = None
 }
 
 trait ClusteringRowModel extends CategoricalRowModel {
   def transformer: CategoricalTransformer[_ <: ClusteringResult]
   def outputFeatures = FeatureUtil.clusteringOutputFeatures
+
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[ClusteringSQLTransformer] = None
 }
 
 trait RegressionRowModel extends RowModel {
   def transformer: RegressionTransformer
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[RegressionSQLTransformer] = None
+
   def outputFeatures = FeatureUtil.regressionOutputFeatures
   /**
    * Used when we are doing model quality evaluation e.g. Confusion Matrix,
    * so we know what feature in the test dataset to compare the result to.
-   * @return Feature description used to identify the dependent feature in an evaluation dataset.
+    *
+    * @return Feature description used to identify the dependent feature in an evaluation dataset.
    */
   def dependentFeature: ColumnDef
+
 }
