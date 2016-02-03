@@ -11,7 +11,6 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
  */
 @AlpineSdkApi
 trait DoubleBox extends DialogElement {
-  def setValue(value: Double): Unit
   def getValue: Double
   def getMin: Double
   def getMax: Double

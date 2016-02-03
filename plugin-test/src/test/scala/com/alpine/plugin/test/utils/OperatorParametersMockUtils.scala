@@ -9,9 +9,8 @@ import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
 import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat}
 import com.alpine.plugin.test.mock.OperatorParametersMock
 
+object OperatorParametersMockUtils {
 
-
-object ParameterMockUtil {
   val defaultOutputDirectory = "target/testResults"
 
   /**
@@ -46,5 +45,15 @@ object ParameterMockUtil {
     operatorParametersMock.setValue(HdfsParameterUtils.storageFormatParameterID, storageFormat)
     operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, overwrite.toString)
     operatorParametersMock
+  }
+
+  def makeArrayList(selections : String*) = {
+    val arrayList = new util.ArrayList[String]()
+    selections.foreach(arrayList.add(_))
+    arrayList
+  }
+
+  def addCheckBoxSelections(operatorParametersMock: OperatorParametersMock, paramId : String, values : String*): Unit ={
+    operatorParametersMock.setValue(paramId, makeArrayList(values : _ * ))
   }
 }

@@ -1,12 +1,16 @@
 package com.alpine.plugin.test.utils
 
-import com.alpine.plugin.core.io.{IOBase, HdfsTabularDataset, OperatorInfo}
+import com.alpine.plugin.core.OperatorGUINode
+import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
+import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.spark.SparkIOTypedPluginJob
-import com.alpine.plugin.core.spark.templates.SparkDataFrameJob
+import com.alpine.plugin.core.spark.templates.{SparkDataFrameJob, SparkDataFrameGUINode}
 import com.alpine.plugin.core.spark.utils.{TestSparkContexts, SparkRuntimeUtils}
-import com.alpine.plugin.test.mock.{SimpleOperatorListener, OperatorParametersMock}
+import com.alpine.plugin.test.mock._
 import org.apache.spark.sql.DataFrame
 import org.scalatest.FunSuite
+
+import scala.com.alpine.plugin.test.mock.OperatorDialogMock
 
 
 class SimpleAbstractSparkJobSuite extends FunSuite {
@@ -47,7 +51,7 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
                                   parameters: OperatorParametersMock): DataFrame = {
 
     val hdfsTabularDataset = createHdfsTabularDatasetLocal(dataFrame, Some(parameters.operatorInfo()),
-      ParameterMockUtil.defaultOutputDirectory)
+      OperatorParametersMockUtils.defaultOutputDirectory)
     val result = operator.onExecution(sc, appConf, hdfsTabularDataset, parameters, new SimpleOperatorListener)
     sparkUtils.getDataFrame(result)
   }
@@ -64,4 +68,47 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
                                                         collection.mutable.Map.empty) = {
     operator.onExecution(sc, appConf, input, parameters, new SimpleOperatorListener)
   }
+
+  def runInputThroughEntireOperator[I <: IOBase, O <: IOBase](input: I, operatorGUINode: OperatorGUINode[I, O],
+                                                              operatorSparkJob: SparkIOTypedPluginJob[I, O],
+                                                              inputParameteres: OperatorParametersMock,
+                                                              tabularSchema: Some[TabularSchema],
+                                                              appConf: collection.mutable.Map[String, String] =
+                                                              collection.mutable.Map.empty) = {
+    val newParameters = getNewParametersFromGUI(input, operatorGUINode, inputParameteres, tabularSchema)
+    val o = operatorSparkJob.onExecution(sc, appConf, input, newParameters, new SimpleOperatorListener)
+  }
+
+  def getNewParametersFromGUI[I <: IOBase, O <: IOBase](input: I, operatorGUINode: OperatorGUINode[I, O],
+                                                        inputParameters: OperatorParametersMock,
+                                                        tabularSchema: Some[TabularSchema],
+                                                        dataSourceName: String = "dataSource") = {
+    val operatorDialogMock = new OperatorDialogMock(inputParameters, input, tabularSchema)
+    operatorGUINode.onPlacement(operatorDialogMock,
+      OperatorDataSourceManagerMock(dataSourceName),
+      new OperatorSchemaManagerMock(tabularSchema))
+    operatorDialogMock.getNewParameters
+  }
+
+  def getNewParametersFromDataFrameGui[T <: SparkDataFrameJob](testGUI: SparkDataFrameGUINode[T],
+                                                               inputHdfs: HdfsTabularDataset,
+                                                               inputParameters: OperatorParametersMock,
+                                                               dataSourceName: String = "dataSource") = {
+    val operatorDialogMock = new OperatorDialogMock(inputParameters,
+      inputHdfs, Some(inputHdfs.tabularSchema))
+    testGUI.onPlacement(operatorDialogMock,
+      OperatorDataSourceManagerMock(dataSourceName),
+      new OperatorSchemaManagerMock(Some(inputHdfs.tabularSchema)))
+    operatorDialogMock.getNewParameters
+  }
+
+  def runDataFrameThroughEntireDFTemplate[T <: SparkDataFrameJob](operatorGUI: SparkDataFrameGUINode[T],
+                                                                  operatorJob: T,
+                                                                  inputParams: OperatorParametersMock, dataFrameInput: DataFrame, path: String = "target/testResults") = {
+    val inputHdfs = HdfsDelimitedTabularDatasetDefault(path, sparkUtils.convertSparkSQLSchemaToTabularSchema(dataFrameInput.schema), TSVAttributes.default, None)
+    val parameters = getNewParametersFromDataFrameGui(operatorGUI, inputHdfs, inputParams)
+    runDataFrameThroughDFTemplate(dataFrameInput, operatorJob, parameters)
+  }
+
+
 }

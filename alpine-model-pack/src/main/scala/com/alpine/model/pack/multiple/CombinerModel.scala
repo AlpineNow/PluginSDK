@@ -99,6 +99,8 @@ object CombinerModel {
     var suffix = groupIDWithUnderscore
     var count = 0
     val featureNamesSoFar = featuresSoFar.map(f => f.columnName)
+    // Important to match just on the name, not on the whole ColumnDef,
+    // as columns with the same name but different types are still illegal.
     while (newFeatures.map(s => s.columnName + suffix).intersect(featureNamesSoFar).nonEmpty) {
       count += 1
       suffix = groupIDWithUnderscore + sepChar + count.toString
