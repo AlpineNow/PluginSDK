@@ -1,12 +1,15 @@
 /*
- * Copyright (c) 2015 Alpine Data Labs
+ * Copyright (C) 2015 Alpine Data Labs
  * All rights reserved.
  */
 package com.alpine.model.pack.preprocess
 
 import com.alpine.model.RowModel
+import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
+import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
+import com.alpine.transformer.sql.ColumnarSQLExpression
 
 /**
  * Model to apply one-hot encoding to categorical input features.
@@ -23,11 +26,13 @@ case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature],
     })
   }
 
+  override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(OneHotEncodingSQLTransformer(this, sqlGenerator))
 }
 
 /**
  * One hot encoding for a single feature.
  * The baseValue is encoded as all 0s to ensure a linear independence of the range.
+ *
  * @param hotValues values to be encoded as 1 at the corresponding index, 0s elsewhere.
  * @param baseValue value to be encoded as a vector as 0s.
  */
@@ -93,4 +98,20 @@ case class SingleOneHotEncoder(transform: OneHotEncodedFeature) {
       startingIndex + i
     }
   }
+}
+
+case class OneHotEncodingSQLTransformer(val model: OneHotEncodingModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+
+  override def getSQLExpressions = {
+    // TODO: Bad data handling.
+    (inputColumnNames zip model.oneHotEncodedFeatures).flatMap {
+      case (name, oneHotEncodedFeatures) =>
+        val inputFeature: String = name.escape(sqlGenerator)
+        oneHotEncodedFeatures.hotValues.map(v => {
+          val sql = s"""(CASE WHEN ($inputFeature = '$v') THEN 1 ELSE 0 END)"""
+          ColumnarSQLExpression(sql)
+        })
+    }
+  }
+
 }

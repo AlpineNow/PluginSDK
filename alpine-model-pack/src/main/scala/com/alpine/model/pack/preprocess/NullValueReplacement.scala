@@ -5,8 +5,12 @@
 package com.alpine.model.pack.preprocess
 
 import com.alpine.model.RowModel
+import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.plugin.core.io.ColumnDef
+import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
+import com.alpine.transformer.sql.ColumnarSQLExpression
+import com.alpine.util.SQLUtility
 
 /**
  * Model that will replace null values in the input row with specified values.
@@ -14,6 +18,7 @@ import com.alpine.transformer.Transformer
 case class NullValueReplacement(replacementValues: Seq[Any], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
   override def transformer: Transformer = NullValueReplacer(this)
   override def outputFeatures = inputFeatures
+  override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(new NullValueSQLReplacer(this, sqlGenerator))
 }
 
 case class NullValueReplacer(model: NullValueReplacement) extends Transformer {
@@ -36,4 +41,20 @@ case class NullValueReplacer(model: NullValueReplacement) extends Transformer {
     }
     result
   }
+}
+
+/**
+  * Assumes replacement values are either numeric or string.
+  */
+class NullValueSQLReplacer(val model: NullValueReplacement, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+
+  override def getSQLExpressions: Seq[ColumnarSQLExpression] = {
+    (inputColumnNames zip model.replacementValues).map {
+      case (name, value) =>
+        val replacementAsSQL = if (value.isInstanceOf[Number]) value else SQLUtility.wrapInSingleQuotes(value.toString)
+        val escapedName = name.escape(sqlGenerator)
+        s"""COALESCE($escapedName, $replacementAsSQL)"""
+    }.map(ColumnarSQLExpression)
+  }
+
 }

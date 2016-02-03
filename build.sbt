@@ -3,7 +3,7 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.4.2",
+  version := "1.5-alpha",
   publishMavenStyle := true,
   pomExtra := <scm>
     <url>git@github.com:AlpineNow/PluginSDK.git</url>
@@ -67,35 +67,11 @@ def sparkDependencies = excludeJPMML({
 })
 
 val scalaTestDep = "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test"
-val junitDependency = "junit" % "junit" % "4.11" % "test"
 val gsonDependency = "com.google.code.gson" % "gson" % "2.3.1"
 val jodaTimeDependency = "joda-time" % "joda-time" % "2.1"
 val commonsIODependency = "commons-io" % "commons-io" % "2.4"
 val apacheCommonsDependency = "org.apache.commons" % "commons-lang3" % "3.4"
-
-lazy val miniClusterDependencies = excludeJavaxServlet(
-  Seq(
-  "org.apache.hadoop" % "hadoop-hdfs" % "2.6.0" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-common" % "2.6.0" % "compile,test" classifier "" classifier "tests" ,
-  "org.apache.hadoop" % "hadoop-client" % "2.6.0" % "compile,test" classifier "" classifier "tests" ,
-  "org.apache.hadoop" % "hadoop-mapreduce-client-jobclient" % "2.6.0" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-yarn-server-tests" % "2.6.0" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-yarn-server-web-proxy" % "2.6.0" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-minicluster" % "2.6.0",
-  // spark, not marked as provided
-  "org.apache.spark" % s"spark-mllib_$scalaMajorVersion" % sparkVersion  ,
-  "org.apache.spark" % s"spark-catalyst_$scalaMajorVersion" % sparkVersion  ,
-  "org.apache.spark" % s"spark-sql_$scalaMajorVersion" % sparkVersion ,
-  "org.apache.spark" % s"spark-hive_$scalaMajorVersion" % sparkVersion ,
-  "org.apache.spark" % s"spark-yarn_$scalaMajorVersion" % sparkVersion ,
-  "org.apache.spark" % s"spark-unsafe_$scalaMajorVersion" % sparkVersion ,
-  "org.apache.spark" % s"spark-network-yarn_$scalaMajorVersion" % sparkVersion ,
-  "org.apache.spark" % s"spark-network-common_$scalaMajorVersion" % sparkVersion ,
-  "org.apache.spark" % s"spark-network-shuffle_$scalaMajorVersion" % sparkVersion,
-  // test deps as compile deps so they are carried through
-  "org.scalatest" % "scalatest_2.10" % "2.2.4",
-  "junit" % "junit" % "4.11"
-))
+val prestoParserDependency = "com.facebook.presto" % "presto-parser" % "0.79" // Versions after this use Java 8.
 
 lazy val Common = Project(
   id = "common",
@@ -159,7 +135,8 @@ lazy val ModelAPI = Project(
     libraryDependencies ++= Seq(
       gsonDependency,
       jodaTimeDependency,
-      scalaTestDep
+      scalaTestDep,
+      apacheCommonsDependency
     )
   ) ++ publishParameters("alpine-model-api")
 ).dependsOn(Common)
@@ -169,7 +146,8 @@ lazy val ModelPack = Project(
   base = file("alpine-model-pack"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep
+      scalaTestDep,
+      prestoParserDependency
     )
   ) ++ publishParameters("alpine-model-pack")
 ).dependsOn(ModelAPI % "compile->compile;test->test")
@@ -179,9 +157,8 @@ lazy val PluginTest = Project(
   base = file("plugin-test"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep,
-      junitDependency
-    ) ++ miniClusterDependencies
+      scalaTestDep
+    ) ++ sparkDependencies
   ) ++ publishParameters("plugin-test")
 ).dependsOn(PluginCore, PluginSpark % "test->test", PluginIOImpl)
 

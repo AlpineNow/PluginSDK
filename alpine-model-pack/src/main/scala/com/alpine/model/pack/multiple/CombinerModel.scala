@@ -5,7 +5,9 @@
 package com.alpine.model.pack.multiple
 
 import com.alpine.model.RowModel
+import com.alpine.model.pack.multiple.sql.CombinerSQLTransformer
 import com.alpine.plugin.core.io.ColumnDef
+import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
 
 import scala.collection.mutable.ListBuffer
@@ -24,15 +26,23 @@ case class CombinerModel(models: Seq[ModelWithID], override val identifier: Stri
   // Make this a val so it will be included in the JSON.
   val inputFeatures: Seq[ColumnDef] = {
     // Combine input features but remove duplicates.
-    models.flatMap(t => t.model.transformationSchema.inputFeatures).distinct
+    models.flatMap(t => t.model.inputFeatures).distinct
   }
 
   def outputFeatures: Seq[ColumnDef] = {
     CombinerModel.getOutputFeaturesWithGroupID(models.map(t => (t.id, t.model.transformationSchema.outputFeatures)))
   }
 
+  override def sqlOutputFeatures: Seq[ColumnDef] = {
+    CombinerModel.getOutputFeaturesWithGroupID(models.map(m =>(m.model.identifier, m.model.sqlOutputFeatures)))
+  }
+
   override def classesForLoading = {
     super.classesForLoading ++ models.flatMap(t => t.model.classesForLoading).toSet
+  }
+
+  override def sqlTransformer(sqlGenerator: SQLGenerator) = {
+    CombinerSQLTransformer.make(this, sqlGenerator)
   }
 }
 
@@ -49,7 +59,9 @@ case class CombinerTransformer(combinerTransformer: CombinerModel) extends Trans
   }
 
   def apply(row: Row) = {
-    scorersWithIndices.flatMap(x => x._1.apply(FilteredSeq(row, x._2)))
+    scorersWithIndices.flatMap {
+      case (transformer, indices) => transformer.apply(FilteredSeq(row, indices))
+    }
   }
 
 }
@@ -117,5 +129,3 @@ case class FilteredSeq[A](originalSeq: Seq[A], indicesToUse: Seq[Int]) extends S
     }
   }
 }
-
-

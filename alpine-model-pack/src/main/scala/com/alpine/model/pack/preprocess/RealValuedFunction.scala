@@ -6,9 +6,12 @@ package com.alpine.model.pack.preprocess
 
 import com.alpine.common.serialization.json.TypeWrapper
 import com.alpine.model.RowModel
+import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.model.pack.util.CastedDoubleSeq
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
+import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
+import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression}
 
 /**
  * Interface for real-valued functions
@@ -17,18 +20,45 @@ import com.alpine.transformer.Transformer
  */
 trait RealValuedFunction {
   def apply(x: Double): Double
+  def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression]
 }
 
 case class Exp() extends RealValuedFunction {
   def apply(x: Double) = math.exp(x)
+
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""EXP(${name.escape(sqlGenerator)})"""
+      )
+    )
+  }
+
 }
 
 case class Log() extends RealValuedFunction {
   def apply(x: Double) = math.log(x)
+
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""LN(${name.escape(sqlGenerator)})"""
+      )
+    )
+  }
 }
 
 case class Log1p() extends RealValuedFunction {
   def apply(x: Double) = math.log1p(x)
+
+  // TODO: Investigate if some databases support this function natively.
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""LN(1 + ${name.escape(sqlGenerator)})"""
+      )
+    )
+  }
 }
 
 //case class Sqrt() extends RealValuedFunction {
@@ -49,13 +79,33 @@ case class Log1p() extends RealValuedFunction {
 
 case class Power(p: Double) extends RealValuedFunction {
   def apply(x: Double) = math.pow(x, p)
+
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""POWER(${name.escape(sqlGenerator)}, $p)"""
+      )
+    )
+  }
 }
 
-case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], inputFeatures: Seq[ColumnDef]) extends RowModel {
+case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
   override def transformer = RealValuedFunctionTransformer(this)
 
   override def outputFeatures = {
     functions.map(f => f.function.value.getClass.getSimpleName + "_" + inputFeatures(f.index).columnName).map(name => ColumnDef(name, ColumnType.Double))
+  }
+
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[RealValuedFunctionsSQLTransformer] = {
+    val canBeScoredInSQL = this.functions.map {
+      // Some functions may only work for some database types, or not at all.
+      wrappedFunction => wrappedFunction.function.value.sqlExpression(ColumnName("dummyName"), sqlGenerator)
+    }.forall(_.isDefined)
+    if (canBeScoredInSQL) {
+      Some(RealValuedFunctionsSQLTransformer(this, sqlGenerator))
+    } else {
+      None
+    }
   }
 }
 
@@ -76,4 +126,14 @@ case class RealValuedFunctionTransformer(model: RealValuedFunctionsModel) extend
     }
     result
   }
+}
+
+case class RealValuedFunctionsSQLTransformer(model: RealValuedFunctionsModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+
+  override def getSQLExpressions: Seq[ColumnarSQLExpression] = {
+    model.functions.map {
+      wrappedFunction => wrappedFunction.function.value.sqlExpression(inputColumnNames(wrappedFunction.index), sqlGenerator).get
+    }
+  }
+
 }

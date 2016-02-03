@@ -5,8 +5,11 @@
 package com.alpine.model.pack
 
 import com.alpine.model.RowModel
+import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.plugin.core.io.ColumnDef
+import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
+import com.alpine.transformer.sql.SQLTransformer
 
 /**
  * Represents a model that carries features through without transforming them.
@@ -15,6 +18,10 @@ import com.alpine.transformer.Transformer
 case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
   override def transformer: Transformer = UnitTransformer
   override def outputFeatures = inputFeatures
+
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = {
+    Some(UnitSQLTransformer(this, sqlGenerator))
+  }
 }
 
 /**
@@ -23,4 +30,10 @@ case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: Str
  */
 object UnitTransformer extends Transformer {
   override def apply(row: Row): Row = row
+}
+
+case class UnitSQLTransformer(val model : UnitModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+  override def getSQLExpressions = {
+    inputColumnNames.map(_.asColumnarSQLExpression(sqlGenerator))
+  }
 }
