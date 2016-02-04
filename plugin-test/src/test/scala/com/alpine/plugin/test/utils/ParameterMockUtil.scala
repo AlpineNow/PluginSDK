@@ -9,7 +9,7 @@ import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
 import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat}
 import com.alpine.plugin.test.mock.OperatorParametersMock
 
-object OperatorParametersMockUtils {
+object ParameterMockUtil {
 
   val defaultOutputDirectory = "target/testResults"
 

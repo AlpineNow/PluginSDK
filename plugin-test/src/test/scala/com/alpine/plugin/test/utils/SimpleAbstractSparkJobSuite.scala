@@ -51,7 +51,7 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
                                   parameters: OperatorParametersMock): DataFrame = {
 
     val hdfsTabularDataset = createHdfsTabularDatasetLocal(dataFrame, Some(parameters.operatorInfo()),
-      OperatorParametersMockUtils.defaultOutputDirectory)
+      ParameterMockUtil.defaultOutputDirectory)
     val result = operator.onExecution(sc, appConf, hdfsTabularDataset, parameters, new SimpleOperatorListener)
     sparkUtils.getDataFrame(result)
   }

@@ -5,7 +5,7 @@ import com.alpine.plugin.core.spark.utils.{SparkRuntimeUtils, TestSparkContexts}
 import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat}
 import com.alpine.plugin.core.{OperatorListener, OperatorParameters}
 import com.alpine.plugin.test.mock.{OperatorParametersMock, SimpleOperatorListener}
-import com.alpine.plugin.test.utils.{OperatorParametersMockUtils, SimpleAbstractSparkJobSuite}
+import com.alpine.plugin.test.utils.{ParameterMockUtil, SimpleAbstractSparkJobSuite}
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row}
 
@@ -39,8 +39,8 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
 
     val expectedRows = Array(Row("Masha"), Row("Ulia"), Row("Nastya"))
 
-    OperatorParametersMockUtils.addTabularColumn(parameters, columnParamId, "name")
-    OperatorParametersMockUtils.addHdfsParams(parameters, "ColumnSelector")
+    ParameterMockUtil.addTabularColumn(parameters, columnParamId, "name")
+    ParameterMockUtil.addHdfsParams(parameters, "ColumnSelector")
 
     val result = operator.transform(parameters, dataFrame = dataFrameInput,
       new SparkRuntimeUtils(sc), new SimpleOperatorListener)
@@ -53,7 +53,7 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
     val outputDir = "dir"
     val outputName = "name"
     val operatorParametersMock = new OperatorParametersMock("123", "thing")
-    OperatorParametersMockUtils.addHdfsParams(operatorParametersMock, outputName,
+    ParameterMockUtil.addHdfsParams(operatorParametersMock, outputName,
       outputDirectory = outputDir,
       storageFormat = HdfsStorageFormat.TSV,
       overwrite = false)
@@ -67,14 +67,14 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
 
   test("Test Add single Column Method") {
     val operatorParametersMock = new OperatorParametersMock("123", "thing")
-    OperatorParametersMockUtils.addTabularColumn(operatorParametersMock, "id", "colName")
+    ParameterMockUtil.addTabularColumn(operatorParametersMock, "id", "colName")
     val (_, parameterValue) = operatorParametersMock.getTabularDatasetSelectedColumn("id")
     assert(parameterValue.equals("colName"))
   }
 
   test("Test Add multiple Column Method") {
     val operatorParametersMock = new OperatorParametersMock("123", "thing")
-    OperatorParametersMockUtils.addTabularColumns(operatorParametersMock, "id", "col1", "col2")
+    ParameterMockUtil.addTabularColumns(operatorParametersMock, "id", "col1", "col2")
     val (_, parameterValue) = operatorParametersMock.getTabularDatasetSelectedColumns("id")
     assert(parameterValue.sameElements(Array("col1", "col2")))
   }
