@@ -8,7 +8,7 @@ import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
 import com.alpine.plugin.core.spark.utils.TestSparkContexts._
 import com.alpine.plugin.core.{OperatorListener, OperatorParameters}
 import com.alpine.plugin.test.mock.OperatorParametersMock
-import com.alpine.plugin.test.utils.{OperatorParametersMockUtils, SimpleAbstractSparkJobSuite}
+import com.alpine.plugin.test.utils.{ParameterMockUtil, SimpleAbstractSparkJobSuite}
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row}
 
@@ -81,9 +81,9 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
     val dataFrameInput = sqlContext.createDataFrame(inputRows, inputSchema)
 
     val parameters = new OperatorParametersMock(colFilterName, uuid)
-    OperatorParametersMockUtils.addTabularColumn(parameters, "addTabularDatasetColumnDropdownBox", "name")
-    OperatorParametersMockUtils.addTabularColumns(parameters, "addTabularDatasetColumnCheckboxes", "name", "age")
-    OperatorParametersMockUtils.addHdfsParams(parameters, "ColumnSelector")
+    ParameterMockUtil.addTabularColumn(parameters, "addTabularDatasetColumnDropdownBox", "name")
+    ParameterMockUtil.addTabularColumns(parameters, "addTabularDatasetColumnCheckboxes", "name", "age")
+    ParameterMockUtil.addHdfsParams(parameters, "ColumnSelector")
     val operatorGUI = new TestGui
     val operatorJob = new TestSparkJob
     val (r, addendum) = runDataFrameThroughEntireDFTemplate(operatorGUI, operatorJob, parameters, dataFrameInput)

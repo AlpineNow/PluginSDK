@@ -4,7 +4,7 @@ import com.alpine.plugin.core.dialog.ColumnFilter
 import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType, TSVAttributes, TabularSchema}
 import com.alpine.plugin.test.mock.{DataSourceMock, OperatorDataSourceManagerMock, OperatorParametersMock, OperatorSchemaManagerMock}
-import com.alpine.plugin.test.utils.OperatorParametersMockUtils
+import com.alpine.plugin.test.utils.ParameterMockUtil
 import org.scalatest.FunSuite
 
 import scala.com.alpine.plugin.test.mock.OperatorDialogMock
@@ -35,7 +35,7 @@ class OperatorDialogMockTests extends FunSuite {
     //add ColumnSelect
 
     val id = "id1"
-    OperatorParametersMockUtils.addTabularColumn(inputParams, id, "outlook")
+    ParameterMockUtil.addTabularColumn(inputParams, id, "outlook")
 
     val mockDialog = new OperatorDialogMock(inputParams, hdfIOInput, Some(golfInputSchema))
     mockDialog.addTabularDatasetColumnDropdownBox(id, "Single Column Outlook",
@@ -44,7 +44,7 @@ class OperatorDialogMockTests extends FunSuite {
       "Single Column Outlook", ColumnFilter.All, "main", required = true))
     assert(t.isFailure, "adding two things with the same name ")
 
-    OperatorParametersMockUtils.addTabularColumn(inputParams, "id2", "outlook")
+    ParameterMockUtil.addTabularColumn(inputParams, "id2", "outlook")
     val testColumnFilter = Try(mockDialog.addTabularDatasetColumnDropdownBox(
       "id2", "Single Column", ColumnFilter.NumericOnly, "2"))
     assert(testColumnFilter.isFailure, "Test column filter validation")
