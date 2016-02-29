@@ -4,8 +4,8 @@
  */
 package com.alpine.model.pack.multiple
 
-import com.alpine.model.pack.multiple.sql.{PipelineClusteringSQLTransformer, PipelineRegressionSQLTransformer, PipelineClassificationSQLTransformer, PipelineSQLTransformer}
 import com.alpine.model._
+import com.alpine.model.pack.multiple.sql.{PipelineClassificationSQLTransformer, PipelineClusteringSQLTransformer, PipelineRegressionSQLTransformer, PipelineSQLTransformer}
 import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.sql.RegressionSQLTransformer
@@ -18,7 +18,7 @@ import com.alpine.transformer.sql.RegressionSQLTransformer
 case class PipelineRowModel(transformers: Seq[RowModel], override val identifier: String = "")
   extends RowModel {
 
-  override def transformer = new PipelineTransformer(transformers.map(t => t.transformer).toList)
+  override def transformer = new PipelineTransformer(transformers.map(t => t.transformer).toList, transformers)
 
   @transient lazy val outputFeatures: Seq[ColumnDef] = transformers.last.transformationSchema.outputFeatures
 
@@ -41,7 +41,9 @@ case class PipelineRowModel(transformers: Seq[RowModel], override val identifier
 case class PipelineRegressionModel(preProcessors: Seq[RowModel], finalModel: RegressionRowModel, override val identifier: String = "")
   extends RegressionRowModel {
 
-  override def transformer = new PipelineRegressionTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer)
+  override def transformer = {
+    new PipelineRegressionTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer, preProcessors ++ List(finalModel))
+  }
 
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[RegressionSQLTransformer] = {
     PipelineRegressionSQLTransformer.make(this, sqlGenerator)
@@ -65,7 +67,9 @@ case class PipelineRegressionModel(preProcessors: Seq[RowModel], finalModel: Reg
 case class PipelineClusteringModel(preProcessors: Seq[RowModel], finalModel: ClusteringRowModel, override val identifier: String = "")
   extends ClusteringRowModel {
 
-  override def transformer = new PipelineCategoricalTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer)
+  override def transformer = {
+    PipelineClusteringTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer, preProcessors ++ List(finalModel))
+  }
 
   override def sqlTransformer(sqlGenerator: SQLGenerator) = {
     PipelineClusteringSQLTransformer.make(this, sqlGenerator)
@@ -90,7 +94,9 @@ case class PipelineClusteringModel(preProcessors: Seq[RowModel], finalModel: Clu
 case class PipelineClassificationModel(preProcessors: Seq[RowModel], finalModel: ClassificationRowModel, override val identifier: String = "")
   extends ClassificationRowModel {
 
-  override def transformer = new PipelineCategoricalTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer)
+  override def transformer = {
+    PipelineClassificationTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer, preProcessors ++ List(finalModel))
+  }
 
   override def sqlTransformer(sqlGenerator: SQLGenerator) = {
     PipelineClassificationSQLTransformer.make(this, sqlGenerator)
@@ -121,7 +127,9 @@ case class PipelineClassificationModel(preProcessors: Seq[RowModel], finalModel:
 case class PipelineCategoricalModel(preProcessors: Seq[RowModel], finalModel: CategoricalRowModel, override val identifier: String = "")
   extends CategoricalRowModel {
 
-  override def transformer = new PipelineCategoricalTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer)
+  override def transformer = {
+    new PipelineCategoricalTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer, preProcessors ++ List(finalModel))
+  }
   override def classLabels = finalModel.classLabels
 
   @transient lazy val inputFeatures: Seq[ColumnDef] = preProcessors.head.transformationSchema.inputFeatures

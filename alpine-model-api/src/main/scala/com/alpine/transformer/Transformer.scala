@@ -4,7 +4,7 @@
  */
 package com.alpine.transformer
 
-import com.alpine.result.{ClusteringResult, CategoricalResult, RealResult, MLResult, ClassificationResult}
+import com.alpine.result.{CategoricalResult, ClassificationResult, ClusteringResult, MLResult, RealResult}
 
 /**
  * Serialization doesn't have to be maintained between different versions for this object, since it it always created by a model,
@@ -82,10 +82,24 @@ trait CategoricalTransformer[A <: CategoricalResult] extends MLTransformer[A] {
 
 trait ClusteringTransformer extends CategoricalTransformer[ClusteringResult] {
   def scoreDistances(row: Row): Array[Double]
-  def score(row: Row) = ClusteringResult(classLabels, scoreDistances(row))
+  def score(row: Row) = {
+    val distances: Array[Double] = scoreDistances(row)
+    if (distances == null) {
+      null
+    } else {
+      ClusteringResult(classLabels, distances)
+    }
+  }
 }
 
 trait ClassificationTransformer extends CategoricalTransformer[ClassificationResult] {
   def scoreConfidences(row: Row): Array[Double]
-  def score(row: Row) = ClassificationResult(classLabels, scoreConfidences(row))
+  def score(row: Row) = {
+    val confidences: Array[Double] = scoreConfidences(row)
+    if (confidences == null) {
+      null
+    } else {
+      ClassificationResult(classLabels, confidences)
+    }
+  }
 }

@@ -3,7 +3,7 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.5-alpha-1",
+  version := "1.5-beta",
   publishMavenStyle := true,
   pomExtra := <scm>
     <url>git@github.com:AlpineNow/PluginSDK.git</url>
@@ -73,7 +73,7 @@ val gsonDependency = "com.google.code.gson" % "gson" % "2.3.1"
 val jodaTimeDependency = "joda-time" % "joda-time" % "2.1"
 val commonsIODependency = "commons-io" % "commons-io" % "2.4"
 val apacheCommonsDependency = "org.apache.commons" % "commons-lang3" % "3.4"
-val prestoParserDependency = "com.facebook.presto" % "presto-parser" % "0.79" // Versions after this use Java 8.
+//val prestoParserDependency = "com.facebook.presto" % "presto-parser" % "0.79" // Versions after this use Java 8.
 
 lazy val Common = Project(
   id = "common",
@@ -148,8 +148,8 @@ lazy val ModelPack = Project(
   base = file("alpine-model-pack"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep,
-      prestoParserDependency
+      scalaTestDep
+    //  prestoParserDependency
     )
   ) ++ publishParameters("alpine-model-pack")
 ).dependsOn(ModelAPI % "compile->compile;test->test")

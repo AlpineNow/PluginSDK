@@ -5,13 +5,13 @@
 package com.alpine.model.pack.multiple.sql
 
 import com.alpine.model.pack.UnitModel
-import com.alpine.model.pack.ml.{SingleLogisticRegression, MultiLogisticRegressionModel, LinearRegressionModel}
-import com.alpine.model.pack.multiple.{ModelWithID, CombinerModel, PipelineRowModel}
+import com.alpine.model.pack.ml.{LinearRegressionModel, MultiLogisticRegressionModel, SingleLogisticRegression}
+import com.alpine.model.pack.multiple.{CombinerModel, ModelWithID, PipelineRowModel}
 import com.alpine.model.pack.preprocess.OneHotEncodingModelTest
-import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.AliasGenerator
-import com.alpine.transformer.sql.{ColumnarSQLExpression, ColumnName, LayeredSQLExpressions}
-import com.alpine.util.{SimpleSQLGenerator, SQLUtility}
+import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
+import com.alpine.util.{SQLUtility, SimpleSQLGenerator}
 import org.scalatest.FunSuite
 
 class CombinerSQLTransformerTest extends FunSuite {
@@ -34,7 +34,7 @@ class CombinerSQLTransformerTest extends FunSuite {
         |CREATE TABLE demo.delete_me AS
         | SELECT
         | 0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED",
-        | (((0.2 + ("column_0" * 0.9)) + ("column_2" * 1.0)) + ("column_1" * 5.0)) AS "PRED_1"
+        | 0.2 + "column_0" * 0.9 + "column_2" * 1.0 + "column_1" * 5.0 AS "PRED_1"
         | FROM
         | (SELECT
         | (CASE WHEN ("outlook" = 'sunny') THEN 1 ELSE 0 END) AS "outlook_0",

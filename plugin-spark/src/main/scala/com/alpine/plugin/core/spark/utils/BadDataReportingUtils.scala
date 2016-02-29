@@ -8,6 +8,8 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SQLContext}
 
+import scala.util.Try
+
 object BadDataReportingUtils {
 
   /**
@@ -34,7 +36,8 @@ object BadDataReportingUtils {
     val operatorInfo = Some(operatorParameters.operatorInfo)
     val dataToWriteParam = HdfsParameterUtils.getAmountOfBadDataToWrite(operatorParameters)
     val badDataPath = HdfsParameterUtils.getBadDataPath(operatorParameters)
-    val hdfsStorageFormat = HdfsParameterUtils.getHdfsStorageFormat(operatorParameters)
+    val hdfsStorageFormat = Try(HdfsParameterUtils.getHdfsStorageFormat(operatorParameters)
+    ).getOrElse(HdfsStorageFormat.TSV)
     val overwrite = HdfsParameterUtils.getOverwriteParameterValue(operatorParameters)
     val (goodDataFrame, badDataFrame) = removeDataFromDataFrame(isBad, inputDataFrame, dataToWriteParam)
     val message = handleBadDataAsDataFrame(dataToWriteParam, badDataPath, inputDataFrame.count(),

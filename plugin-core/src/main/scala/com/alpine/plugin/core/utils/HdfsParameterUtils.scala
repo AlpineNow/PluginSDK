@@ -164,16 +164,16 @@ object HdfsParameterUtils extends OutputParameterUtils {
   //bad data Reporting:
   val badDataReportParameterID = "badData"
   val badDataReportNO = "No"
-  val badDataReportALL = "All data"
+  val badDataReportALL = "Yes"
   val DEFAULT_NUMBER_ROWS = 1000
-  val badDataReportNROWS = "First " + DEFAULT_NUMBER_ROWS +" rows"
+  val badDataReportNROWS = "Partial (" + DEFAULT_NUMBER_ROWS +") Rows"
   val badDataParameterOptions = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL)
 
   val badDataLocation = "_BadData"
 
   def addBadDataReportParameter(operatorDialog: OperatorDialog) : DialogElement = {
     val badDataSelector = operatorDialog.addDropdownBox(badDataReportParameterID,
-      "Write bad data to file", badDataParameterOptions, badDataReportNO)
+      "Write Bad Data To File", badDataParameterOptions, badDataReportNO)
     badDataSelector
   }
 

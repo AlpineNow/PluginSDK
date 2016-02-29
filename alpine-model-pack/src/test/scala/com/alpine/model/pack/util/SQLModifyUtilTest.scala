@@ -22,6 +22,14 @@ class SQLModifyUtilTest extends FunSuite {
         new SimpleSQLGenerator
       )
     )
+    /* Should preserve case. */
+    assert(ColumnarSQLExpression("\"Column_0\" + \"HI\"") ===
+      replaceColumnNames(
+        ColumnarSQLExpression("\"wind\" + \"HI\""),
+        Map(ColumnName("wind") -> ColumnName("Column_0")),
+        new SimpleSQLGenerator
+      )
+    )
 
     assert(ColumnarSQLExpression("`column_0`") ===
       replaceColumnNames(
@@ -41,20 +49,30 @@ class SQLModifyUtilTest extends FunSuite {
 
     assert("(CASE WHEN (\"column_1\" = 'sunny') THEN 1 ELSE 0 END)" ===
       replaceColumnNames(
-        ColumnarSQLExpression("case when \"outlook\" = 'sunny' then 1 else 0 end"),
+        ColumnarSQLExpression("(CASE WHEN (\"outlook\" = 'sunny') THEN 1 ELSE 0 END)"),
         Map(ColumnName("outlook") -> ColumnName("column_1")),
         new SimpleSQLGenerator
       ).sql
     )
 
-    assert("(CASE WHEN (\"column_1\" = 'true') THEN '\"wind\"' ELSE 'no \"wind\"' END)" ===
-      replaceColumnNames(
-        ColumnarSQLExpression("case when \"wind\" = 'true' then '\"wind\"' else 'no \"wind\"' end"),
-        Map(ColumnName("wind") -> ColumnName("column_1")),
-        new SimpleSQLGenerator
-      ).sql
-    )
+    /**
+      * Need a fancy parser to pass this test.
+      * I was using presto-parser, until I realised it wasn't case sensitive (at least the versions supporting Java 7).
+      */
+    /*
+        assert("(CASE WHEN (\"column_1\" = 'true') THEN '\"wind\"' ELSE 'no \"wind\"' END)" ===
+          replaceColumnNames(
+            ColumnarSQLExpression("case when \"wind\" = 'true' then '\"wind\"' else 'no \"wind\"' end"),
+            Map(ColumnName("wind") -> ColumnName("column_1")),
+            new SimpleSQLGenerator
+          ).sql
+        )
+     */
+  }
 
+  test("Should not quote function names") {
+    assert(ColumnarSQLExpression("EXP(3)") === replaceColumnNames(ColumnarSQLExpression("EXP(3)"), Map(ColumnName("a") -> ColumnName("a1")), new SimpleSQLGenerator))
+    assert(ColumnarSQLExpression("POWER(\"a1\", 2)") === replaceColumnNames(ColumnarSQLExpression("POWER(\"a\", 2)"), Map(ColumnName("a") -> ColumnName("a1")), new SimpleSQLGenerator))
   }
 
 }

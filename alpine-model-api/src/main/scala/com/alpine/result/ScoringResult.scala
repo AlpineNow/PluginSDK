@@ -41,6 +41,10 @@ trait CategoricalResult extends MLResult {
    */
   def details: Array[Double]
 
+  def toMap: Map[String, Double] = {
+    (labels zip details).toMap
+  }
+
   override def equals(other: MLResult, tolerance: Double): Boolean = {
     other match {
       case result: CategoricalResult =>

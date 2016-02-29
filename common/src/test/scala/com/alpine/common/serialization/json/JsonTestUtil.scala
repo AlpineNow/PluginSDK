@@ -26,7 +26,15 @@ object JsonTestUtil {
       println(json)
     }
 
-    assert(p == gson.fromJson(json, p.getClass))
+    val deserialized = gson.fromJson(json, p.getClass)
+    assert(p == deserialized)
+  }
+
+  def testDeserialization(json: String, expected: Any): Unit = {
+    gsonsToTest.foreach(g => {
+      val deserialized = g.fromJson(json, expected.getClass)
+      assert(expected == deserialized)
+    })
   }
 
 }

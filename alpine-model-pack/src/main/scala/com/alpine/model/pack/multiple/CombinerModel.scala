@@ -9,6 +9,7 @@ import com.alpine.model.pack.multiple.sql.CombinerSQLTransformer
 import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
+import com.alpine.util.FilteredSeq
 
 import scala.collection.mutable.ListBuffer
 
@@ -48,11 +49,11 @@ case class CombinerModel(models: Seq[ModelWithID], override val identifier: Stri
 
 case class ModelWithID(id: String, model: RowModel)
 
-case class CombinerTransformer(combinerTransformer: CombinerModel) extends Transformer {
+case class CombinerTransformer(model: CombinerModel) extends Transformer {
 
   private val scorersWithIndices: Seq[(Transformer, Array[Int])] = {
-    val transformers = combinerTransformer.models.map(t => t.model)
-    val inputFeatureDescs = combinerTransformer.inputFeatures
+    val transformers = model.models.map(t => t.model)
+    val inputFeatureDescs = model.inputFeatures
     transformers.map(t => (
       t.transformer, t.transformationSchema.inputFeatures.map(f => inputFeatureDescs.indexOf(f)).toArray)
     )
@@ -114,20 +115,4 @@ object CombinerModel {
     new CombinerModel(models.map(m => ModelWithID(m.identifier, m)))
   }
 
-}
-
-case class FilteredSeq[A](originalSeq: Seq[A], indicesToUse: Seq[Int]) extends Seq[A] {
-  override def length: Int = indicesToUse.length
-
-  override def apply(idx: Int): A = originalSeq(indicesToUse(idx))
-
-  override def iterator: Iterator[A] = {
-    new Iterator[A] {
-      val indexIterator = indicesToUse.iterator
-
-      override def hasNext: Boolean = indexIterator.hasNext
-
-      override def next(): A = originalSeq(indexIterator.next())
-    }
-  }
 }

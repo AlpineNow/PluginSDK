@@ -22,7 +22,7 @@ case class MultiLogisticRegressionModel(singleLORs: Seq[SingleLogisticRegression
                                       override val identifier: String = "") extends ClassificationRowModel {
   override def transformer = LogisticRegressionTransformer(this)
 
-  @transient lazy val classLabels: List[String] = baseValue :: singleLORs.map(l => l.dependentValue).toList
+  @transient lazy val classLabels: List[String] = (singleLORs.map(l => l.dependentValue) ++ List(baseValue)).toList
 
   override def dependentFeature = new ColumnDef(dependentFeatureName, ColumnType.String)
 

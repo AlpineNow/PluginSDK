@@ -33,13 +33,25 @@ case class GsonOptionAdapter() extends JsonSerializer[Option[_]] with JsonDeseri
   }
 
   override def deserialize(jsonElement: JsonElement, t: Type, jdc: JsonDeserializationContext): Option[_] = {
-    val jsonObj: JsonObject = jsonElement.getAsJsonObject
-    val valueType = jsonObj.get(JsonUtil.typeKey).getAsString
-    if (someStr == valueType) {
-      val value: JsonElement = jsonObj.get(JsonUtil.dataKey)
-      Some(jdc.deserialize(value, getFirstTypeParameter(t)))
-    } else {
-      None
+    try {
+      val jsonObj: JsonObject = jsonElement.getAsJsonObject
+      val valueType = jsonObj.get(JsonUtil.typeKey).getAsString
+      if (valueType == someStr) {
+        val value: JsonElement = jsonObj.get(JsonUtil.dataKey)
+        Some(jdc.deserialize(value, getFirstTypeParameter(t)))
+      } else if (valueType == noneStr){
+        None
+      } else {
+        Some(jdc.deserialize(jsonElement, getFirstTypeParameter(t)))
+      }
+    } catch {
+      case e: Exception => {
+        if (jsonElement != null) {
+          Some(jdc.deserialize(jsonElement, getFirstTypeParameter(t)))
+        } else {
+          None
+        }
+      }
     }
   }
 

@@ -19,6 +19,17 @@ object SQLUtility {
 
   def wrapInSingleQuotes(s: String) = "'" + s + "'"
 
+  /**
+    * Expect numeric or String.
+    * Numeric values need to be used raw (without quotes).
+    */
+  def wrapAsValue(a: Any): String = {
+    a match {
+      case s: String => wrapInSingleQuotes(s)
+      case _ => a.toString
+    }
+  }
+
   def argMinOrMaxSQL(labelValuesToColumnNames: Seq[(String, ColumnName)], comparator: String, sqlGenerator: SQLGenerator): String = {
     def comparisonSQL(columnNamesAndLabelValues: Seq[(String, ColumnName)]): String = {
       if (columnNamesAndLabelValues.size == 1) " ELSE " + wrapInSingleQuotes(columnNamesAndLabelValues.head._1)
@@ -37,6 +48,13 @@ object SQLUtility {
 
   def argMaxSQL(labelValuesToColumnNames: Seq[(String, ColumnName)], sqlGenerator: SQLGenerator) = {
     argMinOrMaxSQL(labelValuesToColumnNames, ">", sqlGenerator)
+  }
+
+  def groupBySQL(groupByFeature: ColumnarSQLExpression, valuesToColumnNames: Map[ColumnarSQLExpression, ColumnarSQLExpression]): ColumnarSQLExpression = {
+    val innards = valuesToColumnNames.map{
+      case (value, valueToSelect) => s"""WHEN (${groupByFeature.sql} = ${value.sql}) THEN ${valueToSelect.sql}"""
+    }.mkString(" ")
+    ColumnarSQLExpression(s"""(CASE $innards ELSE NULL END)""")
   }
 
   def dotProduct(x: Seq[String], y: Seq[String]): String = {
