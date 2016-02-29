@@ -1,7 +1,7 @@
 package com.alpine.util
 
 import com.alpine.sql.AliasGenerator
-import com.alpine.transformer.sql.{ColumnarSQLExpression, LayeredSQLExpressions, ColumnName}
+import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
 import org.scalatest.FunSuite
 
 /**
@@ -9,13 +9,28 @@ import org.scalatest.FunSuite
   */
 class SQLUtility$Test extends FunSuite {
 
+  import SQLUtility._
+
   test("Should generate boolean comparisons correctly") {
-    assert(""""distA" < "distB" AND "distA" < "distC"""" === SQLUtility.comparedToOthers(ColumnName("distA"), Seq(ColumnName("distB"), ColumnName("distC")), "<", new SimpleSQLGenerator))
+    assert(""""distA" < "distB" AND "distA" < "distC"""" === comparedToOthers(ColumnName("distA"), Seq(ColumnName("distB"), ColumnName("distC")), "<", new SimpleSQLGenerator))
   }
 
   test("Should generate comparison SQL correctly") {
-    val comparisonSQL: String = SQLUtility.argMinOrMaxSQL(Map("A" -> ColumnName("distA"), "B" -> ColumnName("distB"), "C" -> ColumnName("distC")).toList, "<", new SimpleSQLGenerator)
+    val comparisonSQL: String = argMinOrMaxSQL(Map("A" -> ColumnName("distA"), "B" -> ColumnName("distB"), "C" -> ColumnName("distC")).toList, "<", new SimpleSQLGenerator)
     assert("""(CASE WHEN ("distA" < "distB" AND "distA" < "distC") THEN 'A' WHEN ("distB" < "distC") THEN 'B' ELSE 'C' END)""" === comparisonSQL)
+  }
+
+  test("Should generate group by SQL correctly") {
+    val expected = """(CASE WHEN ("outlook" = 'rain') THEN "PRED_1" WHEN ("outlook" = 'sunny') THEN "PRED_2" WHEN ("outlook" = 'overcast') THEN "PRED_3" ELSE NULL END)"""
+    val actual = groupBySQL(
+      ColumnarSQLExpression("\"outlook\""),
+      Map(
+        ColumnarSQLExpression("'rain'") -> ColumnarSQLExpression("\"PRED_1\""),
+        ColumnarSQLExpression("'sunny'") -> ColumnarSQLExpression("\"PRED_2\""),
+        ColumnarSQLExpression("'overcast'") -> ColumnarSQLExpression("\"PRED_3\"")
+      )
+    )
+    assert(expected === actual.sql)
   }
 
   test("Create table from LayeredSQLExpressions") {
@@ -31,7 +46,7 @@ class SQLUtility$Test extends FunSuite {
         )
       )
     )
-    val sql = SQLUtility.createTable(testExpressions, "demo.golfnew", "demo.delete_me", new AliasGenerator, new SimpleSQLGenerator)
+    val sql = createTable(testExpressions, "demo.golfnew", "demo.delete_me", new AliasGenerator, new SimpleSQLGenerator)
     val expectedSQL: String =
       """CREATE TABLE demo.delete_me AS
         | SELECT (CASE WHEN ("baseVal" > "ce0") THEN 'no' ELSE 'yes' END) AS "PRED", "baseVal" AS "CONF_0", "ce0" AS "CONF_1"

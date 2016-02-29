@@ -5,7 +5,7 @@
 package com.alpine.model
 
 import com.alpine.metadata.DetailedTransformationSchema
-import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.result._
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer._
@@ -67,7 +67,7 @@ trait CategoricalRowModel extends RowModel {
 }
 
 trait ClassificationRowModel extends CategoricalRowModel {
-  def transformer: CategoricalTransformer[_ <: ClassificationResult]
+  def transformer: ClassificationTransformer
   def outputFeatures = FeatureUtil.classificationOutputFeatures
   /**
    * Used when we are doing model quality evaluation e.g. Confusion Matrix,
@@ -80,7 +80,7 @@ trait ClassificationRowModel extends CategoricalRowModel {
 }
 
 trait ClusteringRowModel extends CategoricalRowModel {
-  def transformer: CategoricalTransformer[_ <: ClusteringResult]
+  def transformer: ClusteringTransformer
   def outputFeatures = FeatureUtil.clusteringOutputFeatures
 
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[ClusteringSQLTransformer] = None

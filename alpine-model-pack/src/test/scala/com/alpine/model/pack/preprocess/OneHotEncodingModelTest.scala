@@ -4,7 +4,7 @@
  */
 package com.alpine.model.pack.preprocess
 
-import com.alpine.json.JsonTestUtil
+import com.alpine.json.{ModelJsonUtil, JsonTestUtil}
 import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
 import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
 import com.alpine.util.SimpleSQLGenerator
@@ -16,12 +16,51 @@ import org.scalatest.FunSuite
  */
 class OneHotEncodingModelTest extends FunSuite {
 
+  /**
+    * In February 2016 I changed the baseValue from String to Option[String].
+    */
+  val modelFrom2015 = """{
+                        |  "oneHotEncodedFeatures": [
+                        |    {
+                        |      "hotValues": [
+                        |        "sunny",
+                        |        "overcast"
+                        |      ],
+                        |      "baseValue": "rain"
+                        |    },
+                        |    {
+                        |      "hotValues": [
+                        |        "true"
+                        |      ],
+                        |      "baseValue": "false"
+                        |    }
+                        |  ],
+                        |  "inputFeatures": [
+                        |    {
+                        |      "columnName": "outlook",
+                        |      "columnType": "String"
+                        |    },
+                        |    {
+                        |      "columnName": "wind",
+                        |      "columnType": "String"
+                        |    }
+                        |  ],
+                        |  "identifier": ""
+                        |}
+                        |""".stripMargin
+
+
   val oneHotEncoderModel = OneHotEncodingModel(Seq(
     OneHotEncodedFeature(List("sunny", "overcast"), "rain"),
     OneHotEncodedFeature(List("true"), "false")
   ),
     Seq(new ColumnDef("outlook", ColumnType.String), new ColumnDef("wind", ColumnType.String))
   )
+
+  test("Should deserialize model from  2015") {
+    val oldModel = ModelJsonUtil.compactGson.fromJson(modelFrom2015, classOf[OneHotEncodingModel])
+    assert(oneHotEncoderModel === oldModel)
+  }
 
   test("Serialization of the Pivot transformations should work") {
     val p = OneHotEncodedFeature(List("sunny", "overcast"), "rain")

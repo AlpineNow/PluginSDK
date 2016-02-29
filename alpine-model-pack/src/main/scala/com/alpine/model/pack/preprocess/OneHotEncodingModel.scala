@@ -36,8 +36,14 @@ case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature],
  * @param hotValues values to be encoded as 1 at the corresponding index, 0s elsewhere.
  * @param baseValue value to be encoded as a vector as 0s.
  */
-case class OneHotEncodedFeature(hotValues: Seq[String], baseValue: String) {
+case class OneHotEncodedFeature(hotValues: Seq[String], baseValue: Option[String]) {
   def getScorer = SingleOneHotEncoder(this)
+}
+
+object OneHotEncodedFeature {
+  def apply(hotValues: Seq[String], baseValue: String): OneHotEncodedFeature = {
+    OneHotEncodedFeature(hotValues, Some(baseValue))
+  }
 }
 
 case class OneHotEncodingTransformer(pivotsWithFeatures: Seq[OneHotEncodedFeature]) extends Transformer {
@@ -91,7 +97,7 @@ case class SingleOneHotEncoder(transform: OneHotEncodedFeature) {
         }
         i += 1
       }
-      if (!found && !transform.baseValue.equals(value)) {
+      if (!found && (transform.baseValue.isEmpty || !transform.baseValue.get.equals(value))) {
         // TODO: Error handling.
         throw new Exception(s"""$value is an unrecognised value""")
       }
