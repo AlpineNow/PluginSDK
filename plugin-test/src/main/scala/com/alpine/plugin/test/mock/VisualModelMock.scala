@@ -1,6 +1,6 @@
 package com.alpine.plugin.test.mock
 
-import com.alpine.plugin.core.io.{IOBase, TabularDataset, DBTable}
+import com.alpine.plugin.core.io.{DBTable, IOBase, TabularDataset}
 import com.alpine.plugin.core.visualization.{CompositeVisualModel, VisualModel, VisualModelFactory}
 
 

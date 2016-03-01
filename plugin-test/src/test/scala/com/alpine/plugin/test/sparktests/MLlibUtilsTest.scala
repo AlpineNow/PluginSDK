@@ -1,9 +1,11 @@
 /**
  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
  */
-package com.alpine.plugin.core.spark.utils
+package com.alpine.plugin.test.sparktests
 
+import com.alpine.plugin.core.spark.utils.MLlibUtils
 import com.alpine.plugin.core.spark.utils.MLlibUtils._
+import com.alpine.plugin.test.utils.TestSparkContexts
 import org.apache.spark.mllib.linalg.DenseVector
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.sql.Row
@@ -12,6 +14,8 @@ import org.scalatest.FunSuite
 
 
 class MLlibUtilsTest extends FunSuite {
+
+  import TestSparkContexts._
 
   test("testToLabeledPoint") {
     val toLabeledPointFunc = toLabeledPoint(dependentColumnIndex = 2 , independentColumnIndices = Array(1, 3))
@@ -29,7 +33,6 @@ class MLlibUtilsTest extends FunSuite {
   }
 
   test("mapSeqToCorrectType") {
-    import TestSparkContexts._
 
     val schema = StructType(Array(
       StructField("StringType", StringType),

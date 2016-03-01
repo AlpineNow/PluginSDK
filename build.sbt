@@ -68,7 +68,7 @@ def sparkDependencies = excludeJPMML({
   )
 })
 
-val scalaTestDep = "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test"
+val scalaTestDep = "org.scalatest" % "scalatest_2.10" % "2.2.4"
 val gsonDependency = "com.google.code.gson" % "gson" % "2.3.1"
 val jodaTimeDependency = "joda-time" % "joda-time" % "2.1"
 val commonsIODependency = "commons-io" % "commons-io" % "2.4"
@@ -80,7 +80,7 @@ lazy val Common = Project(
   base = file("common"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep,
+      scalaTestDep % "test",
       gsonDependency
     )
   ) ++ publishParameters("common")
@@ -103,7 +103,7 @@ lazy val PluginIOImpl = Project(
     libraryDependencies ++= Seq(
       commonsIODependency,
       apacheCommonsDependency,
-      scalaTestDep,
+      scalaTestDep % "test",
       gsonDependency
     )
   ) ++ publishParameters("plugin-io-impl")
@@ -114,7 +114,7 @@ lazy val PluginModel = Project(
   base = file("plugin-model"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep
+      scalaTestDep % "test"
     )
   ) ++ publishParameters("plugin-model")
 ).dependsOn(PluginCore, ModelAPI)
@@ -124,7 +124,7 @@ lazy val PluginSpark = Project(
   base = file("plugin-spark"),
   settings = Seq(
     libraryDependencies ++= sparkDependencies ++ Seq(
-      scalaTestDep
+      scalaTestDep % "test"
     )
   ) ++ publishParameters("plugin-spark")
 ).dependsOn(PluginCore, PluginIOImpl)
@@ -137,7 +137,7 @@ lazy val ModelAPI = Project(
     libraryDependencies ++= Seq(
       gsonDependency,
       jodaTimeDependency,
-      scalaTestDep,
+      scalaTestDep % "test",
       apacheCommonsDependency
     )
   ) ++ publishParameters("alpine-model-api")
@@ -148,7 +148,7 @@ lazy val ModelPack = Project(
   base = file("alpine-model-pack"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep
+      scalaTestDep  % "test"
     //  prestoParserDependency
     )
   ) ++ publishParameters("alpine-model-pack")
@@ -162,7 +162,7 @@ lazy val PluginTest = Project(
       scalaTestDep
     ) ++ sparkDependencies
   ) ++ publishParameters("plugin-test")
-).dependsOn(PluginCore, PluginSpark % "test->test", PluginIOImpl)
+).dependsOn(PluginCore, PluginSpark, PluginIOImpl)
 
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)
