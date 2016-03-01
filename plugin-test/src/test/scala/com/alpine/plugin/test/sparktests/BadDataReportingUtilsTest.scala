@@ -1,5 +1,7 @@
-package com.alpine.plugin.core.spark.utils
+package com.alpine.plugin.test.sparktests
 
+import com.alpine.plugin.core.spark.utils.BadDataReportingUtils
+import com.alpine.plugin.test.utils.TestSparkContexts
 import org.apache.spark.sql
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{Row, SQLContext}
@@ -9,7 +11,6 @@ import scala.util.Try
 
 
 class BadDataReportingUtilsTest extends FunSuite {
-
   import TestSparkContexts._
 
   val inputRows = List(Row("Masha", 22), Row("Ulia", 21), Row("Nastya", 23))
@@ -23,7 +24,7 @@ class BadDataReportingUtilsTest extends FunSuite {
   test("Test reporting bad data as String RDD ") {
     val rdd = sc.parallelize(List("", "some"))
     val sqlContext = new SQLContext(rdd.sparkContext)
-    val dummySchema = StructType(Array(StructField("String", StringType, true)))
+    val dummySchema = StructType(Array(StructField("String", StringType, nullable = true)))
     val badDataAsDF = sqlContext.createDataFrame(rdd.map(r => Row.fromSeq(Seq(r))), dummySchema)
     val (data, msg) = BadDataReportingUtils.getBadDataToWriteAndMessage(Some(3), outputPath,
       6, 3, Some(badDataAsDF))
@@ -62,7 +63,7 @@ class BadDataReportingUtilsTest extends FunSuite {
     val badInputData = sqlContext.createDataFrame(sc.parallelize(badData2), inputSchema)
     val allData = goodInputData.unionAll(badInputData)
     val (goodDataOutput, badDataOutput) = BadDataReportingUtils.removeDataFromDataFrame(
-      RowProcessingUtil.containsZeros(_),
+      RowProcessingUtil.containsZeros,
       allData, Some(2))
     val badDataRows = badDataOutput.get.collect().toSet
     val goodDataRows = goodDataOutput.collect().toSet

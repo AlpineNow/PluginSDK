@@ -38,7 +38,7 @@ class SQLModifyUtilTest extends FunSuite {
         new SQLGenerator {
           override def dbType = DatabaseType.hive
 
-          override def useAliasForSelectSubQueries: Boolean = true
+          override def useAliasForSelectSubQueries: Boolean = ???
 
           override def quoteChar: Char = '`'
 

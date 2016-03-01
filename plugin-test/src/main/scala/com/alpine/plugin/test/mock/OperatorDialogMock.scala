@@ -1,12 +1,10 @@
-package scala.com.alpine.plugin.test.mock
-
+package com.alpine.plugin.test.mock
 
 import com.alpine.plugin.core.annotation.Disabled
 import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.dialog._
 import com.alpine.plugin.core.io.{ColumnDef, IOBase, TabularSchema}
-import com.alpine.plugin.test.mock.OperatorParametersMock
-import com.alpine.plugin.test.utils.ParameterMockUtil
+import com.alpine.plugin.test.utils.OperatorParameterMockUtil
 
 import scala.util.{Success, Try}
 
@@ -133,7 +131,7 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
       case _ => defaultSelections
     }
 
-    ParameterMockUtil.addCheckBoxSelections(operatorParametersMock, id, selections: _ *)
+    OperatorParameterMockUtil.addCheckBoxSelections(operatorParametersMock, id, selections: _ *)
 
     class CheckBoxImpl extends AbstractCheckboxMock(values,
       selections, id, label, required) {}
@@ -204,7 +202,8 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
 
     assert(!(required && selection.equals("")))
 
-    ParameterMockUtil.addTabularColumn(operatorParametersMock, id, selection)
+    OperatorParameterMockUtil.addTabularColumn(operatorParametersMock, id, selection)
+
 
     class TabularDatasetColumnDropdownBoxImpl extends
     SingleElementSelectorMock(inputColumns.toSeq, selection, id, label, required) with
@@ -295,7 +294,7 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
       label + " is required. But no values for " +
       " the id  \"" + id + "\" were found.")
 
-    ParameterMockUtil.addTabularColumns(operatorParametersMock, id, selection: _ *)
+    OperatorParameterMockUtil.addTabularColumns(operatorParametersMock, id, selection: _ *)
 
     class TabularDatasetColumnCheckboxesImpl extends AbstractCheckboxMock(selection,
       inputColumns.toSeq, id, label, required) with TabularDatasetColumnCheckboxes {}

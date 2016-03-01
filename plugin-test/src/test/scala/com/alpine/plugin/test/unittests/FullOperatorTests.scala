@@ -5,15 +5,16 @@ import com.alpine.plugin.core.dialog.{ColumnFilter, OperatorDialog}
 import com.alpine.plugin.core.io.OperatorSchemaManager
 import com.alpine.plugin.core.spark.templates.{SparkDataFrameGUINode, SparkDataFrameJob}
 import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
-import com.alpine.plugin.core.spark.utils.TestSparkContexts._
 import com.alpine.plugin.core.{OperatorListener, OperatorParameters}
 import com.alpine.plugin.test.mock.OperatorParametersMock
-import com.alpine.plugin.test.utils.{ParameterMockUtil, SimpleAbstractSparkJobSuite}
+import com.alpine.plugin.test.utils.{TestSparkContexts, OperatorParameterMockUtil, SimpleAbstractSparkJobSuite}
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row}
 
 
-class FullOperatorTests extends SimpleAbstractSparkJobSuite {
+class FullOperatorTests extends  SimpleAbstractSparkJobSuite {
+
+  import TestSparkContexts._
 
   class TestGui extends SparkDataFrameGUINode[TestSparkJob] {
 
@@ -30,7 +31,7 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
           "one fish",
           "two fish"
         ),
-        defaultSelections = Seq()
+        defaultSelections = Seq("blue fish")
       )
 
       operatorDialog.addTabularDatasetColumnCheckboxes(
@@ -51,7 +52,8 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
 
       operatorDialog.addStringBox("addStringBox", "addStringBox Param", "aaa", "a*", 0, 0)
 
-      operatorDialog.addDoubleBox("addDoubleBox", "addDoubleBox param", 0.0, 1.0, true, true, 0.5)
+      operatorDialog.addDoubleBox("addDoubleBox", "addDoubleBox param", 0.0, 1.0,
+        inclusiveMin = true, inclusiveMax = true, 0.5)
 
       super.onPlacement(operatorDialog, operatorDataSourceManager, operatorSchemaManager)
     }
@@ -63,11 +65,16 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
                            sparkUtils: SparkRuntimeUtils, listener: OperatorListener): DataFrame = {
       val col: String = operatorParameters.getTabularDatasetSelectedColumn("addTabularDatasetColumnDropdownBox")._2
       val col2: Array[String] = operatorParameters.getTabularDatasetSelectedColumns("addTabularDatasetColumnCheckboxes")._2
+
       val checkboxes: Array[String] = operatorParameters.getStringArrayValue("addCheckboxes")
+      assert(checkboxes.sameElements(Seq("blue fish")))
       val stringParam = operatorParameters.getStringValue("addStringBox")
+      assert(stringParam == "aaa")
       val intParam = operatorParameters.getIntValue("addIntegerBox")
+      assert(intParam == 50)
       val doubleParam = operatorParameters.getDoubleValue("addDoubleBox")
-      dataFrame
+      assert(doubleParam == 0.5)
+      dataFrame.select(col, col2 : _ *)
     }
   }
 
@@ -81,12 +88,12 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
     val dataFrameInput = sqlContext.createDataFrame(inputRows, inputSchema)
 
     val parameters = new OperatorParametersMock(colFilterName, uuid)
-    ParameterMockUtil.addTabularColumn(parameters, "addTabularDatasetColumnDropdownBox", "name")
-    ParameterMockUtil.addTabularColumns(parameters, "addTabularDatasetColumnCheckboxes", "name", "age")
-    ParameterMockUtil.addHdfsParams(parameters, "ColumnSelector")
+    OperatorParameterMockUtil.addTabularColumn(parameters, "addTabularDatasetColumnDropdownBox", "name")
+    OperatorParameterMockUtil.addTabularColumns(parameters, "addTabularDatasetColumnCheckboxes", "name", "age")
+    OperatorParameterMockUtil.addHdfsParams(parameters, "ColumnSelector")
     val operatorGUI = new TestGui
     val operatorJob = new TestSparkJob
-    val (r, addendum) = runDataFrameThroughEntireDFTemplate(operatorGUI, operatorJob, parameters, dataFrameInput)
+    val (r, _) = runDataFrameThroughEntireDFTemplate(operatorGUI, operatorJob, parameters, dataFrameInput)
     assert(r.collect().nonEmpty)
 
   }

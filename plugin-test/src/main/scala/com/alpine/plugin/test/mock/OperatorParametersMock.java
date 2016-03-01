@@ -28,7 +28,7 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
     public OperatorParametersMock(String operatorName, String operatorUUID) {
         this.operatorName = operatorName;
         this.operatorUUID = operatorUUID;
-        this.parameterMap = new HashMap<String, Object>();
+        this.parameterMap = new HashMap<>();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
             ArrayList<String> arrayList = value.get(key);
             String[] vs = new String[arrayList.size()];
             arrayList.toArray(vs);
-            return new Tuple2<String, String[]>(key, vs);
+            return new Tuple2<>(key, vs);
         } else {
             HashMap<String, ArrayList<String>> value =
                     (HashMap<String, ArrayList<String>>) o;
@@ -83,7 +83,7 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
             ArrayList<String> arrayList = value.get(key);
             String[] vs = new String[arrayList.size()];
             arrayList.toArray(vs);
-            return new Tuple2<String, String[]>(key, vs);
+            return new Tuple2<>(key, vs);
         }
     }
 
@@ -96,13 +96,13 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
                     (LinkedTreeMap<String, String>) o;
             String key = value.keySet().iterator().next();
             String v = value.get(key);
-            return new Tuple2<String, String>(key, v);
+            return new Tuple2<>(key, v);
         } else {
             HashMap<String, String> value =
                     (HashMap<String, String>) o;
             String key = value.keySet().iterator().next();
             String v = value.get(key);
-            return new Tuple2<String, String>(key, v);
+            return new Tuple2<>(key, v);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.alpine.plugin.core.spark.utils
+package com.alpine.plugin.test.utils
 
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
