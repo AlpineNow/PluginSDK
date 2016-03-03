@@ -3,7 +3,7 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.5-beta",
+  version := "1.5-beta-1",
   publishMavenStyle := true,
   pomExtra := <scm>
     <url>git@github.com:AlpineNow/PluginSDK.git</url>
@@ -25,8 +25,7 @@ def publishParameters(module: String) = Seq(
   licenses := Seq("Apache License 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
   scalacOptions in(Compile, doc) ++= Seq("-doc-footer", "Copyright (c) 2015 Alpine Data Labs."),
   javacOptions in compile ++= Seq("-source", javaSourceVersion, "-target", javaTargetVersion),
-  crossPaths := false,
-  publishArtifact in Test := true
+  crossPaths := false
 )
 
 // javax.servlet signing issues can be tricky, we can just exclude the dep

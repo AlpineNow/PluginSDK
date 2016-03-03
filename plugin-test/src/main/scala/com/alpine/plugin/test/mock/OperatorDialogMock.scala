@@ -206,7 +206,8 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
 
 
     class TabularDatasetColumnDropdownBoxImpl extends
-    SingleElementSelectorMock(inputColumns.toSeq, selection, id, label, required) with
+    SingleElementSelectorMock(availableValues = inputColumns.toSeq, getSelectedValue = selection,
+      getId = id, getLabel = label, isRequired = required) with
     TabularDatasetColumnDropdownBox {
       assert(inputColumns.contains(selection),
         "The input of this operator does not contain the column " + selection +
@@ -282,7 +283,6 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     assert(inputSchema.isDefined, "Cannot create tabular dataset column dropdown " + label + " for " +
       "non tabular input")
 
-    val inputColumns = inputSchema.get.definedColumns.map(_.columnName).toSet
     val selection: Array[String] = Try(overrideParams.getTabularDatasetSelectedColumns(id)) match {
       case Success(s) =>
         val columns = s._2.filter(_.length > 0)
@@ -296,8 +296,8 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
 
     OperatorParameterMockUtil.addTabularColumns(operatorParametersMock, id, selection: _ *)
 
-    class TabularDatasetColumnCheckboxesImpl extends AbstractCheckboxMock(selection,
-      inputColumns.toSeq, id, label, required) with TabularDatasetColumnCheckboxes {}
+    class TabularDatasetColumnCheckboxesImpl extends AbstractCheckboxMock(availableValues =inputColumns.toSeq,
+      selected = selection, getId = id, getLabel = label, isRequired = required) with TabularDatasetColumnCheckboxes {}
 
     val de = new TabularDatasetColumnCheckboxesImpl
     updateDialogElements(id, de)
