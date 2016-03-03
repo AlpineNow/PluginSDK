@@ -68,16 +68,16 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
   def runInputThroughEntireOperator[I <: IOBase, O <: IOBase](input: I, operatorGUINode: OperatorGUINode[I, O],
                                                               operatorSparkJob: SparkIOTypedPluginJob[I, O],
                                                               inputParameteres: OperatorParametersMock,
-                                                              tabularSchema: Some[TabularSchema],
+                                                              tabularSchema: Option[TabularSchema],
                                                               appConf: collection.mutable.Map[String, String] =
                                                               collection.mutable.Map.empty) = {
     val newParameters = getNewParametersFromGUI(input, operatorGUINode, inputParameteres, tabularSchema)
-    val o = operatorSparkJob.onExecution(sc, appConf, input, newParameters, new SimpleOperatorListener)
+     operatorSparkJob.onExecution(sc, appConf, input, newParameters, new SimpleOperatorListener)
   }
 
   def getNewParametersFromGUI[I <: IOBase, O <: IOBase](input: I, operatorGUINode: OperatorGUINode[I, O],
                                                         inputParameters: OperatorParametersMock,
-                                                        tabularSchema: Some[TabularSchema],
+                                                        tabularSchema: Option[TabularSchema],
                                                         dataSourceName: String = "dataSource") = {
     val operatorDialogMock = new OperatorDialogMock(inputParameters, input, tabularSchema)
     operatorGUINode.onPlacement(operatorDialogMock,
