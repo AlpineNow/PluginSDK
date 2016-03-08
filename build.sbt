@@ -3,7 +3,7 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.5",
+  version := "1.5.1",
   publishMavenStyle := true,
   pomExtra := <scm>
     <url>git@github.com:AlpineNow/PluginSDK.git</url>

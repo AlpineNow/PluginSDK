@@ -32,7 +32,7 @@ class GroupByClassificationSQLTransformer(val model: GroupByClassificationModel,
 
     val groupBySQLExpression = combinedIntermediateLayers.layers.last.last._2.asColumnarSQLExpression(sqlGenerator)
 
-    val startingFeatureIndexByModel = modelsByGroup.map(_._1) zip cumulativeSum(modelsByGroup.map(_._2.inputFeatures.size))
+    val startingFeatureIndexByModel = modelsByGroup.map(_._1) zip cumulativeSum(modelsByGroup.map(_._2.classLabels.size))
 
     val finalLayerConfidences = model.classLabels.map(l => {
       (l, SQLUtility.groupBySQL(

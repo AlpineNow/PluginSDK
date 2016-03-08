@@ -14,7 +14,7 @@ import org.apache.spark.sql.{Row, DataFrame, SQLContext}
 case class IrisFlower(
   sepalLength: Double,
   sepalWidth: Double,
-  petaLlength: Double,
+  petalLength: Double,
   petalWidth: Double)
 
 
