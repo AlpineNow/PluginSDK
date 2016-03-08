@@ -32,7 +32,7 @@ object UnitTransformer extends Transformer {
   override def apply(row: Row): Row = row
 }
 
-case class UnitSQLTransformer(val model : UnitModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+case class UnitSQLTransformer(model : UnitModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
   override def getSQLExpressions = {
     inputColumnNames.map(_.asColumnarSQLExpression(sqlGenerator))
   }
