@@ -5,7 +5,8 @@ package com.alpine.plugin.test.utils
 
 import java.util
 
-import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat}
+import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
+import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat, HdfsStorageFormatType}
 import com.alpine.plugin.test.mock.OperatorParametersMock
 
 
@@ -35,7 +36,11 @@ object OperatorParameterMockUtil {
 
   /**
    * Use to add all the standard HDFS parameters to the mock parameters object
+    * @deprecated use the method with the following signature:
+    *             addHdfsParams( OperatorParametersMock, String, String, HdfsStorageFormatType, Boolean)
+    *             or the addHdfsParamsDefault method
    */
+  @deprecated("use HdfsStorageFormatType or addHdfsParamsDefault")
   def addHdfsParams(operatorParametersMock: OperatorParametersMock, outputName: String,
                     outputDirectory: String = defaultOutputDirectory, storageFormat: HdfsStorageFormat
                     = HdfsStorageFormat.TSV,
@@ -45,6 +50,29 @@ object OperatorParameterMockUtil {
     operatorParametersMock.setValue(HdfsParameterUtils.storageFormatParameterID, storageFormat)
     operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, overwrite.toString)
     operatorParametersMock
+  }
+
+  /**
+    * Use to add all the standard HDFS parameters to the mock parameters object
+    */
+  def addHdfsParams(operatorParametersMock: OperatorParametersMock, outputName: String,
+                    outputDirectory: String, storageFormat: HdfsStorageFormatType,
+                    overwrite: Boolean): OperatorParametersMock = {
+    operatorParametersMock.setValue(HdfsParameterUtils.outputDirectoryParameterID, outputDirectory)
+    operatorParametersMock.setValue(HdfsParameterUtils.outputNameParameterID, outputName)
+    operatorParametersMock.setValue(HdfsParameterUtils.storageFormatParameterID, storageFormat)
+    operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, overwrite.toString)
+    operatorParametersMock
+  }
+
+  /**
+    * Uses the following default values
+    * outputDirectory = "target/testResults"
+    * storageFormat type = HdfsStorageFormatType.TSV
+    * overwrite = true
+    */
+  def addHdfsParamsDefault(operatorParametersMock: OperatorParametersMock, outputName: String): OperatorParametersMock = {
+    addHdfsParams(operatorParametersMock, outputName, defaultOutputDirectory, HdfsStorageFormatType.TSV, overwrite = true)
   }
 
   def makeArrayList(selections : String*) = {

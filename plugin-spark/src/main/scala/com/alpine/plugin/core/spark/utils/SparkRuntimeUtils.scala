@@ -8,7 +8,7 @@ import scala.collection.mutable
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsAvroDatasetDefault, HdfsDelimitedTabularDatasetDefault, HdfsParquetDatasetDefault}
-import com.alpine.plugin.core.utils.HdfsStorageFormat
+import com.alpine.plugin.core.utils.{HdfsStorageFormatType, HdfsStorageFormat}
 import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
@@ -122,14 +122,79 @@ class SparkRuntimeUtils(sc: SparkContext) {
    *                 object.
    * @return After saving the data frame, returns an HdfsTabularDataset object.
    */
-  def saveDataFrame[T <: HdfsStorageFormat](
-                                             path: String,
-                                             dataFrame: DataFrame,
-                                             storageFormat: T,
-                                             overwrite: Boolean,
-                                             sourceOperatorInfo: Option[OperatorInfo],
-                                             addendum: Map[String, AnyRef] = Map[String, AnyRef](),
-                                             tSVAttributes: TSVAttributes = TSVAttributes.default): HdfsTabularDataset = {
+  def saveDataFrame[T <: HdfsStorageFormatType](
+                                                  path: String,
+                                                  dataFrame: DataFrame,
+                                                  storageFormat: T,
+                                                  overwrite: Boolean,
+                                                  sourceOperatorInfo: Option[OperatorInfo],
+                                                  addendum: Map[String, AnyRef],
+                                                  tSVAttributes: TSVAttributes): HdfsTabularDataset = {
+
+    if (overwrite) {
+      deleteFilePathIfExists(path)
+    }
+
+    storageFormat match {
+      case HdfsStorageFormatType.Parquet =>
+        saveAsParquet(
+          path,
+          dataFrame,
+          sourceOperatorInfo,
+          addendum
+        )
+
+      case HdfsStorageFormatType.Avro =>
+        saveAsAvro(
+          path,
+          dataFrame,
+          sourceOperatorInfo,
+          addendum
+        )
+
+      case HdfsStorageFormatType.TSV =>
+        saveAsCSV(
+          path,
+          dataFrame,
+          tSVAttributes,
+          sourceOperatorInfo,
+          addendum
+        )
+    }
+  }
+
+  def saveDataFrameDefault[T <: HdfsStorageFormatType](
+                                                         path: String,
+                                                         dataFrame: DataFrame): HdfsTabularDataset = {
+    saveDataFrame(path, dataFrame, HdfsStorageFormatType.TSV, true,
+      None, Map[String, AnyRef](), TSVAttributes.default)
+
+  }
+
+  /**
+    * Save a data frame to a path using the given storage format, and return
+    * a corresponding HdfsTabularDataset object that points to the path.
+    * @param path The path to which we'll save the data frame.
+    * @param dataFrame The data frame that we want to save.
+    * @param storageFormat The format that we want to store in.
+    * @param overwrite Whether to overwrite any existing file at the path.
+    * @param sourceOperatorInfo Mandatory source operator information to be included
+    *                           in the output object.
+    * @param addendum Mandatory addendum information to be included in the output
+    *                 object.
+    * @return After saving the data frame, returns an HdfsTabularDataset object.
+    *
+    * @deprecated use saveDataFrame(String, dataFrame, HdfsStorageFormatType, Option[OperatorInfo], boolean). or
+    *             SaveDataFrameDefault.
+    */
+  @deprecated("Use signature with HdfsStorageFormatType rather than HdfsStorageFormat enum or saveDataFrameDefault")
+  def saveDataFrame(
+                     path: String,
+                     dataFrame: DataFrame,
+                     storageFormat: HdfsStorageFormat.HdfsStorageFormat,
+                     overwrite: Boolean,
+                     sourceOperatorInfo: Option[OperatorInfo],
+                     addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsTabularDataset = {
 
     if (overwrite) {
       deleteFilePathIfExists(path)
@@ -153,10 +218,9 @@ class SparkRuntimeUtils(sc: SparkContext) {
         )
 
       case HdfsStorageFormat.TSV =>
-        saveAsCSV(
+        saveAsTSV(
           path,
           dataFrame,
-          tSVAttributes,
           sourceOperatorInfo,
           addendum
         )
@@ -317,4 +381,6 @@ class SparkRuntimeUtils(sc: SparkContext) {
     val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
     hiveContext.table(dataset.getConcatenatedName)
   }
+
+
 }

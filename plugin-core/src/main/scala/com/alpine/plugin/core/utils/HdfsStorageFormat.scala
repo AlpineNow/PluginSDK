@@ -4,32 +4,40 @@
 
 package com.alpine.plugin.core.utils
 
-import com.alpine.plugin.core.utils.{TSV, Avro, Parquet}
+/** *
+  * @deprecated
+  * Use HdfsStorageFormatTypes which are case classes inheriting from the sealed trait HdfsStorageFormatType instead.
+  */
+@deprecated("Use HdfsStorageFormatType case class")
+object HdfsStorageFormat extends Enumeration {
+  type HdfsStorageFormat = Value
+  val Parquet, Avro, TSV = Value
+}
 
-sealed trait HdfsStorageFormat {
+sealed trait HdfsStorageFormatType {
 
 }
 
-case class Parquet() extends HdfsStorageFormat {
+case class Parquet() extends HdfsStorageFormatType {
   override def toString: String = "Parquet"
 }
 
-case class Avro() extends HdfsStorageFormat {
+case class Avro() extends HdfsStorageFormatType {
   override def toString: String = "Avro"
 }
 
-case class TSV() extends HdfsStorageFormat {
+case class TSV() extends HdfsStorageFormatType {
   override def toString: String = "TSV"
 }
 
-object HdfsStorageFormat {
+object HdfsStorageFormatType {
   val Parquet = new Parquet()
   val Avro = new Avro()
   val TSV = new TSV()
 
   val values = Seq(Parquet, Avro, TSV)
 
-  def withName(s: String): HdfsStorageFormat = {
+  def withName(s: String): HdfsStorageFormatType = {
     if (s.equals("Parquet"))
       Parquet
     else if (s.equals("Avro"))
