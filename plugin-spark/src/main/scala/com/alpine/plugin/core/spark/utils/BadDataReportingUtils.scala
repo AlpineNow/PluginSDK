@@ -1,8 +1,9 @@
 package com.alpine.plugin.core.spark.utils
 
 import com.alpine.plugin.core.OperatorParameters
-import com.alpine.plugin.core.io.OperatorInfo
-import com.alpine.plugin.core.utils.{AddendumWriter, HdfsParameterUtils, HdfsStorageFormat, HtmlTabulator}
+import com.alpine.plugin.core.io.{TSVAttributes, OperatorInfo}
+import com.alpine.plugin.core.utils._
+import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SQLContext}
@@ -65,11 +66,14 @@ object BadDataReportingUtils {
     message
   }
 
-  //toDo: It would be awesome if we could write the meta data for the bad data, so that it would be easy to do some analysis of it.
+  //TODO: It would be awesome if we could write the meta data for the bad data, so that it would be easy to do some analysis of it.
 
   /**
-   * Rather than filtering a DataFrame, use this method if you already have the bad data as a data frame.
+    *
+    * @deprecated  Use the method with the signature that includes a value of type
+    *              HDFSStorageFormatType rather than the HdfsStorage format enum. Or handleBadDataAsDataFrameDefault
    */
+  @deprecated("Use signature with HdfsStorageFormatType or handleBadDataAsDataFrameDefault")
   def handleBadDataAsDataFrame(amountOfDataToWriteParam: Option[Long], badDataPath: String,
                                inputDataSize: Long,
                                outputSize: Long, badData: Option[DataFrame],
@@ -87,6 +91,37 @@ object BadDataReportingUtils {
     message
   }
 
+  /**
+    * If specified by Params will write the bad data to a file. Regardless return a message about how much bad data there is.
+    */
+  def handleBadDataAsDataFrame[T <: HdfsStorageFormatType](amountOfDataToWriteParam: Option[Long], badDataPath: String,
+                                                            inputDataSize: Long,
+                                                            outputSize: Long, badData: Option[DataFrame],
+                                                            sparkRuntimeUtils: SparkRuntimeUtils,
+                                                            hdfsStorageFormatType: T,
+                                                            overwrite: Boolean,
+                                                            operatorInfo: Option[OperatorInfo]): String = {
+    val (dataToWrite, message) = getBadDataToWriteAndMessage(amountOfDataToWriteParam, badDataPath,
+      inputDataSize, outputSize, badData)
+    //save the dataToWrite
+    if (dataToWrite.nonEmpty) {
+      val df: DataFrame = dataToWrite.get
+      sparkRuntimeUtils.saveDataFrame(badDataPath, df, hdfsStorageFormatType, overwrite, operatorInfo, Map[String, AnyRef](), TSVAttributes.default)
+    }
+    message
+  }
+
+  /**
+    * If applicable writes bad data as a TSV with default attributes.
+    * @return
+    */
+  def handleBadDataAsDataFrameDefault[T <: HdfsStorageFormatType](amountOfDataToWriteParam: Option[Long], badDataPath: String,
+                                                                   inputDataSize: Long,
+                                                                   outputSize: Long, badData: Option[DataFrame],
+                                                                   sparkRuntimeUtils: SparkRuntimeUtils): String = {
+    handleBadDataAsDataFrame(amountOfDataToWriteParam, badDataPath, inputDataSize, outputSize,
+      badData, sparkRuntimeUtils, HdfsStorageFormatType.TSV, true, None)
+  }
   /**
    * Helper function which uses the AddendumWriter object to generate a message about the bad data and
    * get the data, if any, to write to the bad data file.

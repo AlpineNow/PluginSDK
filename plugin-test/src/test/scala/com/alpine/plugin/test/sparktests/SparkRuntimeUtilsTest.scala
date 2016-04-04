@@ -3,7 +3,7 @@ package com.alpine.plugin.test.sparktests
 import com.alpine.plugin.core.io.TSVAttributes
 import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
 import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
-import com.alpine.plugin.core.utils.HdfsStorageFormat
+import com.alpine.plugin.core.utils.{HdfsStorageFormatType,  HdfsStorageFormat}
 import com.alpine.plugin.test.utils.TestSparkContexts
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
@@ -52,7 +52,7 @@ class SparkRuntimeUtilsTest extends FunSuite {
 
     val dataFrame = sqlContext.createDataFrame(sc.parallelize(originalData))
 
-    val fishDataOutput = sparkUtils.saveDataFrame(fishPath, dataFrame, HdfsStorageFormat.TSV,
+    val fishDataOutput = sparkUtils.saveDataFrame(fishPath, dataFrame, HdfsStorageFormatType.TSV,
       overwrite = true, None, Map[String, AnyRef](), pipeAttributes)
     val readData = sparkUtils.getDataFrame(fishDataOutput).collect()
     val nulls = readData.filter(row => row.anyNull)
@@ -66,11 +66,11 @@ class SparkRuntimeUtilsTest extends FunSuite {
 
   test("Test Storage Utils") {
 
-    val h: HdfsStorageFormat = HdfsStorageFormat.Avro
+    val h: HdfsStorageFormatType = HdfsStorageFormatType.Avro
     val m = h match {
-      case HdfsStorageFormat.Avro => 1
-      case HdfsStorageFormat.Parquet => 2
-      case HdfsStorageFormat.TSV => 3
+      case HdfsStorageFormatType.Avro => 1
+      case HdfsStorageFormatType.Parquet => 2
+      case HdfsStorageFormatType.TSV => 3
     }
 
     assert(m == 1)

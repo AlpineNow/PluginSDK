@@ -12,7 +12,7 @@ import com.alpine.plugin.core.dialog.OperatorDialog
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.spark.utils._
 import com.alpine.plugin.core.spark.{SparkIOTypedPluginJob, SparkRuntimeWithIOTypedJob}
-import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat}
+import com.alpine.plugin.core.utils.{HdfsStorageFormatType, HdfsParameterUtils}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.DataFrame
 
@@ -46,7 +46,7 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
     val overwrite = HdfsParameterUtils.getOverwriteParameterValue(operatorParameters)
     val output = saveResults(
       results, sparkUtils, storageFormat, outputPath, overwrite,
-      Some(operatorParameters.operatorInfo), addendum
+      Some(operatorParameters.operatorInfo), addendum, TSVAttributes.default
     )
     output
   }
@@ -84,7 +84,8 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
                   path: String,
                   overwrite: Boolean,
                   sourceOperatorInfo: Option[OperatorInfo],
-                  addendum: Map[String, AnyRef] = Map[String, AnyRef]()): OutputType
+                  addendum: Map[String, AnyRef] = Map[String, AnyRef](),
+                  tSVAttributes: TSVAttributes): OutputType
 
 }
 
@@ -157,14 +158,15 @@ abstract class SparkDataFrameJob extends TemplatedSparkDataFrameJob[DataFrame, H
                            outputPath: String,
                            overwrite: Boolean,
                            sourceOperatorInfo: Option[OperatorInfo],
-                           addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsTabularDataset = {
+                           addendum: Map[String, AnyRef] = Map[String, AnyRef](), tSVAttributes: TSVAttributes = TSVAttributes.default): HdfsTabularDataset = {
     sparkUtils.saveDataFrame(
       outputPath,
       transformedDataFrame,
-      HdfsStorageFormat.withName(storageFormat),
+      HdfsStorageFormatType.withName(storageFormat),
       overwrite,
       sourceOperatorInfo,
-      addendum
+      addendum,
+      tSVAttributes
     )
   }
 }
@@ -236,7 +238,7 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
     operatorDataSourceManager: OperatorDataSourceManager,
     operatorSchemaManager: OperatorSchemaManager): Unit = {
 
-    HdfsParameterUtils.addHdfsStorageFormatParameter(operatorDialog)
+    HdfsParameterUtils.addHdfsStorageFormatParameter(operatorDialog, HdfsStorageFormatType.TSV)
     HdfsParameterUtils.addStandardHdfsOutputParameters(operatorDialog)
   }
 
@@ -263,7 +265,7 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
     inputSchema: TabularSchema,
     params: OperatorParameters) : TabularSchema= {
     val newCols = defineOutputSchemaColumns(inputSchema, params)
-    val storageFormat = HdfsParameterUtils.getHdfsStorageFormat(params)
+    val storageFormat = HdfsParameterUtils.getHdfsStorageFormatType(params)
     val newTabularFormatAttributes = HdfsParameterUtils.getTabularFormatAttributes(storageFormat)
     TabularSchema(newCols, newTabularFormatAttributes)
   }
