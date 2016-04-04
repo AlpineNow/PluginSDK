@@ -124,4 +124,16 @@ class CombinerSQLTransformerTest extends FunSuite {
     assert(expectedSQL === sql)
   }
 
+  test("Should handle name conflicts when column_* is used as a name") {
+    val modelA = new UnitModel(Seq(ColumnDef("column_0", ColumnType.String), ColumnDef("column_1", ColumnType.String)))
+    val modelB = new UnitModel(Seq(ColumnDef("column_0", ColumnType.String), ColumnDef("column_1", ColumnType.String), ColumnDef("column_2", ColumnType.String)))
+
+    val combinerModel = CombinerModel.make(Seq(PipelineRowModel(Seq(modelA, modelA)), PipelineRowModel(Seq(modelB, modelB))))
+    val sqlExpressions = combinerModel.sqlTransformer(simpleSQLGenerator).get.getSQL
+    sqlExpressions.layers.foreach(layer => {
+      val columnNames: Seq[ColumnName] = layer.map(t => t._2)
+      assert(columnNames.distinct === columnNames)
+    })
+  }
+
 }

@@ -18,8 +18,27 @@ trait HdfsDelimitedTabularDataset extends HdfsTabularDataset {
 case class TSVAttributes(delimiter: Char,
                          escapeStr: Char,
                          quoteStr: Char,
-                         containsHeader: Boolean)
+                         containsHeader: Boolean,
+                         nullString : String = "") extends Serializable{
+  lazy val toMap: Map[String, String] = Map(
+    "delimiter" -> delimiter.toString,
+    "escape" -> escapeStr.toString,
+    "quote" -> quoteStr.toString,
+    "header" -> containsHeader.toString,
+    "nullValue" -> nullString
+  )
 
-object TSVAttributes {
-  val default = TSVAttributes('\t', '\\', '\"', containsHeader = false)
+}
+
+object TSVAttributes extends Serializable {
+  val DEFAULT_ESCAPE_CHAR = '\\'
+  val DEFAULT_QUOTE_CHAR = '\"'
+  val DEFAULT_DELIM = '\t'
+  val COMMA_DELIM = ','
+
+  val default =
+    TSVAttributes(DEFAULT_DELIM, DEFAULT_ESCAPE_CHAR, DEFAULT_QUOTE_CHAR, containsHeader = false)
+
+  val defaultCSV =
+    TSVAttributes(COMMA_DELIM, DEFAULT_ESCAPE_CHAR, DEFAULT_QUOTE_CHAR, containsHeader = false)
 }

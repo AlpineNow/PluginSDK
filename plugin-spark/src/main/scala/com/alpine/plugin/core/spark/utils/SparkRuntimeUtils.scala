@@ -5,7 +5,6 @@
 package com.alpine.plugin.core.spark.utils
 
 import scala.collection.mutable
-
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsAvroDatasetDefault, HdfsDelimitedTabularDatasetDefault, HdfsParquetDatasetDefault}
@@ -29,8 +28,6 @@ class SparkRuntimeUtils(sc: SparkContext) {
    * Converts an Alpine specific 'ColumnType' to the corresponding Saprk SQL specific type.
    * If no match can be found for the type, return a string type rather than throwing an exception.
    * used to define data frame schemas.
-   * @param columnType
-   * @return
    */
   def convertColumnTypeToSparkSQLDataType(columnType: ColumnType.TypeValue): DataType = {
     columnType match {
@@ -47,8 +44,6 @@ class SparkRuntimeUtils(sc: SparkContext) {
 
   /**
    * Converts from a Spark SQL data type to an Alpine-specific column type.
-   * @param dataType
-   * @return
    */
   def convertSparkSQLDataTypeToColumnType(dataType: DataType): ColumnType.TypeValue = {
     dataType match {
@@ -127,13 +122,14 @@ class SparkRuntimeUtils(sc: SparkContext) {
    *                 object.
    * @return After saving the data frame, returns an HdfsTabularDataset object.
    */
-  def saveDataFrame(
-    path: String,
-    dataFrame: DataFrame,
-    storageFormat: HdfsStorageFormat.HdfsStorageFormat,
-    overwrite: Boolean,
-    sourceOperatorInfo: Option[OperatorInfo],
-    addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsTabularDataset = {
+  def saveDataFrame[T <: HdfsStorageFormat](
+                                             path: String,
+                                             dataFrame: DataFrame,
+                                             storageFormat: T,
+                                             overwrite: Boolean,
+                                             sourceOperatorInfo: Option[OperatorInfo],
+                                             addendum: Map[String, AnyRef] = Map[String, AnyRef](),
+                                             tSVAttributes: TSVAttributes = TSVAttributes.default): HdfsTabularDataset = {
 
     if (overwrite) {
       deleteFilePathIfExists(path)
@@ -157,9 +153,10 @@ class SparkRuntimeUtils(sc: SparkContext) {
         )
 
       case HdfsStorageFormat.TSV =>
-        saveAsTSV(
+        saveAsCSV(
           path,
           dataFrame,
+          tSVAttributes,
           sourceOperatorInfo,
           addendum
         )
@@ -170,15 +167,12 @@ class SparkRuntimeUtils(sc: SparkContext) {
    * Write a DataFrame to HDFS as a Parquet file, and return an instance of the
    * HDFSParquet IO base type which contains the Alpine 'TabularSchema' definition (created by
    * converting the DataFrame schema) and the path to the to the saved data.
-   * @param path
-   * @param dataFrame
-   * @return
    */
   def saveAsParquet(path: String,
                     dataFrame: DataFrame,
                     sourceOperatorInfo: Option[OperatorInfo],
                     addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsParquetDataset = {
-    dataFrame.saveAsParquetFile(path)
+    dataFrame.write.parquet(path)
     val tabularSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
     new HdfsParquetDatasetDefault(path, tabularSchema, sourceOperatorInfo, addendum)
   }
@@ -187,26 +181,22 @@ class SparkRuntimeUtils(sc: SparkContext) {
    * Write a DataFrame as an HDFSAvro dataset, and return the an instance of the Alpine
    * HDFSAvroDataset type which contains the  'TabularSchema' definition
    * (created by converting the DataFrame schema) and the path to the to the saved data.
-   * @param path
-   * @param dataFrame
-   * @return
    */
   def saveAsAvro(path: String,
                  dataFrame: DataFrame,
                  sourceOperatorInfo: Option[OperatorInfo],
                  addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsAvroDataset = {
-    dataFrame.save(path, "com.databricks.spark.avro")
+    dataFrame.write.format("com.databricks.spark.avro").save(path)
     val tabularSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
     new HdfsAvroDatasetDefault(path, tabularSchema, sourceOperatorInfo, addendum)
   }
 
   /**
    * Write a DataFrame to HDFS as a Tabular Delimited file, and return an instance of the Alpine
-   * HDFSParquet type  which contains the Alpine 'TabularSchema' definition (created by converting
-   * the DataFrame schema) and the path to the to the saved data.
-   * @param path
-   * @param dataFrame
-   * @return
+    * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
+    * the DataFrame schema) and the path to the to the saved data. Uses the default TSVAttributes object
+    * which specifies that the data be written as a Tab Delimited File. See TSVAAttributes for more
+    * information and use the saveAsCSV file to customize csv options such as null string and delimiters.
    */
   def saveAsTSV(path: String,
                 dataFrame: DataFrame,
@@ -233,6 +223,35 @@ class SparkRuntimeUtils(sc: SparkContext) {
   }
 
   /**
+    * More general version of saveAsTSV.
+    * Write a DataFrame to HDFS as a Tabular Delimited file, and return an instance of the Alpine
+    * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
+    * the DataFrame schema) and the path to the to the saved data.
+    * @param path where file will be written (this function will create a directory of part files)
+    * @param dataFrame - data to write
+    * @param tSVAttributes - an object which specifies how the file should be written
+    * @param sourceOperatorInfo from parameters. Includes name and UUID
+    * @param addendum
+    * @return
+    */
+  def saveAsCSV(path: String, dataFrame: DataFrame,
+                tSVAttributes: TSVAttributes,
+                sourceOperatorInfo: Option[OperatorInfo],
+                addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+
+    dataFrame.saveAsCsvFile(path, tSVAttributes.toMap)
+    val tabularSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
+    new HdfsDelimitedTabularDatasetDefault(
+      path,
+      tabularSchema,
+      tSVAttributes,
+      sourceOperatorInfo,
+      addendum
+    )
+  }
+
+
+  /**
    * Checks if the given file path already exists (and would cause a 'PathAlreadyExists'
    * exception when we try to write to it) and deletes the directory to prevent existing
    * results at that path if they do exist.
@@ -253,36 +272,41 @@ class SparkRuntimeUtils(sc: SparkContext) {
   // ======================================================================
 
   /**
-   * Returns a DataFrame from an Alpine HdfsTabularDataset. The DataFrame's schema will
-   * correspond to the column header of the Alpine dataset.
-   * @param dataset
+    * Returns a DataFrame from an Alpine HdfsTabularDataset. The DataFrame's schema will
+    * correspond to the column header of the Alpine dataset.
+    * Uses the databricks csv parser from spark-csv with the following options:
+     1.withParseMode("DROPMALFORMED"): Catch parse errors such as number format exception caused by a
+      string value in a numeric column and remove those rows rather than fail.
+     2.withTreatEmptyValuesAsNulls(true) -> the empty string will represent a null value in char columns as it does in alpine
+     3.If a TSV, The delimiter attributes specified by the TSV attributes object
+    * @param dataset Alpine specific object. Usually input or output of operator.
    * @return Spark SQL DataFrame
    */
   def getDataFrame(dataset: HdfsTabularDataset): DataFrame = {
-    // TODO : Sort out reusing SQL context for fast run. Right now this method
-    // TODO : is causing failures, just creating SQL context from Spark context
-    // TODO : right now.
-    // val sqlContext = SQLContextSingleton.getOrCreate(sc)
+
     val sqlContext = new SQLContext(sc)
     val path = dataset.path
 
-    if (dataset.isInstanceOf[HdfsAvroDataset]) {
-      sqlContext.load(path, "com.databricks.spark.avro")
-    } else if (dataset.isInstanceOf[HdfsParquetDataset]) {
-      sqlContext.load(path)
-    } else {
-      val tabularSchema = dataset.tabularSchema
-      val delimitedDataset = dataset.asInstanceOf[HdfsDelimitedTabularDataset]
-      val tsvAttributes: TSVAttributes = delimitedDataset.tsvAttributes
-      val schema: StructType = convertTabularSchemaToSparkSQLSchema(tabularSchema)
-
-      new CsvParser().
-        withUseHeader(tsvAttributes.containsHeader).
-        withDelimiter(tsvAttributes.delimiter).
-        withQuoteChar(tsvAttributes.quoteStr).
-        withEscape(tsvAttributes.escapeStr).
-        withSchema(schema).
-        csvFile(sqlContext, path)
+    dataset match {
+      case _: HdfsAvroDataset =>
+        sqlContext.read.format("com.databricks.spark.avro").load(path)
+      case _: HdfsParquetDataset =>
+        sqlContext.read.load(path)
+      case _ =>
+        val tabularSchema = dataset.tabularSchema
+        val delimitedDataset = dataset.asInstanceOf[HdfsDelimitedTabularDataset]
+        val tsvAttributes: TSVAttributes = delimitedDataset.tsvAttributes
+        val schema: StructType = convertTabularSchemaToSparkSQLSchema(tabularSchema)
+        //TODO: Set up mirror with new parser to match behavior of alpine.
+        new CsvParser()
+          .withParseMode("DROPMALFORMED")
+          .withTreatEmptyValuesAsNulls(true)
+          .withUseHeader(tsvAttributes.containsHeader)
+          .withDelimiter(tsvAttributes.delimiter)
+          .withQuoteChar(tsvAttributes.quoteStr)
+          .withEscape(tsvAttributes.escapeStr)
+          .withSchema(schema)
+          .csvFile(sqlContext, path)
     }
   }
 

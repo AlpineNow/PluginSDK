@@ -13,17 +13,17 @@ import com.alpine.transformer.Transformer
 import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
 
 /**
- * Model that creates output features that are polynomial combinations of the input features.
- *
- *
- * We use java.lang.Double for the type of the numeric values, because the scala Double type information
- * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
- *
- * If the exponents are a matrix
- * {{{[[1,2,0], [0.5,3,2]]}}}
- * Then the transformation of a row (x1, x2, x3) will be
- * {{{(y1, y2) = (x1 * x2 pow 2, sqrt(x1) * x2 pow 3 * x3 pow 2).}}}
- */
+  * Model that creates output features that are polynomial combinations of the input features.
+  *
+  *
+  * We use java.lang.Double for the type of the numeric values, because the scala Double type information
+  * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
+  *
+  * If the exponents are a matrix
+  * {{{[[1,2,0], [0.5,3,2]]}}}
+  * Then the transformation of a row (x1, x2, x3) will be
+  * {{{(y1, y2) = (x1 * x2 pow 2, sqrt(x1) * x2 pow 3 * x3 pow 2).}}}
+  */
 case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
   override def transformer: Transformer = PolynomialTransformer(this)
 
@@ -60,20 +60,27 @@ case class PolynomialTransformer(model: PolynomialModel) extends Transformer {
   }
 }
 
-case class PolynomialSQLTransformer(val model: PolynomialModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+case class PolynomialSQLTransformer(model: PolynomialModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
   override def getSQLExpressions: Seq[ColumnarSQLExpression] = {
-    model.exponents.map(doubles =>
-      (doubles zip inputColumnNames).map {
+    model.exponents.map(doubles => {
+      val expression = (doubles zip inputColumnNames).flatMap {
         case (exponent, name) =>
           if (exponent == 1) {
             // Slightly more efficient.
-            name.escape(sqlGenerator)
+            Some(name.escape(sqlGenerator))
           } else if (exponent == 0) {
-            "1" // Do this to avoid "ERROR: zero raised to zero is undefined".
+            None // Do this to avoid "ERROR: zero raised to zero is undefined".
           } else {
-            s"POWER(${name.escape(sqlGenerator)}, $exponent)"
+            Some(s"POWER(${name.escape(sqlGenerator)}, $exponent)")
           }
       }.mkString(" * ")
+      if (expression != "") {
+        expression
+      } else {
+        // 1 is the identity for multiplication.
+        "1"
+      }
+    }
     ).map(ColumnarSQLExpression)
   }
 

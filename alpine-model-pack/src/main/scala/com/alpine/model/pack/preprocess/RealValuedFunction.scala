@@ -36,6 +36,53 @@ case class Exp() extends RealValuedFunction {
 
 }
 
+case class Multiply(coefficient: Double) extends RealValuedFunction  {
+  def apply(x: Double): Double = x * coefficient
+
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""$coefficient * ${name.escape(sqlGenerator)}"""
+      )
+    )
+  }
+}
+
+case class Divide(denominator: Double) extends RealValuedFunction  {
+  def apply(x: Double): Double = x / denominator
+
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""${name.escape(sqlGenerator)} / $denominator"""
+      )
+    )
+  }
+}
+case class Add(offset: Double) extends RealValuedFunction  {
+  def apply(x: Double): Double = x + offset
+
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""${name.escape(sqlGenerator)} + $offset"""
+      )
+    )
+  }
+}
+
+case class Subtract(offset: Double) extends RealValuedFunction  {
+  def apply(x: Double): Double = x - offset
+
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""${name.escape(sqlGenerator)} - $offset"""
+      )
+    )
+  }
+}
+
 case class Log() extends RealValuedFunction {
   def apply(x: Double) = math.log(x)
 
@@ -110,6 +157,12 @@ case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], input
 }
 
 case class RealFunctionWithIndex(function: TypeWrapper[_ <: RealValuedFunction], index: Int)
+
+object RealValuedFunctionsModel {
+  def make(functions: Seq[RealValuedFunction], inputFeatures: Seq[ColumnDef]): RealValuedFunctionsModel = {
+    RealValuedFunctionsModel(functions.zipWithIndex.map(t => RealFunctionWithIndex(TypeWrapper(t._1), t._2)), inputFeatures)
+  }
+}
 
 case class RealValuedFunctionTransformer(model: RealValuedFunctionsModel) extends Transformer {
 

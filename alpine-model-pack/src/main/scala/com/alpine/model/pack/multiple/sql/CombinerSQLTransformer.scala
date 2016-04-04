@@ -76,9 +76,10 @@ object CombinerSQLTransformer {
             aliasMap = None
             newExpressions zip originalColumnNames
           } else {
+            val columnNamesToAvoid = columnNamesForThisLayer union originalColumnNames.toSet
             aliasMap = Some(nameConflicts.map(n => (n, {
               var alias = ColumnName(aliasGenerator.getNextAlias)
-              while (columnNamesForThisLayer.contains(alias)) {
+              while (columnNamesToAvoid.contains(alias)) {
                 alias = ColumnName(aliasGenerator.getNextAlias)
               }
               alias

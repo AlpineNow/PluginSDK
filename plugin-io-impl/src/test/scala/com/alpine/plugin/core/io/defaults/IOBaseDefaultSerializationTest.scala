@@ -60,7 +60,7 @@ class IOBaseDefaultSerializationTest extends FunSuite {
     testSerialization(dBTable, Some(previousJson))
   }
 
-  val tsvAttributes = TSVAttributes(',', '\\', '`', containsHeader = false)
+  val tsvAttributes = TSVAttributes(',', '\\', '`', containsHeader = false, null)
   val hdfsDataset = HdfsDelimitedTabularDatasetDefault("path", schema, tsvAttributes, Some(opInfo))
   test("Should serialize HdfsDelimitedTabularDatasetDefault correctly") {
     val previousJson = """{"type":"com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault","data":{"path":"path","tabularSchema":{"definedColumns":[{"columnName":"name1","columnType":"Long"}],"isPartial":false,"expectedOutputFormatAttributes":{"type":"None"}},"tsvAttributes":{"delimiter":",","escapeStr":"\\","quoteStr":"`","containsHeader":false},"sourceOperatorInfo":{"type":"Some","data":{"uuid":"uuid","name":"name"}},"addendum":{}}}"""
