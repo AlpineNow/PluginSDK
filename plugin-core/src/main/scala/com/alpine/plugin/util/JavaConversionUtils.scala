@@ -61,4 +61,8 @@ object JavaConversionUtils {
     Option.apply(value)
   }
 
+  def getOrElse[A](option: Option[A], alternative: A): A = {
+    option.getOrElse(alternative)
+  }
+
 }

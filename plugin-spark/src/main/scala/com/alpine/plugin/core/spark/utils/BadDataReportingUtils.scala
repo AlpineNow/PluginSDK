@@ -2,7 +2,6 @@ package com.alpine.plugin.core.spark.utils
 
 import com.alpine.plugin.core.OperatorParameters
 import com.alpine.plugin.core.io.OperatorInfo
-import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
 import com.alpine.plugin.core.utils.{AddendumWriter, HdfsParameterUtils, HdfsStorageFormat, HtmlTabulator}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}

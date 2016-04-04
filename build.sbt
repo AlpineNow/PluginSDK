@@ -3,7 +3,7 @@
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
   name := s"$module",
-  version := "1.5.1",
+  version := "1.6-alpha",
   publishMavenStyle := true,
   pomExtra := <scm>
     <url>git@github.com:AlpineNow/PluginSDK.git</url>
@@ -34,7 +34,6 @@ def excludeFromAll(items: Seq[ModuleID], group: String, artifact: String) =
 
 def excludeJavaxServlet(items: Seq[ModuleID]) =
   excludeFromAll(items, "javax.servlet", "servlet-api")
-
 lazy val javaSourceVersion = "1.7"
 lazy val javaTargetVersion = "1.7"
 lazy val scalaMajorVersion = "2.10"
@@ -63,7 +62,7 @@ def sparkDependencies = excludeJPMML({
     "org.apache.spark" % s"spark-network-common_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-network-shuffle_$scalaMajorVersion" % sparkVersion,
     "com.databricks" % "spark-avro_2.10" % "1.0.0",
-    "com.databricks" % "spark-csv_2.10" % "1.1.0"
+    "com.databricks" % "spark-csv_2.10" % "1.3.0"
   )
 })
 
@@ -148,7 +147,7 @@ lazy val ModelPack = Project(
   settings = Seq(
     libraryDependencies ++= Seq(
       scalaTestDep  % "test"
-    //  prestoParserDependency
+      //  prestoParserDependency
     )
   ) ++ publishParameters("alpine-model-pack")
 ).dependsOn(ModelAPI % "compile->compile;test->test")

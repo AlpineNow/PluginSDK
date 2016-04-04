@@ -106,7 +106,7 @@ case class SingleOneHotEncoder(transform: OneHotEncodedFeature) {
   }
 }
 
-case class OneHotEncodingSQLTransformer(val model: OneHotEncodingModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+case class OneHotEncodingSQLTransformer(model: OneHotEncodingModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
 
   override def getSQLExpressions = {
     // TODO: Bad data handling.

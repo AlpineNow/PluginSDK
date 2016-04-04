@@ -40,8 +40,8 @@ trait RowModel extends MLModel {
   /**
    * Used to identify this model when in a collection of models.
    * Should be simple characters, so it can be used in a feature name.
-   *
-   * @return identifier for the model.
+    *
+    * @return identifier for the model.
    */
   def identifier: String = ""
   def transformationSchema: DetailedTransformationSchema = {

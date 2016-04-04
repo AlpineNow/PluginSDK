@@ -97,7 +97,8 @@ class PipelineCategoricalTransformer[R <: CategoricalResult](preProcessors: List
 
   /**
    * The result must always return the labels in the order specified here.
-   * @return The class labels in the order that they will be returned by the result.
+    *
+    * @return The class labels in the order that they will be returned by the result.
    */
   override def classLabels: Seq[String] = finalTransformer.classLabels
 }

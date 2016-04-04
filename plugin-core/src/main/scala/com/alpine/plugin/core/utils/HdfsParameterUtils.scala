@@ -48,7 +48,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
    * @return The dropdown dialog element.
    */
   def addHdfsStorageFormatParameter(operatorDialog: OperatorDialog,
-                                    defaultFormat: HdfsStorageFormat.HdfsStorageFormat = HdfsStorageFormat.TSV): DialogElement = {
+                                    defaultFormat: HdfsStorageFormat = HdfsStorageFormat.TSV): DialogElement = {
     val formats = HdfsStorageFormat.values.map(_.toString)
     operatorDialog.addDropdownBox(
       storageFormatParameterID,
@@ -135,7 +135,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
    *                   called addHdfsStorageFormatParameter before.
    * @return The selected Hdfs storage format.
    */
-  def getHdfsStorageFormat(parameters: OperatorParameters): HdfsStorageFormat.HdfsStorageFormat = {
+  def getHdfsStorageFormat(parameters: OperatorParameters): HdfsStorageFormat = {
     val parameterValue = parameters.getStringValue(storageFormatParameterID)
     if (parameterValue == null) {
       HdfsStorageFormat.TSV // Defaults to TSV if this parameter is missing.
@@ -153,7 +153,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
    * @param storageFormat The Hdfs storage format.
    * @return Tabular format attributes.
    */
-  def getTabularFormatAttributes(storageFormat: HdfsStorageFormat.HdfsStorageFormat): TabularFormatAttributes = {
+  def getTabularFormatAttributes(storageFormat: HdfsStorageFormat): TabularFormatAttributes = {
     storageFormat match {
       case HdfsStorageFormat.Parquet => TabularFormatAttributes.createParquetFormat()
       case HdfsStorageFormat.Avro => TabularFormatAttributes.createAvroFormat()

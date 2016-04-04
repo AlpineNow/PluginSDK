@@ -72,6 +72,15 @@ object SQLUtility {
     s"""CREATE TABLE $outputTableName AS $selectStatement"""
   }
 
+  def createTempTable(sql: LayeredSQLExpressions,
+                  inputTableName: String,
+                  outputTableName: String,
+                  aliasGenerator: AliasGenerator,
+                  sqlGenerator: SQLGenerator): String = {
+    val selectStatement: String = getSelectStatement(sql, inputTableName, aliasGenerator, sqlGenerator)
+    s"""CREATE TEMP TABLE $outputTableName AS $selectStatement"""
+  }
+
   def getSelectStatement(sql: LayeredSQLExpressions,
                          inputTableName: String,
                          aliasGenerator: AliasGenerator,
@@ -84,12 +93,16 @@ object SQLUtility {
     if (intermediateLayers == Nil) {
       input
     } else {
-      s"""(SELECT ${selectColumnsAs(intermediateLayers.head, sqlGenerator)} FROM ${selectFromInput(intermediateLayers.tail, input, aliasGenerator, sqlGenerator)}) ${
-        if (sqlGenerator.useAliasForSelectSubQueries) {
-          "AS " + aliasGenerator.getNextAlias
-        } else ""
+      s"""(SELECT ${selectColumnsAs(intermediateLayers.head, sqlGenerator)} FROM ${selectFromInput(intermediateLayers.tail, input, aliasGenerator, sqlGenerator)})${
+        aliasPhraseIfNeeded(sqlGenerator, aliasGenerator)
       }"""
     }
+  }
+
+  def aliasPhraseIfNeeded(sqlGenerator: SQLGenerator, aliasGenerator: AliasGenerator): String = {
+    if (sqlGenerator.useAliasForSelectSubQueries) {
+      " AS " + aliasGenerator.getNextAlias
+    } else ""
   }
 
   def selectColumnsAs(columns: Seq[(ColumnarSQLExpression, ColumnName)], sqlGenerator: SQLGenerator): String = {
