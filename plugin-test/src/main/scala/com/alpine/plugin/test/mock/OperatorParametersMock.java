@@ -14,11 +14,14 @@ import scala.collection.JavaConversions;
 
 import com.alpine.plugin.core.OperatorParameters;
 import com.google.gson.internal.LinkedTreeMap;
+import scala.collection.mutable.Map;
 
 /**
  * Plugin 1.0 operator parameters.
  */
 public class OperatorParametersMock implements OperatorParameters, Serializable {
+
+    private static final String SPARK_PARAM = "sparkSettings";
 
     private HashMap<String, Object> parameterMap;
 
@@ -133,6 +136,11 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         return JavaConversions.asScalaIterator(
                 this.parameterMap.keySet().iterator()
         );
+    }
+
+    @Override
+    public Map<String, String> getAdvancedSparkParameters() {
+        return new scala.collection.mutable.HashMap<String, String>();
     }
 
     @Override

@@ -169,7 +169,8 @@ abstract class SparkRuntimeWithIOTypedJob[
         numExecutors = numExecutors,
         executorMemoryMB = executorMemoryMB,
         driverMemoryMB = driverMemoryMB,
-        numExecutorCores = numExecutorCores
+        numExecutorCores = numExecutorCores,
+        additionalParameters = parameters.getAdvancedSparkParameters
       )
     sparkJobConfiguration
   }

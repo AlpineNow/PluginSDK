@@ -5,8 +5,9 @@ package com.alpine.plugin.test.utils
 
 import java.util
 
+import com.alpine.plugin.core.utils.HdfsStorageFormat
 import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
-import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat, HdfsStorageFormatType}
+import com.alpine.plugin.core.utils.{HdfsStorageFormatType, HdfsStorageFormat, HdfsParameterUtils}
 import com.alpine.plugin.test.mock.OperatorParametersMock
 
 

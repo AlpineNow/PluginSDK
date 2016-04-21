@@ -5,6 +5,7 @@
 package com.alpine.plugin.core.utils
 
 import com.alpine.plugin.core.dialog.OperatorDialog
+import com.alpine.plugin.core.dialog.SparkParameter
 
 /**
  * Convenience functions for directly adding Spark related options to the
@@ -22,36 +23,13 @@ object SparkParameterUtils {
     defaultDriverMemoryMB: Int,
     defaultNumExecutorCores: Int
   ) {
-    operatorDialog.addIntegerBox(
-      sparkNumExecutorsElementId,
-      "Number of Executors",
-      1,
-      Int.MaxValue,
-      defaultNumExecutors
-    )
 
-    operatorDialog.addIntegerBox(
-      sparkExecutorMBElementId,
-      "Executor Memory in MB",
-      1,
-      Int.MaxValue,
-      defaultExecutorMemoryMB
+    val list = List(
+      new SparkParameter(sparkNumExecutorsElementId, "Number of Executors", defaultNumExecutors.toString, false, false),
+      new SparkParameter(sparkExecutorMBElementId, "Executor Memory in MB", defaultExecutorMemoryMB.toString, false, false),
+      new SparkParameter(sparkDriverMBElementId, "Driver Memory in MB", defaultDriverMemoryMB.toString, false, false),
+      new SparkParameter(sparkNumExecutorCoresElementId, "Number of Executor Cores", defaultNumExecutorCores.toString, false, false)
     )
-    
-    operatorDialog.addIntegerBox(
-      sparkDriverMBElementId,
-      "Driver Memory in MB",
-      1,
-      Int.MaxValue,
-      defaultDriverMemoryMB
-    )
-    
-    operatorDialog.addIntegerBox(
-      sparkNumExecutorCoresElementId,
-      "Number of Executor Cores",
-      1,
-      Int.MaxValue,
-      defaultNumExecutorCores
-    )
+    operatorDialog.addAdvancedSparkSettingsBox("sparkSettings", "Advanced Spark Settings", list)
   }
 }

@@ -4,7 +4,7 @@
 
 package com.alpine.plugin.core.spark.utils
 
-import scala.collection.mutable
+import java.sql.Timestamp
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsAvroDatasetDefault, HdfsDelimitedTabularDatasetDefault, HdfsParquetDatasetDefault}
@@ -12,98 +12,15 @@ import com.alpine.plugin.core.utils.{HdfsStorageFormatType, HdfsStorageFormat}
 import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.{SQLContext, DataFrame}
+import org.apache.spark.sql.{UserDefinedFunction, SQLContext, DataFrame}
 import org.apache.spark.sql.types._
 
 /**
  * :: AlpineSdkApi ::
  */
 @AlpineSdkApi
-class SparkRuntimeUtils(sc: SparkContext) {
-  // ======================================================================
-  // Schema conversion util functions.
-  // ======================================================================
+class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
 
-  /**
-   * Converts an Alpine specific 'ColumnType' to the corresponding Saprk SQL specific type.
-   * If no match can be found for the type, return a string type rather than throwing an exception.
-   * used to define data frame schemas.
-   */
-  def convertColumnTypeToSparkSQLDataType(columnType: ColumnType.TypeValue): DataType = {
-    columnType match {
-      case ColumnType.Int => IntegerType
-      case ColumnType.Long => LongType
-      case ColumnType.Float => FloatType
-      case ColumnType.Double => DoubleType
-      case ColumnType.String => StringType
-      case ColumnType.DateTime => TimestampType
-      case _ => StringType // Rather than throwing an exception, treat it as a string type.
-      // throw new UnsupportedOperationException(columnType.toString + " is not supported.")
-    }
-  }
-
-  /**
-   * Converts from a Spark SQL data type to an Alpine-specific column type.
-   */
-  def convertSparkSQLDataTypeToColumnType(dataType: DataType): ColumnType.TypeValue = {
-    dataType match {
-      case IntegerType => ColumnType.Int
-      case LongType => ColumnType.Long
-      case FloatType => ColumnType.Float
-      case DoubleType => ColumnType.Double
-      case StringType => ColumnType.String
-      case DateType => ColumnType.DateTime
-      case TimestampType => ColumnType.DateTime
-      case _ =>
-        throw new UnsupportedOperationException(
-          "Spark SQL data type " + dataType.toString + " is not supported."
-        )
-    }
-  }
-
-  /**
-   *Convert the Alpine 'TabularSchema' with column names and types to the equivalent Spark SQL
-   * data frame header.
-   * @param tabularSchema An Alpine 'TabularSchemaOutline' object with fixed column definitions
-   *                      containing a name and Alpine specific type.
-   * @return
-   */
-  def convertTabularSchemaToSparkSQLSchema(tabularSchema: TabularSchema): StructType = {
-    StructType(
-      tabularSchema.getDefinedColumns.map{
-        columnDef =>
-          StructField(
-            columnDef.columnName,
-            convertColumnTypeToSparkSQLDataType(columnDef.columnType),
-            nullable = true
-          )
-      }
-    )
-  }
-
-  /**
-   * Converts from a Spark SQL schema to the Alpine 'TabularSchema' type. The 'TabularSchema'
-   * object this method returns can be used to create any of the tabular Alpine IO types
-   * (HDFSTabular dataset, dataTable etc.)
-   * @param schema -a Spark SQL DataFrame schema
-   * @return the equivalent Alpine schema for that dataset
-   */
-  def convertSparkSQLSchemaToTabularSchema(schema: StructType): TabularSchema = {
-    val columnDefs = new mutable.ArrayBuffer[ColumnDef]()
-
-    val schemaItr = schema.iterator
-    while (schemaItr.hasNext) {
-      val colInfo = schemaItr.next()
-      val colDef = ColumnDef(
-        columnName = colInfo.name,
-        columnType = convertSparkSQLDataTypeToColumnType(colInfo.dataType)
-      )
-
-      columnDefs += colDef
-    }
-
-    TabularSchema(columnDefs)
-  }
 
   // ======================================================================
   // Storage util functions.
@@ -166,7 +83,7 @@ class SparkRuntimeUtils(sc: SparkContext) {
   def saveDataFrameDefault[T <: HdfsStorageFormatType](
                                                          path: String,
                                                          dataFrame: DataFrame): HdfsTabularDataset = {
-    saveDataFrame(path, dataFrame, HdfsStorageFormatType.TSV, true,
+    saveDataFrame(path, dataFrame, HdfsStorageFormatType.TSV, overwrite = true,
       None, Map[String, AnyRef](), TSVAttributes.default)
 
   }
@@ -236,8 +153,9 @@ class SparkRuntimeUtils(sc: SparkContext) {
                     dataFrame: DataFrame,
                     sourceOperatorInfo: Option[OperatorInfo],
                     addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsParquetDataset = {
+    val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
+    withDatesChanged.write.parquet(path)
     dataFrame.write.parquet(path)
-    val tabularSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
     new HdfsParquetDatasetDefault(path, tabularSchema, sourceOperatorInfo, addendum)
   }
 
@@ -250,8 +168,8 @@ class SparkRuntimeUtils(sc: SparkContext) {
                  dataFrame: DataFrame,
                  sourceOperatorInfo: Option[OperatorInfo],
                  addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsAvroDataset = {
-    dataFrame.write.format("com.databricks.spark.avro").save(path)
-    val tabularSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
+    val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
+    withDatesChanged.write.format("com.databricks.spark.avro").save(path)
     new HdfsAvroDatasetDefault(path, tabularSchema, sourceOperatorInfo, addendum)
   }
 
@@ -266,7 +184,9 @@ class SparkRuntimeUtils(sc: SparkContext) {
                 dataFrame: DataFrame,
                 sourceOperatorInfo: Option[OperatorInfo],
                 addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsDelimitedTabularDataset = {
-    dataFrame.saveAsCsvFile(
+
+    val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
+    withDatesChanged.saveAsCsvFile(
       path,
       Map(
         "delimiter" -> "\t",
@@ -276,7 +196,6 @@ class SparkRuntimeUtils(sc: SparkContext) {
       )
     )
 
-    val tabularSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
     new HdfsDelimitedTabularDatasetDefault(
       path,
       tabularSchema,
@@ -295,16 +214,13 @@ class SparkRuntimeUtils(sc: SparkContext) {
     * @param dataFrame - data to write
     * @param tSVAttributes - an object which specifies how the file should be written
     * @param sourceOperatorInfo from parameters. Includes name and UUID
-    * @param addendum
-    * @return
     */
   def saveAsCSV(path: String, dataFrame: DataFrame,
                 tSVAttributes: TSVAttributes,
                 sourceOperatorInfo: Option[OperatorInfo],
                 addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
-
-    dataFrame.saveAsCsvFile(path, tSVAttributes.toMap)
-    val tabularSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
+    val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
+    withDatesChanged.saveAsCsvFile(path, tSVAttributes.toMap)
     new HdfsDelimitedTabularDatasetDefault(
       path,
       tabularSchema,
@@ -343,24 +259,30 @@ class SparkRuntimeUtils(sc: SparkContext) {
       string value in a numeric column and remove those rows rather than fail.
      2.withTreatEmptyValuesAsNulls(true) -> the empty string will represent a null value in char columns as it does in alpine
      3.If a TSV, The delimiter attributes specified by the TSV attributes object
+
+    Date format behavior: DateTime columns are parsed as dates and then converted to the TimeStampType according to
+    the format specified by the alpine type. The original format is save in the schema as metadata for that column.
+    It can be accessed with SparkSqlDateTimeUtils.getDatFormatInfo(structField) for any given column.
+
     * @param dataset Alpine specific object. Usually input or output of operator.
    * @return Spark SQL DataFrame
    */
   def getDataFrame(dataset: HdfsTabularDataset): DataFrame = {
+    val tabularSchema = dataset.tabularSchema
+    val (schema, dateFormats) = convertTabularSchemaToSparkSQLSchemaDateSupport(tabularSchema)
 
     val sqlContext = new SQLContext(sc)
     val path = dataset.path
 
-    dataset match {
+    val tabularData = dataset match {
       case _: HdfsAvroDataset =>
         sqlContext.read.format("com.databricks.spark.avro").load(path)
       case _: HdfsParquetDataset =>
         sqlContext.read.load(path)
       case _ =>
-        val tabularSchema = dataset.tabularSchema
         val delimitedDataset = dataset.asInstanceOf[HdfsDelimitedTabularDataset]
         val tsvAttributes: TSVAttributes = delimitedDataset.tsvAttributes
-        val schema: StructType = convertTabularSchemaToSparkSQLSchema(tabularSchema)
+
         //TODO: Set up mirror with new parser to match behavior of alpine.
         new CsvParser()
           .withParseMode("DROPMALFORMED")
@@ -372,6 +294,9 @@ class SparkRuntimeUtils(sc: SparkContext) {
           .withSchema(schema)
           .csvFile(sqlContext, path)
     }
+    //map dateTime columns from string to java.sql.Date objects. Will appear in schema as TimeStampType objects
+    mapDFtoUnixDateTime(tabularData, dateFormats)
+
   }
 
   /**
@@ -382,5 +307,73 @@ class SparkRuntimeUtils(sc: SparkContext) {
     hiveContext.table(dataset.getConcatenatedName)
   }
 
+  /**
+    * STRING -> JAVA TIMESTAMP OBJECT (based on unix time stamp)
+    * Take in a dataframe and a map of the column names to the date formats represented in them
+    * and use the Spark SQL: "unix_timestamp" UDF,  to change the columns with string dates into
+    * unix timestamps in seconds and a custom udf to change that into java dates.
+    * Preserves original naming of the columns. Columns which were originally DateTime columns will
+    * now be of TimeStampType rather than StringType.
+    *
+    * @param dataFrame the input dataframe where the date rows are as strings.
+    * @param map columnName -> dateFormat for parsing
+    */
+  def mapDFtoUnixDateTime(dataFrame: DataFrame, map : scala.collection.mutable.Map[String, String]) = {
+    // dataFrame.sqlContext.udf.register("makeDateTime", makeDateTime(_:String,_:String))
+    if(map.isEmpty) {
+      dataFrame
+    }
+    else {
 
+      import org.apache.spark.sql.functions.unix_timestamp
+
+      //generate a function that maps from the unix time stamp to the java.sql.Date object for a given format
+      def dateTimeFunction(format : String ): UserDefinedFunction = {
+        import org.apache.spark.sql.functions.udf
+        udf((time : Long) => new Timestamp(time * 1000))
+      }
+
+      val selectExpression = dataFrame.schema.fieldNames.map( colDef =>
+        map.get(colDef) match {
+          case None => dataFrame(colDef)
+          case Some(format) =>
+            val unixCol = unix_timestamp(dataFrame(colDef), format)
+            dateTimeFunction(format)(unixCol).cast(TimestampType
+            ).as(colDef, dataFrame.schema(colDef).metadata)
+        })
+      dataFrame.select(selectExpression :_*)
+    }
+  }
+
+  /**
+    * JAVA TIME STAMP OBJECT--> STRING
+    * Take in a dataFrame and map of the column names to the date formats we want to print and use
+    * the Spark SQL UDF date_format to convert from the TimeStamp type to a string representation of the date or time.
+    * @param dataFrame input data where date columns are represented as java TimeStamp Objects
+    * @param map columnName -> dateFormat to convert to
+    */
+  def mapDFtoCustomDateTimeFormat(dataFrame: DataFrame, map : scala.collection.mutable.Map[String, String]) = {
+    if(map.isEmpty){
+      dataFrame
+    }
+    else {
+
+      import org.apache.spark.sql.functions.date_format
+
+      val selectExpression = dataFrame.schema.fieldNames.map( colDef =>
+        map.get(colDef) match {
+          case None => dataFrame(colDef)
+          case Some(format) =>
+            date_format(dataFrame(colDef), format).as(colDef, dataFrame.schema(colDef).metadata)
+        })
+
+      dataFrame.select(selectExpression :_*)
+    }
+  }
+
+  private def dealWithDates(dataFrame : DataFrame) = {
+      val alpineSchema = getDateFormatFromSchema(dataFrame.schema)
+      val map = getDateMap(alpineSchema)
+      (mapDFtoCustomDateTimeFormat(dataFrame, map), alpineSchema)
+  }
 }

@@ -72,6 +72,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
     )
   }
 
+
   /**
    * adds a string dialog box to let the user define the name of the file with the output.
    * @param operatorDialog The dialog to which the parameter will be added.

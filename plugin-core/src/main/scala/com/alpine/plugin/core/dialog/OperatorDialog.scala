@@ -53,6 +53,8 @@ trait OperatorDialog {
    */
   def getDialogElement(id: String): DialogElement
 
+  def addAdvancedSparkSettingsBox(id: String, label: String, availableValues: List[SparkParameter]): DialogElement
+
   /**
    * Add a data source selection box. This can be used to select a particular
    * data source if the workflow is associated with multiple data sources.

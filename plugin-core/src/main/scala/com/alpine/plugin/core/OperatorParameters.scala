@@ -89,4 +89,5 @@ trait OperatorParameters {
    */
   def getParameterIds: Iterator[String]
 
+  def getAdvancedSparkParameters: scala.collection.mutable.Map[String, String]
 }

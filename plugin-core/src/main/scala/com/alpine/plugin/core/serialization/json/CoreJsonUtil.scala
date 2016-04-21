@@ -6,6 +6,7 @@ package com.alpine.plugin.core.serialization.json
 import java.lang.reflect.Type
 
 import com.alpine.plugin.core.io._
+import com.alpine.plugin.core.utils.HdfsStorageFormatType
 
 object CoreJsonUtil {
 
