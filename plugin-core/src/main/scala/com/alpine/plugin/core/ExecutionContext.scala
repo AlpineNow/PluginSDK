@@ -9,4 +9,6 @@ package com.alpine.plugin.core
  * underlying platform, such as connection information and/or job submission,
  * the working directory, etc.
  */
-trait ExecutionContext
+trait ExecutionContext {
+  def chorusUserInfo: ChorusUserInfo
+}
