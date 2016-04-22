@@ -353,6 +353,31 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     val de = new DoubleBoxImpl
     updateDialogElements(id, de)
   }
+
+  override def addAdvancedSparkSettingsBox(id: String, label: String, availableValues: List[SparkParameter]): DialogElement = {
+    class AdvancedSparkSettingsBoxImpl extends DefaultDialogElementMock(id, label) with AdvancedSparkSettingsBox {
+
+      override def setAvailableValues(options: Iterator[String]): Unit = {}
+
+      override def getSetting(settingId: String): String = {
+
+        val element: String = Try(availableValues.find(t => t.name == settingId).head) match {
+          case Success(s) => s.value
+          case _ => ""
+        }
+        element
+      }
+
+      override def addSetting(name: String, value: String): Unit = {}
+
+      override def setParameters(options: Iterator[SparkParameter]): Unit = {}
+
+      override def setAvailableValues(options: Map[String, String]): Unit = {}
+    }
+
+    val de = new AdvancedSparkSettingsBoxImpl
+    updateDialogElements(id, de)
+  }
 }
 
 object OperatorDialogMock {

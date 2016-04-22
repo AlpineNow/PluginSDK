@@ -61,10 +61,12 @@ case class TabularDatasetVisualModel(dataset: TabularDataset) extends VisualMode
 
 
 case class CompositeVisualModelImpl() extends CompositeVisualModel {
-  var models = Map[String, VisualModel]()
+  private val modelList = scala.collection.mutable.ListBuffer[(String, VisualModel)]()
 
   override def addVisualModel(name: String, visualModel: VisualModel): Unit = {
-    models = models.updated(name, visualModel)
+    modelList.append((name, visualModel))
   }
+
+  lazy val models = modelList.toArray
 
 }

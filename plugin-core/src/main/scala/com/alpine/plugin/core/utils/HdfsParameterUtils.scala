@@ -18,6 +18,9 @@ object HdfsParameterUtils extends OutputParameterUtils {
   val outputNameParameterID = "outputName"
   val storageFormatParameterID = "storageFormat"
 
+
+
+
   /**
    * Adds
    * -- "outputDirectory": an HDFS directory selector for the location of the output
@@ -71,6 +74,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
       defaultFormat.toString
     )
   }
+
 
   /**
    * adds a string dialog box to let the user define the name of the file with the output.

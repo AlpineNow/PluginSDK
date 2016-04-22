@@ -18,6 +18,7 @@ sealed trait HdfsStorageFormatType {
 
 }
 
+
 case class Parquet() extends HdfsStorageFormatType {
   override def toString: String = "Parquet"
 }
