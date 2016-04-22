@@ -17,13 +17,13 @@ From there you can run tasks like
 > test
 ```
 
-Or you can enter sub projects run tests from there.
+Or you can enter sub projects and run tests from there:
 ```
 > project alpine-model-pack
 > test
 ```
 
-Or do run these commands in one line each:
+Or run these commands in one line each:
 ```
 ./sbt compile
 ./sbt test
