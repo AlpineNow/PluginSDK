@@ -11,8 +11,8 @@ trait OutputParameterUtils {
 
   val operatorNameUUIDVariable = "@operator_name_uuid"
 
-  private val trueStr = true.toString
-  private val falseStr = false.toString
+  private val trueStr = "true"
+  private val falseStr = "false"
 
   val overwriteParameterID = "overwrite"
 
@@ -42,7 +42,10 @@ trait OutputParameterUtils {
       false
     }
   }
-
 }
 
-object OutputParameterUtils extends OutputParameterUtils
+object OutputParameterUtils extends OutputParameterUtils {
+  def toTrueFalseString(bool : Boolean) : String = {
+    if(bool) trueStr else falseStr
+  }
+}

@@ -5,9 +5,8 @@ package com.alpine.plugin.test.utils
 
 import java.util
 
-import com.alpine.plugin.core.utils.HdfsStorageFormat
+import com.alpine.plugin.core.utils._
 import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
-import com.alpine.plugin.core.utils.{HdfsStorageFormatType, HdfsStorageFormat, HdfsParameterUtils}
 import com.alpine.plugin.test.mock.OperatorParametersMock
 
 
@@ -49,7 +48,7 @@ object OperatorParameterMockUtil {
     operatorParametersMock.setValue(HdfsParameterUtils.outputDirectoryParameterID, outputDirectory)
     operatorParametersMock.setValue(HdfsParameterUtils.outputNameParameterID, outputName)
     operatorParametersMock.setValue(HdfsParameterUtils.storageFormatParameterID, storageFormat)
-    operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, overwrite.toString)
+    operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, OutputParameterUtils.toTrueFalseString(overwrite))
     operatorParametersMock
   }
 
@@ -62,7 +61,7 @@ object OperatorParameterMockUtil {
     operatorParametersMock.setValue(HdfsParameterUtils.outputDirectoryParameterID, outputDirectory)
     operatorParametersMock.setValue(HdfsParameterUtils.outputNameParameterID, outputName)
     operatorParametersMock.setValue(HdfsParameterUtils.storageFormatParameterID, storageFormat)
-    operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, overwrite.toString)
+    operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, OutputParameterUtils.toTrueFalseString(overwrite))
     operatorParametersMock
   }
 

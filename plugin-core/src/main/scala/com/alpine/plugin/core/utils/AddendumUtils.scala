@@ -3,17 +3,22 @@ package com.alpine.plugin.core.utils
 import java.text.SimpleDateFormat
 import java.util.{Date, Calendar}
 import java.util.concurrent.TimeUnit
+import com.alpine.plugin.core.io.{IOBase, TabularDataset}
+import com.alpine.plugin.core.visualization.{VisualModelFactory, CompositeVisualModel, VisualModel}
 
 /**
  * Utilities for writing the addendum for custom operators in a consistent manner
  */
 object AddendumWriter {
 
-  def reportInputSize(n: Long): List[String] = List("Input data size: ", n +
-    " rows")
+  val SUMMARY_DISPLAY_NAME = "Summary"
+  val OUTPUT_DISPLAY_NAME = "Output"
 
-  def reportOutputSize(n: Long): List[String] = List("Output data size: ", n +
-    " rows")
+  val summaryKey = "summaryKey"
+
+  def reportInputSize(n: Long): List[String] = List("Input data size: ", n + " rows")
+
+  def reportOutputSize(n: Long): List[String] = List("Input size after removing bad data: ", n + " rows")
 
   def reportBadDataSize(input: Long, output: Long): List[String] = {
     val badRows = input - output
@@ -41,13 +46,54 @@ object AddendumWriter {
    * Returns a string describing the name of the results and where they are stored.
    * Has html <br> tags afterwards.
    */
-  def reportOutputLocation(outputPath: String, resultName: String =
-  "The results"): String = resultName + " are stored at: <br>" + outputPath + "<br>"
+  def reportOutputLocation(outputPath: String, resultMessage: String =
+  "The output of the operator is stored at"): String = resultMessage +"<br>" + outputPath + "<br>"
 
   /**
    * Add to a list that will be used by Tabulator. It creates an empty row in the table
    */
   val emptyRow = List("&nbsp", "&nbsp")
+
+  /**
+    * Create a map which can be used as the addendum with one (key, value) pair added.
+    * Add more values to the map with map.updated(newKey, newValue)
+    * @param summaryText The text which should appear in the summary tab of the result output.
+    * @return
+    */
+  def createStandardAddendum(summaryText : String) : Map[String, AnyRef] = {
+    Map[String,AnyRef](summaryKey -> summaryText)
+  }
+
+  /**
+    * Use in the 'OnOutputVisualization class. Creates a composite visualization with
+    * - the output of a tabular dataset
+    * - the visual models provided by the optional additionalVisualModels parameter
+    * - an HtmlVisualModel of the summary if it has been added to the addendum (nothing will be
+    * - added if the addendum doesn't include anything with the visual key 'summaryKey'
+    */
+  def createCompositeVisualModel[O <: TabularDataset]( visualModelFactory: VisualModelFactory,
+    outputData : O, additionalVisualModels : Array[(String,VisualModel)] = Array.empty[(String, VisualModel)]
+     ) : CompositeVisualModel = {
+
+    val model = visualModelFactory.createCompositeVisualModel()
+    model.addVisualModel(OUTPUT_DISPLAY_NAME, visualModelFactory.createTabularDatasetVisualization(outputData))
+    additionalVisualModels.foldLeft(model)(
+      (compositeModel, visualModelPair) =>
+        {
+          compositeModel.addVisualModel(visualModelPair._1, visualModelPair._2)
+          compositeModel
+        } )
+
+    val summaryText = outputData.asInstanceOf[IOBase].addendum.get(summaryKey)
+
+    summaryText match {
+      case Some(text) =>
+        val summaryVisualModel = visualModelFactory.createHtmlTextVisualization(text.toString)
+        model.addVisualModel(SUMMARY_DISPLAY_NAME, summaryVisualModel)
+        model
+      case None => model
+    }
+  }
 }
 
 class Timer() {

@@ -18,6 +18,9 @@ object HdfsParameterUtils extends OutputParameterUtils {
   val outputNameParameterID = "outputName"
   val storageFormatParameterID = "storageFormat"
 
+
+
+
   /**
    * Adds
    * -- "outputDirectory": an HDFS directory selector for the location of the output

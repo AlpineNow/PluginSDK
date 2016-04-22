@@ -17,10 +17,8 @@ trait AdvancedSparkSettingsBox extends DialogElement {
   def getSetting(settingId: String): String
 }
 
-class SparkParameter(n: String, dn: String, v: String, us: Boolean, o: Boolean) {
-  val name: String = n
-  val displayName: String = dn
-  val value: String = v
-  val userSpecified: Boolean = us
-  val overridden: Boolean = o
-}
+case class SparkParameter(name: String,
+                          displayName: String,
+                          value: String,
+                          userSpecified: Boolean,
+                          overridden: Boolean)
