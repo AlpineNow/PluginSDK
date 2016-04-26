@@ -39,7 +39,7 @@ object JavaConversionUtils {
   }
 
   def toList[T](javaList: java.util.List[T]): List[T] = {
-    javaList.toArray.toList.asInstanceOf[List[T]]
+    toSeq(javaList).toList
   }
 
   def toList[T](scalaList: Seq[T]): util.Collection[T] = {
