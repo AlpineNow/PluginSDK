@@ -13,9 +13,20 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
  */
 @AlpineSdkApi
 case class Row(values: Seq[String]) {
+
   def getNumCols: Int = {
     values.length
   }
 
   def valuesAsArray: Array[String] = values.toArray
+}
+
+object Row {
+
+  /**
+    * Included because Java doesn't have access to implicit Array -> Seq conversion.
+    */
+  def make(values: Array[String]) = {
+    Row(values)
+  }
 }

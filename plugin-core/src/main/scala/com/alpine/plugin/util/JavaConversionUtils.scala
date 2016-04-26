@@ -21,6 +21,10 @@ object JavaConversionUtils {
     m.toMap
   }
 
+  def reverseMap[U,V](m: Map[U, V]): Map[V, U] = {
+    m.map(t => t.swap)
+  }
+
   /**
    * Builds a scala list natively in Java.
    * @param javaList  objects or collection
@@ -28,6 +32,10 @@ object JavaConversionUtils {
    */
   def toSeq[T](javaList : java.util.List[T]): Seq[T] = {
     JavaConversions.asScalaBuffer(javaList)
+  }
+
+  def toSeq[T](array : Array[T]): Seq[T] = {
+    array
   }
 
   def toList[T](javaList: java.util.List[T]): List[T] = {
