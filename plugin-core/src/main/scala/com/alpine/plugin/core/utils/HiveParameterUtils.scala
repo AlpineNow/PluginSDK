@@ -30,7 +30,7 @@ object HiveParameterUtils extends TableOutputParameterUtils {
                                   defaultDatabaseName: String = defaultDatabaseName,
                                   defaultTableName: String = defaultTableName
                                    ): Seq[DialogElement] = {
-    val databaseName = addResultDatabaseNameParameter(operatorDialog, defaultDatabaseName)
+    val databaseName = DBParameterUtils.addDBSchemaDropDownBox(operatorDialog, defaultDatabaseName)
     val tableName = addResultTableNameParameter(operatorDialog, defaultTableName)
     val viewOrTable = addViewOrTableRadioButton(operatorDialog)
     val overwrite = addOverwriteParameter(operatorDialog)
@@ -39,8 +39,7 @@ object HiveParameterUtils extends TableOutputParameterUtils {
 
   def addResultDatabaseNameParameter(operatorDialog: OperatorDialog,
                                      defaultDatabaseName: String = defaultDatabaseName): DialogElement = {
-    val databaseName = operatorDialog.addStringBox(resultDBNameParameterID, "Result Database Name", defaultDatabaseName, ".*", 0, 0)
-    databaseName
+    operatorDialog.addStringBox(resultDBNameParameterID, "Result Database Name", defaultDatabaseName, ".*", 0, 0)
   }
 
   /**
