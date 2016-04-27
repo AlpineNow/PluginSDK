@@ -8,6 +8,7 @@ import java.sql.Connection
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.ExecutionContext
+import com.alpine.sql.SQLGenerator
 
 /**
  * :: AlpineSdkApi ::
@@ -35,4 +36,5 @@ case class DBConnectionInfo(
 @AlpineSdkApi
 trait DBExecutionContext extends ExecutionContext {
   def getDBConnectionInfo: DBConnectionInfo
+  def getSQLGenerator: SQLGenerator
 }

@@ -35,15 +35,7 @@ class SQLModifyUtilTest extends FunSuite {
       replaceColumnNames(
         ColumnarSQLExpression("`wind`"),
         Map(ColumnName("wind") -> ColumnName("column_0")),
-        new SQLGenerator {
-          override def dbType = DatabaseType.hive
-
-          override def useAliasForSelectSubQueries: Boolean = ???
-
-          override def quoteChar: Char = '`'
-
-          override def escapeColumnName(s: String): String = quoteChar + s + quoteChar
-        }
+        new SimpleSQLGenerator(DatabaseType.hive)
       )
     )
 
