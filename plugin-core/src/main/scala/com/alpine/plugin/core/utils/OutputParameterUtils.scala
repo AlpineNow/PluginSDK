@@ -14,7 +14,11 @@ trait OutputParameterUtils {
   private val trueStr = "true"
   private val falseStr = "false"
 
+  private val yesStr = "Yes"
+  private val noStr = "No"
+
   val overwriteParameterID = "overwrite"
+  val dropIfExists = "dropIfExist"
 
   def addOverwriteParameter(operatorDialog: OperatorDialog, defaultValue: Boolean = true): DialogElement = {
     // May replace this with a more natural representation of a boolean parameter
@@ -42,6 +46,37 @@ trait OutputParameterUtils {
       false
     }
   }
+
+  /**
+    * For use with database, not HDFS.
+    * @param operatorDialog
+    * @param defaultValue
+      * @return
+      */
+  def addDropIfExistsParameter(operatorDialog: OperatorDialog, defaultValue: Boolean = true): DialogElement = {
+    val overwrite = operatorDialog.addRadioButtons(
+      dropIfExists,
+      "Drop If Exists",
+      Array(yesStr, noStr).toSeq,
+      defaultValue.toString
+    )
+    overwrite
+  }
+
+  /**
+    * Gets the value of the dropIfExists parameter, returning true if the String value is "Yes",
+    * false if it is a different value or missing.
+    * @param parameters OperatorParameters instance [containing the dropIfExists parameter].
+    * @return Boolean representation of the dropIfExists parameter.
+    */
+  def getDropIfExistsParameterValue(parameters: OperatorParameters): Boolean = {
+    if (parameters.contains(dropIfExists)) {
+      yesStr == parameters.getStringValue(dropIfExists)
+    } else {
+      false
+    }
+  }
+
 }
 
 object OutputParameterUtils extends OutputParameterUtils {

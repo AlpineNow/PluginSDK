@@ -21,12 +21,12 @@ object DBParameterUtils extends TableOutputParameterUtils {
     * Adds parameters to your operator to allow the user to determine how the output of the
     * database operator will be written.
     * This method adds the following parameters.
-    *   -- "outputSchema": a drop down with all the defined schemas in the database, so that the
-    *      user can pick their output schema.
     *   -- "viewOrTable": a radio button which lets the user choose whether to store the output
     *      as a view or a table
-    *   -- "overwrite" : Inherited from the super class. A radio button so the user can select
-    *      to delete the output table if it already exists or throw an exception.
+    *   -- "outputSchema": a drop down with all the defined schemas in the database, so that the
+    *      user can pick their output schema.
+    *   -- "dropIfExists" : Inherited from the super class. A radio button so the user can select
+    *      to drop the output table/view if it already exists or throw an exception.
     *   -- "outputName" : The name of the output table.
     *      The default is the userID+the workflow name + the operator UUID
     *
@@ -39,11 +39,11 @@ object DBParameterUtils extends TableOutputParameterUtils {
   def addStandardDBOutputParameters(operatorDialog: OperatorDialog,
                                     defaultOutputName: String = operatorNameUUIDVariable
                                    ): Seq[DialogElement] = {
-    val schema = addDBSchemaDropDownBox(operatorDialog)
     val outputType = addViewOrTableRadioButton(operatorDialog)
-    val overwrite = addOverwriteParameter(operatorDialog)
-    val tableName = addResultTableNameParameter(operatorDialog, defaultTableName)
-    Seq(schema, outputType, overwrite, tableName)
+    val schema = addDBSchemaDropDownBox(operatorDialog)
+    val tableName = addResultTableNameParameter(operatorDialog, defaultTableName, "Output Table")
+    val dropIfExists = addDropIfExistsParameter(operatorDialog)
+    Seq(schema, outputType, dropIfExists, tableName)
   }
 
   /**

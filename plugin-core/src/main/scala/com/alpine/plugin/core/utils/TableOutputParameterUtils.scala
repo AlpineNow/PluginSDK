@@ -25,8 +25,9 @@ trait TableOutputParameterUtils extends OutputParameterUtils {
   val tableKey = "table"
 
   def addResultTableNameParameter(operatorDialog: OperatorDialog,
-                                  defaultTableName: String = defaultTableName): DialogElement = {
-    val tableName = operatorDialog.addStringBox(resultTableNameParameterID, "Result Table Name", defaultTableName, ".+", 0, 0)
+                                  defaultTableName: String = defaultTableName,
+                                  label: String = "Result Table Name"): DialogElement = {
+    val tableName = operatorDialog.addStringBox(resultTableNameParameterID, label, defaultTableName, ".+", 0, 0)
     tableName
   }
 
@@ -34,7 +35,7 @@ trait TableOutputParameterUtils extends OutputParameterUtils {
     operatorDialog.addRadioButtons(
       viewOrTableParameterKey,
       "Output Type",
-      Seq(viewKey, tableKey),
+      Seq(tableKey, viewKey),
       tableKey
     )
   }
