@@ -45,13 +45,12 @@ case class GsonOptionAdapter() extends JsonSerializer[Option[_]] with JsonDeseri
         Some(jdc.deserialize(jsonElement, getFirstTypeParameter(t)))
       }
     } catch {
-      case e: Exception => {
+      case e: Exception =>
         if (jsonElement != null) {
           Some(jdc.deserialize(jsonElement, getFirstTypeParameter(t)))
         } else {
           None
         }
-      }
     }
   }
 

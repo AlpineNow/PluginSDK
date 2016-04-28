@@ -32,7 +32,7 @@ class TestNewStorageFormatMethods extends SimpleAbstractSparkJobSuite {
     override def transform(operatorParameters: OperatorParameters, dataFrame: DataFrame,
                            sparkUtils: SparkRuntimeUtils, listener: OperatorListener): DataFrame = {
       val storageFormat = HdfsParameterUtils.getHdfsStorageFormatType(operatorParameters)
-      val writeBadDataToFile = BadDataReportingUtils.handleBadDataAsDataFrameDefault(None,
+      val writeBadDataToFile = BadDataReportingUtils.handleNullDataAsDataFrameDefault(None,
         "target/testResults/", 10, 10, None, sparkUtils)
       dataFrame
     }

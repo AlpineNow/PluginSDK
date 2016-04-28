@@ -1,16 +1,19 @@
 package com.alpine.plugin.test.sparktests
 
 import com.alpine.plugin.core.spark.utils.BadDataReportingUtils
-import com.alpine.plugin.test.utils.TestSparkContexts
+import com.alpine.plugin.core.utils.HdfsParameterUtils
+import com.alpine.plugin.test.mock.OperatorParametersMock
+import com.alpine.plugin.test.utils.{OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.sql
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{Row, SQLContext}
+import org.apache.spark.sql.{DataFrame, Row, SQLContext}
 import org.scalatest.FunSuite
 
+import scala.reflect.io.File
 import scala.util.Try
 
 
-class BadDataReportingUtilsTest extends FunSuite {
+class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   import TestSparkContexts._
 
   val inputRows = List(Row("Masha", 22), Row("Ulia", 21), Row("Nastya", 23))
@@ -29,7 +32,7 @@ class BadDataReportingUtilsTest extends FunSuite {
     val (data, msg) = BadDataReportingUtils.getBadDataToWriteAndMessage(Some(3), outputPath,
       6, 3, Some(badDataAsDF))
     assert(data.get.count() == 2)
-    assert(msg.contains("<br> All bad data written to file: <br>"))
+    assert(msg.contains("All the data removed (due to null values) has been written to file:"))
   }
 
   test("Reporting bad data as DataFrame ") {
@@ -69,6 +72,18 @@ class BadDataReportingUtilsTest extends FunSuite {
     val goodDataRows = goodDataOutput.collect().toSet
     assert(badDataRows.equals(badData2.toSet))
     assert(goodDataRows.equals(inputRows.toSet))
+  }
+
+  test("Bad data with nothing in it "){
+    val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows), inputSchema)
+    val mockParams = new OperatorParametersMock("Thin", "One")
+     OperatorParameterMockUtil.addHdfsParamsDefault(mockParams, "BadDataTest")
+     mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, HdfsParameterUtils.badDataReportALL)
+    val (badDataDf, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
+      goodInputData, mockParams, sparkUtils, "because it is evil")
+    val badDataFile = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
+    assert(!badDataFile.isDirectory)
+    assert(message.contains("No data removed because it is evil"))
   }
 }
 

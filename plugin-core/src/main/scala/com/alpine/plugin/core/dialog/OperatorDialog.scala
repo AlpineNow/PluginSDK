@@ -42,7 +42,7 @@ trait OperatorDialog {
 
   /**
    * Get an iterator of dialog elements.
-   * @return An iterator of dialog elements.
+   * @return The dialog elements.
    */
   def getDialogElements(): Iterator[DialogElement]
 
