@@ -5,15 +5,19 @@
 package com.alpine.plugin.core.spark.utils
 
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
+
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsAvroDatasetDefault, HdfsDelimitedTabularDatasetDefault, HdfsParquetDatasetDefault}
-import com.alpine.plugin.core.utils.{HdfsStorageFormatType, HdfsStorageFormat}
+import com.alpine.plugin.core.utils.{HdfsStorageFormat, HdfsStorageFormatType}
 import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.{UserDefinedFunction, SQLContext, DataFrame}
-import org.apache.spark.sql.types._
+import org.apache.spark.sql.types.TimestampType
+import org.apache.spark.sql.{DataFrame, SQLContext, UserDefinedFunction}
+
+import scala.util.Try
 
 /**
  * :: AlpineSdkApi ::
@@ -261,7 +265,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
      3.If a TSV, The delimiter attributes specified by the TSV attributes object
 
     Date format behavior: DateTime columns are parsed as dates and then converted to the TimeStampType according to
-    the format specified by the alpine type. The original format is save in the schema as metadata for that column.
+    the format specified by the Alpine type 'ColumnType' format argument. The original format is save in the schema as metadata for that column.
     It can be accessed with SparkSqlDateTimeUtils.getDatFormatInfo(structField) for any given column.
 
     * @param dataset Alpine specific object. Usually input or output of operator.
@@ -269,8 +273,8 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
    */
   def getDataFrame(dataset: HdfsTabularDataset): DataFrame = {
     val tabularSchema = dataset.tabularSchema
-    val (schema, dateFormats) = convertTabularSchemaToSparkSQLSchemaDateSupport(tabularSchema)
-
+    val schema = convertTabularSchemaToSparkSQLSchema(tabularSchema, keepDatesAsStrings = true)
+    val dateFormats = getDateMap(tabularSchema)
     val sqlContext = new SQLContext(sc)
     val path = dataset.path
 
@@ -317,8 +321,12 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     *
     * @param dataFrame the input dataframe where the date rows are as strings.
     * @param map columnName -> dateFormat for parsing
+    * @throws Exception "Illegal Date Format" if one of the date formats provided is not a valid
+    *                   Java SimpleDateFormat pattern.
+    *                   And "Could not parse dates correctly. " if the date format is valid, but
+    *                   doesn't correspond to the data that is actually in the column.
     */
-  def mapDFtoUnixDateTime(dataFrame: DataFrame, map : scala.collection.mutable.Map[String, String]) = {
+  def mapDFtoUnixDateTime(dataFrame: DataFrame, map: Map[String, String]): DataFrame = {
     // dataFrame.sqlContext.udf.register("makeDateTime", makeDateTime(_:String,_:String))
     if(map.isEmpty) {
       dataFrame
@@ -326,22 +334,43 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     else {
 
       import org.apache.spark.sql.functions.unix_timestamp
-
+      //check that all the date formats are valid Simple Date Formats and throw a reasonable exception if
+      //they are not
+      try {
+        validateDateFormatMap(map)
       //generate a function that maps from the unix time stamp to the java.sql.Date object for a given format
       def dateTimeFunction(format : String ): UserDefinedFunction = {
         import org.apache.spark.sql.functions.udf
         udf((time : Long) => new Timestamp(time * 1000))
       }
 
-      val selectExpression = dataFrame.schema.fieldNames.map( colDef =>
-        map.get(colDef) match {
-          case None => dataFrame(colDef)
+      val selectExpression = dataFrame.schema.fieldNames.map(columnName =>
+        map.get(columnName) match {
+          case None => dataFrame(columnName)
           case Some(format) =>
-            val unixCol = unix_timestamp(dataFrame(colDef), format)
+            val unixCol = unix_timestamp(dataFrame(columnName), format)
             dateTimeFunction(format)(unixCol).cast(TimestampType
-            ).as(colDef, dataFrame.schema(colDef).metadata)
+            ).as(columnName, dataFrame.schema(columnName).metadata)
         })
-      dataFrame.select(selectExpression :_*)
+
+        dataFrame.select(selectExpression: _*)
+      }
+      catch {
+        case (e: IllegalArgumentException) => throw new IllegalArgumentException("Failed at read: " + e.getMessage, e)
+        case (e: Throwable) => throw new RuntimeException("Failed at read: Could not parse dates correctly. " +
+          "Could not read data: Please check that the date formats provided correspond to the data in the columns.", e)
+      }
+    }
+  }
+
+  def validateDateFormatMap(map: Map[String, String]): Unit = {
+    map.foreach {
+      case (colName, dateFormat) => {
+        val simpleDateFormat = Try(new SimpleDateFormat(dateFormat))
+        if (simpleDateFormat.isFailure)
+          throw new IllegalArgumentException("Date format " + dateFormat + " for column " + colName + " is not a valid SimpleDateFormat",
+            simpleDateFormat.failed.get)
+      }
     }
   }
 
@@ -352,27 +381,33 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     * @param dataFrame input data where date columns are represented as java TimeStamp Objects
     * @param map columnName -> dateFormat to convert to
     */
-  def mapDFtoCustomDateTimeFormat(dataFrame: DataFrame, map : scala.collection.mutable.Map[String, String]) = {
+  def mapDFtoCustomDateTimeFormat(dataFrame: DataFrame, map: Map[String, String]): DataFrame = {
     if(map.isEmpty){
       dataFrame
     }
     else {
+      try {
+        import org.apache.spark.sql.functions.date_format
+        validateDateFormatMap(map)
 
-      import org.apache.spark.sql.functions.date_format
-
-      val selectExpression = dataFrame.schema.fieldNames.map( colDef =>
-        map.get(colDef) match {
-          case None => dataFrame(colDef)
-          case Some(format) =>
-            date_format(dataFrame(colDef), format).as(colDef, dataFrame.schema(colDef).metadata)
-        })
-
-      dataFrame.select(selectExpression :_*)
+        val selectExpression = dataFrame.schema.fieldNames.map(colDef =>
+          map.get(colDef) match {
+            case None => dataFrame(colDef)
+            case Some(format) =>
+              date_format(dataFrame(colDef), format).as(colDef, dataFrame.schema(colDef).metadata)
+          })
+        dataFrame.select(selectExpression: _*)
+      }
+      catch {
+        case (e: IllegalArgumentException) => throw new IllegalArgumentException("Failed to save results: " + e.getMessage, e)
+        case (e: Throwable) =>
+          throw new RuntimeException("Failed to save results : Could not convert to custom date formats.", e)
+      }
     }
   }
 
   private def dealWithDates(dataFrame : DataFrame) = {
-      val alpineSchema = getDateFormatFromSchema(dataFrame.schema)
+    val alpineSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
       val map = getDateMap(alpineSchema)
       (mapDFtoCustomDateTimeFormat(dataFrame, map), alpineSchema)
   }

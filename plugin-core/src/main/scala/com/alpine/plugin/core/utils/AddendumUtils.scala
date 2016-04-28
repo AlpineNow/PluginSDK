@@ -18,15 +18,15 @@ object AddendumWriter {
 
   def reportInputSize(n: Long): List[String] = List("Input data size: ", n + " rows")
 
-  def reportOutputSize(n: Long): List[String] = List("Input size after removing bad data: ", n + " rows")
+  def reportOutputSize(n: Long): List[String] = List("Input size after removing rows with null values: ", n + " rows")
 
   def reportBadDataSize(input: Long, output: Long): List[String] = {
     val badRows = input - output
     val badPercent = ((badRows / input.toDouble) * 100).round
-    val badRowMsg = if (badRows == 0) "No bad data"
+    val badRowMsg = if (badRows == 0) "No data removed due to null values"
     else
       badRows + " rows (" + badPercent + "%)"
-    List("Rows removed due to bad data: ", badRowMsg)
+    List("Rows removed due to null values: ", badRowMsg)
   }
 
   /**

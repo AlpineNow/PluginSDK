@@ -7,6 +7,10 @@ package com.alpine.plugin.core.io
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 
 object ColumnType {
+
+  val SPARK_SQL_DATE_FORMAT = "yyyy-mm-dd"
+  val SPARK_SQL_TIME_STAMP_FORMAT = "yyyy-mm-dd hh:mm:ss"
+
   //add another field for format. Which we can use for the date time format
   case class TypeValue(name: String, format : Option[String]) {
     def this(name: String) {
@@ -15,7 +19,7 @@ object ColumnType {
   }
 
   object TypeValue{
-    def apply(name : String) : TypeValue = new TypeValue(name)
+    def apply(name: String): TypeValue = new TypeValue(name)
   }
 
   // These only represent column types of HDFS based datasets.
@@ -25,9 +29,9 @@ object ColumnType {
   val Long = TypeValue("Long")
   val Float = TypeValue("Float")
   val Double = TypeValue("Double")
-  val DateTime = TypeValue("DateTime")
+  val DateTime = TypeValue("DateTime", Some(SPARK_SQL_TIME_STAMP_FORMAT))
 
-  def DateTime(format : String) : TypeValue = TypeValue(DateTime.name, Some(format))
+  def DateTime(format: String): TypeValue = TypeValue(DateTime.name, Some(format))
   /**
    * Map of Strings to Doubles, serialized in standard JSON.
    */

@@ -34,7 +34,6 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
     input: HdfsTabularDataset,
     operatorParameters: OperatorParameters,
     listener: OperatorListener): OutputType = {
-
     val sparkUtils = new SparkRuntimeUtils(sparkContext)
     val dataFrame = sparkUtils.getDataFrame(input)
     listener.notifyMessage("Starting transformation")
