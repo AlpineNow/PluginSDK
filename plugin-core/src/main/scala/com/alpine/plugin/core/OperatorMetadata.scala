@@ -5,6 +5,7 @@
 package com.alpine.plugin.core
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
+import com.alpine.plugin.core.icon.{OperatorIcon, StarBurst}
 
 /**
   * :: AlpineSdkApi ::
@@ -18,8 +19,8 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
   * @param author         the writer of the operator
   * @param version        the version number of this operator.
   * @param helpURL        A link to documentation about the operator
-  * @param iconNamePrefix String name of the custom icon. To use the default icon,
-  *                       use the empty String.
+  * @param icon           Name and shape of the custom icon. To use the default icon,
+  *                       use Option.empty().
   * @param toolTipText    The text of the tool tip which appears when the user hovers over the icon
   *                       for the operator in the left hand "operators" dropdown.
   */
@@ -29,18 +30,8 @@ case class OperatorMetadata(name: String,
                             author: Option[String],
                             version: Int,
                             helpURL: Option[String],
-                            iconNamePrefix: Option[String], toolTipText: Option[String]) {
-  def this(name: String,
-           category: String,
-           author: String,
-           version: Int,
-           helpURL: String,
-           iconNamePrefix: String, toolTipText: String) = {
-    this(name, category, OperatorMetadata.emptyOptionIfEmptyString(author), version,
-      OperatorMetadata.emptyOptionIfEmptyString(helpURL),
-      OperatorMetadata.emptyOptionIfEmptyString(iconNamePrefix),
-      OperatorMetadata.emptyOptionIfEmptyString(toolTipText))
-  }
+                            icon: Option[OperatorIcon],
+                            toolTipText: Option[String]) {
 
   def this(name: String,
            category: String,
@@ -50,21 +41,13 @@ case class OperatorMetadata(name: String,
            iconNamePrefix: String) = {
     this(name, category, OperatorMetadata.emptyOptionIfEmptyString(author),
       version, OperatorMetadata.emptyOptionIfEmptyString(helpURL),
-      OperatorMetadata.emptyOptionIfEmptyString(iconNamePrefix), None)
+      OperatorMetadata.iconNamePrefixToIcon(iconNamePrefix), None)
   }
 
   def this(name: String, category: String, version: Int = 1) = {
     this(name, category, None, version, None, None, None)
   }
 
-  def this(name: String,
-           category: String,
-           author: Option[String],
-           version: Int,
-           helpURL: Option[String],
-           iconNamePrefix: Option[String]) = {
-    this(name, category, author, version, helpURL, iconNamePrefix, None)
-  }
 }
 
 object OperatorMetadata {
@@ -78,20 +61,19 @@ object OperatorMetadata {
     new OperatorMetadata(name, category, author, version, helpURL, iconNamePrefix)
   }
 
-  def apply(name: String,
-            category: String,
-            author: Option[String],
-            version: Int,
-            helpURL: Option[String],
-            iconNamePrefix: Option[String]) = {
-    new OperatorMetadata(name, category, author, version, helpURL, iconNamePrefix, None)
-  }
-
   def emptyOptionIfEmptyString(s: String): Option[String] = {
     if (s == null || s.trim.isEmpty) {
       None
     } else {
       Some(s)
+    }
+  }
+
+  def iconNamePrefixToIcon(iconNamePrefix: String): Option[OperatorIcon] = {
+    if (iconNamePrefix == null || iconNamePrefix.trim.isEmpty) {
+      None
+    } else {
+      Some(OperatorIcon(iconNamePrefix, StarBurst))
     }
   }
 }
@@ -117,23 +99,22 @@ object OperatorCategories {
     * Use for graphing or data exploration operators.
     */
   val EXPLORE = "Explore"
-  //0
-  val LOAD_DATA = "Load" //source operators 0
 
+  val LOAD_DATA = "Load"
 
   /**
     * Use for predictors and evaluator operators which
     * take the input of a model.
     */
-  val PREDICTOR = "Predict" //square
+  val PREDICTOR = "Predict"
 
-
-  val TOOLS = "Tools" //square
+  val TOOLS = "Tools"
 
   /**
     * Includes T-Tests and other operators which perform inferential statistics.
     */
   val STATISTICS = "Statistics"
+
   val NLP = "NLP"
 
 }
