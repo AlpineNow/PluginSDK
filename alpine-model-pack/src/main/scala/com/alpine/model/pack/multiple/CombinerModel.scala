@@ -79,7 +79,7 @@ object CombinerModel {
         featureBuilder.append(new ColumnDef(feature.columnName + suffix, feature.columnType))
       }
     }
-    featureBuilder.toSeq
+    featureBuilder
   }
 
   def getOutputFeaturesWithGroupID(subOutputFeatures: Seq[(String, Seq[ColumnDef])]): Seq[ColumnDef] = {
@@ -92,7 +92,7 @@ object CombinerModel {
         featureBuilder.append(new ColumnDef(feature.columnName + suffix, feature.columnType))
       }
     }
-    featureBuilder.toSeq
+    featureBuilder
   }
 
   private def getSuffixForConcatenation(featuresSoFar: ListBuffer[ColumnDef], newFeatures: Seq[ColumnDef], groupID: String = ""): String = {
