@@ -14,7 +14,7 @@ import com.alpine.plugin.core.io.OperatorInfo
  * The developers can extract operator parameter values through this interface.
  */
 @AlpineSdkApi
-trait OperatorParameters {
+trait OperatorParameters extends Serializable {
 
   def operatorInfo: OperatorInfo
   /**

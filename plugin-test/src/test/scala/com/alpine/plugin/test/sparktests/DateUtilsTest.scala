@@ -5,6 +5,8 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType, TSVAttributes, TabularS
 import com.alpine.plugin.core.spark.utils.{SparkSchemaUtils, SparkRuntimeUtils, SparkSqlDateTimeUtils}
 import com.alpine.plugin.test.utils.TestSparkContexts
 import org.apache.spark._
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.{Column, Row}
 import org.apache.spark.sql.types._
 import org.scalatest.FunSuite
 
@@ -18,7 +20,8 @@ class DateUtilsTest extends FunSuite {
 
   val justDateType = ColumnType.DateTime("dd/MM/yyyy")
   val justTime = ColumnType.DateTime("HH:mm")
-  val standardDateType = ColumnType.DateTime(ColumnType.SPARK_SQL_DATE_FORMAT)
+  val standardDateType = ColumnType.DateTime("yyyy-MM-dd")
+
 
   val dateSchema = TabularSchema(Seq(
     ColumnDef("JustDate", justDateType),
@@ -62,13 +65,16 @@ class DateUtilsTest extends FunSuite {
   }
 
   test("Round trip date conversion") {
-    val df = sqlContext.createDataFrame(sc.parallelize(rows), sqlSchema)
+    val df = sqlContext.createDataFrame(sc.parallelize(rows ++ Seq(Row.fromTuple(null, "", "3", "1091-03-05"))), sqlSchema)
     val asDates = sparkUtils.mapDFtoUnixDateTime(df, dateFormatMap)
+
+    assert(asDates.collect().apply(2).getAs[java.sql.Timestamp](0) == null)
     val map = sparkUtils.getDateMap(dateSchema)
     val correctedDF = sparkUtils.mapDFtoCustomDateTimeFormat(asDates, map)
     val result = correctedDF.collect()
     assert(result.head(0).toString.equals("12/07/1991"))
-    assert(result.forall(!_.anyNull))
+    assert(result(2).toSeq.equals(Seq(null, null, "3", "1091-03-05")))
+
   }
 
   test("Convert Spark Schema to Alpine Schema") {
@@ -98,7 +104,7 @@ class DateUtilsTest extends FunSuite {
     assert(alpineSchema.getDefinedColumns.map(_.columnType) === expectedAlpineTypes)
 
     //round trip to Spark Schema
-    // when we convert the alpine schema we always return time stampe types
+    // when we convert the alpine schema we always return time stamp types
     val timeStampOnlySchema = StructType(
       Array(
         StructField("Grade", StringType),
@@ -140,5 +146,7 @@ class DateUtilsTest extends FunSuite {
         assert(expectedDef.equals(actualDef), expectedDef.toString + " != " + actualDef.toString)
     }
   }
+
+
 }
 

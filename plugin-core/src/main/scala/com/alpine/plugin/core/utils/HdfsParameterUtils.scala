@@ -227,9 +227,16 @@ object HdfsParameterUtils extends OutputParameterUtils {
 
   val badDataLocation = "_BadData"
 
+  @deprecated("Use addNullDataReportParameter")
   def addBadDataReportParameter(operatorDialog: OperatorDialog) : DialogElement = {
     val badDataSelector = operatorDialog.addDropdownBox(badDataReportParameterID,
-      "Write Bad Data To File", badDataParameterOptions, badDataReportNO)
+      "Write Rows Removed Due to Null Data To File", badDataParameterOptions, badDataReportNO)
+    badDataSelector
+  }
+
+  def addNullDataReportParameter(operatorDialog: OperatorDialog, message: String = "Write Rows Removed Due to Null Data to File"): DialogElement = {
+    val badDataSelector = operatorDialog.addDropdownBox(badDataReportParameterID,
+      "Write Rows Removed Due to Null Data To File", badDataParameterOptions, badDataReportNO)
     badDataSelector
   }
 

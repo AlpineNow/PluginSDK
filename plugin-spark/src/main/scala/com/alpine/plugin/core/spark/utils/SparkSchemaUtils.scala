@@ -14,6 +14,7 @@ trait SparkSchemaUtils {
   // Schema conversion util functions.
   // ======================================================================
   /**
+    * Convert from Alpine's 'ColumnType' to the corresponding Spark Sql Typ.
     * DateTime Behavior: Converts all DateTime columns to TimeStampType. If there is a format string
     * will add that to the metadata. If there is no format string, will use the ISO format
     * ("yyyy-mm-dd hh:mm:ss")
@@ -31,6 +32,7 @@ trait SparkSchemaUtils {
           case None => Some(ColumnType.SPARK_SQL_TIME_STAMP_FORMAT) //should look up what the alpine default is
         }
         val dataType = if (keepDatesAsStrings) StringType else TimestampType
+
         (dataType, formatStr)
 
       case _ => (StringType, columnType.format)
@@ -38,6 +40,12 @@ trait SparkSchemaUtils {
       // throw new UnsupportedOperationException(columnType.toString + " is not supported.")
     }
   }
+
+  @deprecated("Will not properly handle data formats. Use toStructField")
+  def convertColumnTypeToSparkSQLDataType(columnType: ColumnType.TypeValue): (DataType) = {
+    convertColumnTypeToSparkSQLDataType(columnType, keepDatesAsStrings = false)._1
+  }
+
 
   /**
     * Converts from a Spark SQL data type to an Alpine-specific ColumnType

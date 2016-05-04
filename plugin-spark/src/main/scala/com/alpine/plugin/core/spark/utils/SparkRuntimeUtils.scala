@@ -86,9 +86,10 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
 
   def saveDataFrameDefault[T <: HdfsStorageFormatType](
                                                          path: String,
-                                                         dataFrame: DataFrame): HdfsTabularDataset = {
+                                                         dataFrame: DataFrame,
+                                                         sourceOperatorInfo: Option[OperatorInfo]): HdfsTabularDataset = {
     saveDataFrame(path, dataFrame, HdfsStorageFormatType.TSV, overwrite = true,
-      None, Map[String, AnyRef](), TSVAttributes.default)
+      sourceOperatorInfo, Map[String, AnyRef](), TSVAttributes.default)
 
   }
 
@@ -339,17 +340,22 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
       try {
         validateDateFormatMap(map)
       //generate a function that maps from the unix time stamp to the java.sql.Date object for a given format
+
       def dateTimeFunction(format : String ): UserDefinedFunction = {
         import org.apache.spark.sql.functions.udf
-        udf((time : Long) => new Timestamp(time * 1000))
+        udf((time: Long) => new Timestamp(time * 1000))
       }
+
+        import org.apache.spark.sql.functions.{lit, when}
 
       val selectExpression = dataFrame.schema.fieldNames.map(columnName =>
         map.get(columnName) match {
           case None => dataFrame(columnName)
           case Some(format) =>
-            val unixCol = unix_timestamp(dataFrame(columnName), format)
-            dateTimeFunction(format)(unixCol).cast(TimestampType
+            lazy val unixCol = unix_timestamp(dataFrame(columnName), format)
+            val nulled = when(unixCol.isNull, lit(null))
+              .otherwise(dateTimeFunction(format)(unixCol))
+            nulled.cast(TimestampType
             ).as(columnName, dataFrame.schema(columnName).metadata)
         })
 
@@ -365,12 +371,11 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
 
   def validateDateFormatMap(map: Map[String, String]): Unit = {
     map.foreach {
-      case (colName, dateFormat) => {
+      case (colName, dateFormat) =>
         val simpleDateFormat = Try(new SimpleDateFormat(dateFormat))
         if (simpleDateFormat.isFailure)
           throw new IllegalArgumentException("Date format " + dateFormat + " for column " + colName + " is not a valid SimpleDateFormat",
             simpleDateFormat.failed.get)
-      }
     }
   }
 

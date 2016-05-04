@@ -48,6 +48,8 @@ case class OperatorMetadata(name: String,
     this(name, category, None, version, None, None, None)
   }
 
+  val resolvedToolTip: String = toolTipText.getOrElse("A " + category + " operator.")
+
 }
 
 object OperatorMetadata {

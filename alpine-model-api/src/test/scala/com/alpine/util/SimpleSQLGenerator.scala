@@ -27,9 +27,10 @@ class SimpleSQLGenerator extends SQLGenerator {
     }
   }
 
+  override def dbType = databaseType
+
   override def quoteChar: String = quoteString
   override def useAliasForSelectSubQueries: Boolean = isAliasRequired
-  override def dbType = databaseType
 
   @deprecated("Please use quoteIdentifier instead [Paul]", "2016-04-22")
   override def escapeColumnName(s: String): String = quoteIdentifier(s)
@@ -51,5 +52,49 @@ class SimpleSQLGenerator extends SQLGenerator {
 
   override def getCreateTableAsSelectSQL(columns: String, sourceTable: String, destinationTable: String, whereClause: String): String = {
     s"""CREATE TABLE $destinationTable AS (SELECT $columns FROM $sourceTable $whereClause"""
+  }
+
+  override def getCreateTableAsSelectSQL(columns: String, sourceTable: String, destinationTable: String): String = {
+    getCreateTableAsSelectSQL(columns, sourceTable, destinationTable, "")
+  }
+
+  override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String, whereClause: String): String = {
+    s"""CREATE VIEW $destinationView AS (SELECT $columns FROM $sourceTable $whereClause"""
+  }
+
+  override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String): String = {
+    getCreateViewAsSelectSQL(columns, sourceTable, destinationView, "")
+  }
+
+  override def getCreateTableOrViewAsSelectSQL(columns: String, sourceTable: String, destinationTable: String, whereClause: String, isView: Boolean): String = {
+    if (isView) {
+      getCreateViewAsSelectSQL(columns, sourceTable, destinationTable, whereClause)
+    } else {
+      getCreateTableAsSelectSQL(columns, sourceTable, destinationTable, whereClause)
+    }
+  }
+
+  override def getCreateTableOrViewAsSelectSQL(columns: String, sourceTable: String, destinationTable: String, isView: Boolean): String = {
+    if (isView) {
+      getCreateViewAsSelectSQL(columns, sourceTable, destinationTable)
+    } else {
+      getCreateTableAsSelectSQL(columns, sourceTable, destinationTable)
+    }
+  }
+
+  override def getDropTableIfExistsSQL(tableName: String, cascade: Boolean = false) = {
+    if (cascade) {
+      s"""DROP TABLE IF EXISTS $tableName"""
+    } else {
+      s"""DROP TABLE IF EXISTS $tableName CASCADE"""
+    }
+  }
+
+  override def getDropViewIfExistsSQL(viewName: String, cascade: Boolean = false) = {
+    if (cascade) {
+      s"""DROP VIEW IF EXISTS $viewName"""
+    } else {
+      s"""DROP VIEW IF EXISTS $viewName CASCADE"""
+    }
   }
 }
