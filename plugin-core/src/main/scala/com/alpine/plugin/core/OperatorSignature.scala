@@ -44,22 +44,17 @@ abstract class OperatorSignature[
   private val guiNodeClassArgumentMap =
     GenericUtils.getAncestorClassGenericTypeArguments(guiNodeClass, classOf[OperatorGUINode[_,_]].getName).get
 
-  private[plugin] val guiNodeInputClass =
-    toClass(guiNodeClassArgumentMap("I")).asInstanceOf[Class[_ <: IOBase]]
-  private[plugin] val guiNodeOutputClass =
-    toClass(guiNodeClassArgumentMap("O")).asInstanceOf[Class[_ <: IOBase]]
+  private[plugin] val guiNodeInputClass = guiNodeClassArgumentMap("I")
+  private[plugin] val guiNodeOutputClass = guiNodeClassArgumentMap("O")
 
   private[plugin] val runtimeClass = toClass(genericArgumentMap("R")).asInstanceOf[Class[R]]
 
   private val runtimeClassArgumentMap =
     GenericUtils.getAncestorClassGenericTypeArguments(runtimeClass, classOf[OperatorRuntime[_,_,_]].getName).get
 
-  private[plugin] val runtimeInputClass =
-    toClass(runtimeClassArgumentMap("I")).asInstanceOf[Class[_ <: IOBase]]
-  private[plugin] val runtimeOutputClass =
-    toClass(runtimeClassArgumentMap("O")).asInstanceOf[Class[_ <: IOBase]]
-  private[plugin] val runtimeContextClass =
-    toClass(runtimeClassArgumentMap("CTX")).asInstanceOf[Class[_ <: ExecutionContext]]
+  private[plugin] val runtimeInputClass = runtimeClassArgumentMap("I")
+  private[plugin] val runtimeOutputClass = runtimeClassArgumentMap("O")
+  private[plugin] val runtimeContextClass = runtimeClassArgumentMap("CTX")
 
   private[plugin] val inputsAreValid = guiNodeInputClass == runtimeInputClass
   private[plugin] val outputsAreValid = guiNodeOutputClass == runtimeOutputClass

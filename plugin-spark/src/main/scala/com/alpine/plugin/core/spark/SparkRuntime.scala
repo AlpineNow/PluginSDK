@@ -4,16 +4,16 @@
 
 package com.alpine.plugin.core.spark
 
+import com.alpine.plugin.core.annotation.AlpineSdkApi
+import com.alpine.plugin.core.io.IOBase
+import com.alpine.plugin.core.utils.SparkParameterUtils
+import com.alpine.plugin.core.{OperatorRuntime, _}
+import com.alpine.plugin.generics.GenericUtils
+
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
-
-import com.alpine.plugin.core.{OperatorRuntime, _}
-import com.alpine.plugin.core.annotation.AlpineSdkApi
-import com.alpine.plugin.core.io.IOBase
-import com.alpine.plugin.core.utils.SparkParameterUtils
-import com.alpine.plugin.generics.GenericUtils
 
 /**
  * :: AlpineSdkApi ::
@@ -77,6 +77,7 @@ abstract class SparkRuntimeWithIOTypedJob[
    *                 the console or the Alpine UI.
    * @return The output from the execution.
    */
+  @throws[Exception]
   def onExecution(
     context: SparkExecutionContext,
     input: I,

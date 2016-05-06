@@ -21,8 +21,8 @@ trait TableOutputParameterUtils extends OutputParameterUtils {
   val defaultDatabaseName = "@default_schema"
   val outputSchemaParameterId = "outputSchema"
   val viewOrTableParameterKey = "viewOrTable"
-  val viewKey = "view"
-  val tableKey = "table"
+  val viewKey = "VIEW"
+  val tableKey = "TABLE"
 
   def addResultTableNameParameter(operatorDialog: OperatorDialog,
                                   defaultTableName: String = defaultTableName,
@@ -84,7 +84,8 @@ trait TableOutputParameterUtils extends OutputParameterUtils {
    */
   @throws(classOf[NullPointerException])
   def getIsViewParam(parameters: OperatorParameters): Boolean = {
-    parameters.getStringValue(viewOrTableParameterKey) == viewKey
+    val viewOrTable = parameters.getStringValue(viewOrTableParameterKey)
+    viewOrTable != null && viewOrTable.toUpperCase == viewKey // viewKey is now VIEW
   }
 
 }

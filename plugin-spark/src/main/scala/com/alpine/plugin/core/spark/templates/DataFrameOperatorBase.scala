@@ -4,17 +4,17 @@
 
 package com.alpine.plugin.core.spark.templates
 
-import scala.collection.mutable
-
 import com.alpine.plugin.core._
 import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.dialog.OperatorDialog
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.spark.utils._
 import com.alpine.plugin.core.spark.{SparkIOTypedPluginJob, SparkRuntimeWithIOTypedJob}
-import com.alpine.plugin.core.utils.{HdfsStorageFormatType, HdfsParameterUtils}
+import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormatType}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.DataFrame
+
+import scala.collection.mutable
 
 /**
  * Templated base for Spark plugin jobs operating on DataFrames.
@@ -29,6 +29,7 @@ import org.apache.spark.sql.DataFrame
 abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
   extends SparkIOTypedPluginJob[HdfsTabularDataset, OutputType] {
 
+  @throws[Exception]
   override def onExecution(sparkContext: SparkContext,
     appConf: mutable.Map[String, String],
     input: HdfsTabularDataset,
@@ -62,6 +63,7 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
    * @param listener - the operator listener object which can be used to print messages to the GUI.
    * @return the output DataFrame and a map containing the keys and values to add to the output
    */
+  @throws[Exception]
   def transformWithAddendum(operatorParameters: OperatorParameters,
                                  dataFrame: DataFrame,
                                  sparkUtils: SparkRuntimeUtils,
@@ -112,6 +114,7 @@ abstract class SparkDataFrameJob extends TemplatedSparkDataFrameJob[DataFrame, H
    * @param listener - the operator listener object which can be used to print messages to the GUI.
    * @return your transformed DataFrame (Default implementation returns the input DataFrame)
    */
+  @throws[Exception]
   def transform(operatorParameters: OperatorParameters,
                 dataFrame: DataFrame,
                 sparkUtils: SparkRuntimeUtils,
@@ -130,6 +133,7 @@ abstract class SparkDataFrameJob extends TemplatedSparkDataFrameJob[DataFrame, H
    * @return the output DataFrame and a map containing the keys and values to add to the output.
    *         (Default implementation returns the input DataFrame with no Addendum information)
    */
+   @throws[Exception]
    def transformWithAddendum(operatorParameters: OperatorParameters,
                                  dataFrame: DataFrame,
                                  sparkUtils: SparkRuntimeUtils,
@@ -195,6 +199,7 @@ abstract class InferredSparkDataFrameJob extends SparkDataFrameJob {
    * @param listener - the operator listener object which can be used to print messages to the GUI.
    * @return
    */
+  @throws[Exception]
   override def transform(operatorParameters: OperatorParameters, dataFrame: DataFrame, sparkUtils: SparkRuntimeUtils,
     listener: OperatorListener): DataFrame = {
     transform(operatorParameters, dataFrame, listener)
@@ -208,6 +213,7 @@ abstract class InferredSparkDataFrameJob extends SparkDataFrameJob {
    * @param listener - the operator listener object which can be used to print messages to the GUI.
    * @return
    */
+  @throws[Exception]
   def transform(operatorParameters: OperatorParameters, dataFrame: DataFrame,
     listener: OperatorListener): DataFrame
 }
