@@ -19,8 +19,8 @@ case class TSVAttributes(delimiter: Char,
                          escapeStr: Char,
                          quoteStr: Char,
                          containsHeader: Boolean,
-                         nullString : String = "") extends Serializable{
-  lazy val toMap: Map[String, String] = Map(
+                         nullString : String = "") extends Serializable {
+  @transient lazy val toMap: Map[String, String] = Map(
     "delimiter" -> delimiter.toString,
     "escape" -> escapeStr.toString,
     "quote" -> quoteStr.toString,

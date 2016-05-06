@@ -3,7 +3,7 @@ package com.alpine.plugin.core.icon
 /**
   * Created by Jennifer Thompson on 4/27/16.
   */
-class OperatorIcon private (val filePrefix: String, val shapeName: String) {
+case class OperatorIcon private (filePrefix: String, shapeName: String) {
 
   def this(filePrefix: String, shape: IconShape) {
     this(filePrefix, shape.getClass.getSimpleName.dropRight(1)) // dropRight(1) to remove the $ sign.

@@ -368,6 +368,7 @@ case class ColumnFilter(
  * :: AlpineSdkApi ::
  * A companion filter object that's used to create off-shelf filters.
  */
+//TODO: Refactor to allow date column filter
 object ColumnFilter {
   /**
    * :: AlpineSdkApi ::

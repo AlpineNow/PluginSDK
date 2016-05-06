@@ -30,6 +30,7 @@ abstract class OperatorRuntime[
    *                 the console.
    * @return The output from the execution.
    */
+  @throws[Exception]
   def onExecution(
     context: CTX,
     input: I,
