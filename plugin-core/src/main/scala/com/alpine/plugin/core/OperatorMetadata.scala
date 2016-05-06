@@ -6,6 +6,7 @@ package com.alpine.plugin.core
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.icon.{OperatorIcon, StarBurst}
+import OperatorMetadata._
 
 /**
   * :: AlpineSdkApi ::
@@ -39,9 +40,31 @@ case class OperatorMetadata(name: String,
            version: Int,
            helpURL: String,
            iconNamePrefix: String) = {
-    this(name, category, OperatorMetadata.emptyOptionIfEmptyString(author),
-      version, OperatorMetadata.emptyOptionIfEmptyString(helpURL),
-      OperatorMetadata.iconNamePrefixToIcon(iconNamePrefix), None)
+    this(name,
+      category,
+      emptyOptionIfEmptyString(author),
+      version,
+      emptyOptionIfEmptyString(helpURL),
+      iconNamePrefixToIcon(iconNamePrefix),
+      None
+    )
+  }
+
+  def this(name: String,
+           category: String,
+           author: String,
+           version: Int,
+           helpURL: String,
+           icon: OperatorIcon,
+           toolTipText: String) = {
+    this(name,
+      category,
+      emptyOptionIfEmptyString(author),
+      version,
+      emptyOptionIfEmptyString(helpURL),
+      Option.apply(icon),
+      emptyOptionIfEmptyString(toolTipText)
+    )
   }
 
   def this(name: String, category: String, version: Int = 1) = {
