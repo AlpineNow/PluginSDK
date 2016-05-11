@@ -322,7 +322,6 @@ abstract class InferredSparkDataFrameGUINode[Job <: InferredSparkDataFrameJob]()
   private class FakeListener() extends OperatorListener {
     override def notifyMessage(msg: String): Unit = {}
     override def notifyError(error: String): Unit = {}
-    override def notifyProgress(id: String, prog: Float): Unit = {}
   }
 
   /**

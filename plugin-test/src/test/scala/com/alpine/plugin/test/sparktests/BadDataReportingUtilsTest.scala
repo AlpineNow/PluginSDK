@@ -6,8 +6,7 @@ import com.alpine.plugin.test.mock.OperatorParametersMock
 import com.alpine.plugin.test.utils.{OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.sql
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Row, SQLContext}
-import org.scalatest.FunSuite
+import org.apache.spark.sql.{Row, SQLContext}
 
 import scala.reflect.io.File
 import scala.util.Try
@@ -45,6 +44,16 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
     assert(resultData.length == badData.length)
   }
 
+  test("Reporting bad data as DataFrame with new method ") {
+    val badDF = sqlContext.createDataFrame(sc.parallelize(badData), inputSchema)
+    val writeBadDataParam: Option[Long] = Some(Int.MaxValue)
+    val badDataPath = outputPath + "/test2"
+    val (data, report) = BadDataReportingUtils.getNullDataToWriteMessage(writeBadDataParam, badDataPath,
+      6, 3, Some(badDF), "Rows removed due to null data")
+    val resultData = data.get.collect()
+    assert(resultData.length == badData.length)
+  }
+
   test("test method to filter bad data from data frame ") {
     val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows), inputSchema)
     val badInputData = sqlContext.createDataFrame(sc.parallelize(badData), inputSchema)
@@ -74,9 +83,22 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
     assert(goodDataRows.equals(inputRows.toSet))
   }
 
+  test("NullDataAndReportGeneralMethod") {
+    val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
+    val mockParams = new OperatorParametersMock("TestNullData", "Two")
+    OperatorParameterMockUtil.addHdfsParamsDefault(mockParams, "TestNullData")
+    mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, HdfsParameterUtils.badDataReportALL)
+    val (filteredDF, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
+      goodInputData, mockParams, sparkUtils, "because it is evil")
+    assert(filteredDF.count() == 3)
+    val badDataFile = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
+    assert(badDataFile.isDirectory)
+    assert(message.contains("Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows"))
+  }
+
   test("Bad data with nothing in it "){
     val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows), inputSchema)
-    val mockParams = new OperatorParametersMock("Thin", "One")
+    val mockParams = new OperatorParametersMock("Thing", "One")
      OperatorParameterMockUtil.addHdfsParamsDefault(mockParams, "BadDataTest")
      mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, HdfsParameterUtils.badDataReportALL)
     val (badDataDf, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
@@ -84,6 +106,11 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
     val badDataFile = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
     assert(!badDataFile.isDirectory)
     assert(message.contains("No data removed because it is evil"))
+    assert(!message.contains("null"))
+    assert(message == "<table ><tr><td style = \"padding-right:10px;\" >" +
+      "Input data size: </td><td style = \"padding-right:10px;\" >3 rows</td></tr><tr><td style = \"padding-right:10px;\" >" +
+      "Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows</td></tr><tr><td style = \"padding-right:10px;\" >" +
+      "No data removed because it is evil</td><td style = \"padding-right:10px;\" ></td></tr></table>")
   }
 }
 

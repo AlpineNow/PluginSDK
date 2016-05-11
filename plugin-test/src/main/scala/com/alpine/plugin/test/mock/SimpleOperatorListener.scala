@@ -15,10 +15,4 @@ class SimpleOperatorListener extends OperatorListener {
     println(error)
   }
 
-  override def notifyProgress(
-                               progressBarId: String,
-                               currentProgress: Float
-                               ) = {
-    println(progressBarId + " " + currentProgress)
-  }
 }

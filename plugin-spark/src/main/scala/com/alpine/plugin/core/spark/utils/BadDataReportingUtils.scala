@@ -20,28 +20,30 @@ object BadDataReportingUtils {
    * the information about the what data was removed and if/where it was stored.
    * The message is generated using the 'AddendumWriter' object in the Plugin Core module.
     *
-    * Note about Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
+    * Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
     * in numeric columns. We use the Drop Malformed option, so in the case of dirty data, the operator will not
     * fail, but will silently remove those rows.
    */
   def filterNullDataAndReport(inputDataFrame: DataFrame,
                               operatorParameters: OperatorParameters,
                               sparkRuntimeUtils: SparkRuntimeUtils): (DataFrame, String) = {
-    filterNullDataAndReportGeneral(row => row.anyNull, inputDataFrame, operatorParameters, sparkRuntimeUtils, defaultDataRemovedMessage)
+    filterNullDataAndReportGeneral(row => row.anyNull, inputDataFrame, operatorParameters,
+      sparkRuntimeUtils, defaultDataRemovedMessage)
   }
 
   @deprecated("use filterNullDataAndReport")
   def filterBadDataAndReport(inputDataFrame: DataFrame,
                              operatorParameters: OperatorParameters,
                              sparkRuntimeUtils: SparkRuntimeUtils): (DataFrame, String) = {
-    filterNullDataAndReportGeneral(row => row.anyNull, inputDataFrame, operatorParameters, sparkRuntimeUtils, defaultDataRemovedMessage)
+    filterNullDataAndReportGeneral(row => row.anyNull, inputDataFrame, operatorParameters,
+      sparkRuntimeUtils, defaultDataRemovedMessage)
   }
 
   /**
     * Same as 'filterNullDataAndReport' but rather than using the .anyNull function in the dataFrame class allows the user
     * to define a function which returns a boolean for each row is it contains data which should be removed.
     *
-    * * Note about Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
+    * Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
     * in numeric columns. We use the Drop Malformed option, so in the case of dirty data, the operator will not
     * fail, but will silently remove those rows.
    */
@@ -55,8 +57,23 @@ object BadDataReportingUtils {
     ).getOrElse(HdfsStorageFormatType.TSV)
     val overwrite = HdfsParameterUtils.getOverwriteParameterValue(operatorParameters)
     val (goodDataFrame, badDataFrame) = removeDataFromDataFrame(removeRow, inputDataFrame, dataToWriteParam)
-    val inputCount = inputDataFrame.count()
-    val outputCount = goodDataFrame.count()
+    val ar = inputDataFrame.rdd.treeAggregate(Array(0, 0))(
+      seqOp = (ar, row) =>
+        if (removeRow(row)) {
+          ar(1) += 1 //bad data count is at index 1
+          ar
+        } else {
+          ar(0) += 1 //good data is at index 2
+          ar
+        },
+      combOp = (v1, v2) => {
+        v1(0) += v2(0)
+        v1(1) += v2(1)
+        v1
+      })
+    val badDataCount = ar(1)
+    val outputCount = ar(0)
+    val inputCount = badDataCount + outputCount
     val message = handleNullDataAsDataFrame(dataToWriteParam, badDataPath, inputCount, outputCount
       , badData = badDataFrame, sparkRuntimeUtils, hdfsStorageFormat,
       overwrite, operatorInfo, dataRemovedDueTo)
@@ -72,9 +89,9 @@ object BadDataReportingUtils {
 
   /**
     * Rather than filtering the data, just provide an RDD of Strings that contain the null data and
-   * write the data and report according to the values of the other parameters.
+    * write the data and report according to the values of the other parameters.
     *
-    * * Note about Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
+    * Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
     * in numeric columns. We use the Drop Malformed option, so in the case of dirty data, the operator will not
     * fail, but will silently remove those rows.
    */
@@ -103,14 +120,15 @@ object BadDataReportingUtils {
   }
 
 
-  //TODO: It would be awesome if we could write the meta data for the bad data, so that it would be easy to do some analysis of it.
+  //TODO: It would be awesome if we could write the meta data for the bad data, so that it would be
+  // easy to do some analysis of it.
 
   /**
     *
     * @deprecated  Use the method with the signature that includes a value of type
     *              HDFSStorageFormatType rather than the HdfsStorage format enum. Or handleBadDataAsDataFrameDefault
    */
-  @deprecated("Use signature with HdfsStorageFormatType or handleBadDataAsDataFrameDefault")
+  @deprecated("Use signature with HdfsStorageFormatType or handelNullDataAsDataFrame")
   def handleBadDataAsDataFrame(amountOfDataToWriteParam: Option[Long], badDataPath: String,
                                inputDataSize: Long,
                                outputSize: Long, badData: Option[DataFrame],
@@ -129,7 +147,8 @@ object BadDataReportingUtils {
   }
 
   /**
-    * If specified by Params will write data containing null values to a file. Regardless return a message about how much data was removed.
+    * If specified by Params will write data containing null values to a file. Regardless return a message
+    * about how much data was removed.
     */
   def handleNullDataAsDataFrame[T <: HdfsStorageFormatType](amountOfDataToWriteParam: Option[Long], badDataPath: String,
                                                             inputDataSize: Long,
@@ -161,8 +180,7 @@ object BadDataReportingUtils {
       nullData, sparkRuntimeUtils, HdfsStorageFormatType.TSV, overwrite = true, None, dataRemovedDueTo)
   }
   /**
-   * Helper function which uses the AddendumWriter object to generate a message about the bad data and
-   * get the data, if any, to write to the bad data file.
+    * Helper function which uses the AddendumWriter object to generate a message about the bad data and* get the data, if any, to write to the bad data file.
     * The data removed parameter is the message for what the bad data was removed. It will be of the form
     * "data removed " + dataRemovedDueTo. I.e. if you put "due to zero values" then the message would read
     * "Data removed due to zero values".
@@ -174,7 +192,7 @@ object BadDataReportingUtils {
       case (Some(n), Some(data)) =>
         val badDataSize = inputDataSize - outputSize
         val (dataToWrite, locationMsg) =
-          if (badDataSize == 0) (None, "<br>No data removed " + dataRemovedDueTo + "<br>")
+          if (badDataSize == 0) (None, "")
 
           else if (n < Long.MaxValue && n < badDataSize) {
             val sampleSize: Double = n / badDataSize.toDouble
@@ -185,10 +203,10 @@ object BadDataReportingUtils {
           else
             (Some(data), "<br>All the data removed (" + dataRemovedDueTo + ") has been written to file: <br>" + badDataPath + "<br>")
 
-        val lists = AddendumWriter.generateBadDataReport(inputDataSize, outputSize)
+        val lists = AddendumWriter.generateNullDataReport(inputDataSize, outputSize, dataRemovedDueTo)
         val table = HtmlTabulator.format(lists)
         (dataToWrite, table + locationMsg)
-      case (_, _) => val lists = AddendumWriter.generateBadDataReport(inputDataSize, outputSize)
+      case (_, _) => val lists = AddendumWriter.generateNullDataReport(inputDataSize, outputSize, dataRemovedDueTo)
         (None, HtmlTabulator.format(lists))
     }
   }
@@ -205,12 +223,18 @@ object BadDataReportingUtils {
   }
 
   /**
-   * Split a DataFrame according to the value of the rowIsBad parameter.
+    * Split a DataFrame according to the value of the removeRow parameter.
     *
-    * Note about Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
-    * in numeric columns. We use the Drop Malformed option, so in the case of dirty data, the operator will not
+    * Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
+    * in numeric columns). We use the Drop Malformed option, so in the case of dirty data, the operator will not
     * fail, but will silently remove those rows.
-   */
+    *
+    * @param removeRow A function from spark.sql.Row to boolean. Should return true if the row is
+    *                  false.
+    * @param inputDataFrame Input data read without null or bad data removed.
+    * @param dataToWriteParam None if write no data. Some(n) if parameter value is write n rows.
+    * @return
+    */
   def removeDataFromDataFrame(removeRow: Row => Boolean, inputDataFrame: DataFrame,
                               dataToWriteParam: Option[Long] = Some(Long.MaxValue)
                                ): (DataFrame, Option[DataFrame]) = {
