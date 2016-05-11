@@ -160,7 +160,6 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
                     addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsParquetDataset = {
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
     withDatesChanged.write.parquet(path)
-    dataFrame.write.parquet(path)
     new HdfsParquetDatasetDefault(path, tabularSchema, sourceOperatorInfo, addendum)
   }
 

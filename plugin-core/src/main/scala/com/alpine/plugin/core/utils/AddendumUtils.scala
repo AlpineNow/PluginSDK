@@ -18,15 +18,22 @@ object AddendumWriter {
 
   def reportInputSize(n: Long): List[String] = List("Input data size: ", n + " rows")
 
-  def reportOutputSize(n: Long): List[String] = List("Input size after removing rows with null values: ", n + " rows")
+  def reportOutputSize(n: Long): List[String] = List("Input size after removing rows with null values " + ": ", n + " rows")
+
+  def reportOutputSize(n: Long, reason: String): List[String] =
+    List("Input size after removing rows " + reason + ": ", n + " rows")
 
   def reportBadDataSize(input: Long, output: Long): List[String] = {
+    reportNullDataSize(input, output, "due to null values")
+  }
+
+  def reportNullDataSize(input: Long, output: Long, reason: String) = {
     val badRows = input - output
     val badPercent = ((badRows / input.toDouble) * 100).round
-    val badRowMsg = if (badRows == 0) "No data removed due to null values"
+    if (badRows == 0)
+      List("No data removed " + reason, "")
     else
-      badRows + " rows (" + badPercent + "%)"
-    List("Rows removed due to null values: ", badRowMsg)
+      List("Rows removed " + reason + ": ", badRows + " rows (" + badPercent + "%)")
   }
 
   /**
@@ -35,12 +42,27 @@ object AddendumWriter {
    * removed. If, for example, the input had 100 rows and the output had ninety the report would
    * read:
    * Input data size:  100 rows
-   * Output data size: 90 rows
-   * Rows removed due to bad data: 10 rows (10%)
+    * Input data size after removing rows with null values: 90 rows
+    * Rows removed (due to null values) : 10 rows (10%)
    */
   def generateBadDataReport(inputSize: Long, outputSize: Long) = List(reportInputSize(inputSize),
     reportOutputSize(outputSize), reportBadDataSize(inputSize, outputSize))
 
+  /**
+    * Given the input size and output size, generates a report as a list of lists (which can
+    * then be formatted as an HTML table with the tabulator class about how much bad data was
+    * removed. If, for example, the input had 100 rows and the output had ninety the report would
+    * read:
+    * Input data size:  100 rows
+    * Input data size after removing rows + REASON + : 90 rows
+    * Rows removed (REASON) : 10 rows (10%)
+    * @param inputSize
+    * @param outputSize
+    * @param reason - why the data was removed e.g. "due to null values"
+    * @return
+    */
+  def generateNullDataReport(inputSize: Long, outputSize: Long, reason: String) = List(reportInputSize(inputSize),
+    reportOutputSize(outputSize, reason), reportNullDataSize(inputSize, outputSize, reason))
 
   /**
    * Returns a string describing the name of the results and where they are stored.
