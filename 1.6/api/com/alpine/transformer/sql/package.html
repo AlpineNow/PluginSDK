@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>sql - com.alpine.transformer.sql</title>
+          <meta name="description" content="sql - com.alpine.transformer.sql" />
+          <meta name="keywords" content="sql com.alpine.transformer.sql" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.alpine.transformer.sql.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../package.html" class="extype" name="com.alpine.transformer">transformer</a></p>
+        <h1>sql</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sql</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.transformer.sql.ClassificationModelSQLExpressions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClassificationModelSQLExpressionsextendsProductwithSerializable"></a>
+      <a id="ClassificationModelSQLExpressions:ClassificationModelSQLExpressions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassificationModelSQLExpressions.html"><span class="name">ClassificationModelSQLExpressions</span></a><span class="params">(<span name="labelColumnSQL">labelColumnSQL: <a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a></span>, <span name="confidenceSQL">confidenceSQL: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a>]</span>, <span name="intermediateLayers">intermediateLayers: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Seq">Seq</span>[(<a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a>, <a href="ColumnName.html" class="extype" name="com.alpine.transformer.sql.ColumnName">ColumnName</a>)]] = <span class="symbol">immutable.this.Nil</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.ClassificationSQLTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClassificationSQLTransformerextendsSQLTransformer"></a>
+      <a id="ClassificationSQLTransformer:ClassificationSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassificationSQLTransformer.html"><span class="name">ClassificationSQLTransformer</span></a><span class="result"> extends <a href="SQLTransformer.html" class="extype" name="com.alpine.transformer.sql.SQLTransformer">SQLTransformer</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.ClusteringModelSQLExpressions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClusteringModelSQLExpressionsextendsProductwithSerializable"></a>
+      <a id="ClusteringModelSQLExpressions:ClusteringModelSQLExpressions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ClusteringModelSQLExpressions.html"><span class="name">ClusteringModelSQLExpressions</span></a><span class="params">(<span name="labelColumnSQL">labelColumnSQL: <a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a></span>, <span name="distanceSQL">distanceSQL: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a>]</span>, <span name="intermediateLayers">intermediateLayers: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Seq">Seq</span>[(<a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a>, <a href="ColumnName.html" class="extype" name="com.alpine.transformer.sql.ColumnName">ColumnName</a>)]] = <span class="symbol">immutable.this.Nil</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.ClusteringSQLTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClusteringSQLTransformerextendsSQLTransformer"></a>
+      <a id="ClusteringSQLTransformer:ClusteringSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClusteringSQLTransformer.html"><span class="name">ClusteringSQLTransformer</span></a><span class="result"> extends <a href="SQLTransformer.html" class="extype" name="com.alpine.transformer.sql.SQLTransformer">SQLTransformer</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.ColumnName" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ColumnNameextendsProductwithSerializable"></a>
+      <a id="ColumnName:ColumnName"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ColumnName.html"><span class="name">ColumnName</span></a><span class="params">(<span name="rawName">rawName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.ColumnarSQLExpression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ColumnarSQLExpressionextendsProductwithSerializable"></a>
+      <a id="ColumnarSQLExpression:ColumnarSQLExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ColumnarSQLExpression.html"><span class="name">ColumnarSQLExpression</span></a><span class="params">(<span name="sql">sql: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.LayeredSQLExpression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LayeredSQLExpressionextendsProductwithSerializable"></a>
+      <a id="LayeredSQLExpression:LayeredSQLExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LayeredSQLExpression.html"><span class="name">LayeredSQLExpression</span></a><span class="params">(<span name="finalLayer">finalLayer: <a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a></span>, <span name="intermediateLayers">intermediateLayers: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Seq">Seq</span>[(<a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a>, <a href="ColumnName.html" class="extype" name="com.alpine.transformer.sql.ColumnName">ColumnName</a>)]] = <span class="symbol">immutable.this.Nil</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.LayeredSQLExpressions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LayeredSQLExpressionsextendsProductwithSerializable"></a>
+      <a id="LayeredSQLExpressions:LayeredSQLExpressions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LayeredSQLExpressions.html"><span class="name">LayeredSQLExpressions</span></a><span class="params">(<span name="layers">layers: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Seq">Seq</span>[(<a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a>, <a href="ColumnName.html" class="extype" name="com.alpine.transformer.sql.ColumnName">ColumnName</a>)]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.RegressionModelSQLExpression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RegressionModelSQLExpressionextendsProductwithSerializable"></a>
+      <a id="RegressionModelSQLExpression:RegressionModelSQLExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RegressionModelSQLExpression.html"><span class="name">RegressionModelSQLExpression</span></a><span class="params">(<span name="predictionColumnSQL">predictionColumnSQL: <a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a></span>, <span name="intermediateLayers">intermediateLayers: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Seq">Seq</span>[(<a href="ColumnarSQLExpression.html" class="extype" name="com.alpine.transformer.sql.ColumnarSQLExpression">ColumnarSQLExpression</a>, <a href="ColumnName.html" class="extype" name="com.alpine.transformer.sql.ColumnName">ColumnName</a>)]] = <span class="symbol">immutable.this.Nil</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.RegressionSQLTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="RegressionSQLTransformerextendsSQLTransformer"></a>
+      <a id="RegressionSQLTransformer:RegressionSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RegressionSQLTransformer.html"><span class="name">RegressionSQLTransformer</span></a><span class="result"> extends <a href="SQLTransformer.html" class="extype" name="com.alpine.transformer.sql.SQLTransformer">SQLTransformer</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.SQLTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SQLTransformerextendsAnyRef"></a>
+      <a id="SQLTransformer:SQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SQLTransformer.html"><span class="name">SQLTransformer</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.transformer.sql.ClassificationModelSQLExpressions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClassificationModelSQLExpressions"></a>
+      <a id="ClassificationModelSQLExpressions:ClassificationModelSQLExpressions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassificationModelSQLExpressions$.html"><span class="name">ClassificationModelSQLExpressions</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.transformer.sql.ClusteringModelSQLExpressions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ClusteringModelSQLExpressions"></a>
+      <a id="ClusteringModelSQLExpressions:ClusteringModelSQLExpressions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ClusteringModelSQLExpressions$.html"><span class="name">ClusteringModelSQLExpressions</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+    </body>
+      </html>

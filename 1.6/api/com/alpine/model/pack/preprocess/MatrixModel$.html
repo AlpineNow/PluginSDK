@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>SparkPluginJob - com.alpine.plugin.core.spark.SparkPluginJob</title>
-          <meta name="description" content="SparkPluginJob - com.alpine.plugin.core.spark.SparkPluginJob" />
-          <meta name="keywords" content="SparkPluginJob com.alpine.plugin.core.spark.SparkPluginJob" />
+          <title>MatrixModel - com.alpine.model.pack.preprocess.MatrixModel</title>
+          <meta name="description" content="MatrixModel - com.alpine.model.pack.preprocess.MatrixModel" />
+          <meta name="keywords" content="MatrixModel com.alpine.model.pack.preprocess.MatrixModel" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../../index.html';
-            var hash = 'com.alpine.plugin.core.spark.SparkPluginJob';
+            var hash = 'com.alpine.model.pack.preprocess.MatrixModel$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -22,36 +22,26 @@
    	  </script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <img src="../../../../../lib/class_big.png" />
-        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.plugin">plugin</a>.<a href="../package.html" class="extype" name="com.alpine.plugin.core">core</a>.<a href="package.html" class="extype" name="com.alpine.plugin.core.spark">spark</a></p>
-        <h1>SparkPluginJob</h1>
+        <a href="MatrixModel.html" title="Go to companion"><img src="../../../../../lib/object_to_class_big.png" /></a>
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.model">model</a>.<a href="../package.html" class="extype" name="com.alpine.model.pack">pack</a>.<a href="package.html" class="extype" name="com.alpine.model.pack.preprocess">preprocess</a></p>
+        <h1><a href="MatrixModel.html" title="Go to companion">MatrixModel</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">class</span>
+        <span class="modifier"></span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">SparkPluginJob</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">MatrixModel</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>:: AlpineSdkApi ::
-This is the Spark Job base class.
-It gets submitted to the cluster by a Runtime class which is a derivative of
-SparkRuntime. The 'onExecution method' in this class serves as the driver function
-for the Spark Job.</p><p>If you choose to use this class as a base rather than using the its
-child &quot;SparkIOTypedPluginJob' you must implement your own serialization
-and deserialization logic for the inputs and outputs.
-</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@<a href="../annotation/AlpineSdkApi.html" class="extype" name="com.alpine.plugin.core.annotation.AlpineSdkApi">AlpineSdkApi</a></span><span class="args">()</span>
-              
-        </dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -69,7 +59,7 @@ and deserialization logic for the inputs and outputs.
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="com.alpine.plugin.core.spark.SparkPluginJob"><span>SparkPluginJob</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="com.alpine.model.pack.preprocess.MatrixModel"><span>MatrixModel</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -87,52 +77,14 @@ and deserialization logic for the inputs and outputs.
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="com.alpine.plugin.core.spark.SparkPluginJob#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():com.alpine.plugin.core.spark.SparkPluginJob"></a>
-      <a id="&lt;init&gt;:SparkPluginJob"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">SparkPluginJob</span><span class="params">()</span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
+        
+
+        
 
         
 
         <div id="values" class="values members">
-              <h3>Abstract Value Members</h3>
-              <ol><li name="com.alpine.plugin.core.spark.SparkPluginJob#onExecution" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="onExecution(sparkContext:org.apache.spark.SparkContext,appConf:scala.collection.mutable.Map[String,String],listener:com.alpine.plugin.core.OperatorListener):Unit"></a>
-      <a id="onExecution(SparkContext,Map[String,String],OperatorListener):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">abstract </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">onExecution</span><span class="params">(<span name="sparkContext">sparkContext: <span class="extype" name="org.apache.spark.SparkContext">SparkContext</span></span>, <span name="appConf">appConf: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="listener">listener: <a href="../OperatorListener.html" class="extype" name="com.alpine.plugin.core.OperatorListener">OperatorListener</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">The driver function of this Spark job.</p><div class="fullcomment"><div class="comment cmt"><p>The driver function of this Spark job.
-After the end (Alpine) user has 'run' your custom operator, this
-Spark job will be submitted to the cluster.
-</p></div><dl class="paramcmts block"><dt class="param">sparkContext</dt><dd class="cmt"><p>Spark context created when the Spark job was submitted</p></dd><dt class="param">appConf</dt><dd class="cmt"><p>a map containing system related parameters (rather than operator parameters)
-               including all Spark parameters, workflow-level variables</p></dd><dt class="param">listener</dt><dd class="cmt"><p>a listener object which allows you to send messages to th Alpine GUI during
-                the Spark job
-</p></dd></dl></div>
-    </li></ol>
-            </div>
-
-        <div id="values" class="values members">
-              <h3>Concrete Value Members</h3>
+              <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
@@ -275,6 +227,19 @@ Spark job will be submitted to the cluster.
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.alpine.model.pack.preprocess.MatrixModel#generateOutputFeatures" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="generateOutputFeatures(indices:Seq[Int]):Seq[com.alpine.plugin.core.io.ColumnDef]"></a>
+      <a id="generateOutputFeatures(Seq[Int]):Seq[ColumnDef]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">generateOutputFeatures</span><span class="params">(<span name="indices">indices: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Int">Int</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a>]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -445,7 +410,11 @@ Spark job will be submitted to the cluster.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
