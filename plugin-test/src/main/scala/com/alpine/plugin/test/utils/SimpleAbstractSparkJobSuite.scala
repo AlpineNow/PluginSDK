@@ -27,7 +27,7 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
   def createHdfsTabularDatasetLocal(dataFrame: DataFrame, opInfo: Option[OperatorInfo],
                                     path: String) = {
     sparkUtils.deleteFilePathIfExists(path)
-    sparkUtils.saveAsTSV(path, dataFrame, opInfo)
+    sparkUtils.saveAsCSV(path, dataFrame, TSVAttributes.defaultCSV, opInfo)
   }
 
   /**
