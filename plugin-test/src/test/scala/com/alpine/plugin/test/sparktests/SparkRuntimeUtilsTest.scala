@@ -1,13 +1,18 @@
 package com.alpine.plugin.test.sparktests
 
+import java.io.{FileReader, File}
+
 import com.alpine.plugin.core.io.TSVAttributes
 import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
-import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
+import com.alpine.plugin.core.spark.utils.{SparkMetadataWriter, SparkRuntimeUtils}
 import com.alpine.plugin.core.utils.{HdfsStorageFormatType,  HdfsStorageFormat}
 import com.alpine.plugin.test.utils.TestSparkContexts
+import org.apache.hadoop.fs.{Path, FileSystem}
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 import org.scalatest.FunSuite
+
+import scala.io.Source
 
 
 class SparkRuntimeUtilsTest extends FunSuite {
@@ -45,22 +50,27 @@ class SparkRuntimeUtilsTest extends FunSuite {
       quoteStr = TSVAttributes.DEFAULT_QUOTE_CHAR,
       containsHeader = false,
       nullString = "")
-    val originalData = Seq(
+    val originalFishData = Seq(
       FishColor("red", "fish"),
       FishColor("blue", "fish"),
       FishColor("", "fish"))
 
-    val dataFrame = sqlContext.createDataFrame(sc.parallelize(originalData))
+    val dataFrame = sqlContext.createDataFrame(sc.parallelize(originalFishData))
 
-    val fishDataOutput = sparkUtils.saveDataFrame(fishPath, dataFrame, HdfsStorageFormatType.TSV,
+    val fishDataOutput = sparkUtils.saveDataFrame(fishPath+"_PipeDelim", dataFrame, HdfsStorageFormatType.TSV,
       overwrite = true, None, Map[String, AnyRef](), pipeAttributes)
     val readData = sparkUtils.getDataFrame(fishDataOutput).collect()
     val nulls = readData.filter(row => row.anyNull)
 
     assert(readData.length == 3)
     assert(nulls.length == 1)
+    val metadata = new File(fishDataOutput.path +"/" + SparkMetadataWriter.METADATA_FILENAME)
+    assert(metadata.isFile(), "Failed to write metadata")
+    val s: String = Source.fromFile(metadata).getLines().next()
+    assert(s.equals(
+      "{\"column_names\":[\"color\",\"fish\"],\"column_types\":[\"chararray\",\"chararray\"],\"delimiter\":\"|\",\"escape\":\"\\\\\",\"quote\":\"\\\"\",\"is_first_line_header\":false,\"total_number_of_rows\":-1}"), "Metadata is not correct")
 
-    val asTextFile = sc.textFile(fishPath)
+    val asTextFile = sc.textFile(fishDataOutput.path)
     assert(asTextFile.first().split('|').length == 2)
   }
 

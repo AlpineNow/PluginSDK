@@ -93,6 +93,8 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
 
   }
 
+
+
   /**
     * Save a data frame to a path using the given storage format, and return
     * a corresponding HdfsTabularDataset object that points to the path.
@@ -140,9 +142,10 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
         )
 
       case HdfsStorageFormat.TSV =>
-        saveAsTSV(
+        saveAsCSV(
           path,
           dataFrame,
+          TSVAttributes.defaultCSV,
           sourceOperatorInfo,
           addendum
         )
@@ -177,12 +180,47 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     new HdfsAvroDatasetDefault(path, tabularSchema, sourceOperatorInfo, addendum)
   }
 
+  // ======================================================================
+  // Storage util functions for delimited data.
+  // ======================================================================
+
+
   /**
-   * Write a DataFrame to HDFS as a Tabular Delimited file, and return an instance of the Alpine
+    *More general version of saveAsCSV.
+    * Write a DataFrame to HDFS as a Tabular Delimited file, and return an instance of the Alpine
+    * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
+    * the DataFrame schema) and the path to the to the saved data. Also writes the ".alpine_metadata"
+    * to the result directory so that the user can drag and drop the result output and use it without
+    * configuring the dataset
+    * @param path where file will be written (this function will create a directory of part files)
+    * @param dataFrame - data to write
+    * @param tSVAttributes - an object which specifies how the file should be written
+    * @param sourceOperatorInfo from parameters. Includes name and UUID
+    * Same as 'saveAsCSV' but also writes the ".alpine_metadata" to the result so  that
+    * the user can drag and drop the result output and use it without
+    * configuring the dataset
+    */
+  def saveAsCSV(path: String, dataFrame: DataFrame,
+    tSVAttributes: TSVAttributes,
+    sourceOperatorInfo: Option[OperatorInfo],
+    addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+    val dataset = saveAsCSVoMetadata(path ,dataFrame, tSVAttributes, sourceOperatorInfo, addendum)
+    val fileSystem = FileSystem.get(sc.hadoopConfiguration)
+    SparkMetadataWriter.writeMetadataForDataset(dataset, fileSystem)
+    dataset
+  }
+
+
+  /**
+    * Write a DataFrame to HDFS as a Tab Delimited file, and return an instance of the Alpine
     * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
     * the DataFrame schema) and the path to the to the saved data. Uses the default TSVAttributes object
     * which specifies that the data be written as a Tab Delimited File. See TSVAAttributes for more
     * information and use the saveAsCSV file to customize csv options such as null string and delimiters.
+    *
+    * Also writes the ".alpine_metadata"
+    * to the result directory so that the user can drag and drop the result output and use it without
+    * configuring the dataset
    */
   def saveAsTSV(path: String,
                 dataFrame: DataFrame,
@@ -219,7 +257,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     * @param tSVAttributes - an object which specifies how the file should be written
     * @param sourceOperatorInfo from parameters. Includes name and UUID
     */
-  def saveAsCSV(path: String, dataFrame: DataFrame,
+  def saveAsCSVoMetadata(path: String, dataFrame: DataFrame,
                 tSVAttributes: TSVAttributes,
                 sourceOperatorInfo: Option[OperatorInfo],
                 addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
@@ -252,7 +290,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
   }
 
   // ======================================================================
-  // Dataframe util functions.
+  // DataFrame util functions.
   // ======================================================================
 
   /**
