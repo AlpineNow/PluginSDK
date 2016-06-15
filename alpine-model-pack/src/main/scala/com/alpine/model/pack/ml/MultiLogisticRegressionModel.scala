@@ -5,6 +5,8 @@
 package com.alpine.model.pack.ml
 
 import com.alpine.model.ClassificationRowModel
+import com.alpine.model.export.pfa.modelconverters.LogisticRegressionPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.SQLGenerator
@@ -19,7 +21,8 @@ case class MultiLogisticRegressionModel(singleLORs: Seq[SingleLogisticRegression
                                       baseValue: String,
                                       dependentFeatureName: String,
                                       inputFeatures: Seq[ColumnDef],
-                                      override val identifier: String = "") extends ClassificationRowModel {
+                                      override val identifier: String = "")
+  extends ClassificationRowModel with PFAConvertible {
   override def transformer = LogisticRegressionTransformer(this)
 
   @transient lazy val classLabels: List[String] = (singleLORs.map(l => l.dependentValue) ++ List(baseValue)).toList
@@ -27,6 +30,8 @@ case class MultiLogisticRegressionModel(singleLORs: Seq[SingleLogisticRegression
   override def dependentFeature = new ColumnDef(dependentFeatureName, ColumnType.String)
 
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(LogisticRegressionSQLTransformer(this, sqlGenerator))
+
+  override def getPFAConverter: PFAConverter = new LogisticRegressionPFAConverter(this)
 }
 
 /**
@@ -83,6 +88,7 @@ case class LogisticRegressionTransformer(model: MultiLogisticRegressionModel) ex
 
   /**
    * The result must always return the labels in the order specified here.
+ *
    * @return The class labels in the order that they will be returned by the result.
    */
   override def classLabels: Seq[String] = model.classLabels

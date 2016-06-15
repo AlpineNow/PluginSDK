@@ -5,11 +5,13 @@
 package com.alpine.model.pack.ml
 
 import com.alpine.model.ClusteringRowModel
+import com.alpine.model.export.pfa.modelconverters.KMeansPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.ClusteringTransformer
-import com.alpine.transformer.sql.{ColumnName, ClusteringModelSQLExpressions, ClusteringSQLTransformer, ColumnarSQLExpression}
+import com.alpine.transformer.sql.{ClusteringModelSQLExpressions, ClusteringSQLTransformer, ColumnName, ColumnarSQLExpression}
 
 /**
  * A model representing results of the K-Means clustering algorithm.
@@ -26,12 +28,15 @@ import com.alpine.transformer.sql.{ColumnName, ClusteringModelSQLExpressions, Cl
  */
 case class KMeansModel(clusters: Seq[ClusterInfo],
                        inputFeatures: Seq[ColumnDef],
-                       override val identifier: String = "") extends ClusteringRowModel {
+                       override val identifier: String = "")
+  extends ClusteringRowModel with PFAConvertible {
   override def classLabels: Seq[String] = clusters.map(_.name)
 
   override def transformer = KMeansTransformer(this)
 
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(new KMeansSQLTransformer(this, sqlGenerator))
+
+  override def getPFAConverter: PFAConverter = new KMeansPFAConverter(this)
 }
 
 /**

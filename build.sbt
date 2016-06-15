@@ -28,6 +28,9 @@ def publishParameters(module: String) = Seq(
   crossPaths := false
 )
 
+resolvers += "opendatagroup" at "http://repository.opendatagroup.com/maven"
+val hadrianDependency = "com.opendatagroup" % "hadrian" % "0.8.3"
+
 // javax.servlet signing issues can be tricky, we can just exclude the dep
 def excludeFromAll(items: Seq[ModuleID], group: String, artifact: String) =
   items.map(_.exclude(group, artifact))
@@ -146,7 +149,8 @@ lazy val ModelPack = Project(
   base = file("alpine-model-pack"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep  % "test"
+      scalaTestDep  % "test",
+      hadrianDependency % "test"
       //  prestoParserDependency
     )
   ) ++ publishParameters("alpine-model-pack")

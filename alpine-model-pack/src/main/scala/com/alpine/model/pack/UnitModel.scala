@@ -5,6 +5,8 @@
 package com.alpine.model.pack
 
 import com.alpine.model.RowModel
+import com.alpine.model.export.pfa.modelconverters.UnitPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.sql.SQLGenerator
@@ -15,13 +17,16 @@ import com.alpine.transformer.sql.SQLTransformer
  * Represents a model that carries features through without transforming them.
  * Designed to be used in parallel to other models in the CombinerModel.
  */
-case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
+case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: String = "")
+  extends RowModel with PFAConvertible {
   override def transformer: Transformer = UnitTransformer
   override def outputFeatures = inputFeatures
 
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = {
     Some(UnitSQLTransformer(this, sqlGenerator))
   }
+
+  override def getPFAConverter: PFAConverter = new UnitPFAConverter(this)
 }
 
 /**

@@ -5,6 +5,8 @@
 package com.alpine.model.pack.preprocess
 
 import com.alpine.model.RowModel
+import com.alpine.model.export.pfa.modelconverters.PolynomialPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -24,7 +26,9 @@ import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
   * Then the transformation of a row (x1, x2, x3) will be
   * {{{(y1, y2) = (x1 * x2 pow 2, sqrt(x1) * x2 pow 3 * x3 pow 2).}}}
   */
-case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
+case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "")
+  extends RowModel with PFAConvertible  {
+
   override def transformer: Transformer = PolynomialTransformer(this)
 
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = Some(new PolynomialSQLTransformer(this, sqlGenerator))
@@ -33,6 +37,7 @@ case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures:
     exponents.indices.map(i => ColumnDef("y_" + i, ColumnType.Double))
   }
 
+  override def getPFAConverter: PFAConverter = new PolynomialPFAConverter(this)
 }
 
 case class PolynomialTransformer(model: PolynomialModel) extends Transformer {

@@ -5,6 +5,8 @@
 package com.alpine.model.pack.ml
 
 import com.alpine.model.RegressionRowModel
+import com.alpine.model.export.pfa.modelconverters.LinearRegressionPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.ml.sql.LinearRegressionSQLTransformer
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -30,13 +32,16 @@ case class LinearRegressionModel(coefficients: Seq[java.lang.Double],
                                  inputFeatures: Seq[ColumnDef],
                                  intercept: Double = 0,
                                  dependentFeatureName: String = "",
-                                 override val identifier: String = "") extends RegressionRowModel {
+                                 override val identifier: String = "")
+  extends RegressionRowModel with PFAConvertible  {
 
   override def transformer = new LinearRegressionTransformer(coefficients, intercept)
 
   override def dependentFeature = new ColumnDef(dependentFeatureName, ColumnType.Double)
 
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(new LinearRegressionSQLTransformer(this, sqlGenerator))
+
+  override def getPFAConverter: PFAConverter = new LinearRegressionPFAConverter(this)
 }
 
 

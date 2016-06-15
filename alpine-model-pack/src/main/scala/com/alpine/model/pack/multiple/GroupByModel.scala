@@ -4,6 +4,8 @@
 
 package com.alpine.model.pack.multiple
 
+import com.alpine.model.export.pfa.modelconverters.GroupByPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.multiple.sql.{GroupByClassificationSQLTransformer, GroupByRegressionSQLTransformer}
 import com.alpine.model.{ClassificationRowModel, RegressionRowModel, RowModel}
 import com.alpine.plugin.core.io.ColumnDef
@@ -33,7 +35,7 @@ trait GroupByModel[M <: RowModel] {
   * They also need to be of the type of the groupByFeature.
   */
 case class GroupByRegressionModel(groupByFeature: ColumnDef, modelsByGroup: Map[Any, RegressionRowModel], override val identifier: String = "")
-  extends RegressionRowModel with GroupByModel[RegressionRowModel] {
+  extends RegressionRowModel with GroupByModel[RegressionRowModel] with PFAConvertible {
 
   def isValid: Boolean = {
     modelsByGroup.nonEmpty && modelsByGroup.map(_._2.dependentFeature).toSeq.distinct.size == 1
@@ -52,10 +54,12 @@ case class GroupByRegressionModel(groupByFeature: ColumnDef, modelsByGroup: Map[
       None
     }
   }
+
+  override def getPFAConverter: PFAConverter = new GroupByPFAConverter(this)
 }
 
 case class GroupByClassificationModel(groupByFeature: ColumnDef, modelsByGroup: Map[Any, ClassificationRowModel], override val identifier: String = "")
-  extends ClassificationRowModel with GroupByModel[ClassificationRowModel]  {
+  extends ClassificationRowModel with GroupByModel[ClassificationRowModel] with PFAConvertible {
 
   def isValid: Boolean = {
     modelsByGroup.nonEmpty && modelsByGroup.map(_._2.dependentFeature).toSeq.distinct.size == 1
@@ -76,4 +80,7 @@ case class GroupByClassificationModel(groupByFeature: ColumnDef, modelsByGroup: 
   }
 
   @transient lazy val classLabels: Seq[String] = modelsByGroup.flatMap(_._2.classLabels).toList.distinct
+
+  override def getPFAConverter: PFAConverter = new GroupByPFAConverter(this)
+
 }
