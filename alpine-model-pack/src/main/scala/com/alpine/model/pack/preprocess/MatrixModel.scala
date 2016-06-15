@@ -1,6 +1,8 @@
 package com.alpine.model.pack.preprocess
 
 import com.alpine.model.RowModel
+import com.alpine.model.export.pfa.modelconverters.MatrixPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -11,7 +13,8 @@ import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
 /**
   * Created by Jennifer Thompson on 3/17/16.
   */
-case class MatrixModel(values: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
+case class MatrixModel(values: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "")
+  extends RowModel with PFAConvertible {
   override def transformer: Transformer = MatrixTransformer(this)
 
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = Some(new MatrixSQLTransformer(this, sqlGenerator))
@@ -19,6 +22,8 @@ case class MatrixModel(values: Seq[Seq[java.lang.Double]], inputFeatures: Seq[Co
   def outputFeatures = {
     MatrixModel.generateOutputFeatures(values.indices)
   }
+
+  override def getPFAConverter: PFAConverter = new MatrixPFAConverter(this)
 }
 
 object MatrixModel {

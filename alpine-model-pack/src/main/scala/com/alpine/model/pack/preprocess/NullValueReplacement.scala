@@ -5,6 +5,8 @@
 package com.alpine.model.pack.preprocess
 
 import com.alpine.model.RowModel
+import com.alpine.model.export.pfa.modelconverters.NullValueReplacementPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.sql.SQLGenerator
@@ -15,10 +17,13 @@ import com.alpine.util.SQLUtility
 /**
  * Model that will replace null values in the input row with specified values.
  */
-case class NullValueReplacement(replacementValues: Seq[Any], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
+case class NullValueReplacement(replacementValues: Seq[Any], inputFeatures: Seq[ColumnDef], override val identifier: String = "")
+  extends RowModel with PFAConvertible  {
+
   override def transformer: Transformer = NullValueReplacer(this)
   override def outputFeatures = inputFeatures
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(new NullValueSQLReplacer(this, sqlGenerator))
+  override def getPFAConverter: PFAConverter = new NullValueReplacementPFAConverter(this)
 }
 
 case class NullValueReplacer(model: NullValueReplacement) extends Transformer {

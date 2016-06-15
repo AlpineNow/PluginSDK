@@ -6,6 +6,9 @@ package com.alpine.model.pack.preprocess
 
 import com.alpine.common.serialization.json.TypeWrapper
 import com.alpine.model.RowModel
+import com.alpine.model.export.pfa.expressions.FunctionExecute
+import com.alpine.model.export.pfa.modelconverters.RealValuedFunctionsPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.model.pack.util.CastedDoubleSeq
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -21,6 +24,7 @@ import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression}
 trait RealValuedFunction {
   def apply(x: Double): Double
   def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression]
+  def pfaRepresentation(inputReference: Any): Any
 }
 
 case class Exp() extends RealValuedFunction {
@@ -32,6 +36,10 @@ case class Exp() extends RealValuedFunction {
         s"""EXP(${name.escape(sqlGenerator)})"""
       )
     )
+  }
+
+  def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("m.exp", inputReference)
   }
 
 }
@@ -46,6 +54,10 @@ case class Multiply(coefficient: Double) extends RealValuedFunction  {
       )
     )
   }
+
+  def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("*", inputReference, coefficient)
+  }
 }
 
 case class Divide(denominator: Double) extends RealValuedFunction  {
@@ -58,6 +70,10 @@ case class Divide(denominator: Double) extends RealValuedFunction  {
       )
     )
   }
+
+  def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("/", inputReference, denominator)
+  }
 }
 case class Add(offset: Double) extends RealValuedFunction  {
   def apply(x: Double): Double = x + offset
@@ -68,6 +84,10 @@ case class Add(offset: Double) extends RealValuedFunction  {
         s"""${name.escape(sqlGenerator)} + $offset"""
       )
     )
+  }
+
+  def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("+", inputReference, offset)
   }
 }
 
@@ -81,6 +101,10 @@ case class Subtract(offset: Double) extends RealValuedFunction  {
       )
     )
   }
+
+  def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("-", inputReference, offset)
+  }
 }
 
 case class Log() extends RealValuedFunction {
@@ -92,6 +116,10 @@ case class Log() extends RealValuedFunction {
         s"""LN(${name.escape(sqlGenerator)})"""
       )
     )
+  }
+
+  def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("m.ln", inputReference)
   }
 }
 
@@ -105,6 +133,10 @@ case class Log1p() extends RealValuedFunction {
         s"""LN(1 + ${name.escape(sqlGenerator)})"""
       )
     )
+  }
+
+  def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("m.ln1p", inputReference)
   }
 }
 
@@ -134,9 +166,13 @@ case class Power(p: Double) extends RealValuedFunction {
       )
     )
   }
+
+  def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("**", inputReference, p)
+  }
 }
 
-case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel {
+case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel with PFAConvertible{
   override def transformer = RealValuedFunctionTransformer(this)
 
   override def outputFeatures = {
@@ -154,6 +190,8 @@ case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], input
       None
     }
   }
+
+  override def getPFAConverter: PFAConverter = new RealValuedFunctionsPFAConverter(this)
 }
 
 case class RealFunctionWithIndex(function: TypeWrapper[_ <: RealValuedFunction], index: Int)

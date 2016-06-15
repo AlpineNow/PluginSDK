@@ -5,6 +5,8 @@
 package com.alpine.model.pack.preprocess
 
 import com.alpine.model.RowModel
+import com.alpine.model.export.pfa.modelconverters.OneHotEncodingPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.SQLGenerator
@@ -15,7 +17,8 @@ import com.alpine.transformer.sql.ColumnarSQLExpression
  * Model to apply one-hot encoding to categorical input features.
  * Result will be a sequence of 1s and 0s.
  */
-case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature], inputFeatures: Seq[ColumnDef],  override val identifier: String = "") extends RowModel {
+case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature], inputFeatures: Seq[ColumnDef],  override val identifier: String = "")
+  extends RowModel with PFAConvertible  {
 
   override def transformer = OneHotEncodingTransformer(oneHotEncodedFeatures)
 
@@ -27,6 +30,8 @@ case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature],
   }
 
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(OneHotEncodingSQLTransformer(this, sqlGenerator))
+
+  override def getPFAConverter: PFAConverter = new OneHotEncodingPFAConverter(this)
 }
 
 /**

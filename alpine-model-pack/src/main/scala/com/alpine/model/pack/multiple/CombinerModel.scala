@@ -5,6 +5,8 @@
 package com.alpine.model.pack.multiple
 
 import com.alpine.model.RowModel
+import com.alpine.model.export.pfa.modelconverters.CombinerPFAConverter
+import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
 import com.alpine.model.pack.multiple.sql.CombinerSQLTransformer
 import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.sql.SQLGenerator
@@ -20,7 +22,8 @@ import scala.collection.mutable.ListBuffer
  * the output features are the concatenation of the output features of the sub-models
  *  (with string suffices added to ensure uniqueness of names).
  */
-case class CombinerModel(models: Seq[ModelWithID], override val identifier: String = "") extends RowModel {
+case class CombinerModel(models: Seq[ModelWithID], override val identifier: String = "")
+  extends RowModel with PFAConvertible {
 
   override def transformer: Transformer = CombinerTransformer(this)
 
@@ -45,6 +48,8 @@ case class CombinerModel(models: Seq[ModelWithID], override val identifier: Stri
   override def sqlTransformer(sqlGenerator: SQLGenerator) = {
     CombinerSQLTransformer.make(this, sqlGenerator)
   }
+
+  override def getPFAConverter: PFAConverter = new CombinerPFAConverter(this)
 }
 
 case class ModelWithID(id: String, model: RowModel)
