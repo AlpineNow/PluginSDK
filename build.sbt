@@ -40,7 +40,7 @@ def excludeJavaxServlet(items: Seq[ModuleID]) =
 lazy val javaSourceVersion = "1.7"
 lazy val javaTargetVersion = "1.7"
 lazy val scalaMajorVersion = "2.10"
-lazy val sparkVersion = "1.5.1"
+lazy val sparkVersion = "1.6.1"
 
 useGpg := true
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
