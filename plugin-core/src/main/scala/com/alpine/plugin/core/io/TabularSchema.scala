@@ -14,66 +14,64 @@ import scala.collection.JavaConversions
  * :: AlpineSdkApi ::
  */
 @AlpineSdkApi
-case class TabularSchema private (
+case class TabularSchema(
   definedColumns: Seq[ColumnDef],
-  isPartial: Boolean,
-  expectedOutputFormatAttributes: Option[TabularFormatAttributes]) {
+  isPartial: Boolean) {
 
   def getNumDefinedColumns: Int = definedColumns.length
   def getDefinedColumns: Seq[ColumnDef] = definedColumns
 
-  /**
-   * This may be empty (the user is not required to specify the format).
-   * @return TabularFormatAttributes Some(Avro, Parquet, TSV etc) or None.
-   */
-  def getExpectedOutputFormat: Option[TabularFormatAttributes] = {
-    this.expectedOutputFormatAttributes
-  }
 }
 
 object TabularSchema {
   def apply(columnDefs: Seq[ColumnDef]): TabularSchema = {
-    TabularSchema(columnDefs, isPartial = false, None)
+    TabularSchema(columnDefs, isPartial = false)
   }
 
+  @deprecated("Use overloaded method without expectedOutputFormatAttributes.")
   def apply(columnDefs: Seq[ColumnDef],
             expectedOutputFormatAttributes: TabularFormatAttributes): TabularSchema = {
-    TabularSchema(columnDefs, isPartial = false, Some(expectedOutputFormatAttributes))
+    TabularSchema(columnDefs, isPartial = false)
   }
 
   def apply(columnDefs: util.List[ColumnDef]): TabularSchema = {
     apply(columnDefs, isPartial = false)
   }
 
+  @deprecated("Use overloaded method without expectedOutputFormatAttributes.")
   def apply(columnDefs: util.List[ColumnDef],
             expectedOutputFormatAttributes: TabularFormatAttributes): TabularSchema = {
-    apply(columnDefs, isPartial = false, expectedOutputFormatAttributes)
+    apply(columnDefs, isPartial = false)
   }
 
   def apply(
     columnDefs: util.List[ColumnDef],
     isPartial: Boolean): TabularSchema = {
-    TabularSchema(JavaConversions.asScalaBuffer(columnDefs), isPartial, None)
+    TabularSchema(JavaConversions.asScalaBuffer(columnDefs), isPartial)
   }
 
+  @deprecated("Use overloaded method without expectedOutputFormatAttributes.")
   def apply(
     columnDefs: util.List[ColumnDef],
     isPartial: Boolean,
     expectedOutputFormatAttributes: TabularFormatAttributes): TabularSchema = {
-    TabularSchema(JavaConversions.asScalaBuffer(columnDefs), isPartial, Some(expectedOutputFormatAttributes))
+    TabularSchema(JavaConversions.asScalaBuffer(columnDefs), isPartial)
   }
 
+  @deprecated("Use overloaded method without expectedOutputFormatAttributes.")
   def apply(
     columnDefs: util.List[ColumnDef],
     isPartial: Boolean,
     expectedOutputFormatAttributes: Option[TabularFormatAttributes]): TabularSchema = {
-    TabularSchema(JavaConversions.asScalaBuffer(columnDefs), isPartial, expectedOutputFormatAttributes)
+    TabularSchema(JavaConversions.asScalaBuffer(columnDefs), isPartial)
   }
 
+  @deprecated("Use overloaded method without expectedOutputFormatAttributes.")
   def apply(
     columnDefs: Seq[ColumnDef],
     isPartial: Boolean,
     expectedOutputFormatAttributes: TabularFormatAttributes): TabularSchema = {
-    TabularSchema(columnDefs, isPartial, Some(expectedOutputFormatAttributes))
+    TabularSchema(columnDefs, isPartial)
   }
+
 }

@@ -21,8 +21,8 @@ class OperatorDialogMockTests extends FunSuite  {
   ))
 
   val dataSourceMock = new DataSourceMock("TestDataSource")
-  val schemaManagerMockOneTabular = new OperatorSchemaManagerMock(Some(golfInputSchema))
-  val schemaManagerMockNoSchema = new OperatorSchemaManagerMock(None)
+  val schemaManagerMockOneTabular = new OperatorSchemaManagerMock()
+  val schemaManagerMockNoSchema = new OperatorSchemaManagerMock()
 
   val operatorDataSourceManagerMock = new OperatorDataSourceManagerMock(dataSourceMock)
 

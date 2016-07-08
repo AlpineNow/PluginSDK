@@ -1,6 +1,6 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.core.spark.utils
 
@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsAvroDatasetDefault, HdfsDelimitedTabularDatasetDefault, HdfsParquetDatasetDefault}
+import com.alpine.plugin.core.spark.OperatorFailedException
 import com.alpine.plugin.core.utils.{HdfsStorageFormat, HdfsStorageFormatType}
 import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
@@ -20,41 +21,41 @@ import org.apache.spark.sql.{DataFrame, SQLContext, UserDefinedFunction}
 import scala.util.Try
 
 /**
- * :: AlpineSdkApi ::
- */
+  * :: AlpineSdkApi ::
+  */
 @AlpineSdkApi
-class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
+class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
 
+  val driverHdfs = FileSystem.get(sc.hadoopConfiguration)
 
   // ======================================================================
   // Storage util functions.
   // ======================================================================
 
   /**
-   * Save a data frame to a path using the given storage format, and return
-   * a corresponding HdfsTabularDataset object that points to the path.
-   * @param path The path to which we'll save the data frame.
-   * @param dataFrame The data frame that we want to save.
-   * @param storageFormat The format that we want to store in.
-   * @param overwrite Whether to overwrite any existing file at the path.
-   * @param sourceOperatorInfo Mandatory source operator information to be included
-   *                           in the output object.
-   * @param addendum Mandatory addendum information to be included in the output
-   *                 object.
-   * @return After saving the data frame, returns an HdfsTabularDataset object.
-   */
+    * Save a data frame to a path using the given storage format, and return
+    * a corresponding HdfsTabularDataset object that points to the path.
+    *
+    * @param path               The path to which we'll save the data frame.
+    * @param dataFrame          The data frame that we want to save.
+    * @param storageFormat      The format that we want to store in.
+    * @param overwrite          Whether to overwrite any existing file at the path.
+    * @param sourceOperatorInfo Mandatory source operator information to be included
+    *                           in the output object.
+    * @param addendum           Mandatory addendum information to be included in the output
+    *                           object.
+    * @return After saving the data frame, returns an HdfsTabularDataset object.
+    */
   def saveDataFrame[T <: HdfsStorageFormatType](
-                                                  path: String,
-                                                  dataFrame: DataFrame,
-                                                  storageFormat: T,
-                                                  overwrite: Boolean,
-                                                  sourceOperatorInfo: Option[OperatorInfo],
-                                                  addendum: Map[String, AnyRef],
-                                                  tSVAttributes: TSVAttributes): HdfsTabularDataset = {
+                                                 path: String,
+                                                 dataFrame: DataFrame,
+                                                 storageFormat: T,
+                                                 overwrite: Boolean,
+                                                 sourceOperatorInfo: Option[OperatorInfo],
+                                                 addendum: Map[String, AnyRef],
+                                                 tSVAttributes: TSVAttributes): HdfsTabularDataset = {
 
-    if (overwrite) {
-      deleteFilePathIfExists(path)
-    }
+    deleteOrFailIfExists(path, overwrite)
 
     storageFormat match {
       case HdfsStorageFormatType.Parquet =>
@@ -85,29 +86,27 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
   }
 
   def saveDataFrameDefault[T <: HdfsStorageFormatType](
-                                                         path: String,
-                                                         dataFrame: DataFrame,
-                                                         sourceOperatorInfo: Option[OperatorInfo]): HdfsTabularDataset = {
+                                                        path: String,
+                                                        dataFrame: DataFrame,
+                                                        sourceOperatorInfo: Option[OperatorInfo]): HdfsTabularDataset = {
     saveDataFrame(path, dataFrame, HdfsStorageFormatType.TSV, overwrite = true,
       sourceOperatorInfo, Map[String, AnyRef](), TSVAttributes.default)
-
   }
-
 
 
   /**
     * Save a data frame to a path using the given storage format, and return
     * a corresponding HdfsTabularDataset object that points to the path.
-    * @param path The path to which we'll save the data frame.
-    * @param dataFrame The data frame that we want to save.
-    * @param storageFormat The format that we want to store in.
-    * @param overwrite Whether to overwrite any existing file at the path.
+    *
+    * @param path               The path to which we'll save the data frame.
+    * @param dataFrame          The data frame that we want to save.
+    * @param storageFormat      The format that we want to store in.
+    * @param overwrite          Whether to overwrite any existing file at the path.
     * @param sourceOperatorInfo Mandatory source operator information to be included
     *                           in the output object.
-    * @param addendum Mandatory addendum information to be included in the output
-    *                 object.
+    * @param addendum           Mandatory addendum information to be included in the output
+    *                           object.
     * @return After saving the data frame, returns an HdfsTabularDataset object.
-    *
     * @deprecated use saveDataFrame(String, dataFrame, HdfsStorageFormatType, Option[OperatorInfo], boolean). or
     *             SaveDataFrameDefault.
     */
@@ -120,9 +119,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
                      sourceOperatorInfo: Option[OperatorInfo],
                      addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsTabularDataset = {
 
-    if (overwrite) {
-      deleteFilePathIfExists(path)
-    }
+    deleteOrFailIfExists(path, overwrite)
 
     storageFormat match {
       case HdfsStorageFormat.Parquet =>
@@ -153,10 +150,10 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
   }
 
   /**
-   * Write a DataFrame to HDFS as a Parquet file, and return an instance of the
-   * HDFSParquet IO base type which contains the Alpine 'TabularSchema' definition (created by
-   * converting the DataFrame schema) and the path to the to the saved data.
-   */
+    * Write a DataFrame to HDFS as a Parquet file, and return an instance of the
+    * HDFSParquet IO base type which contains the Alpine 'TabularSchema' definition (created by
+    * converting the DataFrame schema) and the path to the saved data.
+    */
   def saveAsParquet(path: String,
                     dataFrame: DataFrame,
                     sourceOperatorInfo: Option[OperatorInfo],
@@ -167,10 +164,10 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
   }
 
   /**
-   * Write a DataFrame as an HDFSAvro dataset, and return the an instance of the Alpine
-   * HDFSAvroDataset type which contains the  'TabularSchema' definition
-   * (created by converting the DataFrame schema) and the path to the to the saved data.
-   */
+    * Write a DataFrame as an HDFSAvro dataset, and return the an instance of the Alpine
+    * HDFSAvroDataset type which contains the  'TabularSchema' definition
+    * (created by converting the DataFrame schema) and the path to the saved data.
+    */
   def saveAsAvro(path: String,
                  dataFrame: DataFrame,
                  sourceOperatorInfo: Option[OperatorInfo],
@@ -186,25 +183,26 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
 
 
   /**
-    *More general version of saveAsCSV.
+    * More general version of saveAsCSV.
     * Write a DataFrame to HDFS as a Tabular Delimited file, and return an instance of the Alpine
     * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
-    * the DataFrame schema) and the path to the to the saved data. Also writes the ".alpine_metadata"
+    * the DataFrame schema) and the path to the saved data. Also writes the ".alpine_metadata"
     * to the result directory so that the user can drag and drop the result output and use it without
     * configuring the dataset
-    * @param path where file will be written (this function will create a directory of part files)
-    * @param dataFrame - data to write
-    * @param tSVAttributes - an object which specifies how the file should be written
+    *
+    * @param path               where file will be written (this function will create a directory of part files)
+    * @param dataFrame          - data to write
+    * @param tSVAttributes      - an object which specifies how the file should be written
     * @param sourceOperatorInfo from parameters. Includes name and UUID
-    * Same as 'saveAsCSV' but also writes the ".alpine_metadata" to the result so  that
-    * the user can drag and drop the result output and use it without
-    * configuring the dataset
+    *                           Same as 'saveAsCSV' but also writes the ".alpine_metadata" to the result so  that
+    *                           the user can drag and drop the result output and use it without
+    *                           configuring the dataset
     */
   def saveAsCSV(path: String, dataFrame: DataFrame,
-    tSVAttributes: TSVAttributes,
-    sourceOperatorInfo: Option[OperatorInfo],
-    addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
-    val dataset = saveAsCSVoMetadata(path ,dataFrame, tSVAttributes, sourceOperatorInfo, addendum)
+                tSVAttributes: TSVAttributes,
+                sourceOperatorInfo: Option[OperatorInfo],
+                addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+    val dataset = saveAsCSVoMetadata(path, dataFrame, tSVAttributes, sourceOperatorInfo, addendum)
     val fileSystem = FileSystem.get(sc.hadoopConfiguration)
     SparkMetadataWriter.writeMetadataForDataset(dataset, fileSystem)
     dataset
@@ -214,14 +212,14 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
   /**
     * Write a DataFrame to HDFS as a Tab Delimited file, and return an instance of the Alpine
     * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
-    * the DataFrame schema) and the path to the to the saved data. Uses the default TSVAttributes object
+    * the DataFrame schema) and the path to the saved data. Uses the default TSVAttributes object
     * which specifies that the data be written as a Tab Delimited File. See TSVAAttributes for more
     * information and use the saveAsCSV file to customize csv options such as null string and delimiters.
     *
     * Also writes the ".alpine_metadata"
     * to the result directory so that the user can drag and drop the result output and use it without
     * configuring the dataset
-   */
+    */
   def saveAsTSV(path: String,
                 dataFrame: DataFrame,
                 sourceOperatorInfo: Option[OperatorInfo],
@@ -251,16 +249,17 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     * More general version of saveAsTSV.
     * Write a DataFrame to HDFS as a Tabular Delimited file, and return an instance of the Alpine
     * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
-    * the DataFrame schema) and the path to the to the saved data.
-    * @param path where file will be written (this function will create a directory of part files)
-    * @param dataFrame - data to write
-    * @param tSVAttributes - an object which specifies how the file should be written
+    * the DataFrame schema) and the path to the saved data.
+    *
+    * @param path               where file will be written (this function will create a directory of part files)
+    * @param dataFrame          - data to write
+    * @param tSVAttributes      - an object which specifies how the file should be written
     * @param sourceOperatorInfo from parameters. Includes name and UUID
     */
   def saveAsCSVoMetadata(path: String, dataFrame: DataFrame,
-                tSVAttributes: TSVAttributes,
-                sourceOperatorInfo: Option[OperatorInfo],
-                addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+                         tSVAttributes: TSVAttributes,
+                         sourceOperatorInfo: Option[OperatorInfo],
+                         addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
     withDatesChanged.saveAsCsvFile(path, tSVAttributes.toMap)
     new HdfsDelimitedTabularDatasetDefault(
@@ -274,18 +273,32 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
 
 
   /**
-   * Checks if the given file path already exists (and would cause a 'PathAlreadyExists'
-   * exception when we try to write to it) and deletes the directory to prevent existing
-   * results at that path if they do exist.
-   * @param outputPathStr - the full HDFS path
-   * @return
-   */
-  def deleteFilePathIfExists(outputPathStr : String) = {
+    * Checks if the given file path already exists (and would cause a 'PathAlreadyExists'
+    * exception when we try to write to it) and deletes the directory to prevent existing
+    * results at that path if they do exist.
+    *
+    * @param outputPathStr - the full HDFS path
+    * @return
+    */
+  def deleteFilePathIfExists(outputPathStr: String) = {
     val outputPath = new Path(outputPathStr)
-    val driverHdfs = FileSystem.get(sc.hadoopConfiguration)
     if (driverHdfs.exists(outputPath)) {
       println("The path exists already.")
       driverHdfs.delete(outputPath, true)
+    }
+  }
+
+  @throws[OperatorFailedException]
+  def deleteOrFailIfExists[T <: HdfsStorageFormatType](path: String, overwrite: Boolean): Unit = {
+    if (overwrite) {
+      deleteFilePathIfExists(path)
+    } else {
+      val outputPath = new Path(path)
+      if (driverHdfs.exists(outputPath)) {
+        throw new OperatorFailedException(
+          "Results file already exists. Set “Overwrite” to “Yes” or change output location (output file: " + path + ")."
+        )
+      }
     }
   }
 
@@ -297,18 +310,18 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     * Returns a DataFrame from an Alpine HdfsTabularDataset. The DataFrame's schema will
     * correspond to the column header of the Alpine dataset.
     * Uses the databricks csv parser from spark-csv with the following options:
-     1.withParseMode("DROPMALFORMED"): Catch parse errors such as number format exception caused by a
-      string value in a numeric column and remove those rows rather than fail.
-     2.withTreatEmptyValuesAsNulls(true) -> the empty string will represent a null value in char columns as it does in alpine
-     3.If a TSV, The delimiter attributes specified by the TSV attributes object
-
-    Date format behavior: DateTime columns are parsed as dates and then converted to the TimeStampType according to
-    the format specified by the Alpine type 'ColumnType' format argument. The original format is save in the schema as metadata for that column.
-    It can be accessed with SparkSqlDateTimeUtils.getDatFormatInfo(structField) for any given column.
-
+    * 1.withParseMode("DROPMALFORMED"): Catch parse errors such as number format exception caused by a
+    * string value in a numeric column and remove those rows rather than fail.
+    * 2.withTreatEmptyValuesAsNulls(true) -> the empty string will represent a null value in char columns as it does in alpine
+    * 3.If a TSV, The delimiter attributes specified by the TSV attributes object
+    * *
+    * Date format behavior: DateTime columns are parsed as dates and then converted to the TimeStampType according to
+    * the format specified by the Alpine type 'ColumnType' format argument. The original format is save in the schema as metadata for that column.
+    * It can be accessed with SparkSqlDateTimeUtils.getDatFormatInfo(structField) for any given column.
+    *
     * @param dataset Alpine specific object. Usually input or output of operator.
-   * @return Spark SQL DataFrame
-   */
+    * @return Spark SQL DataFrame
+    */
   def getDataFrame(dataset: HdfsTabularDataset): DataFrame = {
     val tabularSchema = dataset.tabularSchema
     val schema = convertTabularSchemaToSparkSQLSchema(tabularSchema, keepDatesAsStrings = true)
@@ -342,8 +355,8 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
   }
 
   /**
-   * For use with hive. Returns a Spark data frame given a hive table.
-   */
+    * For use with hive. Returns a Spark data frame given a hive table.
+    */
   def getDataFrame(dataset: HiveTable): DataFrame = {
     val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
     hiveContext.table(dataset.getConcatenatedName)
@@ -358,7 +371,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     * now be of TimeStampType rather than StringType.
     *
     * @param dataFrame the input dataframe where the date rows are as strings.
-    * @param map columnName -> dateFormat for parsing
+    * @param map       columnName -> dateFormat for parsing
     * @throws Exception "Illegal Date Format" if one of the date formats provided is not a valid
     *                   Java SimpleDateFormat pattern.
     *                   And "Could not parse dates correctly. " if the date format is valid, but
@@ -366,7 +379,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     */
   def mapDFtoUnixDateTime(dataFrame: DataFrame, map: Map[String, String]): DataFrame = {
     // dataFrame.sqlContext.udf.register("makeDateTime", makeDateTime(_:String,_:String))
-    if(map.isEmpty) {
+    if (map.isEmpty) {
       dataFrame
     }
     else {
@@ -376,25 +389,25 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
       //they are not
       try {
         validateDateFormatMap(map)
-      //generate a function that maps from the unix time stamp to the java.sql.Date object for a given format
+        //generate a function that maps from the unix time stamp to the java.sql.Date object for a given format
 
-      def dateTimeFunction(format : String ): UserDefinedFunction = {
-        import org.apache.spark.sql.functions.udf
-        udf((time: Long) => new Timestamp(time * 1000))
-      }
+        def dateTimeFunction(format: String): UserDefinedFunction = {
+          import org.apache.spark.sql.functions.udf
+          udf((time: Long) => new Timestamp(time * 1000))
+        }
 
         import org.apache.spark.sql.functions.{lit, when}
 
-      val selectExpression = dataFrame.schema.fieldNames.map(columnName =>
-        map.get(columnName) match {
-          case None => dataFrame(columnName)
-          case Some(format) =>
-            lazy val unixCol = unix_timestamp(dataFrame(columnName), format)
-            val nulled = when(unixCol.isNull, lit(null))
-              .otherwise(dateTimeFunction(format)(unixCol))
-            nulled.cast(TimestampType
-            ).as(columnName, dataFrame.schema(columnName).metadata)
-        })
+        val selectExpression = dataFrame.schema.fieldNames.map(columnName =>
+          map.get(columnName) match {
+            case None => dataFrame(columnName)
+            case Some(format) =>
+              lazy val unixCol = unix_timestamp(dataFrame(columnName), format)
+              val nulled = when(unixCol.isNull, lit(null))
+                .otherwise(dateTimeFunction(format)(unixCol))
+              nulled.cast(TimestampType
+              ).as(columnName, dataFrame.schema(columnName).metadata)
+          })
 
         dataFrame.select(selectExpression: _*)
       }
@@ -420,11 +433,12 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     * JAVA TIME STAMP OBJECT--> STRING
     * Take in a dataFrame and map of the column names to the date formats we want to print and use
     * the Spark SQL UDF date_format to convert from the TimeStamp type to a string representation of the date or time.
+    *
     * @param dataFrame input data where date columns are represented as java TimeStamp Objects
-    * @param map columnName -> dateFormat to convert to
+    * @param map       columnName -> dateFormat to convert to
     */
   def mapDFtoCustomDateTimeFormat(dataFrame: DataFrame, map: Map[String, String]): DataFrame = {
-    if(map.isEmpty){
+    if (map.isEmpty) {
       dataFrame
     }
     else {
@@ -448,9 +462,9 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils{
     }
   }
 
-  private def dealWithDates(dataFrame : DataFrame) = {
+  private def dealWithDates(dataFrame: DataFrame) = {
     val alpineSchema = convertSparkSQLSchemaToTabularSchema(dataFrame.schema)
-      val map = getDateMap(alpineSchema)
-      (mapDFtoCustomDateTimeFormat(dataFrame, map), alpineSchema)
+    val map = getDateMap(alpineSchema)
+    (mapDFtoCustomDateTimeFormat(dataFrame, map), alpineSchema)
   }
 }

@@ -16,6 +16,7 @@ trait VisualModelFactory {
    * One can return a composite of multiple visualizations.
    * @return A composite visual model that can contain multiple visualizations.
    */
+  @deprecated("Use the constructor directly instead.")
   def createCompositeVisualModel(): CompositeVisualModel
 
   /**
@@ -32,21 +33,22 @@ trait VisualModelFactory {
    * @param text The text we want to display in the console.
    * @return A text visualization object.
    */
-  def createTextVisualization(text: String): VisualModel
+  @deprecated("Use the constructor directly instead.")
+  def createTextVisualization(text: String): TextVisualModel
 
   /**
    * Create a visualization for an Hdfs tabular dataset.
    * @param dataset A Hdfs tabular dataset that we want to visualize.
    * @return A visualization of the sample.
    */
-  def createTabularDatasetVisualization(dataset: TabularDataset): VisualModel
+  def createTabularDatasetVisualization(dataset: TabularDataset): TabularVisualModel
 
   /**
    * Create a visualization for a DB table.
-   * @param dbtable A DB table that we want to visualize.
+   * @param dbTable A DB table that we want to visualize.
    * @return A visualization of the sample.
    */
-  def createDBTableVisualization(dbtable: DBTable): VisualModel
+  def createDBTableVisualization(dbTable: DBTable): VisualModel
 
   /**
    * Create a visualization of an HTML text element.
@@ -55,6 +57,7 @@ trait VisualModelFactory {
    * @param text An HTML String
    * @return A text visualization object, which puts the html text inside of a <text> tag.
    */
-  def createHtmlTextVisualization(text : String ) : VisualModel
+  @deprecated("Use the constructor directly instead.")
+  def createHtmlTextVisualization(text: String): HtmlVisualModel
 
 }

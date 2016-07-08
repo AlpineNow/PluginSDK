@@ -3,15 +3,15 @@ package com.alpine.plugin.test.unittests
 import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.dialog.{ColumnFilter, OperatorDialog}
 import com.alpine.plugin.core.io._
-import com.alpine.plugin.core.io.defaults.{IONoneDefault, HdfsDelimitedTabularDatasetDefault}
+import com.alpine.plugin.core.io.defaults.{HdfsDelimitedTabularDatasetDefault, IONoneDefault}
 import com.alpine.plugin.core.spark.SparkIOTypedPluginJob
 import com.alpine.plugin.core.spark.templates.{SparkDataFrameGUINode, SparkDataFrameJob}
 import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
 import com.alpine.plugin.core.utils.{AddendumWriter, HdfsParameterUtils}
-import com.alpine.plugin.core.visualization.{VisualModel, VisualModelFactory}
+import com.alpine.plugin.core.visualization._
 import com.alpine.plugin.core.{OperatorGUINode, OperatorListener, OperatorParameters}
-import com.alpine.plugin.test.mock.{CompositeVisualModelImpl, VisualModelFactoryMock, OperatorParametersMock}
-import com.alpine.plugin.test.utils.{GolfData, TestSparkContexts, OperatorParameterMockUtil, SimpleAbstractSparkJobSuite}
+import com.alpine.plugin.test.mock.{OperatorParametersMock, VisualModelFactoryMock}
+import com.alpine.plugin.test.utils.{GolfData, OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row}
@@ -177,10 +177,10 @@ class FullOperatorTests extends  SimpleAbstractSparkJobSuite {
     inputParams, None )
 
     val visualModel = gui.onOutputVisualization(inputParams, output, new VisualModelFactoryMock)
-    val models = visualModel.asInstanceOf[CompositeVisualModelImpl].models
+    val models = visualModel.asInstanceOf[CompositeVisualModel].subModels
 
     assert(models.unzip._1 == Seq("Output", "ModelOne", "ModelTwo", "ModelThree", "Summary"))
-    assert(models.toMap.get("Summary").get.toString == "Some Sample Summary Text")
+    assert(models.toMap.apply("Summary").asInstanceOf[HtmlVisualModel].html == "Some Sample Summary Text")
     assert(output.tsvAttributes == TSVAttributes.default)
   }
 }

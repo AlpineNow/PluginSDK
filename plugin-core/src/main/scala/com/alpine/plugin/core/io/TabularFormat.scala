@@ -8,11 +8,11 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
 
 /**
  * :: AlpineSdkApi ::
- * This is used to provide the format hint to the next operator during the
- * design time (within the editor workflow). Some operators (particularly
- * legacy operators) require to know the output tabular format in advance.
+ *
+ * This is unused. The salient information is instead passed along in the HdfsTabularDataset instance at runtime.
  */
 @AlpineSdkApi
+@deprecated
 object TabularFormat extends Enumeration {
   type TabularFormat = Value
   val DelimitedText = Value("DelimitedText")
@@ -28,6 +28,7 @@ object TabularFormat extends Enumeration {
  *                   escape char, quote char, etc.).
  */
 @AlpineSdkApi
+@deprecated
 case class TabularFormatAttributes(
   format: TabularFormat.TabularFormat,
   attributes: Map[String, String]
@@ -37,6 +38,7 @@ case class TabularFormatAttributes(
  * :: AlpineSdkApi ::
  */
 @AlpineSdkApi
+@deprecated
 object TabularFormatAttributes {
   def createDelimitedFormat(
     delimiter: String,

@@ -27,7 +27,7 @@ trait TableOutputParameterUtils extends OutputParameterUtils {
   def addResultTableNameParameter(operatorDialog: OperatorDialog,
                                   defaultTableName: String = defaultTableName,
                                   label: String = "Result Table Name"): DialogElement = {
-    val tableName = operatorDialog.addStringBox(resultTableNameParameterID, label, defaultTableName, ".+", 0, 0)
+    val tableName = operatorDialog.addStringBox(resultTableNameParameterID, label, defaultTableName, ".+", required = true)
     tableName
   }
 
