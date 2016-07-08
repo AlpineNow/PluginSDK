@@ -208,6 +208,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
     * @param storageFormat The HdfsStorageFormatType.
     * @return Tabular format attributes.
     */
+  @deprecated("Use the TabularSchema definition without TabularFormatAttributes, and then you will not need this method.")
   def getTabularFormatAttributes(storageFormat: HdfsStorageFormatType): TabularFormatAttributes = {
     storageFormat match {
       case HdfsStorageFormatType.Parquet => TabularFormatAttributes.createParquetFormat()

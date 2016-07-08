@@ -268,11 +268,9 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
    */
   def defineEntireOutputSchema(
     inputSchema: TabularSchema,
-    params: OperatorParameters) : TabularSchema= {
+    params: OperatorParameters) : TabularSchema = {
     val newCols = defineOutputSchemaColumns(inputSchema, params)
-    val storageFormat = HdfsParameterUtils.getHdfsStorageFormatType(params)
-    val newTabularFormatAttributes = HdfsParameterUtils.getTabularFormatAttributes(storageFormat)
-    TabularSchema(newCols, newTabularFormatAttributes)
+    TabularSchema(newCols)
   }
 
   protected def updateOutputSchema(inputSchemas: Map[String, TabularSchema],

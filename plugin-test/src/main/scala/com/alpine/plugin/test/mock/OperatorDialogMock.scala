@@ -101,6 +101,10 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
   override def getLabel(): String = "Label"
 
   override def addStringBox(id: String, label: String, defaultValue: String, regex: String, width: Int, height: Int): StringBox = {
+    addStringBox(id, label, defaultValue, regex, required = true)
+  }
+
+  override def addStringBox(id: String, label: String, defaultValue: String, regex: String, required: Boolean): StringBox = {
     val selected = setStringValue(id, defaultValue)
 
     class StringBoxImpl extends DefaultDialogElementMock(id, label) with StringBox {
@@ -118,12 +122,16 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     updateDialogElements(id, de)
   }
 
+  override def addLargeStringBox(id: String, label: String, defaultValue: String, regex: String, required: Boolean): StringBox = {
+    addStringBox(id, label, defaultValue, regex, required)
+  }
+
   override def getDialogElement(id: String): DialogElement = dialogElements.get(id).get
 
   @Disabled
   override def addChildOperatorDialog(label: String): OperatorDialog = new OperatorDialogMock(overrideParams, input, inputSchema)
 
-  override def getDialogElements(): Iterator[DialogElement] = dialogElements.values.toIterator
+  override def getDialogElements(): Seq[DialogElement] = dialogElements.values.toSeq
 
   override def addCheckboxes(id: String, label: String, values: Seq[String], defaultSelections: Seq[String], required: Boolean): Checkboxes = {
     val selections: Seq[String] = Try(overrideParams.getStringArrayValue(id)) match {
@@ -303,18 +311,18 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     updateDialogElements(id, de)
   }
 
-  override def addDBTableDropdownBox(id: String, label: String, defaultTable: String): DBTableDropdownBox = {
-
-    val selection = setStringValue(id, defaultTable)
-
-    class DBTableDropdownBoxImpl extends SingleElementSelectorMock(Seq(selection), selection,
-      id, label) with DBTableDropdownBox {}
+  override def addDBTableDropdownBox(id: String, label: String, schemaBoxID2: String): DBTableDropdownBox = {
+    // DBTableDropdownBox does not use available values. We need to refactor this to not extend SingleItemSelector.
+    class DBTableDropdownBoxImpl extends SingleElementSelectorMock(Seq("mockValue"), "mockValue",
+      id, label) with DBTableDropdownBox {
+      override def schemaBoxID: String = schemaBoxID2
+    }
 
     val de = new DBTableDropdownBoxImpl
     updateDialogElements(id, de)
   }
 
-  override def getChildOperatorDialogs(): Iterator[OperatorDialog] = null
+  override def getChildOperatorDialogs(): Seq[OperatorDialog] = null
 
   override def addParentOperatorDropdownBox(id: String, label: String): ParentOperatorDropdownBox = null
 
@@ -378,6 +386,7 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     val de = new AdvancedSparkSettingsBoxImpl
     updateDialogElements(id, de)
   }
+
 }
 
 object OperatorDialogMock {

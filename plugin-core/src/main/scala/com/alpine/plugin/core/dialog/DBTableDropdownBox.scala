@@ -10,4 +10,6 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
  * :: AlpineSdkApi ::
  */
 @AlpineSdkApi
-trait DBTableDropdownBox extends DropdownBox
+trait DBTableDropdownBox extends DropdownBox {
+  def schemaBoxID: String
+}

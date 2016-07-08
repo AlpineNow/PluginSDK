@@ -3,6 +3,7 @@
  */
 package com.alpine.plugin.util
 
+import java.lang.Iterable
 import java.util
 
 import scala.collection.JavaConversions
@@ -44,6 +45,10 @@ object JavaConversionUtils {
 
   def toList[T](scalaList: Seq[T]): util.Collection[T] = {
     JavaConversions.asJavaCollection(scalaList)
+  }
+
+  def toIterable[T](scalaList: Seq[T]): Iterable[T] = {
+    JavaConversions.asJavaIterable(scalaList)
   }
 
   /**

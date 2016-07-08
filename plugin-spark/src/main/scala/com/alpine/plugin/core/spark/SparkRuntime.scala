@@ -11,9 +11,7 @@ import com.alpine.plugin.core.{OperatorRuntime, _}
 import com.alpine.plugin.generics.GenericUtils
 
 import scala.concurrent.Await
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.util.{Failure, Success}
 
 /**
  * :: AlpineSdkApi ::
@@ -68,7 +66,6 @@ abstract class SparkRuntimeWithIOTypedJob[
    * --submits a Spark job with the input dataType the parameters, the application context,
    *    and the listener
    * --de-serializes the output returned by the Spark job
-   * --notifies the UI when the Spark job has finished and the weather it was successful
    * --returns the de-serialized output of the Spark job as an IOBase output object.
    * @param context A Spark specific execution context, includes Spark parameters.
    * @param input The input to the operator.
@@ -102,21 +99,6 @@ abstract class SparkRuntimeWithIOTypedJob[
       sparkJobConfiguration,
       listener
     )
-
-    submittedJob.future.onComplete {
-      case Success(output) => {
-        listener.notifyMessage("Completed " + jobTypeName)
-        output
-      }
-
-      case Failure(t) => {
-        listener.notifyError(
-          "Failed " + jobTypeName
-        )
-        listener.notifyError(t.getMessage)
-        throw t
-      }
-    }
 
     Await.result(submittedJob.future, Duration.Inf)
   }

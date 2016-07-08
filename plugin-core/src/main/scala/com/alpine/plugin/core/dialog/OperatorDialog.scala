@@ -38,13 +38,13 @@ trait OperatorDialog {
    * @return An iterator of child operator dialogs.
    */
   @Disabled
-  def getChildOperatorDialogs(): Iterator[OperatorDialog]
+  def getChildOperatorDialogs(): Seq[OperatorDialog]
 
   /**
    * Get an iterator of dialog elements.
    * @return The dialog elements.
    */
-  def getDialogElements(): Iterator[DialogElement]
+  def getDialogElements(): Seq[DialogElement]
 
   /**
    * Get a dialog element by the Id.
@@ -83,10 +83,8 @@ trait OperatorDialog {
    *           the value of this input box.
    * @param label The visual label of this input box.
    * @param defaultPath The default value to be used in the input box.
-   * @throws Exception
    * @return A Hdfs directory selection box element.
    */
-  @throws(classOf[Exception])
   def addHdfsDirectorySelector(
     id: String,
     label: String,
@@ -100,10 +98,8 @@ trait OperatorDialog {
    *           the value of this input box.
    * @param label The visual label of this input box.
    * @param defaultPath The default value to be used in the input box.
-   * @throws Exception
    * @return A Hdfs file selection box element.
    */
-  @throws(classOf[Exception])
   def addHdfsFileSelector(
     id: String,
     label: String,
@@ -117,10 +113,8 @@ trait OperatorDialog {
    *           the value of this input box.
    * @param label The visual label of this input box.
    * @param defaultSchema The default value to be used in the input box.
-   * @throws Exception
    * @return A DB schema dropdown box element.
    */
-  @throws(classOf[Exception])
   def addDBSchemaDropdownBox(
     id: String,
     label: String,
@@ -130,18 +124,14 @@ trait OperatorDialog {
   /**
    * Add a table selection box. This can be used to select an existing table for
    * an input or an output table.
+   *
    * @param id String id of this input box. This is used later to reference
    *           the value of this input box.
    * @param label The visual label of this input box.
-   * @param defaultTable The default value to be used in the input box.
-   * @throws Exception
+   * @param schemaBoxID The id of the schema dialog element, to know which
    * @return A DB table dropdown box element.
    */
-  @throws(classOf[Exception])
-  def addDBTableDropdownBox(id: String,
-    label: String,
-    defaultTable: String
-   ): DBTableDropdownBox
+  def addDBTableDropdownBox(id: String, label: String, schemaBoxID: String): DBTableDropdownBox
 
   /**
    * Add an integer text box.
@@ -150,10 +140,8 @@ trait OperatorDialog {
    * @param min The minimum accepted value for the integer.
    * @param max The maximum accepted value for the integer.
    * @param defaultValue The default value for the integer.
-   * @throws Exception
    * @return An integer box element.
    */
-  @throws(classOf[Exception])
   def addIntegerBox(
     id: String,
     label: String,
@@ -171,10 +159,8 @@ trait OperatorDialog {
    * @param inclusiveMin Whether the minimum is an inclusive value.
    * @param inclusiveMax Whether the maximum is an inclusive value.
    * @param defaultValue The default value for the double.
-   * @throws Exception
    * @return A double box element.
    */
-  @throws(classOf[Exception])
   def addDoubleBox(
     id: String,
     label: String,
@@ -192,10 +178,8 @@ trait OperatorDialog {
    * @param values Available checkbox values.
    * @param defaultSelections Default selected checkboxes.
    * @param required Whether the user is required to select a value for this parameter.
-   * @throws Exception
    * @return A checkboxes element.
    */
-  @throws(classOf[Exception])
   def addCheckboxes(
     id: String,
     label: String,
@@ -210,10 +194,8 @@ trait OperatorDialog {
    * @param label The visual label of this input box.
    * @param values Available checkbox values.
    * @param defaultSelection Default selected button.
-   * @throws Exception
    * @return A radio button element.
    */
-  @throws(classOf[Exception])
   def addRadioButtons(
     id: String,
     label: String,
@@ -227,10 +209,8 @@ trait OperatorDialog {
    * @param label The visual label of this input box.
    * @param values Available checkbox values.
    * @param defaultSelection Default selected vale.
-   * @throws Exception
    * @return A dropdown box element.
    */
-  @throws(classOf[Exception])
   def addDropdownBox(
     id: String,
     label: String,
@@ -246,10 +226,9 @@ trait OperatorDialog {
    * @param regex The regular expression constraint for the input box.
    * @param width  Number of pixels for the width. 0 will use a default value.
    * @param height Number of pixels for the height. 0 will use a default value.
-   * @throws Exception
    * @return A string box element.
    */
-  @throws(classOf[Exception])
+  @deprecated("Use addStringBox (without width and height parameters) or addLargeStringBox instead.")
   def addStringBox(
     id: String,
     label: String,
@@ -257,6 +236,40 @@ trait OperatorDialog {
     regex: String,
     width: Int,
     height: Int
+  ): StringBox
+
+  /**
+   * Add a string input box.
+   * @param id String id of this input box.
+   * @param label The visual label of this input box.
+   * @param defaultValue The default value in the string box.
+   * @param regex The regular expression constraint for the input box.
+   * @param required Boolean indicating whether the value must be non-empty.
+   * @return A string box element.
+   */
+  def addStringBox(
+    id: String,
+    label: String,
+    defaultValue: String,
+    regex: String,
+    required: Boolean
+  ): StringBox
+
+  /**
+    * Add a large string input box.
+    * @param id String id of this input box.
+    * @param label The visual label of this input box.
+    * @param defaultValue The default value in the string box.
+    * @param regex The regular expression constraint for the input box.
+    * @param required Boolean indicating whether the value must be non-empty.
+    * @return A string box element.
+    */
+  def addLargeStringBox(
+    id: String,
+    label: String,
+    defaultValue: String,
+    regex: String,
+    required: Boolean
   ): StringBox
 
   /**
@@ -289,10 +302,8 @@ trait OperatorDialog {
    *                         put multiple column selectors (checkboxes and/or
    *                         dropboxes) in the same group.
    * @param required Whether the user is required to select a value for this parameter.
-   * @throws Exception
    * @return An input column checkboxes element.
    */
-  @throws(classOf[Exception])
   def addTabularDatasetColumnCheckboxes(
     id: String,
     label: String,
@@ -317,10 +328,8 @@ trait OperatorDialog {
    *                         put multiple column selectors (checkboxes and/or
    *                         dropboxes) in the same group.
    * @param required Whether the user is required to select a value for this parameter.
-   * @throws Exception
    * @return A single column selector dropdown box element.
    */
-  @throws(classOf[Exception])
   def addTabularDatasetColumnDropdownBox(
     id: String,
     label: String,

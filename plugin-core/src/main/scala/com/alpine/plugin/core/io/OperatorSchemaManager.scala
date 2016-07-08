@@ -13,6 +13,5 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
 trait OperatorSchemaManager {
   def getOutputSchema(): TabularSchema
   def setOutputSchema(outputSchema: TabularSchema): Unit
-  def getInputSchema(): TabularSchema
-  def setInputSchema(inputSchema: TabularSchema): Unit
 }
+
