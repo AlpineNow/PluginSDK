@@ -8,7 +8,7 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
 
 /**
  * :: AlpineSdkApi ::
- * Tabular dataset refers to table format datasets, such as CSV/TSV/
+  * Tabular dataset refers to table format datasets, such as CSV/TSV
  * Parquet/Avro, etc. that reside within Hdfs.
  */
 @AlpineSdkApi

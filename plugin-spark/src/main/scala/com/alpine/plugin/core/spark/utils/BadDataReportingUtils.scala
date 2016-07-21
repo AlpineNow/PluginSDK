@@ -53,8 +53,7 @@ object BadDataReportingUtils {
     val operatorInfo = Some(operatorParameters.operatorInfo)
     val dataToWriteParam = HdfsParameterUtils.getAmountOfBadDataToWrite(operatorParameters)
     val badDataPath = HdfsParameterUtils.getBadDataPath(operatorParameters)
-    val hdfsStorageFormat = Try(HdfsParameterUtils.getHdfsStorageFormatType(operatorParameters)
-    ).getOrElse(HdfsStorageFormatType.TSV)
+    val hdfsStorageFormat = Try(HdfsParameterUtils.getHdfsStorageFormatType(operatorParameters)).getOrElse(HdfsStorageFormatType.CSV)
     val overwrite = HdfsParameterUtils.getOverwriteParameterValue(operatorParameters)
     val (goodDataFrame, badDataFrame) = removeDataFromDataFrame(removeRow, inputDataFrame, dataToWriteParam)
     val ar = inputDataFrame.rdd.treeAggregate(Array(0, 0))(
@@ -169,7 +168,7 @@ object BadDataReportingUtils {
   }
 
   /**
-    * If applicable writes bad data as a TSV with default attributes.
+    * If applicable writes bad data as a CSV with default attributes.
     * @return
     */
   def handleNullDataAsDataFrameDefault[T <: HdfsStorageFormatType](amountOfDataToWriteParam: Option[Long], badDataPath: String,
@@ -177,7 +176,7 @@ object BadDataReportingUtils {
                                                                    outputSize: Long, nullData: Option[DataFrame],
                                                                    sparkRuntimeUtils: SparkRuntimeUtils, dataRemovedDueTo: String = defaultDataRemovedMessage): String = {
     handleNullDataAsDataFrame(amountOfDataToWriteParam, badDataPath, inputDataSize, outputSize,
-      nullData, sparkRuntimeUtils, HdfsStorageFormatType.TSV, overwrite = true, None, dataRemovedDueTo)
+      nullData, sparkRuntimeUtils, HdfsStorageFormatType.CSV, overwrite = true, None, dataRemovedDueTo)
   }
   /**
     * Helper function which uses the AddendumWriter object to generate a message about the bad data and* get the data, if any, to write to the bad data file.

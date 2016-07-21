@@ -26,7 +26,7 @@ import scala.util.Try
 @AlpineSdkApi
 class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
 
-  val driverHdfs = FileSystem.get(sc.hadoopConfiguration)
+  lazy val driverHdfs = FileSystem.get(sc.hadoopConfiguration)
 
   // ======================================================================
   // Storage util functions.
@@ -38,10 +38,12 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     *
     * @param path               The path to which we'll save the data frame.
     * @param dataFrame          The data frame that we want to save.
-    * @param storageFormat      The format that we want to store in.
+    * @param storageFormat      The format that we want to store in. Defaults to CSV
     * @param overwrite          Whether to overwrite any existing file at the path.
     * @param sourceOperatorInfo Mandatory source operator information to be included
     *                           in the output object.
+    *                           Note: Only set to None in testing. This information is required for
+    *                           Touchpoints and if this is an output to an operator with multiple inputs.
     * @param addendum           Mandatory addendum information to be included in the output
     *                           object.
     * @return After saving the data frame, returns an HdfsTabularDataset object.
@@ -74,7 +76,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
           addendum
         )
 
-      case HdfsStorageFormatType.TSV =>
+      case _ =>
         saveAsCSV(
           path,
           dataFrame,
@@ -85,12 +87,24 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     }
   }
 
+  /**
+    * Calls above method but defaults to saving as a comma-seperated file with overwrite = true,
+    * and no addendum
+    *
+    * @param path               The path to which we'll save the data frame.
+    * @param dataFrame          The data frame that we want to save.
+    * @param sourceOperatorInfo Mandatory source operator information to be included
+    *                           in the output object.
+    *                           Note: Only set to None in testing. This information is required for
+    *                           Touchpoints and if this is an output to an operator with multiple inputs.
+    * @return the HdfsTabularData object corresponding to the output
+    */
   def saveDataFrameDefault[T <: HdfsStorageFormatType](
                                                         path: String,
                                                         dataFrame: DataFrame,
                                                         sourceOperatorInfo: Option[OperatorInfo]): HdfsTabularDataset = {
-    saveDataFrame(path, dataFrame, HdfsStorageFormatType.TSV, overwrite = true,
-      sourceOperatorInfo, Map[String, AnyRef](), TSVAttributes.default)
+    saveDataFrame(path, dataFrame, HdfsStorageFormatType.CSV, overwrite = true,
+      sourceOperatorInfo, Map[String, AnyRef](), TSVAttributes.defaultCSV)
   }
 
 
@@ -104,6 +118,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     * @param overwrite          Whether to overwrite any existing file at the path.
     * @param sourceOperatorInfo Mandatory source operator information to be included
     *                           in the output object.
+    *                           Only set to None in testing, this is required for Touchpoints and if this is an output to an operator with multiple inputs.
     * @param addendum           Mandatory addendum information to be included in the output
     *                           object.
     * @return After saving the data frame, returns an HdfsTabularDataset object.
@@ -313,7 +328,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     * 1.withParseMode("DROPMALFORMED"): Catch parse errors such as number format exception caused by a
     * string value in a numeric column and remove those rows rather than fail.
     * 2.withTreatEmptyValuesAsNulls(true) -> the empty string will represent a null value in char columns as it does in alpine
-    * 3.If a TSV, The delimiter attributes specified by the TSV attributes object
+    * 3.If a CSV, The delimiter attributes specified by the CSV attributes object
     * *
     * Date format behavior: DateTime columns are parsed as dates and then converted to the TimeStampType according to
     * the format specified by the Alpine type 'ColumnType' format argument. The original format is save in the schema as metadata for that column.
@@ -351,7 +366,19 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     }
     //map dateTime columns from string to java.sql.Date objects. Will appear in schema as TimeStampType objects
     mapDFtoUnixDateTime(tabularData, dateFormats)
+  }
 
+  /**
+    * Returns the dataframe corresponding to a given tabular dataset (can be Hive, or a HDFS path).
+    *
+    * @param dataset The dataset containing a reference to the data on disk.
+    * @return A DataFrame representation of the dataset.
+    */
+  def getDataFrameGeneral(dataset: TabularDataset): DataFrame = {
+    dataset match {
+      case hive: HiveTable => getDataFrame(hive)
+      case hdfs: HdfsTabularDataset => getDataFrame(hdfs)
+    }
   }
 
   /**

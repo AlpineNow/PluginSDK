@@ -61,7 +61,8 @@ object SparkParameterUtils {
       new SparkParameter(sparkNumExecutorCoresElementId, "Number of Executor Cores",
         defaultNumExecutorCores.toString, false, false),
       new SparkParameter(storageLevelParamId, "Storage Level", defaultStorageLevel, false, false)
-    ) ++ additionalSparkParameters
+      //TODO Add dynamic allocation param
+    )
     operatorDialog.addAdvancedSparkSettingsBox("sparkSettings", "Advanced Spark Settings", list)
   }
 

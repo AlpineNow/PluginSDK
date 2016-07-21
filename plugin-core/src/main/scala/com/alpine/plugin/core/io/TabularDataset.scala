@@ -14,6 +14,6 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
  * reside in Hdfs should extend HdfsTabularDataset.
  */
 @AlpineSdkApi
-trait TabularDataset {
+trait TabularDataset extends IOBase {
   def tabularSchema: TabularSchema
 }
