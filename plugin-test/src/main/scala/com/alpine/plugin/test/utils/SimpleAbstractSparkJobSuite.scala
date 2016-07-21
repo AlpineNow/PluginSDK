@@ -103,7 +103,7 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
                                                                   inputParams: OperatorParametersMock,
     dataFrameInput: DataFrame, path: String = "target/testResults") = {
     val inputHdfs = HdfsDelimitedTabularDatasetDefault(
-      path, sparkUtils.convertSparkSQLSchemaToTabularSchema(dataFrameInput.schema), TSVAttributes.default, None)
+      path, sparkUtils.convertSparkSQLSchemaToTabularSchema(dataFrameInput.schema), TSVAttributes.defaultCSV, None)
     val parameters = getNewParametersFromDataFrameGui(operatorGUI, inputHdfs, inputParams)
     runDataFrameThroughDFTemplate(dataFrameInput, operatorJob, parameters)
   }

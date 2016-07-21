@@ -46,7 +46,7 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
     val overwrite = HdfsParameterUtils.getOverwriteParameterValue(operatorParameters)
     val output = saveResults(
       results, sparkUtils, storageFormat, outputPath, overwrite,
-      Some(operatorParameters.operatorInfo), addendum, TSVAttributes.default
+      Some(operatorParameters.operatorInfo), addendum, TSVAttributes.defaultCSV
     )
     output
   }
@@ -74,7 +74,7 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
    * @param results - the data to write
    * @param sparkUtils- Spark utils object with utility methods to write data and transform
    *                  between Alpine header types and Spark SQL schema types
-   * @param storageFormat - Parquet, Avro, and TSV
+    * @param storageFormat - Parquet, Avro, and CSV
    * @param path full HDFS output path
    * @param overwrite Boolean indicating whether to overwrite existing results at that location.
    * @return
@@ -148,7 +148,7 @@ abstract class SparkDataFrameJob extends TemplatedSparkDataFrameJob[DataFrame, H
    * @param sparkUtils- contains utility methods to write data and to convert between Alpine header
    *                  types and
    *                  Spark SQL schemas
-   * @param storageFormat - Parquet, Avro, and TSV
+    * @param storageFormat - Parquet, Avro, and CSV
    * @param outputPath The location in HDFS to store the data frame.
    * @param overwrite - If false will throw a "File Already Exists" exception if the output path
    *                  already exists.
@@ -243,7 +243,7 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
     operatorDataSourceManager: OperatorDataSourceManager,
     operatorSchemaManager: OperatorSchemaManager): Unit = {
 
-    HdfsParameterUtils.addHdfsStorageFormatParameter(operatorDialog, HdfsStorageFormatType.TSV)
+    HdfsParameterUtils.addHdfsStorageFormatParameter(operatorDialog, HdfsStorageFormatType.CSV)
     HdfsParameterUtils.addStandardHdfsOutputParameters(operatorDialog)
   }
 

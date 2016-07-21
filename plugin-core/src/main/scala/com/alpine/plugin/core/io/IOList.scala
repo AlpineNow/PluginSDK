@@ -13,5 +13,13 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
  */
 @AlpineSdkApi
 trait IOList[T <: IOBase] extends IOBase {
+  /**
+    * @return The elements in the list.
+    */
   def elements: Seq[T]
+
+  /**
+    * @return Information about the operators that created each element, in their respective order.
+    */
+  def sources: Seq[OperatorInfo]
 }

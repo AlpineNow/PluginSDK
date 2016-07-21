@@ -4,6 +4,8 @@
 
 package com.alpine.plugin.core.visualization
 
+import java.util.Locale
+
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io.{DBTable, IOBase, TabularDataset}
 
@@ -16,7 +18,7 @@ trait VisualModelFactory {
    * One can return a composite of multiple visualizations.
    * @return A composite visual model that can contain multiple visualizations.
    */
-  @deprecated("Use the constructor directly instead.")
+  @deprecated("Use CompositeVisualModel directly instead.")
   def createCompositeVisualModel(): CompositeVisualModel
 
   /**
@@ -33,15 +35,15 @@ trait VisualModelFactory {
    * @param text The text we want to display in the console.
    * @return A text visualization object.
    */
-  @deprecated("Use the constructor directly instead.")
-  def createTextVisualization(text: String): TextVisualModel
+  @deprecated("Use TextVisualModel directly instead.")
+  def createTextVisualization(text: String): VisualModel
 
   /**
    * Create a visualization for an Hdfs tabular dataset.
    * @param dataset A Hdfs tabular dataset that we want to visualize.
    * @return A visualization of the sample.
    */
-  def createTabularDatasetVisualization(dataset: TabularDataset): TabularVisualModel
+  def createTabularDatasetVisualization(dataset: TabularDataset): VisualModel
 
   /**
    * Create a visualization for a DB table.
@@ -57,7 +59,9 @@ trait VisualModelFactory {
    * @param text An HTML String
    * @return A text visualization object, which puts the html text inside of a <text> tag.
    */
-  @deprecated("Use the constructor directly instead.")
-  def createHtmlTextVisualization(text: String): HtmlVisualModel
+  @deprecated("Use HtmlVisualModel directly instead.")
+  def createHtmlTextVisualization(text: String): VisualModel
+
+  def locale: Locale
 
 }

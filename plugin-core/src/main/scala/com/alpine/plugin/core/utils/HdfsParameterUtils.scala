@@ -4,7 +4,7 @@
 package com.alpine.plugin.core.utils
 import com.alpine.plugin.core.OperatorParameters
 import com.alpine.plugin.core.dialog._
-import com.alpine.plugin.core.io.TabularFormatAttributes
+import com.alpine.plugin.core.io.{TSVAttributes, TabularFormatAttributes}
 import com.alpine.plugin.core.utils.HdfsStorageFormat._
 import scala.util.{Failure, Success, Try}
 
@@ -17,9 +17,6 @@ object HdfsParameterUtils extends OutputParameterUtils {
   val outputDirectoryParameterID = "outputDirectory"
   val outputNameParameterID = "outputName"
   val storageFormatParameterID = "storageFormat"
-
-
-
 
   /**
    * Adds
@@ -46,7 +43,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
 
   /**
    * Adds a dropdown menu to select the storage format for a tabular dataset output.
-   * I.e., it'll add a dropdown menu with available selections 'TSV', 'Parquet' and 'Avro'.
+    * I.e., it'll add a dropdown menu with available selections 'CSV', 'Parquet' and 'Avro'.
    * @param operatorDialog The operator dialog where you are going to add the dropdown menu.
    * @param defaultFormat The default format one wants to use.
    * @return The dropdown dialog element.
@@ -89,8 +86,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
         outputNameParameterID,
         "Output Name",
         defaultOutputName,
-        ".+", 0, 0
-      )
+        ".+", true)
     outputName
   }
 
@@ -156,11 +152,11 @@ object HdfsParameterUtils extends OutputParameterUtils {
   def getHdfsStorageFormatType(parameters: OperatorParameters): HdfsStorageFormatType = {
     val parameterValue = parameters.getStringValue(storageFormatParameterID)
     if (parameterValue == null) {
-      HdfsStorageFormatType.TSV // Defaults to TSV if this parameter is missing.
+      HdfsStorageFormatType.CSV // Defaults to CSV if this parameter is missing.
     } else {
       Try(HdfsStorageFormatType.withName(parameterValue)) match {
         case Success(f) => f
-        case Failure(_) => HdfsStorageFormatType.TSV // Defaults to TSV if the parameter value is strange.
+        case Failure(_) => HdfsStorageFormatType.CSV // Defaults to CSV if the parameter value is strange.
       }
     }
   }
@@ -176,17 +172,17 @@ object HdfsParameterUtils extends OutputParameterUtils {
   def getHdfsStorageFormat(parameters: OperatorParameters): HdfsStorageFormat = {
     val parameterValue = parameters.getStringValue(storageFormatParameterID)
     if (parameterValue == null) {
-      HdfsStorageFormat.TSV // Defaults to TSV if this parameter is missing.
+      HdfsStorageFormat.TSV // Defaults to CSV if this parameter is missing.
     } else {
       Try(HdfsStorageFormat.withName(parameterValue)) match {
         case Success(f) => f
-        case Failure(_) => HdfsStorageFormat.TSV // Defaults to TSV if the parameter value is strange.
+        case Failure(_) => HdfsStorageFormat.TSV // Defaults to CSV if the parameter value is strange.
       }
     }
   }
 
   /**
-   * Get default tabular format attributes to use (e.g., delimiter, quote information for CSV/TSV).
+    * Get default tabular format attributes to use (e.g., delimiter, quote information for CSV/CSV).
    * This is useful if one wants to define output formats using default values.
    * @param storageFormat The HdfsStorageFormatType
    * @return Tabular format attributes.
@@ -203,7 +199,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
   }
 
   /**
-    * Get default tabular format attributes to use (e.g., delimiter, quote information for CSV/TSV).
+    * Get default tabular format attributes to use (e.g., delimiter, quote information for CSV/CSV).
     * This is useful if one wants to define output formats using default values.
     * @param storageFormat The HdfsStorageFormatType.
     * @return Tabular format attributes.
@@ -214,6 +210,10 @@ object HdfsParameterUtils extends OutputParameterUtils {
       case HdfsStorageFormatType.Parquet => TabularFormatAttributes.createParquetFormat()
       case HdfsStorageFormatType.Avro => TabularFormatAttributes.createAvroFormat()
       case HdfsStorageFormatType.TSV => TabularFormatAttributes.createTSVFormat()
+      case HdfsStorageFormatType.CSV => TabularFormatAttributes.createDelimitedFormat(
+        TSVAttributes.defaultCSV.delimiter.toString,
+        TSVAttributes.defaultCSV.escapeStr.toString,
+        TSVAttributes.defaultCSV.quoteStr.toString) //needed in case user is still using deprecated method
       case t : HdfsStorageFormatType => throw new MatchError("The HdfsStorageFormatType " + t.toString + " is not supported.")
     }
   }

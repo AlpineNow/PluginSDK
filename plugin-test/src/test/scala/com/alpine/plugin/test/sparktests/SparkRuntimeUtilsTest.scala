@@ -2,7 +2,7 @@ package com.alpine.plugin.test.sparktests
 
 import java.io.{FileReader, File}
 
-import com.alpine.plugin.core.io.TSVAttributes
+import com.alpine.plugin.core.io.{HdfsTabularDataset, OperatorInfo, TSVAttributes}
 import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
 import com.alpine.plugin.core.spark.utils.{SparkMetadataWriter, SparkRuntimeUtils}
 import com.alpine.plugin.core.utils.{HdfsStorageFormatType,  HdfsStorageFormat}
@@ -84,6 +84,20 @@ class SparkRuntimeUtilsTest extends FunSuite {
     }
 
     assert(m == 1)
+  }
+
+  test("Default delim is CSV"){
+    val f = HdfsDelimitedTabularDatasetDefault(path,
+      sparkUtils.convertSparkSQLSchemaToTabularSchema(carsSchema), TSVAttributes.defaultCSV, None)
+    val results = sparkUtils.getDataFrame(f)
+
+    val savedASDF: HdfsDelimitedTabularDatasetDefault = sparkUtils.saveDataFrameDefault(
+      path = "plugin-test/src/test/resources/TestSavingAsCSV.csv",
+      dataFrame = results,
+      sourceOperatorInfo = Some(OperatorInfo("1", "2"))).asInstanceOf[HdfsDelimitedTabularDatasetDefault]
+
+    assert(savedASDF.tsvAttributes == TSVAttributes.defaultCSV, "Save Data Frame default should save data frame as a csv")
+    
   }
 
 }

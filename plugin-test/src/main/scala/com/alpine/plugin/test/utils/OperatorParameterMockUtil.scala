@@ -68,11 +68,11 @@ object OperatorParameterMockUtil {
   /**
     * Uses the following default values
     * outputDirectory = "target/testResults"
-    * storageFormat type = HdfsStorageFormatType.TSV
+    * storageFormat type = HdfsStorageFormatType.CSV
     * overwrite = true
     */
   def addHdfsParamsDefault(operatorParametersMock: OperatorParametersMock, outputName: String): OperatorParametersMock = {
-    addHdfsParams(operatorParametersMock, outputName, defaultOutputDirectory, HdfsStorageFormatType.TSV, overwrite = true)
+    addHdfsParams(operatorParametersMock, outputName, defaultOutputDirectory, HdfsStorageFormatType.CSV, overwrite = true)
   }
 
   def makeArrayList(selections : String*) = {

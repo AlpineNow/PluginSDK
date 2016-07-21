@@ -311,11 +311,11 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     updateDialogElements(id, de)
   }
 
-  override def addDBTableDropdownBox(id: String, label: String, schemaBoxID2: String): DBTableDropdownBox = {
+  override def addDBTableDropdownBox(id: String, label: String, schemaBoxID: String): DBTableDropdownBox = {
     // DBTableDropdownBox does not use available values. We need to refactor this to not extend SingleItemSelector.
     class DBTableDropdownBoxImpl extends SingleElementSelectorMock(Seq("mockValue"), "mockValue",
       id, label) with DBTableDropdownBox {
-      override def schemaBoxID: String = schemaBoxID2
+      override def schemaBoxID: String = schemaBoxID
     }
 
     val de = new DBTableDropdownBoxImpl

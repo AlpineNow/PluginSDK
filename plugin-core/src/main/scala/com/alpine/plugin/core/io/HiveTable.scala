@@ -13,7 +13,7 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
  * and tabular schema (column descriptions).
  */
 @AlpineSdkApi
-trait HiveTable extends IOBase with TabularDataset {
+trait HiveTable extends TabularDataset {
   def tabularSchema: TabularSchema
   def tableName: String
   def dbName: Option[String]

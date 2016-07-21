@@ -14,11 +14,8 @@ import com.alpine.plugin.core.io.{IOBase, OperatorInfo}
  */
 @AlpineSdkApi
 abstract class ModelWrapper[M <: MLModel](
-  val modelName: String,
   val model: M,
-  val sourceOperatorInfo: Option[OperatorInfo],
   val addendum: Map[String, AnyRef]) extends IOBase {
-  override def displayName: String = modelName
 }
 
 /**
@@ -27,11 +24,19 @@ abstract class ModelWrapper[M <: MLModel](
  */
 @AlpineSdkApi
 class ClassificationModelWrapper(
-  modelName: String,
   model: ClassificationRowModel,
-  override val sourceOperatorInfo: Option[OperatorInfo],
   override val addendum: Map[String, AnyRef] = Map[String, AnyRef]()
-) extends ModelWrapper[ClassificationRowModel](modelName, model, sourceOperatorInfo, addendum) {}
+) extends ModelWrapper[ClassificationRowModel](model, addendum) {
+
+  @deprecated("Use constructor without sourceOperatorInfo and modelName.")
+  def this(modelName: String,
+           model: ClassificationRowModel,
+           sourceOperatorInfo: Option[OperatorInfo],
+           addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+    this(model, addendum)
+  }
+
+}
 
 /**
  * :: AlpineSdkApi ::
@@ -39,11 +44,19 @@ class ClassificationModelWrapper(
  */
 @AlpineSdkApi
 class ClusteringModelWrapper(
-  override val modelName: String,
   override val model: ClusteringRowModel,
-  override val sourceOperatorInfo: Option[OperatorInfo],
   override val addendum: Map[String, AnyRef] = Map[String, AnyRef]()
-) extends ModelWrapper[ClusteringRowModel](modelName, model, sourceOperatorInfo, addendum) {}
+) extends ModelWrapper[ClusteringRowModel](model, addendum) {
+
+  @deprecated("Use constructor without sourceOperatorInfo and modelName.")
+  def this(modelName: String,
+           model: ClusteringRowModel,
+           sourceOperatorInfo: Option[OperatorInfo],
+           addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+    this(model, addendum)
+  }
+
+}
 
 /**
  * :: AlpineSdkApi ::
@@ -51,11 +64,19 @@ class ClusteringModelWrapper(
  */
 @AlpineSdkApi
 class RegressionModelWrapper(
-  modelName: String,
   model: RegressionRowModel,
-  override val sourceOperatorInfo: Option[OperatorInfo],
   override val addendum: Map[String, AnyRef] = Map[String, AnyRef]()
-) extends ModelWrapper[RegressionRowModel](modelName, model, sourceOperatorInfo, addendum) {}
+) extends ModelWrapper[RegressionRowModel](model, addendum) {
+
+  @deprecated("Use constructor without sourceOperatorInfo and modelName.")
+  def this(modelName: String,
+           model: RegressionRowModel,
+           sourceOperatorInfo: Option[OperatorInfo],
+           addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+    this(model, addendum)
+  }
+
+}
 
 /**
  * :: AlpineSdkApi ::
@@ -63,8 +84,16 @@ class RegressionModelWrapper(
  */
 @AlpineSdkApi
 class TransformerWrapper(
-  modelName: String,
   model: RowModel,
-  override val sourceOperatorInfo: Option[OperatorInfo],
   override val addendum: Map[String, AnyRef] = Map[String, AnyRef]()
-) extends ModelWrapper[RowModel](modelName, model, sourceOperatorInfo, addendum) {}
+) extends ModelWrapper[RowModel](model, addendum) {
+
+  @deprecated("Use constructor without sourceOperatorInfo and modelName.")
+  def this(modelName: String,
+           model: RowModel,
+           sourceOperatorInfo: Option[OperatorInfo],
+           addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+    this(model, addendum)
+  }
+
+}

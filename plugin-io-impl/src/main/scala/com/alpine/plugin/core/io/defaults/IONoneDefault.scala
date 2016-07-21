@@ -5,19 +5,26 @@ import com.alpine.plugin.core.io.{IONone, OperatorInfo}
 /**
   * Abstract implementation of [[IONone]].
   * Can be extended by developers who want custom behaviour not provided by [[IONoneDefault]].
-  * @param sourceOperatorInfo Information about the operator that generated this object as output.
   * @param addendum Map containing additional information.
   */
-abstract class AbstractIONone(val sourceOperatorInfo: Option[OperatorInfo],
-                              val addendum: Map[String, AnyRef]) extends IONone {
-  def displayName: String = "None"
-}
+abstract class AbstractIONone(val addendum: Map[String, AnyRef]) extends IONone
 
 /**
   * Default implementation of [[IONone]].
-  * @param sourceOperatorInfo Information about the operator that generated this object as output.
   * @param addendum Map containing additional information.
   */
-case class IONoneDefault(override val sourceOperatorInfo: Option[OperatorInfo] = None,
-                         override val addendum: Map[String, AnyRef] = Map[String, AnyRef]())
-  extends AbstractIONone(sourceOperatorInfo, addendum)
+case class IONoneDefault(override val addendum: Map[String, AnyRef])
+  extends AbstractIONone(addendum)
+
+object IONoneDefault {
+
+  @deprecated("Use constructor without sourceOperatorInfo.")
+  def apply(sourceOperatorInfo: Option[OperatorInfo] = None,
+            addendum: Map[String, AnyRef]): IONoneDefault = {
+    IONoneDefault(addendum)
+  }
+
+  def apply(): IONoneDefault = {
+    new IONoneDefault(Map[String, AnyRef]())
+  }
+}

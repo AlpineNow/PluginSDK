@@ -13,7 +13,7 @@ import com.alpine.plugin.core.{OperatorGUINode, OperatorListener, OperatorParame
 import com.alpine.plugin.test.mock.{OperatorParametersMock, VisualModelFactoryMock}
 import com.alpine.plugin.test.utils.{GolfData, OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+import org.apache.spark.sql.types._
 import org.apache.spark.sql.{DataFrame, Row}
 
 import scala.collection.mutable
@@ -106,8 +106,29 @@ class FullOperatorTests extends  SimpleAbstractSparkJobSuite {
     assert(r.collect().nonEmpty)
   }
 
+  test("DF Template Saving "){
+    val path = "plugin-test/src/test/resources/TestData.csv"
+    val carsSchema = new StructType(
+      Array(
+        StructField("year", IntegerType, nullable = true),
+        StructField("make", StringType, nullable = true),
+        StructField("model", StringType, nullable = true),
+        StructField("price", DoubleType, nullable = true)
+      ))
+    val input = HdfsDelimitedTabularDatasetDefault(path,
+      sparkUtils.convertSparkSQLSchemaToTabularSchema(carsSchema), TSVAttributes.defaultCSV, None)
+    val parameters = new OperatorParametersMock("1", "CarData")
+    OperatorParameterMockUtil.addTabularColumn(parameters, "addTabularDatasetColumnDropdownBox", "year")
+    OperatorParameterMockUtil.addTabularColumns(parameters, "addTabularDatasetColumnCheckboxes", "make")
+    OperatorParameterMockUtil.addHdfsParamsDefault(parameters, "CarsTestOutput")
+    val o = runInputThroughEntireOperator(input, new TestGui, new TestSparkJob, parameters, Some(input.tabularSchema))
+   val outputAsDelimited = o.asInstanceOf[HdfsDelimitedTabularDataset]
+    assert(outputAsDelimited.tsvAttributes == TSVAttributes.defaultCSV)
+  }
+
   test("Check adding only Some values to Multiple column Selector "){
     val golfData = GolfData.createGolfDF(sc)
+
     val parameters = new OperatorParametersMock("2", "GolfData")
     OperatorParameterMockUtil.addTabularColumn(parameters, "addTabularDatasetColumnDropdownBox", "play")
     OperatorParameterMockUtil.addTabularColumns(parameters, "addTabularDatasetColumnCheckboxes", "outlook")
@@ -136,9 +157,9 @@ class FullOperatorTests extends  SimpleAbstractSparkJobSuite {
     override def onOutputVisualization(params: OperatorParameters, output: HdfsDelimitedTabularDataset,
       visualFactory: VisualModelFactory): VisualModel = {
       val additionalModels: Array[(String, VisualModel)] = Array(
-        ("ModelOne", visualFactory.createTextVisualization("One Fish")),
-        ("ModelTwo", visualFactory.createTextVisualization("Two Fish")),
-        ("ModelThree", visualFactory.createHtmlTextVisualization("Three Fish")))
+        ("ModelOne", TextVisualModel("One Fish")),
+        ("ModelTwo", TextVisualModel("Two Fish")),
+        ("ModelThree", TextVisualModel("Three Fish")))
       AddendumWriter.createCompositeVisualModel(visualFactory, output, additionalModels)
     }
 
@@ -161,7 +182,7 @@ class FullOperatorTests extends  SimpleAbstractSparkJobSuite {
       new HdfsDelimitedTabularDatasetDefault(
         outputPathStr,
         outputSchema,
-        TSVAttributes.default,
+        TSVAttributes.defaultCSV,
         Some(operatorParameters.operatorInfo),
         AddendumWriter.createStandardAddendum("Some Sample Summary Text")
       )
@@ -172,15 +193,14 @@ class FullOperatorTests extends  SimpleAbstractSparkJobSuite {
     val inputParams = new OperatorParametersMock("3", "r")
     OperatorParameterMockUtil.addHdfsParamsDefault(inputParams, "result")
     val gui = new HelloWorldInSparkGUINode
-    val output: HdfsDelimitedTabularDataset = runInputThroughEntireOperator(new IONoneDefault(),
-      gui, new HelloWorldInSparkJob,
-    inputParams, None )
-
+    val output: HdfsDelimitedTabularDataset = runInputThroughEntireOperator(IONoneDefault(),
+      gui, new HelloWorldInSparkJob, inputParams, None)
+    assert(output.tsvAttributes == TSVAttributes.defaultCSV,
+      "The dataframe template should return CSV results by default")
     val visualModel = gui.onOutputVisualization(inputParams, output, new VisualModelFactoryMock)
     val models = visualModel.asInstanceOf[CompositeVisualModel].subModels
 
     assert(models.unzip._1 == Seq("Output", "ModelOne", "ModelTwo", "ModelThree", "Summary"))
     assert(models.toMap.apply("Summary").asInstanceOf[HtmlVisualModel].html == "Some Sample Summary Text")
-    assert(output.tsvAttributes == TSVAttributes.default)
   }
 }

@@ -46,7 +46,7 @@ object SparkMetadataWriter {
           tuple.elements.flatMap(element =>
             writeMetadataForDelimitedDatasets(element, hdfs)).toArray
         }
-        case _ => println("warning: can not write metadata for IOBase Type " + ioBase.displayName)
+        case _ => println("warning: can not write metadata for IOBase Type " + ioBase.getClass)
           Array()
       }
     }
