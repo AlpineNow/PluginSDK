@@ -1,9 +1,13 @@
+import sbtassembly.Plugin._
+import AssemblyKeys._
 //import com.typesafe.sbt.SbtGit.GitKeys
+
+val sdkVersion = "1.7"
 
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
-  name := s"$module",
-  version := "1.7-beta",
+  name := module,
+  version := sdkVersion,
   publishMavenStyle := true,
   pomExtra := <scm>
     <url>git@github.com:AlpineNow/PluginSDK.git</url>
@@ -165,6 +169,42 @@ lazy val PluginTest = Project(
     ) ++ sparkDependencies
   ) ++ publishParameters("plugin-test")
 ).dependsOn(PluginCore, PluginSpark, PluginIOImpl)
+
+lazy val CompleteModule = Project(
+  id = "alpine-complete-sdk",
+  base = file("alpine-complete-sdk"), // Empty.
+  settings = assemblySettings ++ Seq(
+    test in assembly := {},
+    jarName in assembly := s"alpine-sdk-assembly-$sdkVersion.jar",
+    mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) => {
+      case PathList("javax", "servlet", xs@_*) => MergeStrategy.last
+      case PathList("javax", "activation", xs@_*) => MergeStrategy.last
+      case PathList("org", "apache", xs@_*) => MergeStrategy.last
+      case PathList("com", "google", xs@_*) => MergeStrategy.last
+      case PathList("com", "esotericsoftware", xs@_*) => MergeStrategy.last
+      case PathList("com", "codahale", xs@_*) => MergeStrategy.last
+      case PathList("com", "yammer", xs@_*) => MergeStrategy.last
+      case PathList("META-INF", xs@_*) => MergeStrategy.discard
+      case "about.html" => MergeStrategy.rename
+      case "overview.html" => MergeStrategy.rename
+      case "plugin.properties" => MergeStrategy.last
+      case "log4j.properties" => MergeStrategy.last
+      case "parquet.thrift" => MergeStrategy.last
+      case "plugin.xml" => MergeStrategy.last
+      case x => old(x)
+    }
+    })
+).dependsOn(
+  Common,
+  PluginCore,
+  PluginSpark,
+  PluginIOImpl,
+  PluginModel,
+  PluginSpark,
+  ModelAPI,
+  ModelPack,
+  PluginTest
+)
 
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)

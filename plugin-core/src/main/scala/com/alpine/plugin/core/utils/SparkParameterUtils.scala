@@ -63,7 +63,7 @@ object SparkParameterUtils {
       new SparkParameter(storageLevelParamId, "Storage Level", defaultStorageLevel, false, false)
       //TODO Add dynamic allocation param
     )
-    operatorDialog.addAdvancedSparkSettingsBox("sparkSettings", "Advanced Spark Settings", list)
+    operatorDialog.addAdvancedSparkSettingsBox("sparkSettings", "Advanced Spark Settings", list ++ additionalSparkParameters)
   }
 
   def getStorageLevel(operatorParameters: OperatorParameters): Option[String] = {
