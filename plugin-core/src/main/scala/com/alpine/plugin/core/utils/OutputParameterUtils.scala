@@ -49,16 +49,18 @@ trait OutputParameterUtils {
 
   /**
     * For use with database, not HDFS.
-    * @param operatorDialog
-    * @param defaultValue
-      * @return
-      */
+    *
+    * @param operatorDialog From the 'onExecution' method's parameters. This method
+    *                       adds the parameters to this object.
+    * @param defaultValue boolean indicating default value of the parameter. True for "Yes", false for "No".
+    * @return The dialog element added.
+    */
   def addDropIfExistsParameter(operatorDialog: OperatorDialog, defaultValue: Boolean = true): DialogElement = {
     val overwrite = operatorDialog.addRadioButtons(
       dropIfExists,
       "Drop If Exists",
-      Array(yesStr, noStr).toSeq,
-      defaultValue.toString
+      Seq(yesStr, noStr),
+      if (defaultValue) yesStr else noStr
     )
     overwrite
   }
