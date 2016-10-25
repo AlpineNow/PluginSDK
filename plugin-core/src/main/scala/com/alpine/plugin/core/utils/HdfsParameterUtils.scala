@@ -224,8 +224,8 @@ object HdfsParameterUtils extends OutputParameterUtils {
   val badDataReportALL = "Yes"
   val DEFAULT_NUMBER_ROWS = 1000
   val badDataReportNROWS = "Partial (" + DEFAULT_NUMBER_ROWS +") Rows"
-  val badDataParameterOptions = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL)
-
+  val badDataReportNO_COUNT = "No and Do Not Count Rows Removed (Fastest)"
+  val badDataParameterOptions = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL, badDataReportNO_COUNT)
   val badDataLocation = "_BadData"
 
   @deprecated("Use addNullDataReportParameter")
@@ -247,11 +247,17 @@ object HdfsParameterUtils extends OutputParameterUtils {
       None
     } else if(paramValue.equals(badDataReportNROWS)){
       Some(DEFAULT_NUMBER_ROWS)
-    } else {
+    } else if (paramValue.equals(badDataReportALL)) {
       Some(Long.MaxValue)
+    } else {
+      None
     }
-
   }
+
+  def countRowsRemovedDueToNullData(parameters: OperatorParameters): Boolean = {
+    !parameters.getStringValue(badDataReportParameterID).equals(badDataReportNO_COUNT)
+  }
+
 
   def getBadDataPath(parameters: OperatorParameters) : String = {
     val outputPath = HdfsParameterUtils.getOutputPath(parameters)

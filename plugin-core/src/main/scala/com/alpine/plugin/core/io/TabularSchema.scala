@@ -20,6 +20,7 @@ case class TabularSchema(
 
   def getNumDefinedColumns: Int = definedColumns.length
   def getDefinedColumns: Seq[ColumnDef] = definedColumns
+  def getDefinedColumnsAsJavaList: util.List[ColumnDef] = JavaConversions.seqAsJavaList(definedColumns)
 
 }
 

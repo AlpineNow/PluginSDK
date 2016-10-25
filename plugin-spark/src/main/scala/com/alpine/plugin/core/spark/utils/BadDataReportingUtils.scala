@@ -56,26 +56,34 @@ object BadDataReportingUtils {
     val hdfsStorageFormat = Try(HdfsParameterUtils.getHdfsStorageFormatType(operatorParameters)).getOrElse(HdfsStorageFormatType.CSV)
     val overwrite = HdfsParameterUtils.getOverwriteParameterValue(operatorParameters)
     val (goodDataFrame, badDataFrame) = removeDataFromDataFrame(removeRow, inputDataFrame, dataToWriteParam)
-    val ar = inputDataFrame.rdd.treeAggregate(Array(0, 0))(
-      seqOp = (ar, row) =>
-        if (removeRow(row)) {
-          ar(1) += 1 //bad data count is at index 1
-          ar
-        } else {
-          ar(0) += 1 //good data is at index 2
-          ar
-        },
-      combOp = (v1, v2) => {
-        v1(0) += v2(0)
-        v1(1) += v2(1)
-        v1
-      })
-    val badDataCount = ar(1)
-    val outputCount = ar(0)
-    val inputCount = badDataCount + outputCount
-    val message = handleNullDataAsDataFrame(dataToWriteParam, badDataPath, inputCount, outputCount
-      , badData = badDataFrame, sparkRuntimeUtils, hdfsStorageFormat,
-      overwrite, operatorInfo, dataRemovedDueTo)
+    val countRows = HdfsParameterUtils.countRowsRemovedDueToNullData(operatorParameters)
+    val message = if (countRows) {
+      val ar = inputDataFrame.rdd.treeAggregate(Array(0, 0))(
+        seqOp = (ar, row) =>
+          if (removeRow(row)) {
+            ar(1) += 1 //bad data count is at index 1
+            ar
+          } else {
+            ar(0) += 1 //good data is at index 2
+            ar
+          },
+        combOp = (v1, v2) => {
+          v1(0) += v2(0)
+          v1(1) += v2(1)
+          v1
+        })
+      val badDataCount = ar(1)
+      val outputCount = ar(0)
+      val inputCount = badDataCount + outputCount
+
+      handleNullDataAsDataFrame(dataToWriteParam, badDataPath, inputCount, outputCount
+        , badData = badDataFrame, sparkRuntimeUtils, hdfsStorageFormat,
+        overwrite, operatorInfo, dataRemovedDueTo)
+    } else {
+      //In this case don't count the rows removed at all, to avoid that extra shuffle.
+      "Some rows of data may have been removed " + dataRemovedDueTo +
+        ".You have selected not to count the number of rows removed to speed up the computation of the operator."
+    }
     (goodDataFrame, message)
   }
 
@@ -96,8 +104,7 @@ object BadDataReportingUtils {
    */
   def reportNullDataAsStringRDD(amountOfDataToWriteParam: Option[Long], badDataPath: String,
                                 inputDataSize: Long, outputSize: Long, badData: Option[RDD[String]],
-                                dataRemovedDueTo: String
-                                ): String = {
+                                dataRemovedDueTo: String): String = {
     val badDataAsDF = badData match {
       case Some(rdd) =>
         val sqlContext = new SQLContext(rdd.sparkContext)
@@ -117,10 +124,6 @@ object BadDataReportingUtils {
                               ): String = {
     reportNullDataAsStringRDD(amountOfDataToWriteParam, badDataPath, inputDataSize, outputSize, badData, defaultDataRemovedMessage)
   }
-
-
-  //TODO: It would be awesome if we could write the meta data for the bad data, so that it would be
-  // easy to do some analysis of it.
 
   /**
     *
@@ -183,6 +186,9 @@ object BadDataReportingUtils {
     * The data removed parameter is the message for what the bad data was removed. It will be of the form
     * "data removed " + dataRemovedDueTo. I.e. if you put "due to zero values" then the message would read
     * "Data removed due to zero values".
+    *
+    * Note: This method should NOT be called in the event that the user selected the
+    * "Do Not Count # of Rows Removed (Faster)" option.
    */
   def getNullDataToWriteMessage(amountOfDataToWriteParam: Option[Long], badDataPath: String,
                                 inputDataSize: Long,

@@ -27,6 +27,15 @@ object TransformerUtil {
     tempArray
   }
 
+  def normalizeProbabilities(array: Seq[Double]) = {
+    val sum = array.sum
+    if (sum != 0) {
+      array.map(d => d / sum)
+    } else {
+      array
+    }
+  }
+
   /**
     * Converts input of type Any to Double.
     * Does this by casting to java.lang.Number,

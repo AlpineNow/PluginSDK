@@ -112,6 +112,21 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
       "Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows</td></tr><tr><td style = \"padding-right:10px;\" >" +
       "No data removed because it is evil</td><td style = \"padding-right:10px;\" ></td></tr></table>")
   }
+
+  test("Test Null Data Reporting NOT counting the rows ") {
+    val inputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
+    val mockParams = new OperatorParametersMock("Thing", "One")
+    OperatorParameterMockUtil.addHdfsParamsDefault(mockParams, "BadDataTest")
+    mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, HdfsParameterUtils.badDataReportNO_COUNT)
+    val (badDataDf, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
+      inputData, mockParams, sparkUtils, "because it is evil")
+    val badDataFile = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
+    assert(badDataDf.count() == inputRows.length)
+    assert(!badDataFile.isDirectory)
+    assert(message.contains("because it is evil"))
+    assert(message.contains("You have selected not to count the number of rows removed to speed up the computation of the operator."))
+    assert(!message.contains("null"))
+  }
 }
 
 object RowProcessingUtil extends Serializable {

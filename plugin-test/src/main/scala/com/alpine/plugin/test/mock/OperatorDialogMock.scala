@@ -6,6 +6,7 @@ import com.alpine.plugin.core.dialog._
 import com.alpine.plugin.core.io.{ColumnDef, IOBase, TabularSchema}
 import com.alpine.plugin.test.utils.OperatorParameterMockUtil
 
+import scala.collection.JavaConversions._
 import scala.util.{Success, Try}
 
 abstract class DefaultDialogElementMock(override val getId: String,
@@ -107,7 +108,7 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
   override def addStringBox(id: String, label: String, defaultValue: String, regex: String, required: Boolean): StringBox = {
     val selected = setStringValue(id, defaultValue)
 
-    class StringBoxImpl extends DefaultDialogElementMock(id, label) with StringBox {
+    class StringBoxImpl extends DefaultDialogElementMock(id, label, required) with StringBox {
       // var value : String = null
       assert(getValue.matches(getRegex), "The string: " + getValue + "does not conform to regex: " + regex)
 
@@ -148,21 +149,32 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     updateDialogElements(id, de)
   }
 
+  override def addCheckboxesFromJavaList(id: String, label: String, values: java.util.List[String], defaultSelections: java.util.List[String], required: Boolean): Checkboxes = {
+    addCheckboxesFromJavaList(id, label, asScalaBuffer(values).toList, asScalaBuffer(defaultSelections).toList, required)
+  }
+
   override def addDropdownBox(id: String, label: String, values: Seq[String], defaultSelection: String): DropdownBox = {
     val s = setStringValue(id, defaultSelection)
     class DropDownBoxImpl extends SingleElementSelectorMock(values, s, id, label) with
     DropdownBox {
     }
-    //toDo: ditch this sequence, do validaiton at object creation --> less mutable
+    //toDo: ditch this sequence, do validation at object creation --> less mutable
     val de = new DropDownBoxImpl
     updateDialogElements(id, de)
   }
 
+  override def addDropdownBoxFromJavaList(id: String, label: String, values: java.util.List[String], defaultSelection: String): DropdownBox = {
+    addDropdownBox(id, label, asScalaBuffer(values).toList, defaultSelection)
+  }
 
   override def addHdfsDirectorySelector(id: String, label: String, defaultPath: String): HdfsFileSelector = {
+      addHdfsDirectorySelector(id, label, defaultPath, required = true)
+  }
+
+  override def addHdfsDirectorySelector(id: String, label: String, defaultPath: String, required : Boolean): HdfsFileSelector = {
     val path = setStringValue(id, defaultPath)
 
-    class HdfsFileSelectorImp extends DefaultDialogElementMock(id, label) with HdfsFileSelector {
+    class HdfsFileSelectorImp extends DefaultDialogElementMock(id, label, required) with HdfsFileSelector {
       private var p: String = null
 
       override def getSelectedPath: String = p
@@ -245,6 +257,10 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     updateDialogElements(id, de)
   }
 
+  override def addRadioButtonsFromJavaList(id: String, label: String, values: java.util.List[String], defaultSelection: String): RadioButtons = {
+    addRadioButtons(id, label, asScalaBuffer(values).toList, defaultSelection)
+  }
+
   override def addIntegerBox(id: String, label: String, min: Int, max: Int, defaultValue: Int): IntegerBox = {
     val selection = Try(overrideParams.getIntValue(id)) match {
       case Success(s) => s
@@ -267,9 +283,13 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
   }
 
   override def addHdfsFileSelector(id: String, label: String, defaultPath: String): HdfsFileSelector = {
+    addHdfsFileSelector(id, label, defaultPath, required = true)
+  }
+
+  override def addHdfsFileSelector(id: String, label: String, defaultPath: String, required : Boolean): HdfsFileSelector = {
     val selection = setStringValue(id, defaultPath)
 
-    class HdfsFileSelectorImpl extends DefaultDialogElementMock(id, label) with HdfsFileSelector {
+    class HdfsFileSelectorImpl extends DefaultDialogElementMock(id, label, required) with HdfsFileSelector {
 
       override def getSelectedPath: String = selection
 

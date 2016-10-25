@@ -4,9 +4,6 @@
 
 package com.alpine.plugin.core.spark.utils
 
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsAvroDatasetDefault, HdfsDelimitedTabularDatasetDefault, HdfsParquetDatasetDefault}
@@ -16,7 +13,8 @@ import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.types.TimestampType
-import org.apache.spark.sql.{DataFrame, SQLContext, UserDefinedFunction}
+import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.joda.time.format.DateTimeFormat
 
 import scala.util.Try
 
@@ -175,7 +173,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
                     addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsParquetDataset = {
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
     withDatesChanged.write.parquet(path)
-    new HdfsParquetDatasetDefault(path, tabularSchema, sourceOperatorInfo, addendum)
+    new HdfsParquetDatasetDefault(path, tabularSchema, addendum)
   }
 
   /**
@@ -189,7 +187,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
                  addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsAvroDataset = {
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
     withDatesChanged.write.format("com.databricks.spark.avro").save(path)
-    new HdfsAvroDatasetDefault(path, tabularSchema, sourceOperatorInfo, addendum)
+    new HdfsAvroDatasetDefault(path, tabularSchema, addendum)
   }
 
   // ======================================================================
@@ -255,7 +253,6 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
       path,
       tabularSchema,
       TSVAttributes.default,
-      sourceOperatorInfo,
       addendum
     )
   }
@@ -281,7 +278,6 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
       path,
       tabularSchema,
       tSVAttributes,
-      sourceOperatorInfo,
       addendum
     )
   }
@@ -391,9 +387,11 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
 
   /**
     * STRING -> JAVA TIMESTAMP OBJECT (based on unix time stamp)
-    * Take in a dataframe and a map of the column names to the date formats represented in them
-    * and use the Spark SQL: "unix_timestamp" UDF,  to change the columns with string dates into
-    * unix timestamps in seconds and a custom udf to change that into java dates.
+    * Take in a DataFrame and a map of the column names to the date formats represented in them
+    * and change the columns with string dates into JAVA TIME STAMP objects by parsing them according
+    * to the format defined in the map.
+    * Because Alpine uses Joda date formats, we use joda to parse the date strings into unix time stamps,
+    * and then convert unix time stamps to java sql objects.
     * Preserves original naming of the columns. Columns which were originally DateTime columns will
     * now be of TimeStampType rather than StringType.
     *
@@ -411,17 +409,10 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     }
     else {
 
-      import org.apache.spark.sql.functions.unix_timestamp
       //check that all the date formats are valid Simple Date Formats and throw a reasonable exception if
       //they are not
       try {
         validateDateFormatMap(map)
-        //generate a function that maps from the unix time stamp to the java.sql.Date object for a given format
-
-        def dateTimeFunction(format: String): UserDefinedFunction = {
-          import org.apache.spark.sql.functions.udf
-          udf((time: Long) => new Timestamp(time * 1000))
-        }
 
         import org.apache.spark.sql.functions.{lit, when}
 
@@ -429,9 +420,9 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
           map.get(columnName) match {
             case None => dataFrame(columnName)
             case Some(format) =>
-              lazy val unixCol = unix_timestamp(dataFrame(columnName), format)
+              lazy val unixCol = DateTimeUdfs.toUnixTimeStampViaJoda(format)(dataFrame(columnName))
               val nulled = when(unixCol.isNull, lit(null))
-                .otherwise(dateTimeFunction(format)(unixCol))
+                .otherwise(DateTimeUdfs.toTimestampFromUTC(format)(unixCol))
               nulled.cast(TimestampType
               ).as(columnName, dataFrame.schema(columnName).metadata)
           })
@@ -449,17 +440,21 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
   def validateDateFormatMap(map: Map[String, String]): Unit = {
     map.foreach {
       case (colName, dateFormat) =>
-        val simpleDateFormat = Try(new SimpleDateFormat(dateFormat))
-        if (simpleDateFormat.isFailure)
-          throw new IllegalArgumentException("Date format " + dateFormat + " for column " + colName + " is not a valid SimpleDateFormat",
-            simpleDateFormat.failed.get)
+        val jodaDateFormat = Try(DateTimeFormat.forPattern(dateFormat))
+        if (jodaDateFormat.isFailure)
+          throw new IllegalArgumentException("Date format \"" + dateFormat + "\" for column "
+            + colName + " is not a valid joda date format",
+            jodaDateFormat.failed.get)
     }
   }
 
   /**
-    * JAVA TIME STAMP OBJECT--> STRING
-    * Take in a dataFrame and map of the column names to the date formats we want to print and use
-    * the Spark SQL UDF date_format to convert from the TimeStamp type to a string representation of the date or time.
+    * JAVA TIME STAMP OBJECT--> STRING  (via joda)
+    * Take in a dataFrame and map of the column names to the date formats we want to print. Convert
+    * to a dateFrames  with the date columns as strings formatted correctly according to the map.
+    * Because the format is in joda time, we have to round trip via unix time.
+    * We use a udf to convert to a column with a Sql.TimeStamp type to a unix time, and then use
+    * Joda to format the unix time stamp according to the column format string provided in the map.
     *
     * @param dataFrame input data where date columns are represented as java TimeStamp Objects
     * @param map       columnName -> dateFormat to convert to
@@ -470,14 +465,14 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     }
     else {
       try {
-        import org.apache.spark.sql.functions.date_format
-        validateDateFormatMap(map)
-
+        validateDateFormatMap(map) //verify that all of the formats in the date format map are correct
         val selectExpression = dataFrame.schema.fieldNames.map(colDef =>
           map.get(colDef) match {
             case None => dataFrame(colDef)
             case Some(format) =>
-              date_format(dataFrame(colDef), format).as(colDef, dataFrame.schema(colDef).metadata)
+              //use udf to parse the TimeStamp object as a string using joda
+              DateTimeUdfs.toDateStringViaJoda(format)(dataFrame(colDef))
+                .as(colDef, dataFrame.schema(colDef).metadata)
           })
         dataFrame.select(selectExpression: _*)
       }
