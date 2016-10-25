@@ -92,6 +92,22 @@ trait OperatorDialog {
   ): HdfsFileSelector
 
   /**
+    * Add a Hdfs directory selection box. This can be used to select an Hdfs
+    * directory that already exists through an interactive selection window.
+    * @param id String id of this input box. This is used later to reference
+    *           the value of this input box.
+    * @param label The visual label of this input box.
+    * @param defaultPath The default value to be used in the input box.
+    * @param isRequired - If the operator can be valid if this is left blank
+    * @return A Hdfs directory selection box element.
+    */
+  def addHdfsDirectorySelector(
+    id: String,
+    label: String,
+    defaultPath: String,
+    isRequired : Boolean): HdfsFileSelector
+
+  /**
    * Add a Hdfs file selection box. This can be used to select an Hdfs file
    * that already exists through an interactive selection window.
    * @param id String id of this input box. This is used later to reference
@@ -104,6 +120,23 @@ trait OperatorDialog {
     id: String,
     label: String,
     defaultPath: String
+  ): HdfsFileSelector
+
+  /**
+    * Add a Hdfs file selection box. This can be used to select an Hdfs file
+    * that already exists through an interactive selection window.
+    * @param id String id of this input box. This is used later to reference
+    *           the value of this input box.
+    * @param label The visual label of this input box.
+    * @param defaultPath The default value to be used in the input box.
+    * @param isRequired - If the operator can be valid if this is left blank
+    * @return A Hdfs file selection box element.
+    */
+  def addHdfsFileSelector(
+    id: String,
+    label: String,
+    defaultPath: String,
+    isRequired : Boolean
   ): HdfsFileSelector
 
   /**
@@ -189,10 +222,28 @@ trait OperatorDialog {
   ): Checkboxes
 
   /**
+    * Add a button that opens a multiple checkbox dialog box.
+    * This version is Java-friendly
+    * @param id String id of this input box.
+    * @param label The visual label of this input box.
+    * @param values Available checkbox values as java.util.List
+    * @param defaultSelections Default selected checkboxes.
+    * @param required Whether the user is required to select a value for this parameter.
+    * @return A checkboxes element.
+    */
+  def addCheckboxesFromJavaList(
+    id: String,
+    label: String,
+    values: java.util.List[String],
+    defaultSelections: java.util.List[String],
+    required: Boolean = true
+  ): Checkboxes
+
+  /**
    * Add a radio button input (a multiple choice input).
    * @param id String id of this input box.
    * @param label The visual label of this input box.
-   * @param values Available checkbox values.
+   * @param values Available checkbox values
    * @param defaultSelection Default selected button.
    * @return A radio button element.
    */
@@ -200,6 +251,22 @@ trait OperatorDialog {
     id: String,
     label: String,
     values: Seq[String],
+    defaultSelection: String
+  ): RadioButtons
+
+  /**
+    * Add a radio button input (a multiple choice input).
+    * This version is Java-friendly.
+    * @param id String id of this input box.
+    * @param label The visual label of this input box.
+    * @param values Available checkbox values as java.util.List
+    * @param defaultSelection Default selected button.
+    * @return A radio button element.
+    */
+  def addRadioButtonsFromJavaList(
+    id: String,
+    label: String,
+    values: java.util.List[String],
     defaultSelection: String
   ): RadioButtons
 
@@ -215,6 +282,22 @@ trait OperatorDialog {
     id: String,
     label: String,
     values: Seq[String],
+    defaultSelection: String
+  ): DropdownBox
+
+  /**
+    * Add a dropdown menu (a multiple choice input).
+    * This version is Java-friendly.
+    * @param id String id of this input box.
+    * @param label The visual label of this input box.
+    * @param values Available checkbox values from java.util.List
+    * @param defaultSelection Default selected vale.
+    * @return A dropdown box element.
+    */
+  def addDropdownBoxFromJavaList(
+    id: String,
+    label: String,
+    values: java.util.List[String],
     defaultSelection: String
   ): DropdownBox
 
@@ -351,6 +434,8 @@ case class ColumnFilter(
   acceptedTypes: Set[ColumnType.TypeValue],
   acceptedNameRegex: String = ".+"
 ) {
+
+
   /**
    * :: AlpineSdkApi ::
    * Determine whether the given column is accepted by the filter.
@@ -359,12 +444,15 @@ case class ColumnFilter(
   def accepts(colDef: ColumnDef): Boolean = {
     val colType = colDef.columnType
     val typeAccepted =
-      if (acceptedTypes.contains(ColumnType.TypeValue("*"))) {
+      if (acceptedTypes.contains(ColumnType.TypeValue(ColumnFilter.ALL_TYPES))) {
         true
-      } else {
+      } else if (colType.name == ColumnType.DateTime.name &&
+        acceptedTypes.contains(ColumnType.TypeValue(ColumnFilter.ALL_DATE_TYPES))) {
+        true
+      }
+      else {
         acceptedTypes.contains(colType)
       }
-
     val p = Pattern.compile(acceptedNameRegex)
     val m = p.matcher(colDef.columnName)
     val nameAccepted = m.matches()
@@ -379,6 +467,8 @@ case class ColumnFilter(
  */
 //TODO: Refactor to allow date column filter
 object ColumnFilter {
+  val ALL_TYPES = "*"
+  val ALL_DATE_TYPES = "*dates"
   /**
    * :: AlpineSdkApi ::
    * Return a filter that only passes numeric types, if the columns are coming
@@ -413,6 +503,21 @@ object ColumnFilter {
   }
 
   /**
+    * :: AlpineSdkApi ::
+    * Return a filter that only passes categorical types, if the columns are
+    * coming from a Hadoop dataset. This doesn't necessarily work for DB columns,
+    * which often have vendor-specific types.
+    * @return A column filter that accepts categorical types (for Hadoop datasets).
+    */
+  def DateTimeOnly: ColumnFilter = {
+    ColumnFilter(
+      Set[ColumnType.TypeValue](
+        ColumnType.TypeValue(ALL_DATE_TYPES)
+      )
+    )
+  }
+
+  /**
    * :: AlpineSdkApi ::
    * Return a filter that accepts any type.
    * @return A column filter that accepts any type.
@@ -420,7 +525,7 @@ object ColumnFilter {
   def All: ColumnFilter = {
     ColumnFilter(
       Set[ColumnType.TypeValue](
-        ColumnType.TypeValue("*") // A special type representing all.
+        ColumnType.TypeValue(ALL_TYPES) // A special type representing all.
       )
     )
   }

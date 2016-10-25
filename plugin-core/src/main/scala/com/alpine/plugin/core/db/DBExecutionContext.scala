@@ -8,7 +8,7 @@ import java.sql.Connection
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.ExecutionContext
-import com.alpine.sql.SQLGenerator
+import com.alpine.sql.{SQLExecutor, SQLGenerator}
 
 /**
  * :: AlpineSdkApi ::
@@ -23,10 +23,10 @@ import com.alpine.sql.SQLGenerator
 @AlpineSdkApi
 case class DBConnectionInfo(
   connection: Connection,
-  name: String,
-  url: String,
-  userName: String,
-  password: String)
+  name:       String,
+  url:        String,
+  userName:   String,
+  password:   String)
 
 /**
  * :: AlpineSdkApi ::
@@ -36,5 +36,6 @@ case class DBConnectionInfo(
 @AlpineSdkApi
 trait DBExecutionContext extends ExecutionContext {
   def getDBConnectionInfo: DBConnectionInfo
-  def getSQLGenerator: SQLGenerator
+  def getSQLGenerator:     SQLGenerator
+  def getSQLExecutor:      SQLExecutor
 }

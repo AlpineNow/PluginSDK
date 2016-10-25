@@ -101,15 +101,16 @@ class KMeansSQLTransformer(val model: KMeansModel, sqlGenerator: SQLGenerator) e
           val diff = coordinate + " - " + name.escape(sqlGenerator)
           "(" + diff + ") * (" + diff + ")"
       }.mkString(" + ")
-      ColumnarSQLExpression("POWER(" + s + ", 0.5)")
+      // Use SQRT instead of POWER(s, 0.5) doesn't work for s = 0 (uses log in the implementation).
+      ColumnarSQLExpression("SQRT(" + s + ")")
     })
 
     val temporaryDistanceNames = clusterExpressions.indices.map(i => ColumnName("DIST_" + i))
 
     ClusteringModelSQLExpressions(
-      model.clusters.map(cluster => cluster.name) zip temporaryDistanceNames,
-      Seq(clusterExpressions zip temporaryDistanceNames),
-      sqlGenerator
+      labelValuesToColumnNames = model.clusters.map(cluster => cluster.name) zip temporaryDistanceNames,
+      layers = Seq(clusterExpressions zip temporaryDistanceNames),
+      sqlGenerator = sqlGenerator
     )
   }
 

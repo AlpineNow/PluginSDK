@@ -51,6 +51,16 @@ trait OperatorParameters extends Serializable {
   def getTabularDatasetSelectedColumns(parameterId: String): (String, Array[String])
 
   /**
+    * Get the selected columns from a tabular dataset output of an input operator.
+    * This is a Java-friendly version.
+    * NOTE: If the parameter was not required and the user did not input a value then this method
+    * will return and empty array.
+    * @param parameterId The parameter Id of the column checkboxes dialog element.
+    * @return An array of selected column names.
+    */
+  def getTabularDatasetSelectedColumnNames(parameterId: String): Array[String]
+
+  /**
    * Get the selected column from a tabular dataset output of an input operator.
    * NOTE: If the parameter was not required and the user didn't select a column this will return
    * an empty string.
@@ -58,6 +68,16 @@ trait OperatorParameters extends Serializable {
    * @return A tuple of a source operator name and a selected column name.
    */
   def getTabularDatasetSelectedColumn(parameterId: String): (String, String)
+
+  /**
+    * Get the selected column from a tabular dataset output of an input operator.
+    * This is a Java-friendly version.
+    * NOTE: If the parameter was not required and the user didn't select a column this will return
+    * an empty string.
+    * @param parameterId The parameter Id of the column dropdown dialog element.
+    * @return The selected column name.
+    */
+  def getTabularDatasetSelectedColumnName(parameterId: String): String
 
   /**
    * Get the value of a parameter as a string.

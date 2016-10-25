@@ -28,7 +28,6 @@ class OperatorDialogMockTests extends FunSuite  {
 
   val hdfIOInput = HdfsDelimitedTabularDatasetDefault("path", golfInputSchema, TSVAttributes.default, Some(inputParams.operatorInfo()))
 
-
   test("Test Column Selectors") {
 
     val id = "id1"

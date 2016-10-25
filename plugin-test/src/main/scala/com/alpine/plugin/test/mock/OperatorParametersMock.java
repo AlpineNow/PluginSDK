@@ -90,6 +90,10 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         }
     }
 
+    public String[] getTabularDatasetSelectedColumnNames(String parameterId) {
+        return getTabularDatasetSelectedColumns(parameterId)._2();
+    }
+
     public Tuple2<String, String> getTabularDatasetSelectedColumn(String parameterId) {
         // The hashmap or the linkedmap in this case is used as a pair.
         // I.e., there's only one key and one value.
@@ -107,6 +111,10 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
             String v = value.get(key);
             return new Tuple2<>(key, v);
         }
+    }
+
+    public String getTabularDatasetSelectedColumnName(String parameterId) {
+        return getTabularDatasetSelectedColumn(parameterId)._2();
     }
 
     public String getStringValue(String parameterId) {

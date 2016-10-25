@@ -58,12 +58,20 @@ class SimpleSQLGenerator extends SQLGenerator {
     getCreateTableAsSelectSQL(columns, sourceTable, destinationTable, "")
   }
 
+  override def getCreateTableAsSelectSQL(selectQuery: String, destinationTable: String): String = {
+    getCreateTableOrViewAsSelectSQL(selectQuery, destinationTable, false)
+  }
+
   override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String, whereClause: String): String = {
     s"""CREATE VIEW $destinationView AS (SELECT $columns FROM $sourceTable $whereClause"""
   }
 
   override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String): String = {
     getCreateViewAsSelectSQL(columns, sourceTable, destinationView, "")
+  }
+
+  override def getCreateViewAsSelectSQL(selectQuery: String, destinationView: String): String = {
+    getCreateTableOrViewAsSelectSQL(selectQuery, destinationView, true)
   }
 
   override def getCreateTableOrViewAsSelectSQL(columns: String, sourceTable: String, destinationTable: String, whereClause: String, isView: Boolean): String = {
@@ -79,6 +87,14 @@ class SimpleSQLGenerator extends SQLGenerator {
       getCreateViewAsSelectSQL(columns, sourceTable, destinationTable)
     } else {
       getCreateTableAsSelectSQL(columns, sourceTable, destinationTable)
+    }
+  }
+
+  override def getCreateTableOrViewAsSelectSQL(selectQuery: String, destinationTable: String, isView: Boolean): String = {
+    if (isView) {
+      s"""CREATE TABLE $destinationTable AS ($selectQuery)"""
+    } else {
+      s"""CREATE VIEW $destinationTable AS ($selectQuery)"""
     }
   }
 

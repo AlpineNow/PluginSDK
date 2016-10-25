@@ -29,7 +29,7 @@ trait SparkSchemaUtils {
       case ColumnType.DateTime.name =>
         val formatStr = columnType.format match {
           case Some(format: String) => columnType.format
-          case None => Some(ColumnType.SPARK_SQL_TIME_STAMP_FORMAT) //should look up what the alpine default is
+          case None => Some(ColumnType.PIG_DATE_FORMAT) //enabled use with pig operators
         }
         val dataType = if (keepDatesAsStrings) StringType else TimestampType
 
@@ -83,11 +83,11 @@ trait SparkSchemaUtils {
       case DateType =>
         ColumnDef(name, ColumnType.DateTime(
           SparkSqlDateTimeUtils.getDatFormatInfo(structField)
-            .getOrElse(ColumnType.SPARK_SQL_DATE_FORMAT)))
+            .getOrElse(ColumnType.PIG_DATE_FORMAT)))
       case TimestampType =>
         ColumnDef(name, ColumnType.DateTime(
           SparkSqlDateTimeUtils.getDatFormatInfo(structField)
-            .getOrElse(ColumnType.SPARK_SQL_TIME_STAMP_FORMAT)))
+            .getOrElse(ColumnType.PIG_DATE_FORMAT)))
       case _ =>
         throw new UnsupportedOperationException(
           "Spark SQL data type " + dataType.toString + " is not supported."
@@ -220,7 +220,7 @@ object SparkSqlDateTimeUtils {
   }
 
   /**
-    * Add a custom date format to a column defintion so that the date will be reformated by the
+    * Add a custom date format to a column definition so that the date will be re-formatted by the
     * 'saveDataFrame method.
     */
   def addDateFormatInfo(field: StructField, format: String) = {

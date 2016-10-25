@@ -19,7 +19,37 @@ object SparkParameterUtils {
   val sparkDriverMBElementId = "spark_driverMB"
   val sparkNumExecutorCoresElementId = "spark_numExecutorCores"
   val storageLevelParamId = "spark_storage_level"
+  val disableDynamicAllocationParamId = "noDynamicAllocation"
 
+  def addStandardSparkOptions(operatorDialog: OperatorDialog, additionalSparkParameters: List[SparkParameter]): Unit ={
+    val list = List(
+      new SparkParameter(disableDynamicAllocationParamId,
+        "Disable Dynamic Allocation", false.toString, false, false),
+      new SparkParameter(sparkNumExecutorsElementId, "Number of Executors", "3", false, false),
+      new SparkParameter(sparkExecutorMBElementId, "Executor Memory in MB", "-1", false, false),
+      new SparkParameter(sparkDriverMBElementId, "Driver Memory in MB", "-1", false, false),
+      new SparkParameter(sparkNumExecutorCoresElementId, "Number of Executor Cores", "-1", false, false)
+    )
+    operatorDialog.addAdvancedSparkSettingsBox("sparkSettings", "Advanced Spark Settings",
+      list ++ additionalSparkParameters)
+  }
+
+  @deprecated("The default values are no longer used due to the auto tuning. If you " +
+    "would like to maintain the old behavior use 'operatorDialog.addAdvancedSparkSettingsBox' directly" +
+     "otherwise use signature without integer params")
+  def addStandardSparkOptions(
+    operatorDialog: OperatorDialog,
+    defaultNumExecutors: Int,
+    defaultExecutorMemoryMB: Int,
+    defaultDriverMemoryMB: Int,
+    defaultNumExecutorCores: Int, additionalSparkParameters: List[SparkParameter]) {
+
+    addStandardSparkOptions(operatorDialog, additionalSparkParameters)
+  }
+
+  @deprecated("The default values are no longer used due to the auto tuning. If you " +
+    "would like to maintain the old behavior use 'operatorDialog.addAdvancedSparkSettingsBox' directly" +
+    "otherwise use signature without integer params")
   def addStandardSparkOptions(
     operatorDialog: OperatorDialog,
     defaultNumExecutors: Int,
@@ -27,13 +57,7 @@ object SparkParameterUtils {
     defaultDriverMemoryMB: Int,
     defaultNumExecutorCores: Int) {
 
-    val list = List(
-      new SparkParameter(sparkNumExecutorsElementId, "Number of Executors", defaultNumExecutors.toString, false, false),
-      new SparkParameter(sparkExecutorMBElementId, "Executor Memory in MB", defaultExecutorMemoryMB.toString, false, false),
-      new SparkParameter(sparkDriverMBElementId, "Driver Memory in MB", defaultDriverMemoryMB.toString, false, false),
-      new SparkParameter(sparkNumExecutorCoresElementId, "Number of Executor Cores", defaultNumExecutorCores.toString, false, false)
-    )
-    operatorDialog.addAdvancedSparkSettingsBox("sparkSettings", "Advanced Spark Settings", list)
+    addStandardSparkOptions(operatorDialog, List[SparkParameter]())
   }
 
   /**
@@ -55,15 +79,8 @@ object SparkParameterUtils {
                                               additionalSparkParameters: List[SparkParameter] =
                                               List.empty[SparkParameter]) {
     val list = List(
-      new SparkParameter(sparkNumExecutorsElementId, "Number of Executors", defaultNumExecutors.toString, false, false),
-      new SparkParameter(sparkExecutorMBElementId, "Executor Memory in MB", defaultExecutorMemoryMB.toString, false, false),
-      new SparkParameter(sparkDriverMBElementId, "Driver Memory in MB", defaultDriverMemoryMB.toString, false, false),
-      new SparkParameter(sparkNumExecutorCoresElementId, "Number of Executor Cores",
-        defaultNumExecutorCores.toString, false, false),
-      new SparkParameter(storageLevelParamId, "Storage Level", defaultStorageLevel, false, false)
-      //TODO Add dynamic allocation param
-    )
-    operatorDialog.addAdvancedSparkSettingsBox("sparkSettings", "Advanced Spark Settings", list ++ additionalSparkParameters)
+      new SparkParameter(storageLevelParamId, "Storage Level", defaultStorageLevel, false, false))
+    addStandardSparkOptions(operatorDialog,list ++ additionalSparkParameters)
   }
 
   def getStorageLevel(operatorParameters: OperatorParameters): Option[String] = {

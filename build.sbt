@@ -2,7 +2,7 @@ import sbtassembly.Plugin._
 import AssemblyKeys._
 //import com.typesafe.sbt.SbtGit.GitKeys
 
-val sdkVersion = "1.7"
+val sdkVersion = "1.8-alpha"
 
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
@@ -86,7 +86,7 @@ lazy val Common = Project(
   settings = Seq(
     libraryDependencies ++= Seq(
       scalaTestDep % "test",
-      gsonDependency
+      gsonDependency, jodaTimeDependency
     )
   ) ++ publishParameters("common")
 )

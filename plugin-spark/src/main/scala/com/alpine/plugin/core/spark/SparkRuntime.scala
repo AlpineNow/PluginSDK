@@ -5,8 +5,7 @@
 package com.alpine.plugin.core.spark
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
-import com.alpine.plugin.core.io.IOBase
-import com.alpine.plugin.core.utils.SparkParameterUtils
+import com.alpine.plugin.core.io.{HdfsParquetDataset, IOBase}
 import com.alpine.plugin.core.{OperatorRuntime, _}
 import com.alpine.plugin.generics.GenericUtils
 
@@ -91,7 +90,6 @@ abstract class SparkRuntimeWithIOTypedJob[
     val jobClass = genericTypeArgs.get("J").asInstanceOf[Class[J]]
     val jobTypeName = jobClass.getName
     listener.notifyMessage("Submitting " + jobTypeName)
-
     submittedJob = context.submitJob(
       jobClass,
       input,
@@ -105,57 +103,47 @@ abstract class SparkRuntimeWithIOTypedJob[
 
   /**
    * The default implementation looks for the parameter values that would be included
-   * by [[com.alpine.plugin.core.utils.SparkParameterUtils.addStandardSparkOptions]].
-   * This covers:
-   * -- Number of Spark Executors
-   * -- Memory per Executor in MB.
-   * -- Driver Memory in MB.
-   * -- Cores per executor.
-   * If those parameters are not present, it uses the default values (3, 2048, 2048, 1)
-   * respectively.
-   *
-   * Override this method to change the default Spark job configuration
-   * (to add additional parameters or change how the standard ones are set).
+   * by [[com.alpine.plugin.core.utils.SparkParameterUtils.addStandardSparkOptions]]. If these are
+    * not provided we call out to Alpine's Spark Auto Tuning algorithm, which will determine them.
+    * The result of this method is an object which we will use to determine the Spark settings.
+    * The SparkJobConfiguration object contains three fields.
+    * 1. A map with the advanced parameters. This should be the parameters in the "Advanced Spark
+    * Parameters" box. However, if you would like to modify these values, or add your own Spark options
+    * here, you may do that by adding those values to this object.
+    * 2. A boolean "autoTuneMissingValues". If set to false, this will disable the auto tuning. In this
+    * case you must fill in the values of
+    * "spark.executor.memory" "spark.driver.memory" and "spark.executor.instances"
+    *  in the "userDefinedParameters" object
+    * 3. Options that will be used for the Auto Tuning.
+    * See com.alpine.plugin.core.spark.SparkJobConfiguration for details
    *
    * @param parameters Parameters of the operator.
    * @param input The input to the operator.
    * @return The Spark job configuration that will be used to submit the Spark job.
    */
   def getSparkJobConfiguration(parameters: OperatorParameters, input: I): SparkJobConfiguration = {
-    // TODO: Not the best way for determining default values?
-    val numExecutors: Int =
-      if (parameters.contains(SparkParameterUtils.sparkNumExecutorsElementId)) {
-        parameters.getIntValue(SparkParameterUtils.sparkNumExecutorsElementId)
-      } else {
-        3
-      }
-    val executorMemoryMB: Int  =
-      if (parameters.contains(SparkParameterUtils.sparkExecutorMBElementId)) {
-        parameters.getIntValue(SparkParameterUtils.sparkExecutorMBElementId)
-      } else {
-        2048
-      }
-    val driverMemoryMB: Int  =
-      if (parameters.contains(SparkParameterUtils.sparkDriverMBElementId)) {
-        parameters.getIntValue(SparkParameterUtils.sparkDriverMBElementId)
-      } else {
-        2048
-      }
-    val numExecutorCores: Int  =
-      if (parameters.contains(SparkParameterUtils.sparkNumExecutorCoresElementId)) {
-        parameters.getIntValue(SparkParameterUtils.sparkNumExecutorCoresElementId)
-      } else {
-        1
-      }
-    val sparkJobConfiguration =
-      new SparkJobConfiguration(
-        numExecutors = numExecutors,
-        executorMemoryMB = executorMemoryMB,
-        driverMemoryMB = driverMemoryMB,
-        numExecutorCores = numExecutorCores,
-        additionalParameters = parameters.getAdvancedSparkParameters
-      )
-    sparkJobConfiguration
+    val params = parameters.getAdvancedSparkParameters
+    SparkJobConfiguration(userDefinedParameters = params, autoTuneMissingValues = true,
+      autoTunerOptions = getAutoTuningOptions(parameters, input))
+  }
+
+
+  /**
+    * Set the options passed to our Spark Auto Tuner which will choose optimal Spark configuration
+    * settings for values not provided by the user based on the size of the cluster, the input
+    * data and the type of computation.
+    * See documentation for the AutoTunerOptions object for more details on what the settings in this
+    * object mean.
+    * Set only the auto tuning options by overriding this method.
+    * To change the parameters passed the Spark Configuration more comprehensively override
+    * 'getSparkJobConfiguration' and this method will be ignored.
+    */
+  def getAutoTuningOptions(parameters: OperatorParameters, input: I) : AutoTunerOptions= {
+    val fileSizeMultiplier = input match {
+      case p : HdfsParquetDataset => 6.0 //compressed data is smaller in memory
+      case _ => 4.0
+    }
+    AutoTunerOptions(1.0, fileSizeMultiplier)
   }
 
   def onStop(

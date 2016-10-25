@@ -42,6 +42,18 @@ object SQLUtility {
     "(CASE" + comparisonSQL(labelValuesToColumnNames) + " END)"
   }
 
+  def minOrMaxByRowSQL(columnNames: Seq[ColumnName], comparator: String, sqlGenerator: SQLGenerator): String = {
+    def comparisonSQL(columnNamesSubList: Seq[ColumnName]): String = {
+      if (columnNamesSubList.size == 1) " ELSE " + columnNamesSubList.head.escape(sqlGenerator)
+      else " WHEN (" + {
+        comparedToOthers(columnNamesSubList.head, columnNamesSubList.tail, comparator, sqlGenerator) +
+          ") THEN " + columnNamesSubList.head.escape(sqlGenerator) +
+          comparisonSQL(columnNamesSubList.tail)
+      }
+    }
+    "(CASE" + comparisonSQL(columnNames) + " END)"
+  }
+
   def argMinSQL(labelValuesToColumnNames: Seq[(String, ColumnName)], sqlGenerator: SQLGenerator) = {
     argMinOrMaxSQL(labelValuesToColumnNames, "<", sqlGenerator)
   }
