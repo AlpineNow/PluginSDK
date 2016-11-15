@@ -4,9 +4,10 @@ import com.alpine.plugin.core.spark.utils.BadDataReportingUtils
 import com.alpine.plugin.core.utils.HdfsParameterUtils
 import com.alpine.plugin.test.mock.OperatorParametersMock
 import com.alpine.plugin.test.utils.{OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{Row, SQLContext}
+import org.apache.spark.sql.{DataFrame, Row, SQLContext}
 
 import scala.reflect.io.File
 import scala.util.Try
@@ -85,25 +86,15 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
 
   test("NullDataAndReportGeneralMethod") {
     val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
-    val mockParams = new OperatorParametersMock("TestNullData", "Two")
-    OperatorParameterMockUtil.addHdfsParamsDefault(mockParams, "TestNullData")
-    mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, HdfsParameterUtils.badDataReportALL)
-    val (filteredDF, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
-      goodInputData, mockParams, sparkUtils, "because it is evil")
-    assert(filteredDF.count() == 3)
-    val badDataFile = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
+
+    val (badDataFile, df, message) = testBadDataReporting(HdfsParameterUtils.badDataReportALL, goodInputData)
     assert(badDataFile.isDirectory)
     assert(message.contains("Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows"))
   }
 
   test("Bad data with nothing in it "){
     val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows), inputSchema)
-    val mockParams = new OperatorParametersMock("Thing", "One")
-     OperatorParameterMockUtil.addHdfsParamsDefault(mockParams, "BadDataTest")
-     mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, HdfsParameterUtils.badDataReportALL)
-    val (badDataDf, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
-      goodInputData, mockParams, sparkUtils, "because it is evil")
-    val badDataFile = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
+    val (badDataFile, badDataDf, message) = testBadDataReporting(HdfsParameterUtils.badDataReportALL, goodInputData)
     assert(!badDataFile.isDirectory)
     assert(message.contains("No data removed because it is evil"))
     assert(!message.contains("null"))
@@ -115,19 +106,73 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
 
   test("Test Null Data Reporting NOT counting the rows ") {
     val inputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
+
+    val (badDataFile, df, msg) = testBadDataReporting(HdfsParameterUtils.badDataReportNO_COUNT, inputData)
+    testNotRemovingTheRows(badDataFile, df, msg)
+  }
+
+
+  test("Bad Data Reporting with old parameter values  ") {
+    val inputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
+
+   val badDataReportNO_COUNT = {
+     //Testing in the not counting and not writing to file case
+     val (badDataFile, df, msg) = testBadDataReporting("No and Do Not Count Rows Removed (Fastest)", inputData)
+     testNotRemovingTheRows(badDataFile, df, msg)
+   }
+
+    val badDataReport_NO = {
+      val (badDataFile, df, msg) = testBadDataReporting("No", inputData)
+      assert(!badDataFile.isDirectory)
+      assert(df.count() == inputRows.length)
+      assert(msg.contains("Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows"))
+    }
+
+    val badDataReport_YES = {
+      val (badDataFile, df, msg) = testBadDataReporting("Yes", inputData)
+      assert(badDataFile.isDirectory)
+      assert(df.count() == inputRows.length)
+      assert(msg.contains("Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows"))
+      badDataFile.deleteRecursively()
+    }
+
+    val badDataReport_PARTIAL = {
+      val (badDataFile, df, msg) = testBadDataReporting("Partial (" + HdfsParameterUtils.DEFAULT_NUMBER_ROWS +") Rows", inputData)
+      assert(badDataFile.isDirectory)
+      assert(df.count() == inputRows.length)
+      assert(msg.contains("Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows"))
+      badDataFile.deleteRecursively()
+    }
+
+  }
+
+  def testBadDataReporting(badDataOption : String, inputData : DataFrame): (File, DataFrame, String) ={
     val mockParams = new OperatorParametersMock("Thing", "One")
     OperatorParameterMockUtil.addHdfsParamsDefault(mockParams, "BadDataTest")
-    mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, HdfsParameterUtils.badDataReportNO_COUNT)
-    val (badDataDf, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
+    mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, badDataOption)
+
+    val f = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
+    if(f.isDirectory){
+      f.deleteRecursively();
+    }
+    val (goodData, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
       inputData, mockParams, sparkUtils, "because it is evil")
+
     val badDataFile = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
-    assert(badDataDf.count() == inputRows.length)
-    assert(!badDataFile.isDirectory)
-    assert(message.contains("because it is evil"))
-    assert(message.contains("You have selected not to count the number of rows removed to speed up the computation of the operator."))
-    assert(!message.contains("null"))
+    (badDataFile, goodData, message)
   }
+
+
+  def testNotRemovingTheRows(badDataFile : File, badDataDF: DataFrame, msg : String) = {
+    assert(badDataDF.count() == inputRows.length)
+    assert(!badDataFile.isDirectory)
+    assert(msg.contains("You have selected not to count the number" +
+      " of rows removed to speed up the computation of the operator."))
+    assert(!msg.contains("null"))
+  }
+
 }
+
 
 object RowProcessingUtil extends Serializable {
   def containsZeros(r: Row): Boolean = {

@@ -31,3 +31,5 @@ case object UpTrapezium extends IconShape
 case object DownTrapezium extends IconShape
 case object StarBurst extends IconShape
 case object SubFlow extends IconShape
+
+//NOTE: if you add another shape, please add to ChorusImageUtility.java init

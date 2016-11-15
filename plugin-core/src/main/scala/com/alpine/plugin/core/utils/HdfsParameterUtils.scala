@@ -220,12 +220,13 @@ object HdfsParameterUtils extends OutputParameterUtils {
 
   //bad data Reporting:
   val badDataReportParameterID = "badData"
-  val badDataReportNO = "No"
-  val badDataReportALL = "Yes"
+  val badDataReportNO = "Do Not Write Null Rows to File"
+  val badDataReportALL = "Write All Null Rows to File"
   val DEFAULT_NUMBER_ROWS = 1000
-  val badDataReportNROWS = "Partial (" + DEFAULT_NUMBER_ROWS +") Rows"
-  val badDataReportNO_COUNT = "No and Do Not Count Rows Removed (Fastest)"
-  val badDataParameterOptions = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL, badDataReportNO_COUNT)
+  val badDataReportNROWS = "Write Up to " + DEFAULT_NUMBER_ROWS  + " Null Rows to File"
+  val badDataReportNO_COUNT = "Do Not Write or Count Null Rows (Fastest)"
+  val badDataParameterOptions = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL,
+    badDataReportNO_COUNT)
   val badDataLocation = "_BadData"
 
   @deprecated("Use addNullDataReportParameter")
@@ -241,8 +242,12 @@ object HdfsParameterUtils extends OutputParameterUtils {
     badDataSelector
   }
 
+  def getNullDataReportParameter(parameters: OperatorParameters):String = {
+    convertParamaterValueFromLegacy(parameters.getStringValue(badDataReportParameterID))
+  }
+
   def getAmountOfBadDataToWrite(parameters: OperatorParameters) : Option[Long] = {
-    val paramValue = parameters.getStringValue(badDataReportParameterID)
+    val paramValue = getNullDataReportParameter(parameters)
     if(paramValue.equals(badDataReportNO)) {
       None
     } else if(paramValue.equals(badDataReportNROWS)){
@@ -254,8 +259,25 @@ object HdfsParameterUtils extends OutputParameterUtils {
     }
   }
 
+  private def convertParamaterValueFromLegacy(oldValue : String) = {
+    if(badDataParameterOptions.contains(oldValue)){
+      oldValue
+    } else
+    oldValue match {
+      case ("No") => badDataReportNO
+      case ("Yes") => badDataReportALL
+      case ("Partial (1000) Rows") => badDataReportNROWS
+      case ("No and Do Not Count Rows Removed (Fastest)") => badDataReportNO_COUNT
+      case (_) => {
+        println(" Warning could not find reference for parameter value " + oldValue)
+        badDataReportNO
+      }
+    }
+  }
+
   def countRowsRemovedDueToNullData(parameters: OperatorParameters): Boolean = {
-    !parameters.getStringValue(badDataReportParameterID).equals(badDataReportNO_COUNT)
+    val paramValue = getNullDataReportParameter(parameters)
+    !paramValue.equals(badDataReportNO_COUNT)
   }
 
 
