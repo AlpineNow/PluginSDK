@@ -2,7 +2,7 @@ import sbtassembly.Plugin._
 import AssemblyKeys._
 //import com.typesafe.sbt.SbtGit.GitKeys
 
-val sdkVersion = "1.8-alpha"
+val sdkVersion = "1.8"
 
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
