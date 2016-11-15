@@ -13,7 +13,7 @@ import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.types.TimestampType
-import org.apache.spark.sql.{Column, DataFrame, SQLContext}
+import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.joda.time.format.DateTimeFormat
 
 import scala.util.Try
@@ -420,7 +420,6 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
           map.get(columnName) match {
             case None => dataFrame(columnName)
             case Some(format) =>
-           //   lazy val unixCol = DateTimeUdfs.toUnixTimeStampViaJoda(format)(dataFrame(columnName))
               lazy val javaTimestamp = DateTimeUdfs.nullableStringToTimeStampViaJoda(format)(dataFrame(columnName))
               val nulled = when(javaTimestamp.isNull, lit(null))
                 .otherwise(javaTimestamp)
