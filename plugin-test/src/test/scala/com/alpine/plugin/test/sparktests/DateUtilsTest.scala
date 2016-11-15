@@ -5,7 +5,7 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType, TSVAttributes, TabularS
 import com.alpine.plugin.core.spark.utils.{SparkRuntimeUtils, SparkSchemaUtils, SparkSqlDateTimeUtils}
 import com.alpine.plugin.test.utils.TestSparkContexts
 import org.apache.spark._
-import org.apache.spark.sql.Row
+
 import org.apache.spark.sql.types._
 import org.scalatest.FunSuite
 
@@ -70,6 +70,20 @@ class DateUtilsTest extends FunSuite {
     val correctedDF = sparkUtils.mapDFtoCustomDateTimeFormat(asDates, map)
     val result = correctedDF.collect()
     assert(result.head(0).toString.equals("12/07/1991"))
+
+  }
+
+
+  test("Round trip date conversion with bad data") {
+    val rows_badData = Seq("rg/07/1991,6:30,1,1991-12-07",
+      "1045/074,5:25,2,1991-07-07").map(r => sql.Row.fromSeq(r.split(",")))
+
+    val df = sqlContext.createDataFrame(sc.parallelize(rows_badData), sqlSchema)
+    val asDates = sparkUtils.mapDFtoUnixDateTime(df, dateFormatMap)
+    val map = sparkUtils.getDateMap(dateSchema)
+    val correctedDF = sparkUtils.mapDFtoCustomDateTimeFormat(asDates, map)
+    val result = correctedDF.collect()
+    assert(result(0).get(0) == null, "Expected malformed date string to be null after parsing")
 
   }
 
@@ -157,7 +171,6 @@ class DateUtilsTest extends FunSuite {
     assert(roundTripAsString.first().contains(
       "2016-09-06T09:46:44.191-07:00,2016-09-06T09:46:44.222-07:00"))
   }
-
 
 }
 

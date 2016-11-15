@@ -420,9 +420,9 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
           map.get(columnName) match {
             case None => dataFrame(columnName)
             case Some(format) =>
-              lazy val unixCol = DateTimeUdfs.toUnixTimeStampViaJoda(format)(dataFrame(columnName))
-              val nulled = when(unixCol.isNull, lit(null))
-                .otherwise(DateTimeUdfs.toTimestampFromUTC(format)(unixCol))
+              lazy val javaTimestamp = DateTimeUdfs.nullableStringToTimeStampViaJoda(format)(dataFrame(columnName))
+              val nulled = when(javaTimestamp.isNull, lit(null))
+                .otherwise(javaTimestamp)
               nulled.cast(TimestampType
               ).as(columnName, dataFrame.schema(columnName).metadata)
           })
