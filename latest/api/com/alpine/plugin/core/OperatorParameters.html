@@ -211,6 +211,40 @@ in the object.</p></div><dl class="paramcmts block"><dt class="param">parameterI
 NOTE: If the parameter was not required and the user didn't select a column this will return
 an empty string.</p></div><dl class="paramcmts block"><dt class="param">parameterId</dt><dd class="cmt"><p>The parameter Id of the column dropdown dialog element.</p></dd><dt>returns</dt><dd class="cmt"><p>A tuple of a source operator name and a selected column name.
 </p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.OperatorParameters#getTabularDatasetSelectedColumnName" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getTabularDatasetSelectedColumnName(parameterId:String):String"></a>
+      <a id="getTabularDatasetSelectedColumnName(String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTabularDatasetSelectedColumnName</span><span class="params">(<span name="parameterId">parameterId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Get the selected column from a tabular dataset output of an input operator.</p><div class="fullcomment"><div class="comment cmt"><p>Get the selected column from a tabular dataset output of an input operator.
+This is a Java-friendly version.
+NOTE: If the parameter was not required and the user didn't select a column this will return
+an empty string.</p></div><dl class="paramcmts block"><dt class="param">parameterId</dt><dd class="cmt"><p>The parameter Id of the column dropdown dialog element.</p></dd><dt>returns</dt><dd class="cmt"><p>The selected column name.
+</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.OperatorParameters#getTabularDatasetSelectedColumnNames" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getTabularDatasetSelectedColumnNames(parameterId:String):Array[String]"></a>
+      <a id="getTabularDatasetSelectedColumnNames(String):Array[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getTabularDatasetSelectedColumnNames</span><span class="params">(<span name="parameterId">parameterId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Get the selected columns from a tabular dataset output of an input operator.</p><div class="fullcomment"><div class="comment cmt"><p>Get the selected columns from a tabular dataset output of an input operator.
+This is a Java-friendly version.
+NOTE: If the parameter was not required and the user did not input a value then this method
+will return and empty array.</p></div><dl class="paramcmts block"><dt class="param">parameterId</dt><dd class="cmt"><p>The parameter Id of the column checkboxes dialog element.</p></dd><dt>returns</dt><dd class="cmt"><p>An array of selected column names.
+</p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.OperatorParameters#getTabularDatasetSelectedColumns" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getTabularDatasetSelectedColumns(parameterId:String):(String,Array[String])"></a>
       <a id="getTabularDatasetSelectedColumns(String):(String,Array[String])"></a>

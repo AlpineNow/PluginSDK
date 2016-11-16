@@ -503,11 +503,13 @@ It can be accessed with SparkSqlDateTimeUtils.getDatFormatInfo(structField) for 
         <span class="name">mapDFtoCustomDateTimeFormat</span><span class="params">(<span name="dataFrame">dataFrame: <span class="extype" name="org.apache.spark.sql.DataFrame">DataFrame</span></span>, <span name="map">map: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result">: <span class="extype" name="org.apache.spark.sql.DataFrame">DataFrame</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">JAVA TIME STAMP OBJECT--&gt; STRING
-Take in a dataFrame and map of the column names to the date formats we want to print and use
-the Spark SQL UDF date_format to convert from the TimeStamp type to a string representation of the date or time.</p><div class="fullcomment"><div class="comment cmt"><p>JAVA TIME STAMP OBJECT--&gt; STRING
-Take in a dataFrame and map of the column names to the date formats we want to print and use
-the Spark SQL UDF date_format to convert from the TimeStamp type to a string representation of the date or time.
+      <p class="shortcomment cmt">JAVA TIME STAMP OBJECT--&gt; STRING  (via joda)
+Take in a dataFrame and map of the column names to the date formats we want to print.</p><div class="fullcomment"><div class="comment cmt"><p>JAVA TIME STAMP OBJECT--&gt; STRING  (via joda)
+Take in a dataFrame and map of the column names to the date formats we want to print. Convert
+to a dateFrames  with the date columns as strings formatted correctly according to the map.
+Because the format is in joda time, we have to round trip via unix time.
+We use a udf to convert to a column with a Sql.TimeStamp type to a unix time, and then use
+Joda to format the unix time stamp according to the column format string provided in the map.
 </p></div><dl class="paramcmts block"><dt class="param">dataFrame</dt><dd class="cmt"><p>input data where date columns are represented as java TimeStamp Objects</p></dd><dt class="param">map</dt><dd class="cmt"><p>columnName -&gt; dateFormat to convert to
 </p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.spark.utils.SparkRuntimeUtils#mapDFtoUnixDateTime" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -523,12 +525,14 @@ the Spark SQL UDF date_format to convert from the TimeStamp type to a string rep
       </span>
       </h4>
       <p class="shortcomment cmt">STRING -&gt; JAVA TIMESTAMP OBJECT (based on unix time stamp)
-Take in a dataframe and a map of the column names to the date formats represented in them
-and use the Spark SQL: &quot;unix_timestamp&quot; UDF,  to change the columns with string dates into
-unix timestamps in seconds and a custom udf to change that into java dates.</p><div class="fullcomment"><div class="comment cmt"><p>STRING -&gt; JAVA TIMESTAMP OBJECT (based on unix time stamp)
-Take in a dataframe and a map of the column names to the date formats represented in them
-and use the Spark SQL: &quot;unix_timestamp&quot; UDF,  to change the columns with string dates into
-unix timestamps in seconds and a custom udf to change that into java dates.
+Take in a DataFrame and a map of the column names to the date formats represented in them
+and change the columns with string dates into JAVA TIME STAMP objects by parsing them according
+to the format defined in the map.</p><div class="fullcomment"><div class="comment cmt"><p>STRING -&gt; JAVA TIMESTAMP OBJECT (based on unix time stamp)
+Take in a DataFrame and a map of the column names to the date formats represented in them
+and change the columns with string dates into JAVA TIME STAMP objects by parsing them according
+to the format defined in the map.
+Because Alpine uses Joda date formats, we use joda to parse the date strings into unix time stamps,
+and then convert unix time stamps to java sql objects.
 Preserves original naming of the columns. Columns which were originally DateTime columns will
 now be of TimeStampType rather than StringType.
 </p></div><dl class="paramcmts block"><dt class="param">dataFrame</dt><dd class="cmt"><p>the input dataframe where the date rows are as strings.</p></dd><dt class="param">map</dt><dd class="cmt"><p>columnName -&gt; dateFormat for parsing</p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">Exception<p>&quot;Illegal Date Format&quot; if one of the date formats provided is not a valid

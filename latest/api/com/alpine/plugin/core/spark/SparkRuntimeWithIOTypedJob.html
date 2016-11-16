@@ -256,6 +256,29 @@ serialization logic, you could use this class with SparkIOTypedPluginJob and sim
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob#getAutoTuningOptions" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getAutoTuningOptions(parameters:com.alpine.plugin.core.OperatorParameters,input:I):com.alpine.plugin.core.spark.AutoTunerOptions"></a>
+      <a id="getAutoTuningOptions(OperatorParameters,I):AutoTunerOptions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAutoTuningOptions</span><span class="params">(<span name="parameters">parameters: <a href="../OperatorParameters.html" class="extype" name="com.alpine.plugin.core.OperatorParameters">OperatorParameters</a></span>, <span name="input">input: <span class="extype" name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob.I">I</span></span>)</span><span class="result">: <a href="AutoTunerOptions.html" class="extype" name="com.alpine.plugin.core.spark.AutoTunerOptions">AutoTunerOptions</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Set the options passed to our Spark Auto Tuner which will choose optimal Spark configuration
+settings for values not provided by the user based on the size of the cluster, the input
+data and the type of computation.</p><div class="fullcomment"><div class="comment cmt"><p>Set the options passed to our Spark Auto Tuner which will choose optimal Spark configuration
+settings for values not provided by the user based on the size of the cluster, the input
+data and the type of computation.
+See documentation for the AutoTunerOptions object for more details on what the settings in this
+object mean.
+Set only the auto tuning options by overriding this method.
+To change the parameters passed the Spark Configuration more comprehensively override
+'getSparkJobConfiguration' and this method will be ignored.
+</p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -282,16 +305,20 @@ serialization logic, you could use this class with SparkIOTypedPluginJob and sim
       </span>
       </h4>
       <p class="shortcomment cmt">The default implementation looks for the parameter values that would be included
-by <a href="../utils/SparkParameterUtils$.html#addStandardSparkOptions(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,defaultNumExecutors:Int,defaultExecutorMemoryMB:Int,defaultDriverMemoryMB:Int,defaultNumExecutorCores:Int):Unit" class="extmbr" name="com.alpine.plugin.core.utils.SparkParameterUtils#addStandardSparkOptions">com.alpine.plugin.core.utils.SparkParameterUtils.addStandardSparkOptions</a>.</p><div class="fullcomment"><div class="comment cmt"><p>The default implementation looks for the parameter values that would be included
-by <a href="../utils/SparkParameterUtils$.html#addStandardSparkOptions(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,defaultNumExecutors:Int,defaultExecutorMemoryMB:Int,defaultDriverMemoryMB:Int,defaultNumExecutorCores:Int):Unit" class="extmbr" name="com.alpine.plugin.core.utils.SparkParameterUtils#addStandardSparkOptions">com.alpine.plugin.core.utils.SparkParameterUtils.addStandardSparkOptions</a>.
-This covers:
--- Number of Spark Executors
--- Memory per Executor in MB.
--- Driver Memory in MB.
--- Cores per executor.
-If those parameters are not present, it uses the default values (3, 2048, 2048, 1)
-respectively.</p><p>Override this method to change the default Spark job configuration
-(to add additional parameters or change how the standard ones are set).
+by <a href="../utils/SparkParameterUtils$.html#addStandardSparkOptions(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,additionalSparkParameters:List[com.alpine.plugin.core.dialog.SparkParameter]):Unit" class="extmbr" name="com.alpine.plugin.core.utils.SparkParameterUtils#addStandardSparkOptions">com.alpine.plugin.core.utils.SparkParameterUtils.addStandardSparkOptions</a>.</p><div class="fullcomment"><div class="comment cmt"><p>The default implementation looks for the parameter values that would be included
+by <a href="../utils/SparkParameterUtils$.html#addStandardSparkOptions(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,additionalSparkParameters:List[com.alpine.plugin.core.dialog.SparkParameter]):Unit" class="extmbr" name="com.alpine.plugin.core.utils.SparkParameterUtils#addStandardSparkOptions">com.alpine.plugin.core.utils.SparkParameterUtils.addStandardSparkOptions</a>. If these are
+not provided we call out to Alpine's Spark Auto Tuning algorithm, which will determine them.
+The result of this method is an object which we will use to determine the Spark settings.
+The SparkJobConfiguration object contains three fields.
+1. A map with the advanced parameters. This should be the parameters in the &quot;Advanced Spark
+Parameters&quot; box. However, if you would like to modify these values, or add your own Spark options
+here, you may do that by adding those values to this object.
+2. A boolean &quot;autoTuneMissingValues&quot;. If set to false, this will disable the auto tuning. In this
+case you must fill in the values of
+&quot;spark.executor.memory&quot; &quot;spark.driver.memory&quot; and &quot;spark.executor.instances&quot;
+ in the &quot;userDefinedParameters&quot; object
+3. Options that will be used for the Auto Tuning.
+See com.alpine.plugin.core.spark.SparkJobConfiguration for details
 </p></div><dl class="paramcmts block"><dt class="param">parameters</dt><dd class="cmt"><p>Parameters of the operator.</p></dd><dt class="param">input</dt><dd class="cmt"><p>The input to the operator.</p></dd><dt>returns</dt><dd class="cmt"><p>The Spark job configuration that will be used to submit the Spark job.
 </p></dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
