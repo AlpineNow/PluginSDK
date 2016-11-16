@@ -1,0 +1,855 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>SQLExecutor - com.alpine.sql.SQLExecutor</title>
+          <meta name="description" content="SQLExecutor - com.alpine.sql.SQLExecutor" />
+          <meta name="keywords" content="SQLExecutor com.alpine.sql.SQLExecutor" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.alpine.sql.SQLExecutor';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img src="../../../lib/trait_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.alpine">alpine</a>.<a href="package.html" class="extype" name="com.alpine.sql">sql</a></p>
+        <h1>SQLExecutor</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">SQLExecutor</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Created by Paul Chang 2016-07-12 (6.1 release)</p><p>The purpose of SQLExecutor is to provide an object to facilitate the execution of commonly used SQL queries.
+All DDL (data definition language) methods are prefixed with &quot;ddl...&quot;. These are methods that create, modify, or
+drop database objects (tables, views, etc.).</p><p>Each SQLExecutor is instantiated with a SQLGenerator, URL, and JDBC Connection. The SQLGenerator is used to
+generate SQL, and the Connection is used to execute SQL. The URL is informational. Several of the methods in
+SQLGenerator are called by corresponding methods in SQLExecutor and have similar signatures, but unlike
+SQLGenerator, SQLExecutor will actually execute SQL. SQLGenerator objects are database-type specific, so
+different SQLGenerator objects are instantiated for different database types.</p><p>Once instantiated, the SQLGenerator, URL, and Connection for a SQLExecutor do not change. Aside from database
+changes, this object has no side-effects once instantiated.</p><p>For certain methods, when specifying table names, fully qualify and delimit as necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot;). Delimiting is required for table names with non-standard characters
+([A-Za-z][A-Za-z0-9]*). Not all databases support delimiters or non-standard characters (such as Teradata).
+For those databases that support schemas, specifying the schema name is recommended.</p><p>For certain methods, when specifying column names, these must be a comma-separated string of columns
+that one would find in a SELECT query. This can include expressions that are aliased
+(i.e. sqlexpression AS aliasname). Any columns with non-standard characters should be delimited
+(i.e. &quot;columnname&quot;). When SELECTing from more than one table, if column names are not unique,
+then columns should be fully qualified (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;columnalias&quot;).</p><p>For certain methods, when specifying a source table, it is permissible to specify more than one table as a join
+(i.e. table1 INNER JOIN table2 ON ...).</p><p>For certain methods, when specifying a whereClause, the literal &quot;WHERE&quot; should be included.
+Note that we can include anything that follows a FROM clause here, such as GROUP BY, ORDER BY, etc.
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.alpine.sql.SQLExecutor"><span>SQLExecutor</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        
+
+        <div id="values" class="values members">
+              <h3>Abstract Value Members</h3>
+              <ol><li name="com.alpine.sql.SQLExecutor#ddlCreateTableAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateTableAsSelect(selectQuery:String,destinationTable:String):Unit"></a>
+      <a id="ddlCreateTableAsSelect(String,String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateTableAsSelect</span><span class="params">(<span name="selectQuery">selectQuery: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationTable">destinationTable: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a table based on a given SELECT query, not necessarily from any particular table.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a table based on a given SELECT query, not necessarily from any particular table.
+The entire SELECT query must be supplied to generate something like
+&quot;CREATE TABLE destinationTable AS selectQuery&quot;.
+This method is useful for calls to UDFs or stored procedures that might be database-specific
+and don't conform to selecting columns from a source table.</p><p>NOTE: Currently, this works only on certain databases like PostgreSQL, Greenplum, Oracle, MySQL, Teradata,
+but not MSSQL, which does not support CREATE TABLE ... AS SELECT ....</p><p>Table name should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).</p><p>selectQuery is not necessarily a SELECT query, but any query that can feed the CREATE TABLE statement.
+</p></div><dl class="paramcmts block"><dt class="param">selectQuery</dt><dd class="cmt"><p>query (not necessary SELECT) to be used for CREATE TABLE</p></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>name of destination table to be created from SELECT query
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlCreateTableAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateTableAsSelect(columns:String,sourceTable:String,destinationTable:String,whereClause:String):Unit"></a>
+      <a id="ddlCreateTableAsSelect(String,String,String,String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateTableAsSelect</span><span class="params">(<span name="columns">columns: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceTable">sourceTable: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationTable">destinationTable: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="whereClause">whereClause: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a table based on a SELECT query from the specified table, column list, and where clause.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a table based on a SELECT query from the specified table, column list, and where clause.</p><p>Table names should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).
+It is acceptable to specify a table join as the sourceTable (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)</p><p>The specified WHERE clause should include the &quot;WHERE&quot; keyword. Note that this is simply SQL that
+is appended to the query as &quot;SELECT columns FROM sourceTable whereClause&quot; and can include other
+SQL outside of just a WHERE clause, such as GROUP BY, ORDER BY, etc.
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>name of destination table to be created from SELECT query</p></dd><dt class="param">whereClause</dt><dd class="cmt"><p>where clause of the SELECT query, including the literal &quot;WHERE&quot; keyword
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlCreateTableAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateTableAsSelect(columns:String,sourceTable:String,destinationTable:String):Unit"></a>
+      <a id="ddlCreateTableAsSelect(String,String,String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateTableAsSelect</span><span class="params">(<span name="columns">columns: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceTable">sourceTable: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationTable">destinationTable: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a table based on a SELECT query from the specified table and column list.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a table based on a SELECT query from the specified table and column list.</p><p>Table names should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).
+It is acceptable to specify a table join as the sourceTable (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>name of destination table to be created from SELECT query
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlCreateTableOrViewAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateTableOrViewAsSelect(selectQuery:String,destinationTableOrView:String,isView:Boolean):Unit"></a>
+      <a id="ddlCreateTableOrViewAsSelect(String,String,Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateTableOrViewAsSelect</span><span class="params">(<span name="selectQuery">selectQuery: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationTableOrView">destinationTableOrView: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isView">isView: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a table or view based on a given SELECT query, not necessarily from any particular table.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a table or view based on a given SELECT query, not necessarily from any particular table.
+The entire SELECT query must be supplied to generate something like
+&quot;CREATE TABLE destinationTable AS selectQuery&quot; or &quot;CREATE VIEW destinationView AS selectQuery.
+This method is useful for calls to UDFs or stored procedures that might be database-specific
+and don't conform to selecting columns from a source table.</p><p>NOTE: Currently, table creation does not work on MSSQL, which does not support
+CREATE TABLE ... AS SELECT ....</p><p>Table or view name should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot; or &quot;schemaname&quot;.&quot;viewname&quot;).</p><p>selectQuery is not necessarily a SELECT query, but any query that can feed the CREATE TABLE statement.
+</p></div><dl class="paramcmts block"><dt class="param">selectQuery</dt><dd class="cmt"><p>query (not necessary SELECT) to be used for CREATE TABLE</p></dd><dt class="param">destinationTableOrView</dt><dd class="cmt"><p>name of destination table to be created from SELECT query</p></dd><dt class="param">isView</dt><dd class="cmt"><p>true if we are generating a view, false if we are generating a table
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlCreateTableOrViewAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateTableOrViewAsSelect(columns:String,sourceTable:String,destinationTableOrView:String,whereClause:String,isView:Boolean):Unit"></a>
+      <a id="ddlCreateTableOrViewAsSelect(String,String,String,String,Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateTableOrViewAsSelect</span><span class="params">(<span name="columns">columns: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceTable">sourceTable: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationTableOrView">destinationTableOrView: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="whereClause">whereClause: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isView">isView: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a table or view based on a SELECT query from an existing table, column list, and where clause.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a table or view based on a SELECT query from an existing table, column list, and where clause.</p><p>Table and view names should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot; or &quot;schemaname&quot;.&quot;viewname&quot;).
+It is acceptable to specify a table join as the sourceTable (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)</p><p>The specified WHERE clause should include the &quot;WHERE&quot; keyword. Note that this is simply SQL that
+is appended to the query as &quot;SELECT columns FROM sourceTable whereClause&quot; and can include other
+SQL outside of just a WHERE clause, such as GROUP BY, ORDER BY, etc.
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationTableOrView</dt><dd class="cmt"><p>name of destination table or view to be created from SELECT query</p></dd><dt class="param">whereClause</dt><dd class="cmt"><p>where clause of the SELECT query, including the literal &quot;WHERE&quot; keyword</p></dd><dt class="param">isView</dt><dd class="cmt"><p>true if we are generating a view, false if we are generating a table
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlCreateTableOrViewAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateTableOrViewAsSelect(columns:String,sourceTable:String,destinationTableOrView:String,isView:Boolean):Unit"></a>
+      <a id="ddlCreateTableOrViewAsSelect(String,String,String,Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateTableOrViewAsSelect</span><span class="params">(<span name="columns">columns: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceTable">sourceTable: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationTableOrView">destinationTableOrView: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isView">isView: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a table or view based on a SELECT query from an existing table and column list.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a table or view based on a SELECT query from an existing table and column list.</p><p>Table and view names should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot; or &quot;schemaname&quot;.&quot;viewname&quot;).
+It is acceptable to specify a table join as the sourceTable (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationTableOrView</dt><dd class="cmt"><p>name of destination table or view to be created from SELECT query</p></dd><dt class="param">isView</dt><dd class="cmt"><p>true if we are generating a view, false if we are generating a table
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlCreateViewAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateViewAsSelect(selectQuery:String,destinationView:String):Unit"></a>
+      <a id="ddlCreateViewAsSelect(String,String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateViewAsSelect</span><span class="params">(<span name="selectQuery">selectQuery: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationView">destinationView: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a view based on a given SELECT query, not necessarily from any particular table.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a view based on a given SELECT query, not necessarily from any particular table.
+The entire SELECT query must be supplied to generate something like
+&quot;CREATE VIEW destinationTable AS selectQuery&quot;.
+This method is useful for calls to UDFs or stored procedures that might be database-specific
+and don't conform to selecting columns from a source table.</p><p>Table name should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).</p><p>selectQuery is not necessarily a SELECT query, but any query that can feed the CREATE TABLE statement.
+</p></div><dl class="paramcmts block"><dt class="param">selectQuery</dt><dd class="cmt"><p>query (not necessary SELECT) to be used for CREATE VIEW</p></dd><dt class="param">destinationView</dt><dd class="cmt"><p>name of destination table to be created from SELECT query
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlCreateViewAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateViewAsSelect(columns:String,sourceTable:String,destinationView:String,whereClause:String):Unit"></a>
+      <a id="ddlCreateViewAsSelect(String,String,String,String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateViewAsSelect</span><span class="params">(<span name="columns">columns: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceTable">sourceTable: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationView">destinationView: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="whereClause">whereClause: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a view based on a SELECT query from the specified table, column list, and where clause.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a view based on a SELECT query from the specified table, column list, and where clause.</p><p>Table and view names should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot; or &quot;schemaname&quot;.&quot;viewname&quot;).
+It is acceptable to specify a table join as the sourceTable (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)</p><p>The specified WHERE clause should include the &quot;WHERE&quot; keyword. Note that this is simply SQL that
+is appended to the query as &quot;SELECT columns FROM sourceTable whereClause&quot; and can include other
+SQL outside of just a WHERE clause, such as GROUP BY, ORDER BY, etc.
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationView</dt><dd class="cmt"><p>name of destination view to be created from SELECT query</p></dd><dt class="param">whereClause</dt><dd class="cmt"><p>where clause of the SELECT query, including the literal &quot;WHERE&quot; keyword
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlCreateViewAsSelect" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlCreateViewAsSelect(columns:String,sourceTable:String,destinationView:String):Unit"></a>
+      <a id="ddlCreateViewAsSelect(String,String,String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlCreateViewAsSelect</span><span class="params">(<span name="columns">columns: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sourceTable">sourceTable: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationView">destinationView: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Generates a view based on a SELECT query from the specified table and column list.</p><div class="fullcomment"><div class="comment cmt"><p>Generates a view based on a SELECT query from the specified table and column list.</p><p>Table and view names should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot; or &quot;schemaname&quot;.&quot;viewname&quot;).
+It is acceptable to specify a table join as the sourceTable (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationView</dt><dd class="cmt"><p>name of destination view to be created from SELECT query
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlDropTableIfExists" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlDropTableIfExists(tableName:String,cascadeFlag:Boolean):Unit"></a>
+      <a id="ddlDropTableIfExists(String,Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlDropTableIfExists</span><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="cascadeFlag">cascadeFlag: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Drops table if it exists, optionally cascade drop all dependent objects</p><div class="fullcomment"><div class="comment cmt"><p>Drops table if it exists, optionally cascade drop all dependent objects</p><p>Note: Table name should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).</p><p>Note: Not all databases support cascade drop. In such cases, a DROP TABLE without a CASCADE is attempted.
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>name of the table to be dropped</p></dd><dt class="param">cascadeFlag</dt><dd class="cmt"><p>if true, drop any dependent objects as well (not supported on all databases)
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlDropTableIfExists" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlDropTableIfExists(tableName:String):Unit"></a>
+      <a id="ddlDropTableIfExists(String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlDropTableIfExists</span><span class="params">(<span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Drops table if it exists</p><div class="fullcomment"><div class="comment cmt"><p>Drops table if it exists</p><p>Note: Table name should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>name of the table to be dropped
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlDropTableOrViewIfExists" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlDropTableOrViewIfExists(tableOrViewName:String,cascadeFlag:Boolean):Unit"></a>
+      <a id="ddlDropTableOrViewIfExists(String,Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlDropTableOrViewIfExists</span><span class="params">(<span name="tableOrViewName">tableOrViewName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="cascadeFlag">cascadeFlag: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Drops table or view if it exists, optionally cascade drop all dependent objects.</p><div class="fullcomment"><div class="comment cmt"><p>Drops table or view if it exists, optionally cascade drop all dependent objects.
+SQLExecutor attempts to drop a table with the given name, and then a view with the given name</p><p>Note: Table or view name should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot; or &quot;schemaname&quot;.&quot;viewname&quot;).</p><p>Note: Not all databases support cascade drop. In such cases, a DROP TABLE or DROP VIEW
+without a CASCADE is attempted.
+</p></div><dl class="paramcmts block"><dt class="param">tableOrViewName</dt><dd class="cmt"><p>name of the table or view to be dropped</p></dd><dt class="param">cascadeFlag</dt><dd class="cmt"><p>if true, drop any dependent objects as well (not supported on all databases)
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlDropTableOrViewIfExists" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlDropTableOrViewIfExists(tableOrViewName:String):Unit"></a>
+      <a id="ddlDropTableOrViewIfExists(String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlDropTableOrViewIfExists</span><span class="params">(<span name="tableOrViewName">tableOrViewName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Drops table or view if it exists.</p><div class="fullcomment"><div class="comment cmt"><p>Drops table or view if it exists.
+SQLExecutor attempts to drop a table with the given name, and then a view with the given name</p><p>Note: Table or view name should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot; or &quot;schemaname&quot;.&quot;viewname&quot;).
+</p></div><dl class="paramcmts block"><dt class="param">tableOrViewName</dt><dd class="cmt"><p>name of the table or view to be dropped
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlDropViewIfExists" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlDropViewIfExists(viewName:String,cascadeFlag:Boolean):Unit"></a>
+      <a id="ddlDropViewIfExists(String,Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlDropViewIfExists</span><span class="params">(<span name="viewName">viewName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="cascadeFlag">cascadeFlag: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Drops view if it exists, optionally cascade drop all dependent objects</p><div class="fullcomment"><div class="comment cmt"><p>Drops view if it exists, optionally cascade drop all dependent objects</p><p>Note: View name should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;viewname&quot;).</p><p>Note: Not all databases support cascade drop. In such cases, a DROP VIEW without a CASCADE is attempted.
+</p></div><dl class="paramcmts block"><dt class="param">viewName</dt><dd class="cmt"><p>name of the view to be dropped</p></dd><dt class="param">cascadeFlag</dt><dd class="cmt"><p>if true, drop any dependent objects as well (not supported on all databases)
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#ddlDropViewIfExists" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ddlDropViewIfExists(viewName:String):Unit"></a>
+      <a id="ddlDropViewIfExists(String):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ddlDropViewIfExists</span><span class="params">(<span name="viewName">viewName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Drops view if it exists</p><div class="fullcomment"><div class="comment cmt"><p>Drops view if it exists</p><p>Note: View name should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;viewname&quot;).
+</p></div><dl class="paramcmts block"><dt class="param">viewName</dt><dd class="cmt"><p>name of the view to be dropped
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#executeQuery" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="executeQuery(sql:String):Array[Array[Object]]"></a>
+      <a id="executeQuery(String):Array[Array[AnyRef]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">executeQuery</span><span class="params">(<span name="sql">sql: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.AnyRef">AnyRef</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Executes a query that returns a ResultSet, but transforms it into an array of arrays of Objects.</p><div class="fullcomment"><div class="comment cmt"><p>Executes a query that returns a ResultSet, but transforms it into an array of arrays of Objects.
+</p></div><dl class="paramcmts block"><dt class="param">sql</dt><dd class="cmt"><p>query to execute, assumes a single ResultSet will be generated from it.</p></dd><dt>returns</dt><dd class="cmt"><p>Array of Array of Objects, transformed from ResultSet
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#executeQuery" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="executeQuery[R](sql:String,resultSetParser:com.alpine.sql.SQLExecutorResultSetParser[R]):R"></a>
+      <a id="executeQuery[R](String,SQLExecutorResultSetParser[R]):R"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">executeQuery</span><span class="tparams">[<span name="R">R</span>]</span><span class="params">(<span name="sql">sql: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resultSetParser">resultSetParser: <a href="SQLExecutorResultSetParser.html" class="extype" name="com.alpine.sql.SQLExecutorResultSetParser">SQLExecutorResultSetParser</a>[<span class="extype" name="com.alpine.sql.SQLExecutor.executeQuery.R">R</span>]</span>)</span><span class="result">: <span class="extype" name="com.alpine.sql.SQLExecutor.executeQuery.R">R</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Executes a query that returns a ResultSet and applies the ResultSetParser object to it.</p><div class="fullcomment"><div class="comment cmt"><p>Executes a query that returns a ResultSet and applies the ResultSetParser object to it.
+</p></div><dl class="paramcmts block"><dt class="tparam">R</dt><dd class="cmt"><p>Type parameter returned by SQLExecutorResultSetParser</p></dd><dt class="param">sql</dt><dd class="cmt"><p>query to execute, assumes a single ResultSet will be generated from it.</p></dd><dt class="param">resultSetParser</dt><dd class="cmt"><p>SQLExecutorResultSetParser object that takes a ResultSet and parses it to return something</p></dd><dt>returns</dt><dd class="cmt"><p>Invocation of resultSetParser on ResultSet, returns object of data type R
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#executeQuery" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="executeQuery[R](sql:String,resultSetParser:java.sql.ResultSet=&gt;R):R"></a>
+      <a id="executeQuery[R](String,(ResultSet)⇒R):R"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">executeQuery</span><span class="tparams">[<span name="R">R</span>]</span><span class="params">(<span name="sql">sql: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="resultSetParser">resultSetParser: (<span class="extype" name="java.sql.ResultSet">ResultSet</span>) ⇒ <span class="extype" name="com.alpine.sql.SQLExecutor.executeQuery.R">R</span></span>)</span><span class="result">: <span class="extype" name="com.alpine.sql.SQLExecutor.executeQuery.R">R</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Executes a query that returns a ResultSet and applies the function to it.</p><div class="fullcomment"><div class="comment cmt"><p>Executes a query that returns a ResultSet and applies the function to it.
+</p></div><dl class="paramcmts block"><dt class="tparam">R</dt><dd class="cmt"><p>Type parameter returned by resultSetParser</p></dd><dt class="param">sql</dt><dd class="cmt"><p>query to execute, assumes a single ResultSet will be generated from it.</p></dd><dt class="param">resultSetParser</dt><dd class="cmt"><p>function that takes a ResultSet and returns something</p></dd><dt>returns</dt><dd class="cmt"><p>Invocation of resultSetParser on ResultSet, returns object of data type R
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#executeUpdate" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="executeUpdate(sql:String):Int"></a>
+      <a id="executeUpdate(String):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">executeUpdate</span><span class="params">(<span name="sql">sql: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Executes a DML-like query that INSERTs, UPDATEs, or DELETEs rows.</p><div class="fullcomment"><div class="comment cmt"><p>Executes a DML-like query that INSERTs, UPDATEs, or DELETEs rows.
+</p></div><dl class="paramcmts block"><dt class="param">sql</dt><dd class="cmt"><p>DML query to execute</p></dd><dt>returns</dt><dd class="cmt"><p>number of rows affected or 0
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#getConnection" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getConnection:java.sql.Connection"></a>
+      <a id="getConnection:Connection"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getConnection</span><span class="result">: <span class="extype" name="java.sql.Connection">Connection</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns JDBC Connection object embedded within this SQLExecutor.</p><div class="fullcomment"><div class="comment cmt"><p>Returns JDBC Connection object embedded within this SQLExecutor. This is also the same Connection that this
+SQLExecutor uses to execute SQL.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the JDBC Connection object embedded within this SQLExecutor.
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#getRowCount" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getRowCount(tableOrViewName:String):Long"></a>
+      <a id="getRowCount(String):Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getRowCount</span><span class="params">(<span name="tableOrViewName">tableOrViewName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns number of rows from a table or view.</p><div class="fullcomment"><div class="comment cmt"><p>Returns number of rows from a table or view.
+</p></div><dl class="paramcmts block"><dt class="param">tableOrViewName</dt><dd class="cmt"><p>name of table or view for which to count rows</p></dd><dt>returns</dt><dd class="cmt"><p>number of rows found
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#getSQLGenerator" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getSQLGenerator:com.alpine.sql.SQLGenerator"></a>
+      <a id="getSQLGenerator:SQLGenerator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getSQLGenerator</span><span class="result">: <a href="SQLGenerator.html" class="extype" name="com.alpine.sql.SQLGenerator">SQLGenerator</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the SQLGenerator object used by this SQLExecutor to generate SQL strings.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the SQLGenerator object used by this SQLExecutor to generate SQL strings. SQLGenerator objects are
+database-type specific, so different SQLGenerator objects are instantiated for different database types.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the SQLGenerator object that is embedded within this SQLExecutor.
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#getURL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getURL:String"></a>
+      <a id="getURL:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getURL</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns the JDBC URL that was used to create the JDBC Connection object that is embedded within this
+SQLExecutor.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the JDBC URL that was used to create the JDBC Connection object that is embedded within this
+SQLExecutor. The URL is useful in determining the type of the database and other connection information,
+but does not include security credentials.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the URL that was used to create the JDBC Connection object embedded within this SQLExecutor.
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLExecutor#tableOrViewExists" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="tableOrViewExists(tableOrViewName:String):Boolean"></a>
+      <a id="tableOrViewExists(String):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tableOrViewExists</span><span class="params">(<span name="tableOrViewName">tableOrViewName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Checks if table or view exists, and if so, returns true.</p><div class="fullcomment"><div class="comment cmt"><p>Checks if table or view exists, and if so, returns true.
+</p></div><dl class="paramcmts block"><dt class="param">tableOrViewName</dt><dd class="cmt"><p>name of table or view to check</p></dd><dt>returns</dt><dd class="cmt"><p>true if the table or view does exist, false otherwise
+</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        <div id="values" class="values members">
+              <h3>Concrete Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:AnyRef):Boolean"></a>
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:AnyRef):Boolean"></a>
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+    </body>
+      </html>
