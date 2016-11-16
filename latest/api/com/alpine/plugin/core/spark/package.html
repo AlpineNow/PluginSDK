@@ -58,7 +58,20 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="com.alpine.plugin.core.spark.OperatorFailedException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.alpine.plugin.core.spark.AutoTunerOptions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AutoTunerOptionsextendsProductwithSerializable"></a>
+      <a id="AutoTunerOptions:AutoTunerOptions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AutoTunerOptions.html"><span class="name">AutoTunerOptions</span></a><span class="params">(<span name="options">options: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.spark.OperatorFailedException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="OperatorFailedExceptionextendsException"></a>
       <a id="OperatorFailedException:OperatorFailedException"></a>
       <h4 class="signature">
@@ -108,7 +121,7 @@ and the developer does not want the framework (in particular, Spark) to retry th
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SparkJobConfiguration.html"><span class="name">SparkJobConfiguration</span></a><span class="params">(<span name="numExecutors">numExecutors: <span class="extype" name="scala.Int">Int</span></span>, <span name="executorMemoryMB">executorMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="driverMemoryMB">driverMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="numExecutorCores">numExecutorCores: <span class="extype" name="scala.Int">Int</span></span>, <span name="additionalParameters">additionalParameters: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="defval" name="scala.collection.mutable.Map.apply[String, String]()">...</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="SparkJobConfiguration.html"><span class="name">SparkJobConfiguration</span></a><span class="params">(<span name="userDefinedParameters">userDefinedParameters: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="autoTuneMissingValues">autoTuneMissingValues: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="autoTunerOptions">autoTunerOptions: <a href="AutoTunerOptions.html" class="extype" name="com.alpine.plugin.core.spark.AutoTunerOptions">AutoTunerOptions</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Spark job configuration.</p>
@@ -159,7 +172,33 @@ submitting a Spark job with the input of your plugin and returning the output ty
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="com.alpine.plugin.core.spark.templates" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="com.alpine.plugin.core.spark.AutoTunerOptions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AutoTunerOptions"></a>
+      <a id="AutoTunerOptions:AutoTunerOptions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="AutoTunerOptions$.html"><span class="name">AutoTunerOptions</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.spark.SparkJobConfiguration" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SparkJobConfiguration"></a>
+      <a id="SparkJobConfiguration:SparkJobConfiguration"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkJobConfiguration$.html"><span class="name">SparkJobConfiguration</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.spark.templates" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="templates"></a>
       <a id="templates:templates"></a>
       <h4 class="signature">

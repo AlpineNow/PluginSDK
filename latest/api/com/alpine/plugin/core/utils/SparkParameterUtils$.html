@@ -153,15 +153,15 @@ dialog window.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="com.alpine.plugin.core.utils.SparkParameterUtils#addStandardSparkOptions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="addStandardSparkOptions(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,defaultNumExecutors:Int,defaultExecutorMemoryMB:Int,defaultDriverMemoryMB:Int,defaultNumExecutorCores:Int):Unit"></a>
-      <a id="addStandardSparkOptions(OperatorDialog,Int,Int,Int,Int):Unit"></a>
+      <a id="addStandardSparkOptions(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,additionalSparkParameters:List[com.alpine.plugin.core.dialog.SparkParameter]):Unit"></a>
+      <a id="addStandardSparkOptions(OperatorDialog,List[SparkParameter]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addStandardSparkOptions</span><span class="params">(<span name="operatorDialog">operatorDialog: <a href="../dialog/OperatorDialog.html" class="extype" name="com.alpine.plugin.core.dialog.OperatorDialog">OperatorDialog</a></span>, <span name="defaultNumExecutors">defaultNumExecutors: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultExecutorMemoryMB">defaultExecutorMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultDriverMemoryMB">defaultDriverMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultNumExecutorCores">defaultNumExecutorCores: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">addStandardSparkOptions</span><span class="params">(<span name="operatorDialog">operatorDialog: <a href="../dialog/OperatorDialog.html" class="extype" name="com.alpine.plugin.core.dialog.OperatorDialog">OperatorDialog</a></span>, <span name="additionalSparkParameters">additionalSparkParameters: <span class="extype" name="scala.List">List</span>[<a href="../dialog/SparkParameter.html" class="extype" name="com.alpine.plugin.core.dialog.SparkParameter">SparkParameter</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
@@ -216,6 +216,19 @@ To have any effect the custom operator developer must implement RDD persistence 
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="com.alpine.plugin.core.utils.SparkParameterUtils#disableDynamicAllocationParamId" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="disableDynamicAllocationParamId:String"></a>
+      <a id="disableDynamicAllocationParamId:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">disableDynamicAllocationParamId</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -505,7 +518,42 @@ To have any effect the custom operator developer must implement RDD persistence 
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="com.alpine.plugin.core.utils.SparkParameterUtils#addStandardSparkOptions" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addStandardSparkOptions(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,defaultNumExecutors:Int,defaultExecutorMemoryMB:Int,defaultDriverMemoryMB:Int,defaultNumExecutorCores:Int):Unit"></a>
+      <a id="addStandardSparkOptions(OperatorDialog,Int,Int,Int,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: ">addStandardSparkOptions</span><span class="params">(<span name="operatorDialog">operatorDialog: <a href="../dialog/OperatorDialog.html" class="extype" name="com.alpine.plugin.core.dialog.OperatorDialog">OperatorDialog</a></span>, <span name="defaultNumExecutors">defaultNumExecutors: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultExecutorMemoryMB">defaultExecutorMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultDriverMemoryMB">defaultDriverMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultNumExecutorCores">defaultNumExecutorCores: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.utils.SparkParameterUtils#addStandardSparkOptions" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addStandardSparkOptions(operatorDialog:com.alpine.plugin.core.dialog.OperatorDialog,defaultNumExecutors:Int,defaultExecutorMemoryMB:Int,defaultDriverMemoryMB:Int,defaultNumExecutorCores:Int,additionalSparkParameters:List[com.alpine.plugin.core.dialog.SparkParameter]):Unit"></a>
+      <a id="addStandardSparkOptions(OperatorDialog,Int,Int,Int,Int,List[SparkParameter]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: ">addStandardSparkOptions</span><span class="params">(<span name="operatorDialog">operatorDialog: <a href="../dialog/OperatorDialog.html" class="extype" name="com.alpine.plugin.core.dialog.OperatorDialog">OperatorDialog</a></span>, <span name="defaultNumExecutors">defaultNumExecutors: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultExecutorMemoryMB">defaultExecutorMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultDriverMemoryMB">defaultDriverMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="defaultNumExecutorCores">defaultNumExecutorCores: <span class="extype" name="scala.Int">Int</span></span>, <span name="additionalSparkParameters">additionalSparkParameters: <span class="extype" name="scala.List">List</span>[<a href="../dialog/SparkParameter.html" class="extype" name="com.alpine.plugin.core.dialog.SparkParameter">SparkParameter</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

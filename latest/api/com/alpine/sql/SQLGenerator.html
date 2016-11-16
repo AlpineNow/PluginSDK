@@ -39,7 +39,19 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The purpose of SQLGenerator is to provide an object to facilitate the construction of commonly used SQL queries.
+Because SQL generation can vary between different database types, each SQLGenerator is instantiated for a
+particular database type.</p><p>For certain methods, when specifying table names, fully qualify and delimit as necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot;). Delimiting is required for table names with non-standard characters
+([A-Za-z][A-Za-z0-9]*). Not all databases support delimiters or non-standard characters (such as Teradata).
+For those databases that support schemas, specifying the schema name is recommended.</p><p>For certain methods, when specifying column names, these must be a comma-separated string of columns
+that one would find in a SELECT query. This can include expressions that are aliased
+(i.e. sqlexpression AS aliasname). Any columns with non-standard characters should be delimited
+(i.e. &quot;columnname&quot;). When SELECTing from more than one table, if column names are not unique,
+then columns should be fully qualified (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;columnalias&quot;).</p><p>For certain methods, when specifying a source table, it is permissible to specify more than one table as a join
+(i.e. table1 INNER JOIN table2 ON ...).</p><p>For certain methods, when specifying a whereClause, the literal &quot;WHERE&quot; should be included.
+Note that we can include anything that follows a FROM clause here, such as GROUP BY, ORDER BY, etc.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -95,8 +107,30 @@
         <span class="name">dbType</span><span class="result">: <a href="DatabaseType$$TypeValue.html" class="extype" name="com.alpine.sql.DatabaseType.TypeValue">TypeValue</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Returns the DatabaseType.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the DatabaseType.TypeValue object that represents the database type.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>
+      <p class="shortcomment cmt">Returns the DatabaseType.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the DatabaseType.TypeValue object that represents the database type. Each SQLGenerator is
+instantiated for a particular database type.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the DatabaseType.TypeValue object that represents the database type of this SQLGenerator
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLGenerator#getCreateTableAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getCreateTableAsSelectSQL(selectQuery:String,destinationTable:String):String"></a>
+      <a id="getCreateTableAsSelectSQL(String,String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getCreateTableAsSelectSQL</span><span class="params">(<span name="selectQuery">selectQuery: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationTable">destinationTable: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a SQL DDL statement to generate a table based on a SELECT query,
+not necessarily from any particular table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a table based on a SELECT query,
+not necessarily from any particular table. The entire SELECT query must be supplied
+to generate something like &quot;CREATE TABLE destinationTable AS selectQuery&quot;.
+This method is useful for calls to UDFs or stored procedures that might be database-specific
+and don't conform to selecting columns from a source table.</p><p>NOTE: Currently, this works only on certain databases like PostgreSQL, Greenplum, Oracle, MySQL, Teradata,
+but not MSSQL, which does not support CREATE TABLE ... AS SELECT ....</p><p>Table name should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).</p><p>selectQuery is not necessarily a SELECT query, but any query that can feed the CREATE TABLE statement.
+</p></div><dl class="paramcmts block"><dt class="param">selectQuery</dt><dd class="cmt"><p>query (not necessary SELECT) to be used for CREATE TABLE</p></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>name of destination table to be created from SELECT query</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getCreateTableAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getCreateTableAsSelectSQL(columns:String,sourceTable:String,destinationTable:String):String"></a>
@@ -111,8 +145,11 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a SQL DDL statement to generate a table based on a SELECT query from an existing table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a table based on a SELECT query from an existing table.
-For most databases, this is something like &quot;CREATE TABLE destinationTable AS SELECT columns FROM sourceTable&quot;
-</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"></dd><dt class="param">sourceTable</dt><dd class="cmt"></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>
+For most databases, this is something like &quot;CREATE TABLE destinationTable AS SELECT columns FROM sourceTable&quot;</p><p>Table names should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).
+it is acceptable to specify a table join as the source table (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>name of destination table to be created from SELECT query</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getCreateTableAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getCreateTableAsSelectSQL(columns:String,sourceTable:String,destinationTable:String,whereClause:String):String"></a>
@@ -127,8 +164,37 @@ For most databases, this is something like &quot;CREATE TABLE destinationTable A
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a SQL DDL statement to generate a table based on a SELECT query from an existing table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a table based on a SELECT query from an existing table.
-For most databases, this is something like &quot;CREATE TABLE destinationTable AS SELECT columns FROM sourceTable whereClause&quot;
-</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"></dd><dt class="param">sourceTable</dt><dd class="cmt"></dd><dt class="param">destinationTable</dt><dd class="cmt"></dd><dt class="param">whereClause</dt><dd class="cmt"><p>
+For most databases, this is something like
+&quot;CREATE TABLE destinationTable AS SELECT columns FROM sourceTable whereClause&quot;</p><p>Table names should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).
+it is acceptable to specify a table join as the source table (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)</p><p>The specified WHERE clause should include the &quot;WHERE&quot; keyword. Note that this is simply SQL that
+is appended to the query as &quot;SELECT columns FROM sourceTable whereClause&quot; and can include other
+SQL outside of just a WHERE clause, such as GROUP BY, ORDER BY, etc.
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>name of destination table to be created from SELECT query</p></dd><dt class="param">whereClause</dt><dd class="cmt"><p>where clause of the SELECT query, including the literal &quot;WHERE&quot; keyword</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLGenerator#getCreateTableOrViewAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getCreateTableOrViewAsSelectSQL(selectQuery:String,destinationTableOrView:String,isView:Boolean):String"></a>
+      <a id="getCreateTableOrViewAsSelectSQL(String,String,Boolean):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getCreateTableOrViewAsSelectSQL</span><span class="params">(<span name="selectQuery">selectQuery: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationTableOrView">destinationTableOrView: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isView">isView: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a SQL DDL statement to generate a table or view based on a SELECT query,
+not necessarily from any particular table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a table or view based on a SELECT query,
+not necessarily from any particular table. The entire SELECT query must be supplied
+to generate something like &quot;CREATE TABLE destinationTable AS selectQuery&quot;
+or &quot;CREATE VIEW destinationTable AS selectQuery&quot;, depending on the isView parameter.
+This method is useful for calls to UDFs or stored procedures that might be database-specific
+and don't conform to selecting columns from a source table.</p><p>NOTE: Currently, creating a table works only on certain databases but not MSSQL,
+which does not support CREATE TABLE ... AS SELECT ....</p><p>Table or view name should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot; or &quot;schemaname&quot;.&quot;viewname&quot;).</p><p>selectQuery is not necessarily a SELECT query, but any query that can feed the CREATE TABLE statement.
+</p></div><dl class="paramcmts block"><dt class="param">selectQuery</dt><dd class="cmt"><p>query (not necessary SELECT) to be used for CREATE TABLE</p></dd><dt class="param">destinationTableOrView</dt><dd class="cmt"><p>name of destination table to be created from SELECT query</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getCreateTableOrViewAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getCreateTableOrViewAsSelectSQL(columns:String,sourceTable:String,destinationTable:String,isView:Boolean):String"></a>
@@ -144,8 +210,12 @@ For most databases, this is something like &quot;CREATE TABLE destinationTable A
       </h4>
       <p class="shortcomment cmt">Returns a SQL DDL statement to generate a table or view based on a SELECT query from an existing table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a table or view based on a SELECT query from an existing table.
 For most databases, this is something like &quot;CREATE TABLE destinationTable AS SELECT columns FROM sourceTable&quot;
-or &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable&quot;, depending on the isView parameter
-</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"></dd><dt class="param">sourceTable</dt><dd class="cmt"></dd><dt class="param">destinationTable</dt><dd class="cmt"></dd><dt class="param">isView</dt><dd class="cmt"><p>
+or &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable&quot;, depending on the isView parameter</p><p>Table and view names should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot;, &quot;schemaname&quot;.&quot;viewname&quot;).
+it is acceptable to specify a table join as the source table (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>name of destination table or view to be created from SELECT query</p></dd><dt class="param">isView</dt><dd class="cmt"><p>true if generating a view, false if generating a table</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getCreateTableOrViewAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getCreateTableOrViewAsSelectSQL(columns:String,sourceTable:String,destinationTable:String,whereClause:String,isView:Boolean):String"></a>
@@ -161,8 +231,34 @@ or &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable&quot;, 
       </h4>
       <p class="shortcomment cmt">Returns a SQL DDL statement to generate a table or view based on a SELECT query from an existing table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a table or view based on a SELECT query from an existing table.
 For most databases, this is something like &quot;CREATE TABLE destinationTable AS SELECT columns FROM sourceTable whereClause&quot;
-or &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable whereClause&quot;, depending on the isView parameter
-</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"></dd><dt class="param">sourceTable</dt><dd class="cmt"></dd><dt class="param">destinationTable</dt><dd class="cmt"></dd><dt class="param">whereClause</dt><dd class="cmt"></dd><dt class="param">isView</dt><dd class="cmt"><p>
+or &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable whereClause&quot;, depending on the isView parameter</p><p>Table and view names should be fully qualified and delimited, if necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot;, &quot;schemaname&quot;.&quot;viewname&quot;).
+it is acceptable to specify a table join as the source table (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)</p><p>The specified WHERE clause should include the &quot;WHERE&quot; keyword. Note that this is simply SQL that
+is appended to the query as &quot;SELECT columns FROM sourceTable whereClause&quot; and can include other
+SQL outside of just a WHERE clause, such as GROUP BY, ORDER BY, etc.
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationTable</dt><dd class="cmt"><p>name of destination table or view to be created from SELECT query</p></dd><dt class="param">whereClause</dt><dd class="cmt"><p>where clause of the SELECT query, including the literal &quot;WHERE&quot; keyword</p></dd><dt class="param">isView</dt><dd class="cmt"><p>true if generating a view, false if generating a table</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
+</p></dd></dl></div>
+    </li><li name="com.alpine.sql.SQLGenerator#getCreateViewAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="getCreateViewAsSelectSQL(selectQuery:String,destinationView:String):String"></a>
+      <a id="getCreateViewAsSelectSQL(String,String):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getCreateViewAsSelectSQL</span><span class="params">(<span name="selectQuery">selectQuery: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="destinationView">destinationView: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Returns a SQL DDL statement to generate a view based on a SELECT query,
+not necessarily from any particular table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a view based on a SELECT query,
+not necessarily from any particular table. The entire SELECT query must be supplied
+to generate something like &quot;CREATE VIEW destinationTable AS selectQuery&quot;.
+This method is useful for calls to UDFs or stored procedures that might be database-specific
+and don't conform to selecting columns from a source table.</p><p>Table name should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;tablename&quot;).</p><p>selectQuery is not necessarily a SELECT query, but any query that can feed the CREATE TABLE statement.
+</p></div><dl class="paramcmts block"><dt class="param">selectQuery</dt><dd class="cmt"><p>query (not necessary SELECT) to be used for CREATE VIEW</p></dd><dt class="param">destinationView</dt><dd class="cmt"><p>name of destination table to be created from SELECT query</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getCreateViewAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getCreateViewAsSelectSQL(columns:String,sourceTable:String,destinationView:String):String"></a>
@@ -177,8 +273,11 @@ or &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable whereCl
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a SQL DDL statement to generate a view based on a SELECT query from an existing table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a view based on a SELECT query from an existing table.
-For most databases, this is something like &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable&quot;
-</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"></dd><dt class="param">sourceTable</dt><dd class="cmt"></dd><dt class="param">destinationView</dt><dd class="cmt"><p>
+For most databases, this is something like &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable&quot;</p><p>View names should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;viewname&quot;).
+it is acceptable to specify a table join as the source table (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationView</dt><dd class="cmt"><p>name of destination view to be created from SELECT query</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getCreateViewAsSelectSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getCreateViewAsSelectSQL(columns:String,sourceTable:String,destinationView:String,whereClause:String):String"></a>
@@ -193,8 +292,14 @@ For most databases, this is something like &quot;CREATE VIEW destinationTable AS
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a SQL DDL statement to generate a view based on a SELECT query from an existing table.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to generate a view based on a SELECT query from an existing table.
-For most databases, this is something like &quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable [whereClause]&quot;
-</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"></dd><dt class="param">sourceTable</dt><dd class="cmt"></dd><dt class="param">destinationView</dt><dd class="cmt"></dd><dt class="param">whereClause</dt><dd class="cmt"><p>
+For most databases, this is something like
+&quot;CREATE VIEW destinationTable AS SELECT columns FROM sourceTable [whereClause]&quot;</p><p>View names should be fully qualified and delimited, if necessary (i.e. &quot;schemaname&quot;.&quot;viewname&quot;).
+it is acceptable to specify a table join as the source table (i.e. table1 INNER JOIN table2 ...),
+but in such cases, column names might not be unique and full qualification and aliasing may be
+required (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;aliasname&quot;)</p><p>The specified WHERE clause should include the &quot;WHERE&quot; keyword. Note that this is simply SQL that
+is appended to the query as &quot;SELECT columns FROM sourceTable whereClause&quot; and can include other
+SQL outside of just a WHERE clause, such as GROUP BY, ORDER BY, etc.
+</p></div><dl class="paramcmts block"><dt class="param">columns</dt><dd class="cmt"><p>String of comma-separated columns to be SELECTed</p></dd><dt class="param">sourceTable</dt><dd class="cmt"><p>name of source table from which we SELECT</p></dd><dt class="param">destinationView</dt><dd class="cmt"><p>name of destination view to be created from SELECT query</p></dd><dt class="param">whereClause</dt><dd class="cmt"><p>where clause of the SELECT query, including the literal &quot;WHERE&quot; keyword</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getDropTableIfExistsSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getDropTableIfExistsSQL(tableName:String,cascade:Boolean):String"></a>
@@ -209,8 +314,8 @@ For most databases, this is something like &quot;CREATE VIEW destinationTable AS
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a SQL DDL statement to drop a table if it exists, and optionally, cascade the drop to dependent tables.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to drop a table if it exists, and optionally, cascade the drop to dependent tables.
-For most databases, this is something like &quot;DROP TABLE IF EXISTS tableName [CASCADE]&quot;
-</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"></dd><dt class="param">cascade</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>
+For most databases, this is something like &quot;DROP TABLE IF EXISTS tableName [CASCADE]&quot;</p><p>NOTE: Not all databases support CASCADE DROP
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>table to be dropped</p></dd><dt class="param">cascade</dt><dd class="cmt"><p>true if dependent objects should also be dropped</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getDropViewIfExistsSQL" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getDropViewIfExistsSQL(viewName:String,cascade:Boolean):String"></a>
@@ -225,8 +330,8 @@ For most databases, this is something like &quot;DROP TABLE IF EXISTS tableName 
       </span>
       </h4>
       <p class="shortcomment cmt">Returns a SQL DDL statement to drop a view if it exists, and optionally, cascade the drop to dependent views.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a SQL DDL statement to drop a view if it exists, and optionally, cascade the drop to dependent views.
-For most databases, this is something like &quot;DROP VIEW IF EXISTS viewName [CASCADE]&quot;
-</p></div><dl class="paramcmts block"><dt class="param">viewName</dt><dd class="cmt"></dd><dt class="param">cascade</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>
+For most databases, this is something like &quot;DROP VIEW IF EXISTS viewName [CASCADE]&quot;</p><p>NOTE: Not all databases support CASCADE DROP
+</p></div><dl class="paramcmts block"><dt class="param">viewName</dt><dd class="cmt"><p>view to be dropped</p></dd><dt class="param">cascade</dt><dd class="cmt"><p>true if dependent objects should also be dropped</p></dd><dt>returns</dt><dd class="cmt"><p>generated SQL statement
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getModuloExpression" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getModuloExpression(dividend:String,divisor:String):String"></a>
@@ -244,7 +349,7 @@ For most databases, this is something like &quot;DROP VIEW IF EXISTS viewName [C
 For example, in PostgreSQL, this is &quot;dividend % divisor&quot;.
 But in Oracle, this is &quot;MODULO(dividend, divisor)&quot;.
 For this reason, we must pass in the expressions used for dividend and divisor.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>
+</p></div><dl class="paramcmts block"><dt class="param">dividend</dt><dd class="cmt"><p>SQL expression for the dividend to be passed to the MODULO (can be a simple column name)</p></dd><dt class="param">divisor</dt><dd class="cmt"><p>SQL expression for the divisor to be passed to the MODULO (can be a simple number)</p></dd><dt>returns</dt><dd class="cmt"><p>a SQL expression for the given dividend modulo the given divisor
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getStandardDeviationFunctionName" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getStandardDeviationFunctionName:String"></a>
@@ -260,8 +365,8 @@ For this reason, we must pass in the expressions used for dividend and divisor.
       </h4>
       <p class="shortcomment cmt">Returns the name of the standard deviation function to be used for this database.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the name of the standard deviation function to be used for this database.
 For example, in PostgreSQL, this is &quot;stddev&quot;. Note that this is just the function name,
-and does not include the argument. A typical call would be &quot;stddev(expression)&quot;.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>
+and does not include the argument. A typical SQL call would be &quot;stddev(expression)&quot;.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>name of the standard deviation function for the current database type
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#getVarianceFunctionName" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="getVarianceFunctionName:String"></a>
@@ -278,7 +383,7 @@ and does not include the argument. A typical call would be &quot;stddev(expressi
       <p class="shortcomment cmt">Returns the name of the variance function to be used for this database.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the name of the variance function to be used for this database.
 For example, in PostgreSQL, this is &quot;variance&quot;. Note that this is just the function name,
 and does not include the argument. A typical call would be &quot;variance(expression)&quot;.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>name of the variance function for the current database type
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#quoteChar" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="quoteChar:String"></a>
@@ -295,7 +400,7 @@ and does not include the argument. A typical call would be &quot;variance(expres
       <p class="shortcomment cmt">Character or String to use when quoting identifiers.</p><div class="fullcomment"><div class="comment cmt"><p>Character or String to use when quoting identifiers.
 Typically, this is a double-quote (for PostgreSQL and other databases), but can be other characters
 or even Strings for other platforms.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the character or characters to be used to delimit identifiers for this database type
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#quoteIdentifier" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="quoteIdentifier(s:String):String"></a>
@@ -311,7 +416,7 @@ or even Strings for other platforms.
       </h4>
       <p class="shortcomment cmt">Wraps an identifier in the appropriate quote character to preserve case and special characters.</p><div class="fullcomment"><div class="comment cmt"><p>Wraps an identifier in the appropriate quote character to preserve case and special characters.
 If there is no quoting mechanism for this database type, just return the argument.
-</p></div><dl class="paramcmts block"><dt class="param">s</dt><dd class="cmt"><p>identifier name to be quoted</p></dd><dt>returns</dt><dd class="cmt"><p>
+</p></div><dl class="paramcmts block"><dt class="param">s</dt><dd class="cmt"><p>string to be delimited</p></dd><dt>returns</dt><dd class="cmt"><p>the given string, but with the appropriate delimiters for the current database type
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#quoteObjectName" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="quoteObjectName(schemaName:String,objectName:String):String"></a>
@@ -327,7 +432,7 @@ If there is no quoting mechanism for this database type, just return the argumen
       </h4>
       <p class="shortcomment cmt">Wraps a schema and table or view name in the appropriate quote character to preserve case and special characters.</p><div class="fullcomment"><div class="comment cmt"><p>Wraps a schema and table or view name in the appropriate quote character to preserve case and special characters.
 If schemaName is unspecified, quote only the objectName. Uses quoteIdentifier() for quoting.
-</p></div><dl class="paramcmts block"><dt class="param">schemaName</dt><dd class="cmt"></dd><dt class="param">objectName</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>
+</p></div><dl class="paramcmts block"><dt class="param">schemaName</dt><dd class="cmt"><p>the schema name of the object (or &quot;&quot; if none)</p></dd><dt class="param">objectName</dt><dd class="cmt"><p>the object name of the object</p></dd><dt>returns</dt><dd class="cmt"><p>a string composed of the given schema and object names, properly delimited
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#useAliasForSelectSubQueries" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="useAliasForSelectSubQueries:Boolean"></a>
@@ -341,8 +446,15 @@ If schemaName is unspecified, quote only the objectName. Uses quoteIdentifier() 
         <span class="name">useAliasForSelectSubQueries</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">If true, subqueries must be aliased.</p><div class="fullcomment"><div class="comment cmt"><p>If true, subqueries must be aliased.
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>
+      <p class="shortcomment cmt">If true, subqueries must be aliased.</p><div class="fullcomment"><div class="comment cmt"><p>If true, subqueries must be aliased. Some databases, such as Oracle, require subqueries
+(queries that appear in the FROM clause) to be aliased. For example:</p><p>SELECT ...
+FROM (
+    SELECT ...
+    FROM foo
+    WHERE ...
+    ) AS fooalias
+WHERE ...
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>true if subqueries must be aliased, false if otherwise
 </p></dd></dl></div>
     </li><li name="com.alpine.sql.SQLGenerator#escapeColumnName" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="escapeColumnName(s:String):String"></a>
@@ -357,9 +469,8 @@ If schemaName is unspecified, quote only the objectName. Uses quoteIdentifier() 
       </span>
       </h4>
       <p class="shortcomment cmt">Wraps a column name in the appropriate quote character to preserve case and special characters.</p><div class="fullcomment"><div class="comment cmt"><p>Wraps a column name in the appropriate quote character to preserve case and special characters.
-If there is no quoting mechanism for this database type, just return the argument.
-Note: Deprecated -- please use quoteIdentifier instead.
-</p></div><dl class="paramcmts block"><dt class="param">s</dt><dd class="cmt"><p>name to be escaped.</p></dd><dt>returns</dt><dd class="cmt"><p>
+If there is no quoting mechanism for this database type, just return the argument.</p><p>Note: Deprecated -- please use quoteIdentifier instead.
+</p></div><dl class="paramcmts block"><dt class="param">s</dt><dd class="cmt"><p>string to be delimited</p></dd><dt>returns</dt><dd class="cmt"><p>the given string, but with appropriate delimiters for the current database type
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@deprecated</span>
               

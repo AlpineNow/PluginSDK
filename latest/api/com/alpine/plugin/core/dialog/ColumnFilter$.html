@@ -152,6 +152,32 @@ A companion filter object that's used to create off-shelf filters.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.alpine.plugin.core.dialog.ColumnFilter#ALL_DATE_TYPES" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ALL_DATE_TYPES:String"></a>
+      <a id="ALL_DATE_TYPES:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ALL_DATE_TYPES</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.dialog.ColumnFilter#ALL_TYPES" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ALL_TYPES:String"></a>
+      <a id="ALL_TYPES:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ALL_TYPES</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      
     </li><li name="com.alpine.plugin.core.dialog.ColumnFilter#All" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="All:com.alpine.plugin.core.dialog.ColumnFilter"></a>
       <a id="All:ColumnFilter"></a>
@@ -178,6 +204,25 @@ Return a filter that accepts any type.</p></div><dl class="paramcmts block"><dt>
       </span>
       <span class="symbol">
         <span class="name">CategoricalOnly</span><span class="result">: <a href="ColumnFilter.html" class="extype" name="com.alpine.plugin.core.dialog.ColumnFilter">ColumnFilter</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">:: AlpineSdkApi ::
+Return a filter that only passes categorical types, if the columns are
+coming from a Hadoop dataset.</p><div class="fullcomment"><div class="comment cmt"><p>:: AlpineSdkApi ::
+Return a filter that only passes categorical types, if the columns are
+coming from a Hadoop dataset. This doesn't necessarily work for DB columns,
+which often have vendor-specific types.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>A column filter that accepts categorical types (for Hadoop datasets).
+</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.dialog.ColumnFilter#DateTimeOnly" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="DateTimeOnly:com.alpine.plugin.core.dialog.ColumnFilter"></a>
+      <a id="DateTimeOnly:ColumnFilter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">DateTimeOnly</span><span class="result">: <a href="ColumnFilter.html" class="extype" name="com.alpine.plugin.core.dialog.ColumnFilter">ColumnFilter</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt">:: AlpineSdkApi ::

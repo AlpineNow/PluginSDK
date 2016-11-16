@@ -24,9 +24,9 @@
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../../../../lib/class_big.png" />
+        <a href="SparkJobConfiguration$.html" title="Go to companion"><img src="../../../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.plugin">plugin</a>.<a href="../package.html" class="extype" name="com.alpine.plugin.core">core</a>.<a href="package.html" class="extype" name="com.alpine.plugin.core.spark">spark</a></p>
-        <h1>SparkJobConfiguration</h1>
+        <h1><a href="SparkJobConfiguration$.html" title="Go to companion">SparkJobConfiguration</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,7 +35,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">SparkJobConfiguration</span><span class="params">(<span name="numExecutors">numExecutors: <span class="extype" name="scala.Int">Int</span></span>, <span name="executorMemoryMB">executorMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="driverMemoryMB">driverMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="numExecutorCores">numExecutorCores: <span class="extype" name="scala.Int">Int</span></span>, <span name="additionalParameters">additionalParameters: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="defval" name="scala.collection.mutable.Map.apply[String, String]()">...</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">SparkJobConfiguration</span><span class="params">(<span name="userDefinedParameters">userDefinedParameters: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="autoTuneMissingValues">autoTuneMissingValues: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="autoTunerOptions">autoTunerOptions: <a href="AutoTunerOptions.html" class="extype" name="com.alpine.plugin.core.spark.AutoTunerOptions">AutoTunerOptions</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -81,7 +81,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="com.alpine.plugin.core.spark.SparkJobConfiguration#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(numExecutors:Int,executorMemoryMB:Int,driverMemoryMB:Int,numExecutorCores:Int,additionalParameters:scala.collection.mutable.Map[String,String]):com.alpine.plugin.core.spark.SparkJobConfiguration"></a>
+      <a id="&lt;init&gt;(userDefinedParameters:scala.collection.mutable.Map[String,String],autoTuneMissingValues:Boolean,autoTunerOptions:com.alpine.plugin.core.spark.AutoTunerOptions):com.alpine.plugin.core.spark.SparkJobConfiguration"></a>
       <a id="&lt;init&gt;:SparkJobConfiguration"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -89,7 +89,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">SparkJobConfiguration</span><span class="params">(<span name="numExecutors">numExecutors: <span class="extype" name="scala.Int">Int</span></span>, <span name="executorMemoryMB">executorMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="driverMemoryMB">driverMemoryMB: <span class="extype" name="scala.Int">Int</span></span>, <span name="numExecutorCores">numExecutorCores: <span class="extype" name="scala.Int">Int</span></span>, <span name="additionalParameters">additionalParameters: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="defval" name="scala.collection.mutable.Map.apply[String, String]()">...</span></span>)</span>
+        <span class="name">SparkJobConfiguration</span><span class="params">(<span name="userDefinedParameters">userDefinedParameters: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="autoTuneMissingValues">autoTuneMissingValues: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="autoTunerOptions">autoTunerOptions: <a href="AutoTunerOptions.html" class="extype" name="com.alpine.plugin.core.spark.AutoTunerOptions">AutoTunerOptions</a></span>)</span>
       </span>
       </h4>
       
@@ -173,7 +173,7 @@
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
         <span class="name">additionalParameters</span><span class="result">: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
@@ -193,6 +193,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.alpine.plugin.core.spark.SparkJobConfiguration#autoTuneMissingValues" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="autoTuneMissingValues:Boolean"></a>
+      <a id="autoTuneMissingValues:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">autoTuneMissingValues</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.plugin.core.spark.SparkJobConfiguration#autoTunerOptions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="autoTunerOptions:com.alpine.plugin.core.spark.AutoTunerOptions"></a>
+      <a id="autoTunerOptions:AutoTunerOptions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">autoTunerOptions</span><span class="result">: <a href="AutoTunerOptions.html" class="extype" name="com.alpine.plugin.core.spark.AutoTunerOptions">AutoTunerOptions</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -218,7 +244,7 @@
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
         <span class="name">driverMemoryMB</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
@@ -244,7 +270,7 @@
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
         <span class="name">executorMemoryMB</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
@@ -341,7 +367,7 @@
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
         <span class="name">numExecutorCores</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
@@ -354,7 +380,7 @@
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
         <span class="name">numExecutors</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
@@ -374,6 +400,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.alpine.plugin.core.spark.SparkJobConfiguration#userDefinedParameters" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="userDefinedParameters:scala.collection.mutable.Map[String,String]"></a>
+      <a id="userDefinedParameters:Map[String,String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">userDefinedParameters</span><span class="result">: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

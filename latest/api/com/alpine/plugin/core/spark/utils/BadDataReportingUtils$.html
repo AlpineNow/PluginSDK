@@ -307,7 +307,8 @@ fail, but will silently remove those rows.
       <p class="shortcomment cmt">Helper function which uses the AddendumWriter object to generate a message about the bad data and* get the data, if any, to write to the bad data file.</p><div class="fullcomment"><div class="comment cmt"><p>Helper function which uses the AddendumWriter object to generate a message about the bad data and* get the data, if any, to write to the bad data file.
 The data removed parameter is the message for what the bad data was removed. It will be of the form
 &quot;data removed &quot; + dataRemovedDueTo. I.e. if you put &quot;due to zero values&quot; then the message would read
-&quot;Data removed due to zero values&quot;.
+&quot;Data removed due to zero values&quot;.</p><p>Note: This method should NOT be called in the event that the user selected the
+&quot;Do Not Count # of Rows Removed (Faster)&quot; option.
 </p></div></div>
     </li><li name="com.alpine.plugin.core.spark.utils.BadDataReportingUtils#handleNullDataAsDataFrame" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="handleNullDataAsDataFrame[T&lt;:com.alpine.plugin.core.utils.HdfsStorageFormatType](amountOfDataToWriteParam:Option[Long],badDataPath:String,inputDataSize:Long,outputSize:Long,badData:Option[org.apache.spark.sql.DataFrame],sparkRuntimeUtils:com.alpine.plugin.core.spark.utils.SparkRuntimeUtils,hdfsStorageFormatType:T,overwrite:Boolean,operatorInfo:Option[com.alpine.plugin.core.io.OperatorInfo],dataRemovedDueTo:String):String"></a>

@@ -119,6 +119,21 @@ input UIs during registration.
       </h4>
       <p class="shortcomment cmt">Add a button that opens a multiple checkbox dialog box.</p><div class="fullcomment"><div class="comment cmt"><p>Add a button that opens a multiple checkbox dialog box.</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">values</dt><dd class="cmt"><p>Available checkbox values.</p></dd><dt class="param">defaultSelections</dt><dd class="cmt"><p>Default selected checkboxes.</p></dd><dt class="param">required</dt><dd class="cmt"><p>Whether the user is required to select a value for this parameter.</p></dd><dt>returns</dt><dd class="cmt"><p>A checkboxes element.
 </p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addCheckboxesFromJavaList" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="addCheckboxesFromJavaList(id:String,label:String,values:java.util.List[String],defaultSelections:java.util.List[String],required:Boolean):com.alpine.plugin.core.dialog.Checkboxes"></a>
+      <a id="addCheckboxesFromJavaList(String,String,List[String],List[String],Boolean):Checkboxes"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addCheckboxesFromJavaList</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="values">values: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="defaultSelections">defaultSelections: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="required">required: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: <a href="Checkboxes.html" class="extype" name="com.alpine.plugin.core.dialog.Checkboxes">Checkboxes</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Add a button that opens a multiple checkbox dialog box.</p><div class="fullcomment"><div class="comment cmt"><p>Add a button that opens a multiple checkbox dialog box.
+This version is Java-friendly</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">values</dt><dd class="cmt"><p>Available checkbox values as java.util.List</p></dd><dt class="param">defaultSelections</dt><dd class="cmt"><p>Default selected checkboxes.</p></dd><dt class="param">required</dt><dd class="cmt"><p>Whether the user is required to select a value for this parameter.</p></dd><dt>returns</dt><dd class="cmt"><p>A checkboxes element.
+</p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addChildOperatorDialog" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="addChildOperatorDialog(label:String):com.alpine.plugin.core.dialog.OperatorDialog"></a>
       <a id="addChildOperatorDialog(String):OperatorDialog"></a>
@@ -223,6 +238,37 @@ data source if the workflow is associated with multiple data sources.</p></div><
       </h4>
       <p class="shortcomment cmt">Add a dropdown menu (a multiple choice input).</p><div class="fullcomment"><div class="comment cmt"><p>Add a dropdown menu (a multiple choice input).</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">values</dt><dd class="cmt"><p>Available checkbox values.</p></dd><dt class="param">defaultSelection</dt><dd class="cmt"><p>Default selected vale.</p></dd><dt>returns</dt><dd class="cmt"><p>A dropdown box element.
 </p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addDropdownBoxFromJavaList" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="addDropdownBoxFromJavaList(id:String,label:String,values:java.util.List[String],defaultSelection:String):com.alpine.plugin.core.dialog.DropdownBox"></a>
+      <a id="addDropdownBoxFromJavaList(String,String,List[String],String):DropdownBox"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addDropdownBoxFromJavaList</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="values">values: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="defaultSelection">defaultSelection: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="DropdownBox.html" class="extype" name="com.alpine.plugin.core.dialog.DropdownBox">DropdownBox</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Add a dropdown menu (a multiple choice input).</p><div class="fullcomment"><div class="comment cmt"><p>Add a dropdown menu (a multiple choice input).
+This version is Java-friendly.</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">values</dt><dd class="cmt"><p>Available checkbox values from java.util.List</p></dd><dt class="param">defaultSelection</dt><dd class="cmt"><p>Default selected vale.</p></dd><dt>returns</dt><dd class="cmt"><p>A dropdown box element.
+</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addHdfsDirectorySelector" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="addHdfsDirectorySelector(id:String,label:String,defaultPath:String,isRequired:Boolean):com.alpine.plugin.core.dialog.HdfsFileSelector"></a>
+      <a id="addHdfsDirectorySelector(String,String,String,Boolean):HdfsFileSelector"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addHdfsDirectorySelector</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="defaultPath">defaultPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isRequired">isRequired: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="HdfsFileSelector.html" class="extype" name="com.alpine.plugin.core.dialog.HdfsFileSelector">HdfsFileSelector</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Add a Hdfs directory selection box.</p><div class="fullcomment"><div class="comment cmt"><p>Add a Hdfs directory selection box. This can be used to select an Hdfs
+directory that already exists through an interactive selection window.</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box. This is used later to reference
+          the value of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">defaultPath</dt><dd class="cmt"><p>The default value to be used in the input box.</p></dd><dt class="param">isRequired</dt><dd class="cmt"><p>- If the operator can be valid if this is left blank</p></dd><dt>returns</dt><dd class="cmt"><p>A Hdfs directory selection box element.
+</p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addHdfsDirectorySelector" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="addHdfsDirectorySelector(id:String,label:String,defaultPath:String):com.alpine.plugin.core.dialog.HdfsFileSelector"></a>
       <a id="addHdfsDirectorySelector(String,String,String):HdfsFileSelector"></a>
@@ -238,6 +284,22 @@ data source if the workflow is associated with multiple data sources.</p></div><
       <p class="shortcomment cmt">Add a Hdfs directory selection box.</p><div class="fullcomment"><div class="comment cmt"><p>Add a Hdfs directory selection box. This can be used to select an Hdfs
 directory that already exists through an interactive selection window.</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box. This is used later to reference
           the value of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">defaultPath</dt><dd class="cmt"><p>The default value to be used in the input box.</p></dd><dt>returns</dt><dd class="cmt"><p>A Hdfs directory selection box element.
+</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addHdfsFileSelector" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="addHdfsFileSelector(id:String,label:String,defaultPath:String,isRequired:Boolean):com.alpine.plugin.core.dialog.HdfsFileSelector"></a>
+      <a id="addHdfsFileSelector(String,String,String,Boolean):HdfsFileSelector"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addHdfsFileSelector</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="defaultPath">defaultPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isRequired">isRequired: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="HdfsFileSelector.html" class="extype" name="com.alpine.plugin.core.dialog.HdfsFileSelector">HdfsFileSelector</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Add a Hdfs file selection box.</p><div class="fullcomment"><div class="comment cmt"><p>Add a Hdfs file selection box. This can be used to select an Hdfs file
+that already exists through an interactive selection window.</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box. This is used later to reference
+          the value of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">defaultPath</dt><dd class="cmt"><p>The default value to be used in the input box.</p></dd><dt class="param">isRequired</dt><dd class="cmt"><p>- If the operator can be valid if this is left blank</p></dd><dt>returns</dt><dd class="cmt"><p>A Hdfs file selection box element.
 </p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addHdfsFileSelector" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="addHdfsFileSelector(id:String,label:String,defaultPath:String):com.alpine.plugin.core.dialog.HdfsFileSelector"></a>
@@ -311,7 +373,22 @@ use.</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cm
         <span class="name">addRadioButtons</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="values">values: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="defaultSelection">defaultSelection: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="RadioButtons.html" class="extype" name="com.alpine.plugin.core.dialog.RadioButtons">RadioButtons</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Add a radio button input (a multiple choice input).</p><div class="fullcomment"><div class="comment cmt"><p>Add a radio button input (a multiple choice input).</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">values</dt><dd class="cmt"><p>Available checkbox values.</p></dd><dt class="param">defaultSelection</dt><dd class="cmt"><p>Default selected button.</p></dd><dt>returns</dt><dd class="cmt"><p>A radio button element.
+      <p class="shortcomment cmt">Add a radio button input (a multiple choice input).</p><div class="fullcomment"><div class="comment cmt"><p>Add a radio button input (a multiple choice input).</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">values</dt><dd class="cmt"><p>Available checkbox values</p></dd><dt class="param">defaultSelection</dt><dd class="cmt"><p>Default selected button.</p></dd><dt>returns</dt><dd class="cmt"><p>A radio button element.
+</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addRadioButtonsFromJavaList" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="addRadioButtonsFromJavaList(id:String,label:String,values:java.util.List[String],defaultSelection:String):com.alpine.plugin.core.dialog.RadioButtons"></a>
+      <a id="addRadioButtonsFromJavaList(String,String,List[String],String):RadioButtons"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addRadioButtonsFromJavaList</span><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="values">values: <span class="extype" name="java.util.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="defaultSelection">defaultSelection: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="RadioButtons.html" class="extype" name="com.alpine.plugin.core.dialog.RadioButtons">RadioButtons</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Add a radio button input (a multiple choice input).</p><div class="fullcomment"><div class="comment cmt"><p>Add a radio button input (a multiple choice input).
+This version is Java-friendly.</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>String id of this input box.</p></dd><dt class="param">label</dt><dd class="cmt"><p>The visual label of this input box.</p></dd><dt class="param">values</dt><dd class="cmt"><p>Available checkbox values as java.util.List</p></dd><dt class="param">defaultSelection</dt><dd class="cmt"><p>Default selected button.</p></dd><dt>returns</dt><dd class="cmt"><p>A radio button element.
 </p></dd></dl></div>
     </li><li name="com.alpine.plugin.core.dialog.OperatorDialog#addStringBox" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="addStringBox(id:String,label:String,defaultValue:String,regex:String,required:Boolean):com.alpine.plugin.core.dialog.StringBox"></a>
