@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>pack - com.alpine.model.pack</title>
+          <meta name="description" content="pack - com.alpine.model.pack" />
+          <meta name="keywords" content="pack com.alpine.model.pack" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.alpine.model.pack.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../package.html" class="extype" name="com.alpine.model">model</a></p>
+        <h1>pack</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pack</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.model.pack.UnitModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UnitModelextendsRowModelwithPFAConvertiblewithProductwithSerializable"></a>
+      <a id="UnitModel:UnitModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnitModel.html"><span class="name">UnitModel</span></a><span class="params">(<span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a>]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a> with <a href="../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Represents a model that carries features through without transforming them.</p>
+    </li><li name="com.alpine.model.pack.UnitSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UnitSQLTransformerextendsSimpleSQLTransformerwithProductwithSerializable"></a>
+      <a id="UnitSQLTransformer:UnitSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnitSQLTransformer.html"><span class="name">UnitSQLTransformer</span></a><span class="params">(<span name="model">model: <a href="UnitModel.html" class="extype" name="com.alpine.model.pack.UnitModel">UnitModel</a></span>, <span name="sqlGenerator">sqlGenerator: <a href="../../sql/SQLGenerator.html" class="extype" name="com.alpine.sql.SQLGenerator">SQLGenerator</a></span>)</span><span class="result"> extends <a href="sql/SimpleSQLTransformer.html" class="extype" name="com.alpine.model.pack.sql.SimpleSQLTransformer">SimpleSQLTransformer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.model.pack.UnitTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UnitTransformer"></a>
+      <a id="UnitTransformer:UnitTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="UnitTransformer$.html"><span class="name">UnitTransformer</span></a><span class="result"> extends <a href="../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Applies the unit (a.</p>
+    </li><li name="com.alpine.model.pack.ml" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ml"></a>
+      <a id="ml:ml"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="ml/package.html"><span class="name">ml</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="multiple"></a>
+      <a id="multiple:multiple"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="multiple/package.html"><span class="name">multiple</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.preprocess" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="preprocess"></a>
+      <a id="preprocess:preprocess"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="preprocess/package.html"><span class="name">preprocess</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.sql" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="sql"></a>
+      <a id="sql:sql"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="sql/package.html"><span class="name">sql</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.util" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="util"></a>
+      <a id="util:util"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="util/package.html"><span class="name">util</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+    </body>
+      </html>

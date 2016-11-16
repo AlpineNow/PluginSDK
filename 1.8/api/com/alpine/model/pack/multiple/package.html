@@ -1,0 +1,381 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>multiple - com.alpine.model.pack.multiple</title>
+          <meta name="description" content="multiple - com.alpine.model.pack.multiple" />
+          <meta name="keywords" content="multiple com.alpine.model.pack.multiple" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.alpine.model.pack.multiple.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.model">model</a>.<a href="../package.html" class="extype" name="com.alpine.model.pack">pack</a></p>
+        <h1>multiple</h1>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">multiple</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.model.pack.multiple.CombinerModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CombinerModelextendsRowModelwithPFAConvertiblewithProductwithSerializable"></a>
+      <a id="CombinerModel:CombinerModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CombinerModel.html"><span class="name">CombinerModel</span></a><span class="params">(<span name="models">models: <span class="extype" name="scala.Seq">Seq</span>[<a href="ModelWithID.html" class="extype" name="com.alpine.model.pack.multiple.ModelWithID">ModelWithID</a>]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a> with <a href="../../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Used to combine several models in parallel.</p>
+    </li><li name="com.alpine.model.pack.multiple.CombinerTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CombinerTransformerextendsTransformerwithProductwithSerializable"></a>
+      <a id="CombinerTransformer:CombinerTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CombinerTransformer.html"><span class="name">CombinerTransformer</span></a><span class="params">(<span name="model">model: <a href="CombinerModel.html" class="extype" name="com.alpine.model.pack.multiple.CombinerModel">CombinerModel</a></span>)</span><span class="result"> extends <a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.GroupByClassificationModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupByClassificationModelextendsClassificationRowModelwithGroupByModel[com.alpine.model.ClassificationRowModel]withPFAConvertiblewithProductwithSerializable"></a>
+      <a id="GroupByClassificationModel:GroupByClassificationModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupByClassificationModel.html"><span class="name">GroupByClassificationModel</span></a><span class="params">(<span name="groupByFeature">groupByFeature: <a href="../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a></span>, <span name="modelsByGroup">modelsByGroup: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../ClassificationRowModel.html" class="extype" name="com.alpine.model.ClassificationRowModel">ClassificationRowModel</a>]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../ClassificationRowModel.html" class="extype" name="com.alpine.model.ClassificationRowModel">ClassificationRowModel</a> with <a href="GroupByModel.html" class="extype" name="com.alpine.model.pack.multiple.GroupByModel">GroupByModel</a>[<a href="../../ClassificationRowModel.html" class="extype" name="com.alpine.model.ClassificationRowModel">ClassificationRowModel</a>] with <a href="../../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.GroupByClassificationTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupByClassificationTransformerextendsClassificationTransformerwithGroupByTransformer[com.alpine.model.ClassificationRowModel]withProductwithSerializable"></a>
+      <a id="GroupByClassificationTransformer:GroupByClassificationTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupByClassificationTransformer.html"><span class="name">GroupByClassificationTransformer</span></a><span class="params">(<span name="model">model: <a href="GroupByClassificationModel.html" class="extype" name="com.alpine.model.pack.multiple.GroupByClassificationModel">GroupByClassificationModel</a></span>)</span><span class="result"> extends <a href="../../../transformer/ClassificationTransformer.html" class="extype" name="com.alpine.transformer.ClassificationTransformer">ClassificationTransformer</a> with <a href="GroupByTransformer.html" class="extype" name="com.alpine.model.pack.multiple.GroupByTransformer">GroupByTransformer</a>[<a href="../../ClassificationRowModel.html" class="extype" name="com.alpine.model.ClassificationRowModel">ClassificationRowModel</a>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.GroupByModel" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="GroupByModel[M&lt;:com.alpine.model.RowModel]extendsAnyRef"></a>
+      <a id="GroupByModel[M&lt;:RowModel]:GroupByModel[M]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupByModel.html"><span class="name">GroupByModel</span></a><span class="tparams">[<span name="M">M &lt;: <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by Jennifer Thompson on 2/12/16.</p>
+    </li><li name="com.alpine.model.pack.multiple.GroupByRegressionModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupByRegressionModelextendsRegressionRowModelwithGroupByModel[com.alpine.model.RegressionRowModel]withPFAConvertiblewithProductwithSerializable"></a>
+      <a id="GroupByRegressionModel:GroupByRegressionModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupByRegressionModel.html"><span class="name">GroupByRegressionModel</span></a><span class="params">(<span name="groupByFeature">groupByFeature: <a href="../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a></span>, <span name="modelsByGroup">modelsByGroup: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a>]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a> with <a href="GroupByModel.html" class="extype" name="com.alpine.model.pack.multiple.GroupByModel">GroupByModel</a>[<a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a>] with <a href="../../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by Jennifer Thompson on 2/9/16.</p>
+    </li><li name="com.alpine.model.pack.multiple.GroupByRegressionTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupByRegressionTransformerextendsRegressionTransformerwithGroupByTransformer[com.alpine.model.RegressionRowModel]withProductwithSerializable"></a>
+      <a id="GroupByRegressionTransformer:GroupByRegressionTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupByRegressionTransformer.html"><span class="name">GroupByRegressionTransformer</span></a><span class="params">(<span name="model">model: <a href="GroupByRegressionModel.html" class="extype" name="com.alpine.model.pack.multiple.GroupByRegressionModel">GroupByRegressionModel</a></span>)</span><span class="result"> extends <a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a> with <a href="GroupByTransformer.html" class="extype" name="com.alpine.model.pack.multiple.GroupByTransformer">GroupByTransformer</a>[<a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.GroupByTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="GroupByTransformer[M&lt;:com.alpine.model.RowModel]extendsAnyRef"></a>
+      <a id="GroupByTransformer[M&lt;:RowModel]:GroupByTransformer[M]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupByTransformer.html"><span class="name">GroupByTransformer</span></a><span class="tparams">[<span name="M">M &lt;: <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by Jennifer Thompson on 2/12/16.</p>
+    </li><li name="com.alpine.model.pack.multiple.ModelWithID" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ModelWithIDextendsProductwithSerializable"></a>
+      <a id="ModelWithID:ModelWithID"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ModelWithID.html"><span class="name">ModelWithID</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="model">model: <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.PipelineCategoricalModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineCategoricalModelextendsCategoricalRowModelwithPFAConvertiblewithProductwithSerializable"></a>
+      <a id="PipelineCategoricalModel:PipelineCategoricalModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineCategoricalModel.html"><span class="name">PipelineCategoricalModel</span></a><span class="params">(<span name="preProcessors">preProcessors: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a>]</span>, <span name="finalModel">finalModel: <a href="../../CategoricalRowModel.html" class="extype" name="com.alpine.model.CategoricalRowModel">CategoricalRowModel</a></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../CategoricalRowModel.html" class="extype" name="com.alpine.model.CategoricalRowModel">CategoricalRowModel</a> with <a href="../../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Never used by Alpine.</p>
+    </li><li name="com.alpine.model.pack.multiple.PipelineCategoricalTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineCategoricalTransformer[R&lt;:com.alpine.result.CategoricalResult]extendsPipelineMLTransformer[R]withCategoricalTransformer[R]"></a>
+      <a id="PipelineCategoricalTransformer[R&lt;:CategoricalResult]:PipelineCategoricalTransformer[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineCategoricalTransformer.html"><span class="name">PipelineCategoricalTransformer</span></a><span class="tparams">[<span name="R">R &lt;: <a href="../../../result/CategoricalResult.html" class="extype" name="com.alpine.result.CategoricalResult">CategoricalResult</a></span>]</span><span class="result"> extends <a href="PipelineMLTransformer.html" class="extype" name="com.alpine.model.pack.multiple.PipelineMLTransformer">PipelineMLTransformer</a>[<span class="extype" name="com.alpine.model.pack.multiple.PipelineCategoricalTransformer.R">R</span>] with <a href="../../../transformer/CategoricalTransformer.html" class="extype" name="com.alpine.transformer.CategoricalTransformer">CategoricalTransformer</a>[<span class="extype" name="com.alpine.model.pack.multiple.PipelineCategoricalTransformer.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.PipelineClassificationModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineClassificationModelextendsClassificationRowModelwithPFAConvertiblewithProductwithSerializable"></a>
+      <a id="PipelineClassificationModel:PipelineClassificationModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineClassificationModel.html"><span class="name">PipelineClassificationModel</span></a><span class="params">(<span name="preProcessors">preProcessors: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a>]</span>, <span name="finalModel">finalModel: <a href="../../ClassificationRowModel.html" class="extype" name="com.alpine.model.ClassificationRowModel">ClassificationRowModel</a></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../ClassificationRowModel.html" class="extype" name="com.alpine.model.ClassificationRowModel">ClassificationRowModel</a> with <a href="../../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Used for combining a Classification model (e.</p>
+    </li><li name="com.alpine.model.pack.multiple.PipelineClassificationTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineClassificationTransformerextendsPipelineCategoricalTransformer[com.alpine.result.ClassificationResult]withClassificationTransformerwithProductwithSerializable"></a>
+      <a id="PipelineClassificationTransformer:PipelineClassificationTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineClassificationTransformer.html"><span class="name">PipelineClassificationTransformer</span></a><span class="params">(<span name="preProcessors">preProcessors: <span class="extype" name="scala.List">List</span>[_ &lt;: <a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a>]</span>, <span name="finalTransformer">finalTransformer: <a href="../../../transformer/ClassificationTransformer.html" class="extype" name="com.alpine.transformer.ClassificationTransformer">ClassificationTransformer</a></span>, <span name="subModels">subModels: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a>]</span>)</span><span class="result"> extends <a href="PipelineCategoricalTransformer.html" class="extype" name="com.alpine.model.pack.multiple.PipelineCategoricalTransformer">PipelineCategoricalTransformer</a>[<a href="../../../result/ClassificationResult.html" class="extype" name="com.alpine.result.ClassificationResult">ClassificationResult</a>] with <a href="../../../transformer/ClassificationTransformer.html" class="extype" name="com.alpine.transformer.ClassificationTransformer">ClassificationTransformer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.PipelineClusteringModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineClusteringModelextendsClusteringRowModelwithPFAConvertiblewithProductwithSerializable"></a>
+      <a id="PipelineClusteringModel:PipelineClusteringModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineClusteringModel.html"><span class="name">PipelineClusteringModel</span></a><span class="params">(<span name="preProcessors">preProcessors: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a>]</span>, <span name="finalModel">finalModel: <a href="../../ClusteringRowModel.html" class="extype" name="com.alpine.model.ClusteringRowModel">ClusteringRowModel</a></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../ClusteringRowModel.html" class="extype" name="com.alpine.model.ClusteringRowModel">ClusteringRowModel</a> with <a href="../../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Used for combining a Clustering model (e.</p>
+    </li><li name="com.alpine.model.pack.multiple.PipelineClusteringTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineClusteringTransformerextendsPipelineCategoricalTransformer[com.alpine.result.ClusteringResult]withClusteringTransformerwithProductwithSerializable"></a>
+      <a id="PipelineClusteringTransformer:PipelineClusteringTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineClusteringTransformer.html"><span class="name">PipelineClusteringTransformer</span></a><span class="params">(<span name="preProcessors">preProcessors: <span class="extype" name="scala.List">List</span>[_ &lt;: <a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a>]</span>, <span name="finalTransformer">finalTransformer: <a href="../../../transformer/ClusteringTransformer.html" class="extype" name="com.alpine.transformer.ClusteringTransformer">ClusteringTransformer</a></span>, <span name="subModels">subModels: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a>]</span>)</span><span class="result"> extends <a href="PipelineCategoricalTransformer.html" class="extype" name="com.alpine.model.pack.multiple.PipelineCategoricalTransformer">PipelineCategoricalTransformer</a>[<a href="../../../result/ClusteringResult.html" class="extype" name="com.alpine.result.ClusteringResult">ClusteringResult</a>] with <a href="../../../transformer/ClusteringTransformer.html" class="extype" name="com.alpine.transformer.ClusteringTransformer">ClusteringTransformer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.PipelineMLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineMLTransformer[R&lt;:com.alpine.result.MLResult]extendsPipelineTransformerwithMLTransformer[R]"></a>
+      <a id="PipelineMLTransformer[R&lt;:MLResult]:PipelineMLTransformer[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineMLTransformer.html"><span class="name">PipelineMLTransformer</span></a><span class="tparams">[<span name="R">R &lt;: <a href="../../../result/MLResult.html" class="extype" name="com.alpine.result.MLResult">MLResult</a></span>]</span><span class="result"> extends <a href="PipelineTransformer.html" class="extype" name="com.alpine.model.pack.multiple.PipelineTransformer">PipelineTransformer</a> with <a href="../../../transformer/MLTransformer.html" class="extype" name="com.alpine.transformer.MLTransformer">MLTransformer</a>[<span class="extype" name="com.alpine.model.pack.multiple.PipelineMLTransformer.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.PipelineRegressionModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineRegressionModelextendsRegressionRowModelwithPFAConvertiblewithProductwithSerializable"></a>
+      <a id="PipelineRegressionModel:PipelineRegressionModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineRegressionModel.html"><span class="name">PipelineRegressionModel</span></a><span class="params">(<span name="preProcessors">preProcessors: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a>]</span>, <span name="finalModel">finalModel: <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a></span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a> with <a href="../../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Used for combining a Regression model (e.</p>
+    </li><li name="com.alpine.model.pack.multiple.PipelineRegressionTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineRegressionTransformer[R&lt;:com.alpine.result.MLResult]extendsPipelineMLTransformer[com.alpine.result.RealResult]withRegressionTransformer"></a>
+      <a id="PipelineRegressionTransformer[R&lt;:MLResult]:PipelineRegressionTransformer[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineRegressionTransformer.html"><span class="name">PipelineRegressionTransformer</span></a><span class="tparams">[<span name="R">R &lt;: <a href="../../../result/MLResult.html" class="extype" name="com.alpine.result.MLResult">MLResult</a></span>]</span><span class="result"> extends <a href="PipelineMLTransformer.html" class="extype" name="com.alpine.model.pack.multiple.PipelineMLTransformer">PipelineMLTransformer</a>[<a href="../../../result/RealResult.html" class="extype" name="com.alpine.result.RealResult">RealResult</a>] with <a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.PipelineRowModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineRowModelextendsRowModelwithPFAConvertiblewithProductwithSerializable"></a>
+      <a id="PipelineRowModel:PipelineRowModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineRowModel.html"><span class="name">PipelineRowModel</span></a><span class="params">(<span name="transformers">transformers: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a>]</span>, <span name="identifier">identifier: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;&quot;</span></span>)</span><span class="result"> extends <a href="../../RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a> with <a href="../../export/pfa/PFAConvertible.html" class="extype" name="com.alpine.model.export.pfa.PFAConvertible">PFAConvertible</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Used to combine models in sequence.</p>
+    </li><li name="com.alpine.model.pack.multiple.PipelineTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineTransformerextendsTransformer"></a>
+      <a id="PipelineTransformer:PipelineTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineTransformer.html"><span class="name">PipelineTransformer</span></a><span class="result"> extends <a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Transformer to apply several transformers in sequence.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.model.pack.multiple.CombinerModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CombinerModel"></a>
+      <a id="CombinerModel:CombinerModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CombinerModel$.html"><span class="name">CombinerModel</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="com.alpine.model.pack.multiple.sql" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="sql"></a>
+      <a id="sql:sql"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="sql/package.html"><span class="name">sql</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../../lib/template.js"></script>
+    </body>
+      </html>
