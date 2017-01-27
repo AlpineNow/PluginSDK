@@ -167,14 +167,21 @@ trait OperatorDialog {
   def addDBTableDropdownBox(id: String, label: String, schemaBoxID: String): DBTableDropdownBox
 
   /**
-   * Add an integer text box.
-   * @param id String id of this input box.
-   * @param label The visual label of this input box.
-   * @param min The minimum accepted value for the integer.
-   * @param max The maximum accepted value for the integer.
-   * @param defaultValue The default value for the integer.
-   * @return An integer box element.
-   */
+    * @param id String id of dropdown box. This corresponds to the id for this parameter in OperatorsParameters.
+    * @param label The visual label of this dropdown box.
+    * @param extensionFilter e.g. Seq(.pynb) for python notebooks
+    */
+  def addChorusFileDropdownBox(id: String, label: String, extensionFilter: Set[String], isRequired: Boolean): ChorusFileDropdown
+
+  /**
+    * Add an integer text box.
+    * @param id String id of this input box.
+    * @param label The visual label of this input box.
+    * @param min The minimum accepted value for the integer.
+    * @param max The maximum accepted value for the integer.
+    * @param defaultValue The default value for the integer.
+    * @return An integer box element.
+    */
   def addIntegerBox(
     id: String,
     label: String,
@@ -543,4 +550,10 @@ object ColumnFilter {
     acceptedTypes: ColumnType.TypeValue*): ColumnFilter = {
     ColumnFilter(acceptedTypes.toSet, acceptedNameRegex)
   }
+}
+
+object Regex{
+  val ANY_STRING = ".*"
+  val AT_LEAST_ONE_CHAR = ".+"
+  val VALID_COLUMN_NAME = "^[A-Za-z]+\\w*$"
 }
