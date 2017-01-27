@@ -4,8 +4,10 @@
  */
 package com.alpine.model.pack.preprocess
 
-import com.alpine.json.{ModelJsonUtil, JsonTestUtil}
-import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
+import java.io.ObjectStreamClass
+
+import com.alpine.json.{JsonTestUtil, ModelJsonUtil}
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
 import com.alpine.util.SimpleSQLGenerator
 import org.scalatest.FunSuite
@@ -96,6 +98,10 @@ class OneHotEncodingModelTest extends FunSuite {
     )
 
     assert(expected === sql)
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[OneHotEncodingModel]).getSerialVersionUID === -7558600518234424483L)
   }
 
 }

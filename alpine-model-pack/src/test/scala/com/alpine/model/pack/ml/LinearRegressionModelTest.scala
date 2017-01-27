@@ -4,6 +4,8 @@
  */
 package com.alpine.model.pack.ml
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.{JsonTestUtil, ModelJsonUtil}
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import org.scalatest.FunSuite
@@ -35,6 +37,10 @@ class LinearRegressionModelTest extends FunSuite {
     coef.foreach(d => {
       assert(d.isNaN)
     })
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[LinearRegressionModel]).getSerialVersionUID === -4888344570084962586L)
   }
 
 }

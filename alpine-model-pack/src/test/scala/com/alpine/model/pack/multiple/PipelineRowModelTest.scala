@@ -4,6 +4,8 @@
  */
 package com.alpine.model.pack.multiple
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.JsonTestUtil
 import com.alpine.model.pack.ml.LinearRegressionModel
 import com.alpine.model.{MLModel, RowModel}
@@ -39,4 +41,15 @@ class PipelineRowModelTest extends FunSuite {
     assert(expectedClasses == classesForLoading)
   }
 
+  test("Serial UID should be stable") {
+    assertSerialUID(classOf[PipelineRowModel], -5456055908821806710L)
+    assertSerialUID(classOf[PipelineRegressionModel], 381487725247733182L)
+    assertSerialUID(classOf[PipelineClassificationModel], -2407095602660767904L)
+    assertSerialUID(classOf[PipelineClusteringModel], -8221170007141359159L)
+  }
+
+  private def assertSerialUID(clazz: Class[_], serialUID: Long) = {
+    val l = ObjectStreamClass.lookup(clazz).getSerialVersionUID
+    assert(l === serialUID)
+  }
 }

@@ -4,6 +4,8 @@
  */
 package com.alpine.model.pack.preprocess
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.JsonTestUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
@@ -60,6 +62,10 @@ class PolynomialModelTest extends FunSuite {
     assert(Seq(1d, 0d) === model.transformer.apply(Seq(1,1,0)))
     assert(Seq(1, 8 * 9d) === model.transformer.apply(Seq(1,2,3)))
     assert(Seq(1, 1 * 2.25) === model.transformer.apply(Seq(4,1,1.5)))
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[PolynomialModel]).getSerialVersionUID === -6759725743006372988L)
   }
 
 }

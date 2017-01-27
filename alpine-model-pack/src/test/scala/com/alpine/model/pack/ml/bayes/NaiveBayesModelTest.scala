@@ -3,6 +3,8 @@
 */
 package com.alpine.model.pack.ml.bayes
 
+import java.io.ObjectStreamClass
+
 import com.alpine.common.serialization.json.TypeWrapper
 import com.alpine.json.JsonTestUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -110,6 +112,10 @@ class NaiveBayesModelTest extends FunSuite {
     assert(expectedClassificationSQL.confidenceSQL === sql.confidenceSQL)
     assert(expectedClassificationSQL.intermediateLayers === sql.intermediateLayers)
     assert(expectedClassificationSQL === sql)
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[NaiveBayesModel]).getSerialVersionUID === -2610940394389016692L)
   }
 
 }

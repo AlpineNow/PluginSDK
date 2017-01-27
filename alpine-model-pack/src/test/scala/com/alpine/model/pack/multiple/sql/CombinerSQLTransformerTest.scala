@@ -18,7 +18,38 @@ class CombinerSQLTransformerTest extends FunSuite {
 
   private val simpleSQLGenerator = new SimpleSQLGenerator
 
-  test("Combining the same model with itself (or something with the same column names) should not produce name collisions.") {
+  test("Combining the same model with itself (or something with the same column names) should not produce name collisions when using blank ids.") {
+
+    val oneHotModel = (new OneHotEncodingModelTest).oneHotEncoderModel
+    val lirModel = LinearRegressionModel.make(Seq[Double](0.9, 1, 5), oneHotModel.outputFeatures, 0.2)
+    val pipeModel = new PipelineRowModel(Seq(oneHotModel, lirModel))
+
+    val combiner = new CombinerModel(Seq(ModelWithID("", pipeModel), ModelWithID("", pipeModel)))
+    val sqlTransformer = combiner.sqlTransformer(simpleSQLGenerator).get
+    val sqlExpressions = sqlTransformer.getSQL
+    val createTableSQL = SQLUtility.createTable(sqlExpressions, "demo.golfnew", "demo.delete_me", new AliasGenerator, simpleSQLGenerator)
+
+    val expectedSQL =
+      """
+        |CREATE TABLE demo.delete_me AS
+        | SELECT
+        | 0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED",
+        | 0.2 + "column_0" * 0.9 + "column_2" * 1.0 + "column_1" * 5.0 AS "PRED_1"
+        | FROM
+        | (SELECT
+        | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_0",
+        | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_1",
+        | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "wind_0",
+        | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_0",
+        | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_2",
+        | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "column_1"
+        | FROM demo.golfnew
+        |) AS alias_0
+        |""".stripMargin.replace("\n", "")
+    assert(expectedSQL === createTableSQL)
+  }
+
+  test("Model identifiers passed in should take effect in the generated column names.") {
 
     val oneHotModel = (new OneHotEncodingModelTest).oneHotEncoderModel
     val lirModel = LinearRegressionModel.make(Seq[Double](0.9, 1, 5), oneHotModel.outputFeatures, 0.2)
@@ -33,8 +64,8 @@ class CombinerSQLTransformerTest extends FunSuite {
       """
         |CREATE TABLE demo.delete_me AS
         | SELECT
-        | 0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED",
-        | 0.2 + "column_0" * 0.9 + "column_2" * 1.0 + "column_1" * 5.0 AS "PRED_1"
+        | 0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED_first",
+        | 0.2 + "column_0" * 0.9 + "column_2" * 1.0 + "column_1" * 5.0 AS "PRED_second"
         | FROM
         | (SELECT
         | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_0",

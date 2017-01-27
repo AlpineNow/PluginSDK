@@ -4,8 +4,10 @@
  */
 package com.alpine.model.pack.preprocess
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.JsonTestUtil
-import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.transformer.sql.ColumnarSQLExpression
 import com.alpine.util.SimpleSQLGenerator
 import org.scalatest.FunSuite
@@ -44,5 +46,9 @@ class NullValueReplacementTest extends FunSuite {
       ColumnarSQLExpression("""COALESCE("outlook", 'sunny')""")
     )
     assert(expected === sqlExpressions)
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[NullValueReplacement]).getSerialVersionUID === -5428266012734031656L)
   }
 }

@@ -38,7 +38,7 @@ case class CombinerModel(models: Seq[ModelWithID], override val identifier: Stri
   }
 
   override def sqlOutputFeatures: Seq[ColumnDef] = {
-    CombinerModel.getOutputFeaturesWithGroupID(models.map(m =>(m.model.identifier, m.model.sqlOutputFeatures)))
+    CombinerModel.getOutputFeaturesWithGroupID(models.map(m =>(m.id, m.model.sqlOutputFeatures)))
   }
 
   override def classesForLoading = {
@@ -117,6 +117,11 @@ object CombinerModel {
   // Similar to apply, but we don't call it "apply" because
   // then the constructors can't be distinguished after type erasure.
   def make(models: Seq[RowModel]): CombinerModel = {
+    new CombinerModel(models.map(m => ModelWithID(m.identifier, m)))
+  }
+
+  def make[T <: RowModel](models: java.util.List[T]): CombinerModel = {
+    import scala.collection.JavaConversions._
     new CombinerModel(models.map(m => ModelWithID(m.identifier, m)))
   }
 

@@ -16,7 +16,7 @@ class RealValuedFunctionsPFAConverterTest extends AlpinePFAConversionTest {
   val inputFeatures = Seq(ColumnDef("x1", ColumnType.Double), ColumnDef("x2", ColumnType.Double))
   val functions = Seq(
     (Exp(), 0), (Exp(), 1), (Log(), 1), (Power(2), 0),
-    (Log1p(), 0), (Multiply(3.2), 0), (Divide(4.6), 0), (Add(5.2), 0), (Subtract(5.2), 0))
+    (Log1p(), 0), (Multiply(3.2), 0), (Divide(4.6), 0), (Add(5.2), 0), (Subtract(5.2), 0), (LinearFunction(4, 5), 0))
   val testModel = RealValuedFunctionsModel(functions.map(t => RealFunctionWithIndex(TypeWrapper(t._1), t._2)), inputFeatures)
 
   val testRows = {

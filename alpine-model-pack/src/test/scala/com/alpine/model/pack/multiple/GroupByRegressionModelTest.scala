@@ -1,5 +1,7 @@
 package com.alpine.model.pack.multiple
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.JsonTestUtil
 import com.alpine.model.pack.ml.LinearRegressionModel
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -107,5 +109,10 @@ class GroupByRegressionModelTest extends FunSuite {
       assert(p2 == q2)
     })
   }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[GroupByRegressionModel]).getSerialVersionUID === -941388806378184495L)
+  }
+
 
 }
