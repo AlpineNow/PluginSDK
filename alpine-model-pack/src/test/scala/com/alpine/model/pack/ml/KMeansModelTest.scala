@@ -34,7 +34,7 @@ class KMeansModelTest extends FunSuite {
   test("Should generate the correct SQL Expression") {
     val clusteringSQL = model.sqlTransformer(new SimpleSQLGenerator).get.getClusteringSQL
     val expectedClusteringSQL = ClusteringModelSQLExpressions(
-      ColumnarSQLExpression( s"""(CASE WHEN ("DIST_0" < "DIST_1" AND "DIST_0" < "DIST_2") THEN 'A' WHEN ("DIST_1" < "DIST_2") THEN 'B' ELSE 'C' END)"""),
+      ColumnarSQLExpression( s"""CASE WHEN "DIST_0" IS NULL OR "DIST_1" IS NULL OR "DIST_2" IS NULL THEN NULL ELSE (CASE WHEN ("DIST_0" < "DIST_1" AND "DIST_0" < "DIST_2") THEN 'A' WHEN ("DIST_1" < "DIST_2") THEN 'B' ELSE 'C' END) END"""),
       Map("A" -> ColumnarSQLExpression(""""DIST_0""""), "B" -> ColumnarSQLExpression(""""DIST_1""""), "C" -> ColumnarSQLExpression(""""DIST_2"""")),
       List(
         List(
@@ -54,10 +54,13 @@ class KMeansModelTest extends FunSuite {
     val sql = SQLUtility.createTable(sqlExpressions, """"demo"."golfnew"""", """"demo"."delete_me"""", new AliasGenerator, sqlGenerator)
 
     val expectedSQL =
-      s"""
+      """
          |CREATE TABLE "demo"."delete_me"
          | AS SELECT
-         | (CASE WHEN ("DIST_0" < "DIST_1" AND "DIST_0" < "DIST_2") THEN 'A' WHEN ("DIST_1" < "DIST_2") THEN 'B' ELSE 'C' END) AS "PRED"
+         | CASE WHEN "DIST_0" IS NULL OR "DIST_1" IS NULL OR "DIST_2" IS NULL THEN NULL ELSE
+         | (CASE WHEN ("DIST_0" < "DIST_1" AND "DIST_0" < "DIST_2") THEN 'A' WHEN ("DIST_1" < "DIST_2") THEN 'B' ELSE 'C' END)
+         | END
+         | AS "PRED"
          | FROM
          | (SELECT
          | SQRT((77.16666666666667 - "humidity") * (77.16666666666667 - "humidity") + (79.66666666666667 - "temperature") * (79.66666666666667 - "temperature"))

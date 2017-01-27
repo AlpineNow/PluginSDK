@@ -32,7 +32,7 @@ class LogisticRegressionSQLTransformerTest extends FunSuite {
         Seq((ColumnarSQLExpression("1 + \"e0\""), ColumnName("sum")), (ColumnarSQLExpression("\"e0\""), ColumnName("e0"))),
         Seq((ColumnarSQLExpression("1 / \"sum\""), ColumnName("baseVal")), (ColumnarSQLExpression("\"e0\" / \"sum\""), ColumnName("ce0"))),
         Seq(
-          (ColumnarSQLExpression("(CASE WHEN (\"baseVal\" > \"ce0\") THEN 'no' ELSE 'yes' END)"), ColumnName("PRED"))
+          (ColumnarSQLExpression("CASE WHEN \"baseVal\" IS NULL OR \"ce0\" IS NULL THEN NULL ELSE (CASE WHEN (\"baseVal\" > \"ce0\") THEN 'no' ELSE 'yes' END) END"), ColumnName("PRED"))
         )
       )
     )
@@ -49,7 +49,7 @@ class LogisticRegressionSQLTransformerTest extends FunSuite {
     ).sqlTransformer(simpleSQLGenerator).get
     val sql = lor.getClassificationSQL
     val expected = ClassificationModelSQLExpressions(
-      labelColumnSQL = ColumnarSQLExpression("(CASE WHEN (\"baseVal\" > \"ce0\") THEN 'no' ELSE 'yes' END)"),
+      labelColumnSQL = ColumnarSQLExpression("CASE WHEN \"baseVal\" IS NULL OR \"ce0\" IS NULL THEN NULL ELSE (CASE WHEN (\"baseVal\" > \"ce0\") THEN 'no' ELSE 'yes' END) END"),
       confidenceSQL = Map("no" -> ColumnarSQLExpression("\"baseVal\""), "yes" -> ColumnarSQLExpression("\"ce0\"")),
       Seq(
         Seq((ColumnarSQLExpression("""EXP(4.0 + "temperature" * 2.0 + "humidity" * 3.0)"""), ColumnName("e0"))),
@@ -81,7 +81,7 @@ class LogisticRegressionSQLTransformerTest extends FunSuite {
     val expectedSQL =
       """CREATE TABLE demo.delete_me AS
         | SELECT
-        | (CASE WHEN ("baseVal" > "ce0") THEN 'no' ELSE 'yes' END) AS "PRED"
+        | CASE WHEN "baseVal" IS NULL OR "ce0" IS NULL THEN NULL ELSE (CASE WHEN ("baseVal" > "ce0") THEN 'no' ELSE 'yes' END) END AS "PRED"
         | FROM
         | (SELECT
         | 1 / "sum" AS "baseVal",

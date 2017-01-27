@@ -77,7 +77,7 @@ class NaiveBayesModelTest extends FunSuite {
     val conf0SQL = ColumnarSQLExpression(""""conf_0"""")
     val conf1SQL = ColumnarSQLExpression(""""conf_1"""")
     val expectedClassificationSQL = ClassificationModelSQLExpressions(
-      labelColumnSQL = ColumnarSQLExpression("""(CASE WHEN ("conf_0" > "conf_1") THEN 'yes' ELSE 'no' END)"""),
+      labelColumnSQL = ColumnarSQLExpression("""CASE WHEN "conf_0" IS NULL OR "conf_1" IS NULL THEN NULL ELSE (CASE WHEN ("conf_0" > "conf_1") THEN 'yes' ELSE 'no' END) END"""),
       confidenceSQL = Map("yes" -> conf0SQL, "no" -> ColumnarSQLExpression(""""conf_1"""")),
       intermediateLayers = List(
         List(

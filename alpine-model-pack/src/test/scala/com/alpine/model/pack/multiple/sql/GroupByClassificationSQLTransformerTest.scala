@@ -39,9 +39,11 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
     val sql = groupModel.sqlTransformer(simpleSQLGenerator).get.getSQL
     val selectStatement = SQLUtility.getSelectStatement(sql, "\"demo\".\"golfnew\"", new AliasGenerator(), simpleSQLGenerator)
     val expectedSQL =
-      """SELECT (CASE WHEN ("CONF0" > "CONF1")
-        |  THEN 'yes'
-        |        ELSE 'no' END) AS "PRED"
+      """SELECT CASE WHEN "CONF0" IS NULL OR "CONF1" IS NULL
+        |  THEN NULL
+        |        ELSE (CASE WHEN ("CONF0" > "CONF1")
+        |          THEN 'yes'
+        |              ELSE 'no' END) END AS "PRED"
         |FROM (SELECT
         |        (CASE WHEN ("wind" = 'true')
         |          THEN "CONF0"
@@ -90,9 +92,11 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
       * There is redundancy in the SQL, which we should fix at some point.
       */
     val expectedSQL =
-      """SELECT (CASE WHEN ("CONF0" > "CONF1")
-        |  THEN 'yes'
-        |        ELSE 'no' END) AS "PRED"
+      """SELECT CASE WHEN "CONF0" IS NULL OR "CONF1" IS NULL
+        |  THEN NULL
+        |        ELSE (CASE WHEN ("CONF0" > "CONF1")
+        |          THEN 'yes'
+        |              ELSE 'no' END) END AS "PRED"
         |FROM (SELECT
         |        (CASE WHEN ("outlook" = 'overcast')
         |          THEN "CONF0"
@@ -148,26 +152,38 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
         |                                      "humidity"    AS "humidity",
         |                                      (CASE WHEN ("wind" = 'true')
         |                                        THEN 1
-        |                                       ELSE 0 END)  AS "wind_0",
+        |                                       WHEN ("wind" = 'false')
+        |                                         THEN 0
+        |                                       ELSE NULL END) AS "wind_0",
         |                                      (CASE WHEN ("wind" = 'false')
         |                                        THEN 1
-        |                                       ELSE 0 END)  AS "wind_1",
-        |                                      "temperature" AS "column_1",
-        |                                      "humidity"    AS "column_3",
+        |                                       WHEN ("wind" = 'true')
+        |                                         THEN 0
+        |                                       ELSE NULL END) AS "wind_1",
+        |                                      "temperature"   AS "column_1",
+        |                                      "humidity"      AS "column_3",
         |                                      (CASE WHEN ("wind" = 'true')
         |                                        THEN 1
-        |                                       ELSE 0 END)  AS "column_4",
+        |                                       WHEN ("wind" = 'false')
+        |                                         THEN 0
+        |                                       ELSE NULL END) AS "column_4",
         |                                      (CASE WHEN ("wind" = 'false')
         |                                        THEN 1
-        |                                       ELSE 0 END)  AS "column_2",
-        |                                      "temperature" AS "column_12",
-        |                                      "humidity"    AS "column_14",
+        |                                       WHEN ("wind" = 'true')
+        |                                         THEN 0
+        |                                       ELSE NULL END) AS "column_2",
+        |                                      "temperature"   AS "column_12",
+        |                                      "humidity"      AS "column_14",
         |                                      (CASE WHEN ("wind" = 'true')
         |                                        THEN 1
-        |                                       ELSE 0 END)  AS "column_15",
+        |                                       WHEN ("wind" = 'false')
+        |                                         THEN 0
+        |                                       ELSE NULL END) AS "column_15",
         |                                      (CASE WHEN ("wind" = 'false')
         |                                        THEN 1
-        |                                       ELSE 0 END)  AS "column_13",
+        |                                       WHEN ("wind" = 'true')
+        |                                         THEN 0
+        |                                       ELSE NULL END) AS "column_13",
         |                                      "outlook"     AS "column_0"
         |                                    FROM
         |                                      "demo"."golfnew") AS alias_0) AS alias_1) AS alias_2) AS alias_3) AS alias_4) AS alias_5"""

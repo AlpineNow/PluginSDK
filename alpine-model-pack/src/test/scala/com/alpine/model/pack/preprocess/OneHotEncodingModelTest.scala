@@ -88,12 +88,13 @@ class OneHotEncodingModelTest extends FunSuite {
     val expected = LayeredSQLExpressions(
       Seq(
         Seq(
-          (ColumnarSQLExpression("(CASE WHEN (\"outlook\" = 'sunny') THEN 1 ELSE 0 END)"), ColumnName("outlook_0")),
-          (ColumnarSQLExpression("(CASE WHEN (\"outlook\" = 'overcast') THEN 1 ELSE 0 END)"), ColumnName("outlook_1")),
-          (ColumnarSQLExpression("(CASE WHEN (\"wind\" = 'true') THEN 1 ELSE 0 END)"), ColumnName("wind_0"))
+          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END)"""), ColumnName("outlook_0")),
+          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END)"""), ColumnName("outlook_1")),
+          (ColumnarSQLExpression("""(CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END)"""), ColumnName("wind_0"))
         )
       )
     )
+
     assert(expected === sql)
   }
 

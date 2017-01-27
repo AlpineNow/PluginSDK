@@ -23,9 +23,9 @@ class PipelineRegressionSQLTransformerTest extends FunSuite {
       ColumnarSQLExpression("""0.0 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0"""),
       List(
         List(
-          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'sunny') THEN 1 ELSE 0 END)"""), ColumnName("outlook_0")),
-          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'overcast') THEN 1 ELSE 0 END)"""), ColumnName("outlook_1")),
-          (ColumnarSQLExpression("""(CASE WHEN ("wind" = 'true') THEN 1 ELSE 0 END)"""), ColumnName("wind_0"))
+          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END)"""), ColumnName("outlook_0")),
+          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END)"""), ColumnName("outlook_1")),
+          (ColumnarSQLExpression("""(CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END)"""), ColumnName("wind_0"))
         )
       )
     )
@@ -40,10 +40,10 @@ class PipelineRegressionSQLTransformerTest extends FunSuite {
     val expected = """SELECT 0.0 +
                      | "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED"
                      | FROM (SELECT
-                       | (CASE WHEN ("outlook" = 'sunny') THEN 1 ELSE 0 END) AS "outlook_0",
-                       | (CASE WHEN ("outlook" = 'overcast') THEN 1 ELSE 0 END) AS "outlook_1",
-                       | (CASE WHEN ("wind" = 'true') THEN 1 ELSE 0 END) AS "wind_0"
-                      | FROM demo.golfnew)
+                     | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_0",
+                     | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_1",
+                     | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "wind_0"
+                     | FROM demo.golfnew)
                      | AS alias_0
                      |""".stripMargin.replace("\n", "")
     assert(expected === selectStatement)

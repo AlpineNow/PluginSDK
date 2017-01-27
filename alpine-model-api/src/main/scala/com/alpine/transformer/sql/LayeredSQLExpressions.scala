@@ -69,7 +69,7 @@ case class ColumnName(rawName: String) {
     this(columnDef.columnName)
   }
 
-  def escape(sqlGenerator: SQLGenerator) = sqlGenerator.escapeColumnName(rawName)
+  def escape(sqlGenerator: SQLGenerator) = sqlGenerator.quoteIdentifier(rawName)
 
   def asColumnarSQLExpression(sqlGenerator: SQLGenerator) = ColumnarSQLExpression(this.escape(sqlGenerator))
 }

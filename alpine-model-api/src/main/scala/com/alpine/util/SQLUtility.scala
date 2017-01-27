@@ -17,7 +17,7 @@ object SQLUtility {
     }
   }
 
-  def wrapInSingleQuotes(s: String) = "'" + s + "'"
+  def wrapInSingleQuotes(s: String): String = "'" + s + "'"
 
   /**
     * Expect numeric or String.
@@ -39,7 +39,7 @@ object SQLUtility {
           comparisonSQL(columnNamesAndLabelValues.tail)
       }
     }
-    "(CASE" + comparisonSQL(labelValuesToColumnNames) + " END)"
+    nullWhenAnyColumnNull(labelValuesToColumnNames.map(_._2), sqlGenerator,"(CASE" + comparisonSQL(labelValuesToColumnNames) + " END)")
   }
 
   def minOrMaxByRowSQL(columnNames: Seq[ColumnName], comparator: String, sqlGenerator: SQLGenerator): String = {
@@ -54,11 +54,15 @@ object SQLUtility {
     "(CASE" + comparisonSQL(columnNames) + " END)"
   }
 
-  def argMinSQL(labelValuesToColumnNames: Seq[(String, ColumnName)], sqlGenerator: SQLGenerator) = {
+  def nullWhenAnyColumnNull(columnNames: Seq[ColumnName], sqlGenerator: SQLGenerator, innards: String): String = {
+    s"CASE WHEN ${columnNames.map(_.escape(sqlGenerator) + " IS NULL").mkString(" OR ")} THEN NULL ELSE $innards END"
+  }
+
+  def argMinSQL(labelValuesToColumnNames: Seq[(String, ColumnName)], sqlGenerator: SQLGenerator): String = {
     argMinOrMaxSQL(labelValuesToColumnNames, "<", sqlGenerator)
   }
 
-  def argMaxSQL(labelValuesToColumnNames: Seq[(String, ColumnName)], sqlGenerator: SQLGenerator) = {
+  def argMaxSQL(labelValuesToColumnNames: Seq[(String, ColumnName)], sqlGenerator: SQLGenerator): String = {
     argMinOrMaxSQL(labelValuesToColumnNames, ">", sqlGenerator)
   }
 

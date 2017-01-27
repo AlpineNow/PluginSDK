@@ -15,9 +15,17 @@ class SQLUtility$Test extends FunSuite {
     assert(""""distA" < "distB" AND "distA" < "distC"""" === comparedToOthers(ColumnName("distA"), Seq(ColumnName("distB"), ColumnName("distC")), "<", new SimpleSQLGenerator))
   }
 
+  test("Should generate null check correctly") {
+    val comparisonSQL: String = nullWhenAnyColumnNull(Seq(ColumnName("distA"), ColumnName("distB"),ColumnName("distC")), new SimpleSQLGenerator, "innards")
+    assert("""CASE WHEN "distA" IS NULL OR "distB" IS NULL OR "distC" IS NULL THEN NULL ELSE innards END""" === comparisonSQL)
+  }
+
   test("Should generate comparison SQL correctly") {
     val comparisonSQL: String = argMinOrMaxSQL(Map("A" -> ColumnName("distA"), "B" -> ColumnName("distB"), "C" -> ColumnName("distC")).toList, "<", new SimpleSQLGenerator)
-    assert("""(CASE WHEN ("distA" < "distB" AND "distA" < "distC") THEN 'A' WHEN ("distB" < "distC") THEN 'B' ELSE 'C' END)""" === comparisonSQL)
+    assert(
+      """CASE WHEN "distA" IS NULL OR "distB" IS NULL OR "distC" IS NULL THEN NULL ELSE
+        | (CASE WHEN ("distA" < "distB" AND "distA" < "distC") THEN 'A' WHEN ("distB" < "distC") THEN 'B' ELSE 'C' END)
+        | END""".stripMargin.replace("\n", "") === comparisonSQL)
   }
 
   test("Should generate group by SQL correctly") {

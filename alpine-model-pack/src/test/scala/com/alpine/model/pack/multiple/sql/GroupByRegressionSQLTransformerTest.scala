@@ -77,10 +77,11 @@ class GroupByRegressionSQLTransformerTest extends FunSuite {
                   | 0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED",
                   | 0.2 + "column_1" * 0.5 + "column_2" * -1.0 AS "PRED_1",
                   | "column_0" AS "wind" FROM
-                  | (SELECT (CASE WHEN ("outlook" = 'sunny') THEN 1 ELSE 0 END) AS "outlook_0",
-                  | (CASE WHEN ("outlook" = 'overcast') THEN 1 ELSE 0 END) AS "outlook_1",
-                  | (CASE WHEN ("outlook" = 'sunny') THEN 1 ELSE 0 END) AS "column_1",
-                  | (CASE WHEN ("outlook" = 'overcast') THEN 1 ELSE 0 END) AS "column_2",
+                  | (SELECT
+                  | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_0",
+                  | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_1",
+                  | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_1",
+                  | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_2",
                   | "wind" AS "column_0"
                   | FROM demo.golfnew) AS alias_0) AS alias_1
                   |""".stripMargin.replaceAllLiterally("\n", "")

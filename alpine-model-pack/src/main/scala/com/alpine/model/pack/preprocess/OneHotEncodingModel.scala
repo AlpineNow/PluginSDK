@@ -85,8 +85,8 @@ case class OneHotEncodingTransformer(pivotsWithFeatures: Seq[OneHotEncodedFeatur
  * @param transform case class wrapping hot values and base values.
  */
 case class SingleOneHotEncoder(transform: OneHotEncodedFeature) {
-  @transient lazy val hotValuesArray = transform.hotValues.toArray
-  @transient lazy val resultDimension = transform.hotValues.length
+  @transient lazy private val hotValuesArray = transform.hotValues.toArray
+  @transient lazy private val resultDimension = transform.hotValues.length
   def setFeatures(currentRow: Array[Any], value: Any, startingIndex: Int): Int = {
     if (startingIndex + resultDimension > currentRow.length) {
       throw new Exception("Cannot do this!!")
@@ -113,16 +113,22 @@ case class SingleOneHotEncoder(transform: OneHotEncodedFeature) {
 
 case class OneHotEncodingSQLTransformer(model: OneHotEncodingModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
 
-  override def getSQLExpressions = {
-    // TODO: Bad data handling.
+  override def getSQLExpressions: Seq[ColumnarSQLExpression] = {
     (inputColumnNames zip model.oneHotEncodedFeatures).flatMap {
       case (name, oneHotEncodedFeatures) =>
         val inputFeature: String = name.escape(sqlGenerator)
-        oneHotEncodedFeatures.hotValues.map(v => {
-          val sql = s"""(CASE WHEN ($inputFeature = '$v') THEN 1 ELSE 0 END)"""
+        oneHotEncodedFeatures.hotValues.map(v1 => {
+          // If it is the hot value v1, we generate 1.
+          // If it is one of the other known values (including base value, if we have one), we generate 0.
+          // Otherwise generate null.
+          val otherValues: Seq[String] = oneHotEncodedFeatures.hotValues.filterNot(v => v == v1) ++ oneHotEncodedFeatures.baseValue.toSeq
+          val sql = s"""(CASE WHEN ${featureEqualsValue(inputFeature, v1)} THEN 1 WHEN ${otherValues.map(vOther => featureEqualsValue(inputFeature, vOther)).mkString(" OR ")} THEN 0 ELSE NULL END)"""
           ColumnarSQLExpression(sql)
         })
     }
   }
 
+  private def featureEqualsValue(inputFeature: String, v: String) = {
+    s"""($inputFeature = '$v')"""
+  }
 }

@@ -37,12 +37,12 @@ class CombinerSQLTransformerTest extends FunSuite {
         | 0.2 + "column_0" * 0.9 + "column_2" * 1.0 + "column_1" * 5.0 AS "PRED_1"
         | FROM
         | (SELECT
-        | (CASE WHEN ("outlook" = 'sunny') THEN 1 ELSE 0 END) AS "outlook_0",
-        | (CASE WHEN ("outlook" = 'overcast') THEN 1 ELSE 0 END) AS "outlook_1",
-        | (CASE WHEN ("wind" = 'true') THEN 1 ELSE 0 END) AS "wind_0",
-        | (CASE WHEN ("outlook" = 'sunny') THEN 1 ELSE 0 END) AS "column_0",
-        | (CASE WHEN ("outlook" = 'overcast') THEN 1 ELSE 0 END) AS "column_2",
-        | (CASE WHEN ("wind" = 'true') THEN 1 ELSE 0 END) AS "column_1"
+        | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_0",
+        | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_1",
+        | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "wind_0",
+        | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_0",
+        | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_2",
+        | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "column_1"
         | FROM demo.golfnew
         |) AS alias_0
         |""".stripMargin.replace("\n", "")
@@ -90,7 +90,7 @@ class CombinerSQLTransformerTest extends FunSuite {
         List(
           (ColumnarSQLExpression("\"column_0\""), ColumnName("temperature")),
           (ColumnarSQLExpression("\"column_1\""), ColumnName("humidity")),
-          (ColumnarSQLExpression("(CASE WHEN (\"baseVal\" > \"ce0\") THEN 'no' ELSE 'yes' END)"), ColumnName("PRED"))
+          (ColumnarSQLExpression("CASE WHEN \"baseVal\" IS NULL OR \"ce0\" IS NULL THEN NULL ELSE (CASE WHEN (\"baseVal\" > \"ce0\") THEN 'no' ELSE 'yes' END) END"), ColumnName("PRED"))
         )
       )
     )
@@ -100,7 +100,7 @@ class CombinerSQLTransformerTest extends FunSuite {
     val expectedSQL =  """CREATE TABLE demo.delete_me AS
                          | SELECT
                          | "column_0" AS "temperature", "column_1" AS "humidity",
-                         | (CASE WHEN ("baseVal" > "ce0") THEN 'no' ELSE 'yes' END) AS "PRED"
+                         | CASE WHEN "baseVal" IS NULL OR "ce0" IS NULL THEN NULL ELSE (CASE WHEN ("baseVal" > "ce0") THEN 'no' ELSE 'yes' END) END AS "PRED"
                          | FROM
                          | (SELECT
                          | "column_0" AS "column_0", "column_1" AS "column_1",
