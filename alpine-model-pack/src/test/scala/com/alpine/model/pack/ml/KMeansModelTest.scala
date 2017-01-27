@@ -4,11 +4,13 @@
  */
 package com.alpine.model.pack.ml
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.JsonTestUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.result.ClusteringResult
 import com.alpine.sql.AliasGenerator
-import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, ClusteringModelSQLExpressions}
+import com.alpine.transformer.sql.{ClusteringModelSQLExpressions, ColumnName, ColumnarSQLExpression}
 import com.alpine.util.{SQLUtility, SimpleSQLGenerator}
 import org.scalatest.FunSuite
 
@@ -72,6 +74,10 @@ class KMeansModelTest extends FunSuite {
          | FROM "demo"."golfnew"
          |) AS alias_0""".stripMargin.replace("\n", "")
     assert(expectedSQL === sql)
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[KMeansModel]).getSerialVersionUID === 1021343246594647667L)
   }
 
 }

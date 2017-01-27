@@ -1,23 +1,22 @@
 /*
- * COPYRIGHT (C) Jun 10 2016 Alpine Data Labs Inc. All Rights Reserved.
- */
-
+ * COPYRIGHT (C) 2017 Alpine Data Labs Inc. All Rights Reserved.
+*/
 package com.alpine.model.export.pfa.modelconverters
 
-import com.alpine.model.export.pfa.{PFAConverter, PFAComponents}
 import com.alpine.model.export.pfa.avrotypes.AvroTypes
-import com.alpine.model.pack.UnitModel
+import com.alpine.model.export.pfa.{PFAComponents, PFAConverter}
+import com.alpine.model.pack.preprocess.RenamingModel
 
 /**
-  * Created by Jennifer Thompson on 6/1/16.
+  * Created by Jennifer Thompson on 1/5/17.
   */
-class UnitPFAConverter(model: UnitModel) extends PFAConverter {
+class RenamingPFAConverter(model: RenamingModel) extends PFAConverter {
 
   override def toPFAComponents(inputName: String, nameSpaceID: Option[String]): PFAComponents = {
     val inputType = AvroTypes.fromAlpineSchema("input", model.inputFeatures)
     val outputType = AvroTypes.fromAlpineSchema("output", model.outputFeatures)
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = Map.empty,

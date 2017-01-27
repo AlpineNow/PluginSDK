@@ -1,5 +1,7 @@
 package com.alpine.model.pack.preprocess
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.JsonTestUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
@@ -55,6 +57,10 @@ class MatrixModelTest extends FunSuite {
     assert(Seq(0, 3) === model.transformer.apply(Seq(1,1,0)))
     assert(Seq(0, 6 + 6) === model.transformer.apply(Seq(1,2,3)))
     assert(Seq(0, 3 + 3) === model.transformer.apply(Seq(4,1,1.5)))
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[MatrixModel]).getSerialVersionUID === 2821986496045802220L)
   }
 
 }

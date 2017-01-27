@@ -4,10 +4,12 @@
  */
 package com.alpine.model.pack.multiple
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.JsonTestUtil
 import com.alpine.model.pack.UnitModel
 import com.alpine.model.pack.preprocess.OneHotEncodingModelTest
-import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import org.scalatest.FunSuite
 
 /**
@@ -23,6 +25,10 @@ class CombinerModelTest extends FunSuite {
 
     val combinerModelWithIdentifiers = new CombinerModel(Seq(ModelWithID("oneHot", oneHotEncoderModel), ModelWithID("unit", unit)))
     JsonTestUtil.testJsonization(combinerModelWithIdentifiers)
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[CombinerModel]).getSerialVersionUID === -8313917981243536138L)
   }
 
 }

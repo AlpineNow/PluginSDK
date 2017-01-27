@@ -140,6 +140,36 @@ case class Log1p() extends RealValuedFunction {
   }
 }
 
+/**
+  * Represents the linear function y = m * x + c.
+  * Can be constructed out of Add and Multiply functions, but included for convenience.
+  *
+  * Added in SDK 1.9 (Alpine-Chorus 6.3).
+  *
+  * @param m multiplier
+  * @param c constant offset
+  */
+case class LinearFunction(m: Double, c: Double) extends RealValuedFunction {
+
+  def apply(x: Double): Double = m * x + c
+
+  override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
+    Some(
+      ColumnarSQLExpression(
+        s"""$m * ${name.escape(sqlGenerator)} + $c"""
+      )
+    )
+  }
+
+  override def pfaRepresentation(inputReference: Any): Any = {
+    FunctionExecute("+",
+      FunctionExecute("*", inputReference, m),
+      c
+    )
+
+  }
+}
+
 //case class Sqrt() extends RealValuedFunction {
 //  def apply(x: Double) = math.sqrt(x)
 //}

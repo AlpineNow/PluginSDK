@@ -1,7 +1,9 @@
 package com.alpine.model.pack.ml
 
+import java.io.ObjectStreamClass
+
 import com.alpine.json.JsonTestUtil
-import com.alpine.plugin.core.io.{ColumnType, ColumnDef}
+import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.result.ClassificationResult
 import org.scalatest.FunSuite
 
@@ -40,6 +42,10 @@ class LogisticRegressionModelTest extends FunSuite {
     val actualResult = transformer.score(testRow)
     assert(expectedResult.toMap === actualResult.toMap)
     assert(expectedResult.equals(actualResult, 1E-6))
+  }
+
+  test("Serial UID should be stable") {
+    assert(ObjectStreamClass.lookup(classOf[MultiLogisticRegressionModel]).getSerialVersionUID === 1381676143872694894L)
   }
 
 }
