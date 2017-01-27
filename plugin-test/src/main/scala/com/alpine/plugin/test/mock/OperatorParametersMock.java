@@ -8,12 +8,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.alpine.plugin.core.dialog.ChorusFile;
 import com.alpine.plugin.core.io.OperatorInfo;
+import com.alpine.plugin.core.utils.ChorusAPICaller;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
 
 import com.alpine.plugin.core.OperatorParameters;
-import com.google.gson.internal.LinkedTreeMap;
 import scala.collection.mutable.Map;
 
 /**
@@ -21,17 +22,32 @@ import scala.collection.mutable.Map;
  */
 public class OperatorParametersMock implements OperatorParameters, Serializable {
 
-    private static final String SPARK_PARAM = "sparkSettings";
-
     private HashMap<String, Object> parameterMap;
 
     private final String operatorName;
     private final String operatorUUID;
+    public String sessionId; //I am not sure if this is useful to expose
+    public ChorusAPICallerMock chorusAPICaller;
+
+    public OperatorParametersMock(String operatorName, String uuid, ChorusAPICallerMock apiCallerMock) {
+        this.operatorName = operatorName;
+        this.operatorUUID = uuid;
+        this.sessionId = Math.random() + "";
+        this.chorusAPICaller = apiCallerMock;
+        this.parameterMap = new HashMap<>();
+    }
 
     public OperatorParametersMock(String operatorName, String operatorUUID) {
         this.operatorName = operatorName;
         this.operatorUUID = operatorUUID;
         this.parameterMap = new HashMap<>();
+        this.sessionId = Math.random() + "";
+        this.chorusAPICaller = ChorusAPICallerMock.apply();
+    }
+
+    public OperatorParametersMock updateChorusAPICaller(ChorusAPICallerMock newAPICaller) {
+        this.chorusAPICaller = newAPICaller;
+        return this;
     }
 
     @Override
@@ -47,6 +63,11 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         this.parameterMap.put(parameterId, value);
     }
 
+    @Override
+    public ChorusAPICaller getChorusAPICaller() {
+        return chorusAPICaller;
+    }
+
     public Object getValue(String parameterId) {
         return this.parameterMap.get(parameterId);
     }
@@ -58,10 +79,12 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
             String[] vs = new String[arrayList.size()];
             arrayList.toArray(vs);
             return vs;
+        } else if (o instanceof java.util.Map) {
+            return getTabularDatasetSelectedColumnNames(parameterId);
         } else {
             throw new AssertionError(
                     "An array parameter value must be stored in memory as an " +
-                            "array list."
+                            "array list or a hashmap."
             );
         }
     }
@@ -71,9 +94,9 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         // I.e., there's only one key and one value
         // (which happens to be an arraylist).
         Object o = this.parameterMap.get(parameterId);
-        if (o instanceof LinkedTreeMap) {
-            LinkedTreeMap<String, ArrayList<String>> value =
-                    (LinkedTreeMap<String, ArrayList<String>>) o;
+        if (o instanceof java.util.Map) {
+            java.util.Map<String, ArrayList<String>> value =
+                    (java.util.Map<String, ArrayList<String>>) o;
             String key = value.keySet().iterator().next();
             ArrayList<String> arrayList = value.get(key);
             String[] vs = new String[arrayList.size()];
@@ -98,9 +121,9 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         // The hashmap or the linkedmap in this case is used as a pair.
         // I.e., there's only one key and one value.
         Object o = this.parameterMap.get(parameterId);
-        if (o instanceof LinkedTreeMap) {
-            LinkedTreeMap<String, String> value =
-                    (LinkedTreeMap<String, String>) o;
+        if (o instanceof java.util.Map) {
+            java.util.Map<String, String> value =
+                    (java.util.Map<String, String>) o;
             String key = value.keySet().iterator().next();
             String v = value.get(key);
             return new Tuple2<>(key, v);
@@ -113,12 +136,26 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         }
     }
 
+    @Override
+    public ChorusFile getChorusFile(String parameterId) {
+        //return type is the same as getTabularDatasetSelectedColumn
+        return (ChorusFile) this.parameterMap.get(parameterId);
+    }
+
     public String getTabularDatasetSelectedColumnName(String parameterId) {
         return getTabularDatasetSelectedColumn(parameterId)._2();
     }
 
     public String getStringValue(String parameterId) {
-        return this.parameterMap.get(parameterId).toString();
+        Object param = parameterMap.get(parameterId);
+        if (param instanceof java.util.Map) {
+            //Is a column selector
+            return getTabularDatasetSelectedColumnName(parameterId);
+        } else if (param instanceof ChorusFile) {
+            return getChorusFile(parameterId).fileId();
+        } else {
+            return param.toString();
+        }
     }
 
     public int getIntValue(String parameterId) {
@@ -148,7 +185,7 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
 
     @Override
     public Map<String, String> getAdvancedSparkParameters() {
-        return new scala.collection.mutable.HashMap<String, String>();
+        return new scala.collection.mutable.HashMap<>();
     }
 
     @Override

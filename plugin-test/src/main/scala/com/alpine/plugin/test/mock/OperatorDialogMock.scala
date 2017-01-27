@@ -53,16 +53,21 @@ abstract class AbstractCheckboxMock(availableValues: Seq[String],
   override def getSelectedValues: Iterator[String] = selected.toIterator
 }
 
-class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
+class OperatorDialogMock(overrideParams: OperatorParametersMock,
+                         input: IOBase,
                          inputSchema: Option[TabularSchema]) extends OperatorDialog {
+
+  private val workfileMap = overrideParams.chorusAPICaller.workfileMap
 
   private val dialogElements = scala.collection.mutable.Map[String, DialogElement]()
   private val selectionGroupIdMap = scala.collection.mutable.Map[String, Set[String]]()
   private val nameTypeMap = inputSchema.getOrElse(TabularSchema(Seq())).getDefinedColumns.map(x => (x.columnName, x.columnType)).toMap
   private val inputColumns = nameTypeMap.keySet
 
-  private val operatorParametersMock = new OperatorParametersMock(overrideParams.operatorInfo().name,
-    overrideParams.operatorInfo().uuid)
+  private val operatorParametersMock = new OperatorParametersMock(
+    overrideParams.operatorInfo().name,
+    overrideParams.operatorInfo().uuid
+  )
 
   private def updateDialogElements[T <: DialogElement](id: String, de: T): T = {
     assert(!dialogElements.contains(id), " You have already added a dialog element with key " + id)
@@ -80,7 +85,8 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     selection
   }
 
-  private def validateColumnSelectionAndUpdateSelectionGroup(column: String, selectionGroupId: String, filter: ColumnFilter): String = {
+  private def validateColumnSelectionAndUpdateSelectionGroup(
+    column: String, selectionGroupId: String, filter: ColumnFilter): String = {
     assert(inputColumns.contains(column), "Column: " + column + " is not present in input schema.")
 
     val group = selectionGroupIdMap.getOrElseUpdate(selectionGroupId, Set())
@@ -379,6 +385,25 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock, input: IOBase,
     }
 
     val de = new DoubleBoxImpl
+    updateDialogElements(id, de)
+  }
+
+  override def addChorusFileDropdownBox(id: String, label: String, extensionFilter: Set[String], isRequired: Boolean): ChorusFileDropdown = {
+    val availableValues = this.workfileMap.values.map(w => w.wf.fileName).toSeq
+
+    val param = overrideParams.getChorusFile(id)
+    if (isRequired)
+      assert(this.workfileMap.contains(param.fileId),
+        "Chorus file with name: " + param.fileName + ", and id " + param.fileId + " is not in the workfile map provided")
+    class ChorusFileDropdownImpl extends SingleElementSelectorMock(availableValues = availableValues,
+      getSelectedValue = param.fileName,
+      getId = label, getLabel = label) with ChorusFileDropdown {
+      //TODO: Add logic to check that the parameter value provided has the correct extension given the extension filter.
+      override def getExtensionFilter: Seq[String] = extensionFilter.toSeq
+    }
+    val de = new ChorusFileDropdownImpl()
+
+    operatorParametersMock.setValue(id, param)
     updateDialogElements(id, de)
   }
 

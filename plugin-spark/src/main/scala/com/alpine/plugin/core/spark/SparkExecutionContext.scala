@@ -4,12 +4,12 @@
 
 package com.alpine.plugin.core.spark
 
-import java.io.{OutputStream, InputStream}
+import java.io.{InputStream, OutputStream}
+import org.apache.hadoop.fs.FileSystem
 
 import scala.concurrent.Future
-
 import com.alpine.plugin.core.annotation.AlpineSdkApi
-import com.alpine.plugin.core.{OperatorListener, OperatorParameters, ExecutionContext}
+import com.alpine.plugin.core.{ExecutionContext, OperatorListener, OperatorParameters}
 import com.alpine.plugin.core.io.IOBase
 
 /**
@@ -49,6 +49,8 @@ trait SparkExecutionContext extends ExecutionContext {
     sparkConf: SparkJobConfiguration,
     listener: OperatorListener
   ): SubmittedSparkJob[O]
+
+  def doHdfsAction[T](fs: FileSystem => T): T
 
   /**
    * Open a HDFS path for reading.

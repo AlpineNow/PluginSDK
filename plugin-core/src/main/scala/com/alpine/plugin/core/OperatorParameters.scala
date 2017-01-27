@@ -5,7 +5,9 @@
 package com.alpine.plugin.core
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
+import com.alpine.plugin.core.dialog.ChorusFile
 import com.alpine.plugin.core.io.OperatorInfo
+import com.alpine.plugin.core.utils.ChorusAPICaller
 
 /**
  * :: AlpineSdkApi ::
@@ -15,6 +17,12 @@ import com.alpine.plugin.core.io.OperatorInfo
  */
 @AlpineSdkApi
 trait OperatorParameters extends Serializable {
+
+  /**
+    * This object contains the session id. It exposes a few supported methods to interact with
+    * the chorus API such as those to download a workfile.
+    */
+  def getChorusAPICaller: ChorusAPICaller
 
   def operatorInfo: OperatorInfo
   /**
@@ -80,11 +88,17 @@ trait OperatorParameters extends Serializable {
   def getTabularDatasetSelectedColumnName(parameterId: String): String
 
   /**
-   * Get the value of a parameter as a string.
-   * @param parameterId The parameter Id that was used with an input field
-   *                    in the OperatorDialog object.
-   * @return The parameter value as a string.
-   */
+    * Get the value of a parameter as a string.
+    * If the parameter is a TabularColumnDropDownBox then this returns the same value as
+    * "getTabularDatasetSelectedColumn". If it is a chorus file object, then it will return the
+    * WorkfileId (e.g. the same as getChorusFile.workfileId)
+    * It will throw an exception if the param is one of the following types:
+    * TabularColumnCheckboxes, Checkboxes.
+    *
+    * @param parameterId The parameter Id that was used with an input field
+    *                    in the OperatorDialog object.
+    * @return The parameter value as a string.
+    */
   def getStringValue(parameterId: String): String
 
   /**
@@ -108,6 +122,12 @@ trait OperatorParameters extends Serializable {
    * @return An iterator of parameter Ids.
    */
   def getParameterIds: Iterator[String]
+
+  /**
+    * Get the chorus file stored added by a "ChorusFileSelector" parameter.
+    * The return type is a case class with a fileId and a fileName field.
+    */
+  def getChorusFile(parameterId: String): ChorusFile
 
   def getAdvancedSparkParameters: scala.collection.mutable.Map[String, String]
 }
