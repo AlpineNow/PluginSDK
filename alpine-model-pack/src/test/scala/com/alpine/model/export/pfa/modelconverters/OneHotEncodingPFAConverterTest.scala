@@ -21,14 +21,14 @@ class OneHotEncodingPFAConverterTest extends AlpinePFAConversionTest {
     OneHotEncodedFeature(List("sunny", "overcast"), "rain"),
     OneHotEncodedFeature(List("true"), "false")
   ),
-    Seq(new ColumnDef("outlook", ColumnType.String), new ColumnDef("wind", ColumnType.String))
+    Seq(ColumnDef("outlook", ColumnType.String), ColumnDef("wind", ColumnType.String))
   )
 
   val testModelNoBaseValue = OneHotEncodingModel(Seq(
     OneHotEncodedFeature(List("sunny", "overcast", "rain"), None),
     OneHotEncodedFeature(List("true"), "false")
   ),
-    Seq(new ColumnDef("outlook", ColumnType.String), new ColumnDef("wind", ColumnType.String))
+    Seq(ColumnDef("outlook", ColumnType.String), ColumnDef("wind", ColumnType.String))
   )
 
   val testRows = Seq(

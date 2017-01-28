@@ -7,12 +7,14 @@ package com.alpine.model.export.pfa.modelconverters
 import com.alpine.model.pack.ml.{ClusterInfo, KMeansModel}
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 
+import scala.collection.immutable.Seq
+
 /**
   * Created by jenny on 5/26/16.
   */
 class KMeansPFAConverterTest extends AlpinePFAConversionTest {
 
-  val testModel = {
+  val testModel: KMeansModel = {
     val clusters = Seq(
       ClusterInfo("one", Seq[java.lang.Double](1d, 1d, 1d, 1d, 1d)),
       ClusterInfo("two", Seq[java.lang.Double](2d, 2d, 2d, 2d, 2d)),
@@ -27,10 +29,10 @@ class KMeansPFAConverterTest extends AlpinePFAConversionTest {
       ColumnDef("d", ColumnType.Double),
       ColumnDef("e", ColumnType.Double)
     )
-    new KMeansModel(clusters, inputFeatures, "KM")
+    KMeansModel(clusters, inputFeatures, "KM")
   }
 
-  val testRows = {
+  val testRows: Seq[Seq[Double]] = {
     Range(0, 10).map(i => testModel.inputFeatures.indices.map(i => math.random * 7))
   }
 

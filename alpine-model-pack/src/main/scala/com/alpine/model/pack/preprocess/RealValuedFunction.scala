@@ -18,18 +18,20 @@ import com.alpine.transformer.Transformer
 import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression}
 
 /**
- * Interface for real-valued functions
- * (functions that map the real (double) numbers to real (double) numbers)
- * to be used in RealValuedFunctionsModel
- */
+  * Interface for real-valued functions
+  * (functions that map the real (double) numbers to real (double) numbers)
+  * to be used in RealValuedFunctionsModel
+  */
 trait RealValuedFunction {
   def apply(x: Double): Double
+
   def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression]
+
   def pfaRepresentation(inputReference: Any): Any
 }
 
 case class Exp() extends RealValuedFunction {
-  def apply(x: Double) = math.exp(x)
+  def apply(x: Double): Double = math.exp(x)
 
   override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
     Some(
@@ -45,7 +47,7 @@ case class Exp() extends RealValuedFunction {
 
 }
 
-case class Multiply(coefficient: Double) extends RealValuedFunction  {
+case class Multiply(coefficient: Double) extends RealValuedFunction {
   def apply(x: Double): Double = x * coefficient
 
   override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
@@ -61,7 +63,7 @@ case class Multiply(coefficient: Double) extends RealValuedFunction  {
   }
 }
 
-case class Divide(denominator: Double) extends RealValuedFunction  {
+case class Divide(denominator: Double) extends RealValuedFunction {
   def apply(x: Double): Double = x / denominator
 
   override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
@@ -76,7 +78,8 @@ case class Divide(denominator: Double) extends RealValuedFunction  {
     FunctionExecute("/", inputReference, denominator)
   }
 }
-case class Add(offset: Double) extends RealValuedFunction  {
+
+case class Add(offset: Double) extends RealValuedFunction {
   def apply(x: Double): Double = x + offset
 
   override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
@@ -92,7 +95,7 @@ case class Add(offset: Double) extends RealValuedFunction  {
   }
 }
 
-case class Subtract(offset: Double) extends RealValuedFunction  {
+case class Subtract(offset: Double) extends RealValuedFunction {
   def apply(x: Double): Double = x - offset
 
   override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
@@ -109,7 +112,7 @@ case class Subtract(offset: Double) extends RealValuedFunction  {
 }
 
 case class Log() extends RealValuedFunction {
-  def apply(x: Double) = math.log(x)
+  def apply(x: Double): Double = math.log(x)
 
   override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
     Some(
@@ -125,7 +128,7 @@ case class Log() extends RealValuedFunction {
 }
 
 case class Log1p() extends RealValuedFunction {
-  def apply(x: Double) = math.log1p(x)
+  def apply(x: Double): Double = math.log1p(x)
 
   // TODO: Investigate if some databases support this function natively.
   override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
@@ -188,7 +191,7 @@ case class LinearFunction(m: Double, c: Double) extends RealValuedFunction {
 //}
 
 case class Power(p: Double) extends RealValuedFunction {
-  def apply(x: Double) = math.pow(x, p)
+  def apply(x: Double): Double = math.pow(x, p)
 
   override def sqlExpression(name: ColumnName, sqlGenerator: SQLGenerator): Option[ColumnarSQLExpression] = {
     Some(
@@ -204,7 +207,7 @@ case class Power(p: Double) extends RealValuedFunction {
 }
 
 @SerialVersionUID(-6730039384877850890L)
-case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel with PFAConvertible{
+case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel with PFAConvertible {
   override def transformer = RealValuedFunctionTransformer(this)
 
   @transient lazy val outputFeatures: Seq[ColumnDef] = {
@@ -249,7 +252,7 @@ object RealValuedFunctionsModel {
 
 case class RealValuedFunctionTransformer(model: RealValuedFunctionsModel) extends Transformer {
 
-  val functions = model.functions.map(t => (t.function.value, t.index)).toArray
+  private val functions = model.functions.map(t => (t.function.value, t.index)).toArray
 
   override def apply(row: Row): Row = {
     val result = Array.ofDim[Any](functions.length)

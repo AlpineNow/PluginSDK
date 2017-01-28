@@ -15,7 +15,7 @@ import org.scalatest.FunSuite
   */
 class GroupByClassificationSQLTransformerTest extends FunSuite {
 
-  val modelA = new MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
+  val modelA = MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
     "yes",
     Seq(0.5, -0.5).map(java.lang.Double.valueOf), 1.0)),
     "no",
@@ -23,7 +23,7 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
     Seq(ColumnDef("temperature", ColumnType.Long), ColumnDef("humidity", ColumnType.Long))
   )
 
-  val modelB = new MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
+  val modelB = MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
     "yes",
     Seq(0.1).map(java.lang.Double.valueOf), -10)),
     "no",
@@ -31,7 +31,7 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
     Seq(ColumnDef("temperature", ColumnType.Long))
   )
 
-  val groupModel = new GroupByClassificationModel(ColumnDef("wind", ColumnType.String), Map("true" -> modelA, "false" -> modelB))
+  val groupModel = GroupByClassificationModel(ColumnDef("wind", ColumnType.String), Map("true" -> modelA, "false" -> modelB))
 
   val simpleSQLGenerator: SimpleSQLGenerator = new SimpleSQLGenerator()
 
@@ -196,7 +196,8 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
 
 object GroupBySampleModels {
 
-  val model = s"""{
+  val model =
+    s"""{
   "type": "com.alpine.model.pack.multiple.GroupByClassificationModel",
   "data": {
     "groupByFeature": {

@@ -13,7 +13,7 @@ class GroupByRegressionSQLTransformer(val model: GroupByRegressionModel, val sql
 
   override def getPredictionSQL: RegressionModelSQLExpression = {
     val subModelsSeq = model.modelsByGroup.toSeq
-    val groupByColumnModel = new UnitModel(Seq(model.groupByFeature))
+    val groupByColumnModel = UnitModel(Seq(model.groupByFeature))
 
     val combinerModel = CombinerModel.make(subModelsSeq.map(_._2) ++ Seq(groupByColumnModel))
     /**

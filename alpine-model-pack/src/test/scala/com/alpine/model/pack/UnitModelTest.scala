@@ -14,23 +14,24 @@ import org.scalatest.FunSuite
   */
 class UnitModelTest extends FunSuite {
 
-  private val oldModelJson = """{
-                       |   "inputFeatures":[
-                       |      {
-                       |         "columnName":"outlook",
-                       |         "columnType":"String"
-                       |      },
-                       |      {
-                       |         "columnName":"humidity",
-                       |         "columnType":"Long"
-                       |      },
-                       |      {
-                       |         "columnName":"play",
-                       |         "columnType":"String"
-                       |      }
-                       |   ],
-                       |   "identifier":"U"
-                       |}""".stripMargin
+  private val oldModelJson =
+    """{
+      |   "inputFeatures":[
+      |      {
+      |         "columnName":"outlook",
+      |         "columnType":"String"
+      |      },
+      |      {
+      |         "columnName":"humidity",
+      |         "columnType":"Long"
+      |      },
+      |      {
+      |         "columnName":"play",
+      |         "columnType":"String"
+      |      }
+      |   ],
+      |   "identifier":"U"
+      |}""".stripMargin
 
   private val testModel = UnitModel(
     inputFeatures = Seq(

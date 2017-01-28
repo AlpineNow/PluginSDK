@@ -9,7 +9,7 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 /**
   * Created by Jennifer Thompson on 6/9/16.
   */
-class NullValueReplacementPFAConverterTest  extends AlpinePFAConversionTest {
+class NullValueReplacementPFAConverterTest extends AlpinePFAConversionTest {
 
   val testModel = NullValueReplacement(
     Seq[Any](70, "sunny"),

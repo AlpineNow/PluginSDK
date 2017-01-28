@@ -34,8 +34,8 @@ object ClassificationModelSQLExpressions {
 }
 
 case class ClusteringModelSQLExpressions(labelColumnSQL: ColumnarSQLExpression,
-                                             distanceSQL: Map[String, ColumnarSQLExpression],
-                                             intermediateLayers: Seq[Seq[(ColumnarSQLExpression, ColumnName)]] = Nil)
+                                         distanceSQL: Map[String, ColumnarSQLExpression],
+                                         intermediateLayers: Seq[Seq[(ColumnarSQLExpression, ColumnName)]] = Nil)
 
 object ClusteringModelSQLExpressions {
 
@@ -69,7 +69,7 @@ case class ColumnName(rawName: String) {
     this(columnDef.columnName)
   }
 
-  def escape(sqlGenerator: SQLGenerator) = sqlGenerator.quoteIdentifier(rawName)
+  def escape(sqlGenerator: SQLGenerator): String = sqlGenerator.quoteIdentifier(rawName)
 
   def asColumnarSQLExpression(sqlGenerator: SQLGenerator) = ColumnarSQLExpression(this.escape(sqlGenerator))
 }

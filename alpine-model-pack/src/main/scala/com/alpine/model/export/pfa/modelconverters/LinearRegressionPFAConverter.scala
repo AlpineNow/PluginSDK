@@ -21,9 +21,9 @@ case class LinearRegressionPFAConverter(model: LinearRegressionModel) extends PF
 
     val cells = Map(
       modelCellName -> CellInit(
-        new RecordType(
+        RecordType(
           "Model",
-          Seq(new FieldType("coeff", AvroTypes.arrayDouble), new FieldType("const", AvroTypes.double))
+          Seq(FieldType("coeff", AvroTypes.arrayDouble), FieldType("const", AvroTypes.double))
         ),
         Map("coeff" -> model.coefficients, "const" -> model.intercept)
       )
@@ -44,7 +44,7 @@ case class LinearRegressionPFAConverter(model: LinearRegressionModel) extends PF
       Seq(convertToVector, linearRegression, record)
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = AvroTypes.fromAlpineSchema("input", model.inputFeatures),
       output = outputType,
       cells = cells,

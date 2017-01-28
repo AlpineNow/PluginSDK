@@ -22,11 +22,11 @@ case class OneHotEncodingPFAConverter(model: OneHotEncodingModel) extends PFACon
 
     val cells = Map(
       oneHotCellName -> CellInit(
-        new ArrayType(AvroTypes.arrayString),
+        ArrayType(AvroTypes.arrayString),
         model.oneHotEncodedFeatures.map(f => f.hotValues ++ f.baseValue.toSeq)
       ),
       dropBaseValue -> CellInit(
-        new ArrayType(AvroTypes.boolean),
+        ArrayType(AvroTypes.boolean),
         model.oneHotEncodedFeatures.map(f => f.baseValue.isDefined)
       )
     )
@@ -89,7 +89,7 @@ case class OneHotEncodingPFAConverter(model: OneHotEncodingModel) extends PFACon
 
     val fcns = Map(expandFcnName -> expandFunction)
 
-    new PFAComponents(
+    PFAComponents(
       input = AvroTypes.fromAlpineSchema("input", model.inputFeatures),
       output = outputType,
       cells = cells,

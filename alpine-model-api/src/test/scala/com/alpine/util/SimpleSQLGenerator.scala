@@ -27,7 +27,7 @@ class SimpleSQLGenerator extends SQLGenerator {
     }
   }
 
-  override def dbType = databaseType
+  override def dbType: TypeValue = databaseType
 
   override def quoteChar: String = quoteString
   override def useAliasForSelectSubQueries: Boolean = isAliasRequired
@@ -59,7 +59,7 @@ class SimpleSQLGenerator extends SQLGenerator {
   }
 
   override def getCreateTableAsSelectSQL(selectQuery: String, destinationTable: String): String = {
-    getCreateTableOrViewAsSelectSQL(selectQuery, destinationTable, false)
+    getCreateTableOrViewAsSelectSQL(selectQuery, destinationTable, isView = false)
   }
 
   override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String, whereClause: String): String = {
@@ -71,7 +71,7 @@ class SimpleSQLGenerator extends SQLGenerator {
   }
 
   override def getCreateViewAsSelectSQL(selectQuery: String, destinationView: String): String = {
-    getCreateTableOrViewAsSelectSQL(selectQuery, destinationView, true)
+    getCreateTableOrViewAsSelectSQL(selectQuery, destinationView, isView = true)
   }
 
   override def getCreateTableOrViewAsSelectSQL(columns: String, sourceTable: String, destinationTable: String, whereClause: String, isView: Boolean): String = {
@@ -98,7 +98,7 @@ class SimpleSQLGenerator extends SQLGenerator {
     }
   }
 
-  override def getDropTableIfExistsSQL(tableName: String, cascade: Boolean = false) = {
+  override def getDropTableIfExistsSQL(tableName: String, cascade: Boolean = false): String = {
     if (cascade) {
       s"""DROP TABLE IF EXISTS $tableName"""
     } else {
@@ -106,7 +106,7 @@ class SimpleSQLGenerator extends SQLGenerator {
     }
   }
 
-  override def getDropViewIfExistsSQL(viewName: String, cascade: Boolean = false) = {
+  override def getDropViewIfExistsSQL(viewName: String, cascade: Boolean = false): String = {
     if (cascade) {
       s"""DROP VIEW IF EXISTS $viewName"""
     } else {

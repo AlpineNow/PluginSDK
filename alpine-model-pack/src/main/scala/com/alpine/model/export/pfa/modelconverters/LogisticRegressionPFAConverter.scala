@@ -34,9 +34,9 @@ class LogisticRegressionPFAConverter(model: MultiLogisticRegressionModel) extend
 
     val cells = Map(
       modelCellName -> CellInit(
-        new ArrayType(new RecordType(
+        ArrayType(RecordType(
           "LinearModel",
-          Seq(new FieldType("coeff", AvroTypes.arrayDouble), new FieldType("const", AvroTypes.double))
+          Seq(FieldType("coeff", AvroTypes.arrayDouble), FieldType("const", AvroTypes.double))
         )),
         model.singleLORs.map(singleLOR => Map("coeff" -> singleLOR.coefficients, "const" -> singleLOR.bias))
       ),
@@ -57,8 +57,8 @@ class LogisticRegressionPFAConverter(model: MultiLogisticRegressionModel) extend
       )
 
       val rawConfs = {
-        val singleLoRFunction: PFAFunction = new PFAFunction(
-          params = Seq(Map("linearModel" -> new AvroTypeReference("LinearModel"))),
+        val singleLoRFunction: PFAFunction = PFAFunction(
+          params = Seq(Map("linearModel" -> AvroTypeReference("LinearModel"))),
           ret = AvroTypes.double,
           `do` = FunctionExecute("m.exp", FunctionExecute("model.reg.linear", "vector", "linearModel"))
         )
@@ -86,7 +86,7 @@ class LogisticRegressionPFAConverter(model: MultiLogisticRegressionModel) extend
 
       val outputValues = Seq(prediction, maxConf, FunctionExecute(UDFAccess(zipDoubleMapFcnName), CellAccess(dependentValuesCellName), "normalizedConfs"))
 
-      val record = new NewPFAObject(
+      val record = NewPFAObject(
         (model.outputFeatures.map(_.columnName) zip outputValues).toMap,
         outputType
       )
@@ -94,7 +94,7 @@ class LogisticRegressionPFAConverter(model: MultiLogisticRegressionModel) extend
       Seq(convertToVector, rawConfs, sum, normalizedConfs, record)
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = cells,
@@ -120,9 +120,9 @@ class LogisticRegressionPFAConverter(model: MultiLogisticRegressionModel) extend
 
     val cells = Map(
       modelCellName -> CellInit(
-        new RecordType(
+        RecordType(
           "Model",
-          Seq(new FieldType("coeff", AvroTypes.arrayDouble), new FieldType("const", AvroTypes.double))
+          Seq(FieldType("coeff", AvroTypes.arrayDouble), FieldType("const", AvroTypes.double))
         ),
         Map("coeff" -> singleLOR.coefficients, "const" -> singleLOR.bias)
       ),
@@ -143,7 +143,7 @@ class LogisticRegressionPFAConverter(model: MultiLogisticRegressionModel) extend
       )
       val confidence = let("conf", FunctionExecute("m.link.logit", FunctionExecute("model.reg.linear", "vector", CellAccess(modelCellName))))
       val prediction = Map("if" -> FunctionExecute(">", "conf", 0.5), "then" -> CellAccess(positiveValueCellName), "else" -> CellAccess(baseValueCellName))
-      val record = new NewPFAObject(
+      val record = NewPFAObject(
         Map(
           model.outputFeatures.head.columnName -> prediction,
           model.outputFeatures(1).columnName -> FunctionExecute("max", "conf", FunctionExecute("-", 1, "conf")),
@@ -160,7 +160,7 @@ class LogisticRegressionPFAConverter(model: MultiLogisticRegressionModel) extend
       Seq(convertToVector, confidence, record)
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = cells,

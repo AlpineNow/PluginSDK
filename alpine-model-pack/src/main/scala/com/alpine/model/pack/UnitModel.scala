@@ -11,17 +11,18 @@ import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
-import com.alpine.transformer.sql.SQLTransformer
+import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
 
 /**
- * Represents a model that carries features through without transforming them.
- * Designed to be used in parallel to other models in the CombinerModel.
- */
+  * Represents a model that carries features through without transforming them.
+  * Designed to be used in parallel to other models in the CombinerModel.
+  */
 @SerialVersionUID(-75224626855321481L)
 case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: String = "")
   extends RowModel with PFAConvertible {
   override def transformer: Transformer = UnitTransformer
-  override def outputFeatures = inputFeatures
+
+  override def outputFeatures: Seq[ColumnDef] = inputFeatures
 
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = {
     Some(UnitSQLTransformer(this, sqlGenerator))
@@ -35,15 +36,15 @@ case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: Str
 }
 
 /**
- * Applies the unit (a.k.a. identity or no-operation) transformation to the input row.
- * That is, apply returns its input argument.
- */
+  * Applies the unit (a.k.a. identity or no-operation) transformation to the input row.
+  * That is, apply returns its input argument.
+  */
 object UnitTransformer extends Transformer {
   override def apply(row: Row): Row = row
 }
 
-case class UnitSQLTransformer(model : UnitModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
-  override def getSQLExpressions = {
+case class UnitSQLTransformer(model: UnitModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+  override def getSQLExpressions: Seq[ColumnarSQLExpression] = {
     inputColumnNames.map(_.asColumnarSQLExpression(sqlGenerator))
   }
 }

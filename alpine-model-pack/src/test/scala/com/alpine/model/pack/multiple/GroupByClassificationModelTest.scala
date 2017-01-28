@@ -12,7 +12,7 @@ import org.scalatest.FunSuite
   */
 class GroupByClassificationModelTest extends FunSuite {
 
-  val modelA = new MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
+  val modelA = MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
     "yes",
     Seq(0.5, -0.5).map(java.lang.Double.valueOf), 1.0)),
     "no",
@@ -20,7 +20,7 @@ class GroupByClassificationModelTest extends FunSuite {
     Seq(ColumnDef("temperature", ColumnType.Long), ColumnDef("humidity", ColumnType.Long))
   )
 
-  val modelB = new MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
+  val modelB = MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
     "yes",
     Seq(0.1).map(java.lang.Double.valueOf), -10)),
     "no",
@@ -28,7 +28,7 @@ class GroupByClassificationModelTest extends FunSuite {
     Seq(ColumnDef("temperature", ColumnType.Long))
   )
 
-  val groupModel = new GroupByClassificationModel(ColumnDef("wind", ColumnType.String), Map("true" -> modelA, "false" -> modelB))
+  val groupModel = GroupByClassificationModel(ColumnDef("wind", ColumnType.String), Map("true" -> modelA, "false" -> modelB))
 
   test("Serialization should work.") {
     JsonTestUtil.testJsonization(groupModel)
@@ -42,10 +42,10 @@ class GroupByClassificationModelTest extends FunSuite {
       val row = List(math.random, math.random, math.random, math.random, math.random)
       val p1 = groupByTransformer.score("true" :: row)
       val q1 = t1.score(row)
-      assert(p1 equals (q1, 1E-3))
+      assert(p1 equals(q1, 1E-3))
       val p2 = groupByTransformer.score("false" :: row)
       val q2 = t2.score(Seq(row(1)))
-      assert(p2 equals (q2, 1E-3))
+      assert(p2 equals(q2, 1E-3))
     })
   }
 

@@ -34,10 +34,10 @@ class MatrixPFAConverter(model: MatrixModel) extends PFAConverter {
           (colDef.columnName, sum(multipliedValues))
       }.toMap
 
-      Seq(new NewPFAObject(outputContents, outputType))
+      Seq(NewPFAObject(outputContents, outputType))
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = Map.empty,

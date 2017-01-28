@@ -18,7 +18,7 @@ class LogisticRegressionSQLTransformerTest extends FunSuite {
   private val simpleSQLGenerator = new SimpleSQLGenerator()
 
   test(" SQL Expression for LOR") {
-    val lor = new MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
+    val lor = MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
       "yes",
       Seq(2.0, 3.0).map(java.lang.Double.valueOf), 4.0)),
       "no",
@@ -40,7 +40,7 @@ class LogisticRegressionSQLTransformerTest extends FunSuite {
   }
 
   test("Confidence SQL for LOR") {
-    val lor = new MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
+    val lor = MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
       "yes",
       Seq(2.0, 3.0).map(java.lang.Double.valueOf), 4.0)),
       "no",
@@ -61,7 +61,7 @@ class LogisticRegressionSQLTransformerTest extends FunSuite {
   }
 
   test("SQL for LOR") {
-    val lor = new MultiLogisticRegressionModel(
+    val lor = MultiLogisticRegressionModel(
       Seq(
         SingleLogisticRegression(
           "yes",

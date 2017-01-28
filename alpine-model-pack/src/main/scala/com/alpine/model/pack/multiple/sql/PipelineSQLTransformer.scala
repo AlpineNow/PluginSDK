@@ -8,7 +8,7 @@ import com.alpine.model.pack.multiple.PipelineRowModel
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.sql._
 
-case class PipelineSQLTransformer(val model: PipelineRowModel, sqlGenerator: SQLGenerator) extends SQLTransformer {
+case class PipelineSQLTransformer(model: PipelineRowModel, sqlGenerator: SQLGenerator) extends SQLTransformer {
 
   override def getSQL: LayeredSQLExpressions = {
     val transformers = model.transformers.map(_.sqlTransformer(sqlGenerator).get)

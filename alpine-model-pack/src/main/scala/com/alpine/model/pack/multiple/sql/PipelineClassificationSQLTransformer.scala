@@ -10,7 +10,7 @@ import com.alpine.transformer.sql._
 class PipelineClassificationSQLTransformer(val model: PipelineClassificationModel, sqlGenerator: SQLGenerator) extends ClassificationSQLTransformer {
 
   override def getClassificationSQL: ClassificationModelSQLExpressions = {
-    val sqlT = new PipelineRowModel(model.preProcessors).sqlTransformer(sqlGenerator).get.getSQL
+    val sqlT = PipelineRowModel(model.preProcessors).sqlTransformer(sqlGenerator).get.getSQL
     val lastSQL = model.finalModel.sqlTransformer(sqlGenerator).get.getClassificationSQL
     ClassificationModelSQLExpressions(lastSQL.labelColumnSQL, lastSQL.confidenceSQL, sqlT.layers ++ lastSQL.intermediateLayers)
   }

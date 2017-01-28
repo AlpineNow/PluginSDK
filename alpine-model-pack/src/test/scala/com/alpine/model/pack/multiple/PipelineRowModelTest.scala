@@ -13,30 +13,30 @@ import com.alpine.model.pack.preprocess.{OneHotEncodingModel, OneHotEncodingMode
 import org.scalatest.FunSuite
 
 /**
- * Tests serialization of various pipeline models.
- */
+  * Tests serialization of various pipeline models.
+  */
 class PipelineRowModelTest extends FunSuite {
 
   val oneHotEncoderModel: OneHotEncodingModel = new OneHotEncodingModelTest().oneHotEncoderModel
 
-  val liRModel = {
+  private val liRModel = {
     val coefficients = Seq[Double](0.9, 1, 5)
     val lirInputFeatures = oneHotEncoderModel.transformationSchema.outputFeatures
     LinearRegressionModel.make(coefficients, lirInputFeatures)
   }
 
   test("Serialization of the Pipeline Model should work") {
-    val pipelineModel = new PipelineRowModel(List[RowModel](oneHotEncoderModel))
+    val pipelineModel = PipelineRowModel(List[RowModel](oneHotEncoderModel))
     JsonTestUtil.testJsonization(pipelineModel)
   }
 
-  val pipelineRegressionModel = new PipelineRegressionModel(List[RowModel](new OneHotEncodingModelTest().oneHotEncoderModel), liRModel)
+  val pipelineRegressionModel = PipelineRegressionModel(List[RowModel](new OneHotEncodingModelTest().oneHotEncoderModel), liRModel)
   test("Serialization of the Pipeline Regression Model should work") {
     JsonTestUtil.testJsonization(pipelineRegressionModel)
   }
 
   test("Should include the classes of each component model, the pipeline model and the MLModel") {
-    val classesForLoading = new PipelineRegressionModel(List[RowModel](new OneHotEncodingModelTest().oneHotEncoderModel), liRModel).classesForLoading
+    val classesForLoading = PipelineRegressionModel(List[RowModel](new OneHotEncodingModelTest().oneHotEncoderModel), liRModel).classesForLoading
     val expectedClasses = Set[Class[_]](classOf[MLModel], classOf[PipelineRegressionModel], classOf[LinearRegressionModel], classOf[OneHotEncodingModel])
     assert(expectedClasses == classesForLoading)
   }

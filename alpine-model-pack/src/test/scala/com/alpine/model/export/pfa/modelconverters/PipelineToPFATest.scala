@@ -13,7 +13,7 @@ import com.alpine.model.pack.preprocess.OneHotEncodingModel
   */
 class PipelineToPFATest extends AlpinePFAConversionTest {
 
-  val testModel = {
+  val testModel: PipelineRowModel = {
     val oneHotEncoderModel: OneHotEncodingModel = new OneHotEncodingPFAConverterTest().testModel
 
     val liRModel = {
@@ -22,7 +22,7 @@ class PipelineToPFATest extends AlpinePFAConversionTest {
       LinearRegressionModel.make(coefficients, lirInputFeatures)
     }
 
-    new PipelineRowModel(List(oneHotEncoderModel, liRModel))
+    PipelineRowModel(List(oneHotEncoderModel, liRModel))
   }
 
   val testRows = Seq(

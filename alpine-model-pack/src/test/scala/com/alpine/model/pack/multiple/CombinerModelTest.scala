@@ -19,7 +19,7 @@ class CombinerModelTest extends FunSuite {
 
   test("Should serialize correctly") {
     val oneHotEncoderModel = (new OneHotEncodingModelTest).oneHotEncoderModel
-    val unit = UnitModel(Seq(new ColumnDef("temperature", ColumnType.Long), new ColumnDef("humidity", ColumnType.Double)))
+    val unit = UnitModel(Seq(ColumnDef("temperature", ColumnType.Long), ColumnDef("humidity", ColumnType.Double)))
     val combinerModel = CombinerModel.make(List(oneHotEncoderModel, unit))
     JsonTestUtil.testJsonization(combinerModel)
 

@@ -16,7 +16,7 @@ import scala.collection.JavaConverters._
   */
 class LogisticRegressionToPFATest extends AlpinePFAConversionTest {
 
-  val testModel = new MultiLogisticRegressionModel(Seq(
+  val testModel = MultiLogisticRegressionModel(Seq(
     SingleLogisticRegression(
       "yes",
       Seq(2.0, -3.0).map(java.lang.Double.valueOf), 4.0
@@ -27,7 +27,7 @@ class LogisticRegressionToPFATest extends AlpinePFAConversionTest {
   )
 
   // Want something like:
-  val samplePFA =
+  private val samplePFA =
     """
       |input: {type: array, items: double}
       |output:
@@ -60,7 +60,7 @@ class LogisticRegressionToPFATest extends AlpinePFAConversionTest {
       |    type: Output
     """.stripMargin
 
-  val testRows = {
+  private val testRows = {
     val r = scala.util.Random
     Seq(Seq(-1, 1), Seq(-4, -2)) ++ Range(0, 100).map(i => testModel.inputFeatures.indices.map(i => r.nextInt(14) - 7))
   }
@@ -71,19 +71,20 @@ class LogisticRegressionToPFATest extends AlpinePFAConversionTest {
 
   test("testToPFA Single LOR") {
     val jsonPFASingle = new LogisticRegressionPFAConverter(testModel).PFAComponentsForSingleLOR("input", None).toJson
-//    println(jsonPFASingle)
+    //    println(jsonPFASingle)
     testPFA(jsonToAst(jsonPFASingle), testModel, testRows)
   }
 
   test("testToPFA Multi LOR") {
     val jsonPFAMulti = new LogisticRegressionPFAConverter(testModel).PFAComponentsForMultiLOR("input", None).toJson
-//    println(jsonPFAMulti)
+    //    println(jsonPFAMulti)
     testPFA(jsonToAst(jsonPFAMulti), testModel, testRows)
   }
 
   override def assertResultsEqual(pfaRecord: PFARecord, alpineResult: Seq[Any]): Unit = {
-//    println(alpineResult + ", " + pfaRecord)
-    if (!(alpineResult(1) == 0.5)) { // In this case either prediction is valid.
+    //    println(alpineResult + ", " + pfaRecord)
+    if (!(alpineResult(1) == 0.5)) {
+      // In this case either prediction is valid.
       assert(alpineResult.head === pfaRecord.get(0), alpineResult + ", " + pfaRecord)
     }
     assertDoublesEqual(alpineResult(1).asInstanceOf[Double], pfaRecord.get(1).asInstanceOf[Double])

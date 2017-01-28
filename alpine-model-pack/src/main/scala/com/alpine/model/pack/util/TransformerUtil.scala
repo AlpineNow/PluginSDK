@@ -18,7 +18,7 @@ object TransformerUtil {
     * @param tempArray the array to be written to.
     * @return reference to tempArray, filled with the contents of the row.
     */
-  def fillRowToDoubleArray(row: Seq[Any], tempArray: Array[Double]) = {
+  def fillRowToDoubleArray(row: Seq[Any], tempArray: Array[Double]): Array[Double] = {
     var i = 0
     while (i < tempArray.length) {
       tempArray(i) = anyToDouble(row(i))
@@ -27,7 +27,7 @@ object TransformerUtil {
     tempArray
   }
 
-  def normalizeProbabilities(array: Seq[Double]) = {
+  def normalizeProbabilities(array: Seq[Double]): Seq[Double] = {
     val sum = array.sum
     if (sum != 0) {
       array.map(d => d / sum)
@@ -78,7 +78,7 @@ case class CastedDoubleSeq(row: Seq[Any]) extends Seq[Double] {
 
   override def iterator: Iterator[Double] = {
     new Iterator[Double] {
-      val rowIterator = row.iterator
+      private val rowIterator = row.iterator
 
       override def hasNext: Boolean = rowIterator.hasNext
 

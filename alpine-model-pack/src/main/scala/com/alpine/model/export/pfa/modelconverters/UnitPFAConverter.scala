@@ -17,7 +17,7 @@ class UnitPFAConverter(model: UnitModel) extends PFAConverter {
     val inputType = AvroTypes.fromAlpineSchema("input", model.inputFeatures)
     val outputType = AvroTypes.fromAlpineSchema("output", model.outputFeatures)
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = Map.empty,

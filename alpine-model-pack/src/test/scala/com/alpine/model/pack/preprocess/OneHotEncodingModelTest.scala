@@ -13,50 +13,51 @@ import com.alpine.util.SimpleSQLGenerator
 import org.scalatest.FunSuite
 
 /**
- * Tests serialization of OneHotEncodingModel
- * and application of OneHotEncodingTransformer.
- */
+  * Tests serialization of OneHotEncodingModel
+  * and application of OneHotEncodingTransformer.
+  */
 class OneHotEncodingModelTest extends FunSuite {
 
   /**
     * In February 2016 I changed the baseValue from String to Option[String].
     */
-  val modelFrom2015 = """{
-                        |  "oneHotEncodedFeatures": [
-                        |    {
-                        |      "hotValues": [
-                        |        "sunny",
-                        |        "overcast"
-                        |      ],
-                        |      "baseValue": "rain"
-                        |    },
-                        |    {
-                        |      "hotValues": [
-                        |        "true"
-                        |      ],
-                        |      "baseValue": "false"
-                        |    }
-                        |  ],
-                        |  "inputFeatures": [
-                        |    {
-                        |      "columnName": "outlook",
-                        |      "columnType": "String"
-                        |    },
-                        |    {
-                        |      "columnName": "wind",
-                        |      "columnType": "String"
-                        |    }
-                        |  ],
-                        |  "identifier": ""
-                        |}
-                        |""".stripMargin
+  private val modelFrom2015 =
+    """{
+      |  "oneHotEncodedFeatures": [
+      |    {
+      |      "hotValues": [
+      |        "sunny",
+      |        "overcast"
+      |      ],
+      |      "baseValue": "rain"
+      |    },
+      |    {
+      |      "hotValues": [
+      |        "true"
+      |      ],
+      |      "baseValue": "false"
+      |    }
+      |  ],
+      |  "inputFeatures": [
+      |    {
+      |      "columnName": "outlook",
+      |      "columnType": "String"
+      |    },
+      |    {
+      |      "columnName": "wind",
+      |      "columnType": "String"
+      |    }
+      |  ],
+      |  "identifier": ""
+      |}
+      |""".stripMargin
 
 
   val oneHotEncoderModel = OneHotEncodingModel(Seq(
     OneHotEncodedFeature(List("sunny", "overcast"), "rain"),
     OneHotEncodedFeature(List("true"), "false")
   ),
-    Seq(new ColumnDef("outlook", ColumnType.String), new ColumnDef("wind", ColumnType.String))
+    Seq(ColumnDef("outlook", ColumnType.String), ColumnDef("wind", ColumnType.String))
   )
 
   test("Should deserialize model from  2015") {
@@ -75,9 +76,9 @@ class OneHotEncodingModelTest extends FunSuite {
 
   test("Should transform input correctly") {
     val t = oneHotEncoderModel.transformer
-    assert(Seq[Any](1,0,1) == t.apply(Seq[Any]("sunny","true")))
-    assert(Seq[Any](0,1,1) == t.apply(Seq[Any]("overcast","true")))
-    assert(Seq[Any](0,0,0) == t.apply(Seq[Any]("rain","false")))
+    assert(Seq[Any](1, 0, 1) == t.apply(Seq[Any]("sunny", "true")))
+    assert(Seq[Any](0, 1, 1) == t.apply(Seq[Any]("overcast", "true")))
+    assert(Seq[Any](0, 0, 0) == t.apply(Seq[Any]("rain", "false")))
     intercept[Exception] {
       t.apply(Seq[Any]("stormy,true"))
     }

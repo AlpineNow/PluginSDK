@@ -15,15 +15,18 @@ import com.alpine.transformer.sql.ColumnarSQLExpression
 import com.alpine.util.{FilteredSeq, SQLUtility}
 
 /**
- * Model that will replace null values in the input row with specified values.
- */
+  * Model that will replace null values in the input row with specified values.
+  */
 @SerialVersionUID(-5428266012734031656L)
 case class NullValueReplacement(replacementValues: Seq[Any], inputFeatures: Seq[ColumnDef], override val identifier: String = "")
-  extends RowModel with PFAConvertible  {
+  extends RowModel with PFAConvertible {
 
   override def transformer: Transformer = NullValueReplacer(this)
+
   override def outputFeatures: Seq[ColumnDef] = inputFeatures
+
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(new NullValueSQLReplacer(this, sqlGenerator))
+
   override def getPFAConverter: PFAConverter = new NullValueReplacementPFAConverter(this)
 
   override def streamline(requiredOutputFeatureNames: Seq[String]): NullValueReplacement = {
@@ -38,7 +41,7 @@ case class NullValueReplacement(replacementValues: Seq[Any], inputFeatures: Seq[
 
 case class NullValueReplacer(model: NullValueReplacement) extends Transformer {
 
-  val replacementValues = model.replacementValues.toArray
+  private val replacementValues = model.replacementValues.toArray
 
   override def allowNullValues = true
 

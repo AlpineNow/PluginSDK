@@ -44,7 +44,7 @@ case class GroupByRegressionModel(groupByFeature: ColumnDef, modelsByGroup: Map[
 
   assert(isValid)
 
-  override def transformer: RegressionTransformer = new GroupByRegressionTransformer(this)
+  override def transformer: RegressionTransformer = GroupByRegressionTransformer(this)
 
   override def dependentFeature: ColumnDef = modelsByGroup.head._2.dependentFeature
 
@@ -76,7 +76,7 @@ case class GroupByClassificationModel(groupByFeature: ColumnDef, modelsByGroup: 
 
   assert(isValid)
 
-  override def transformer = new GroupByClassificationTransformer(this)
+  override def transformer = GroupByClassificationTransformer(this)
 
   @transient lazy val dependentFeature: ColumnDef = modelsByGroup.head._2.dependentFeature
 

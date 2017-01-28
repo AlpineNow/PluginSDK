@@ -13,9 +13,9 @@ import com.alpine.util.SimpleSQLGenerator
 import org.scalatest.FunSuite
 
 /**
- * Tests serialization of NullValueReplacement
- * and application of NullValueReplacer.
- */
+  * Tests serialization of NullValueReplacement
+  * and application of NullValueReplacer.
+  */
 class NullValueReplacementTest extends FunSuite {
 
   val model = NullValueReplacement(
@@ -32,10 +32,10 @@ class NullValueReplacementTest extends FunSuite {
 
   test("Should apply transformation correctly") {
     val t = model.transformer
-    assert(Seq(70,"sunny") === t.apply(Seq[Any](null, null)))
-    assert(Seq(65,"sunny") === t.apply(Seq[Any](65, null)))
-    assert(Seq(70,"rainy") === t.apply(Seq[Any](null, "rainy")))
-    assert(Seq(65,"rainy") === t.apply(Seq[Any](65, "rainy")))
+    assert(Seq(70, "sunny") === t.apply(Seq[Any](null, null)))
+    assert(Seq(65, "sunny") === t.apply(Seq[Any](65, null)))
+    assert(Seq(70, "rainy") === t.apply(Seq[Any](null, "rainy")))
+    assert(Seq(65, "rainy") === t.apply(Seq[Any](65, "rainy")))
   }
 
   test("Should generate SQL expression correctly") {

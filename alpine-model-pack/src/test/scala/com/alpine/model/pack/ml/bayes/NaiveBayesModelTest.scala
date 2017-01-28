@@ -90,7 +90,7 @@ class NaiveBayesModelTest extends FunSuite {
                 | (CASE WHEN "temperature" IS NULL THEN 1 ELSE EXP(-("temperature" - 73.0)*("temperature" - 73.0) / 75.99965472) / 6.1644 END)""".stripMargin.replace("\n", "")
             ),
             ColumnName("conf_0")
-            ),
+          ),
           (ColumnarSQLExpression(
             """5.0 *
               | (CASE WHEN "outlook" IS NULL THEN 1 WHEN "outlook" = 'sunny' THEN 0.6 WHEN "outlook" = 'rain' THEN 0.4 WHEN "outlook" = 'overcast' THEN 0.0 ELSE 0.01 END) *

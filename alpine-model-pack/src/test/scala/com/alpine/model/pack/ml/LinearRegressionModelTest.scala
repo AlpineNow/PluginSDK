@@ -11,17 +11,17 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import org.scalatest.FunSuite
 
 /**
- * Tests serialization of LinearRegressionModel.
- */
+  * Tests serialization of LinearRegressionModel.
+  */
 class LinearRegressionModelTest extends FunSuite {
 
   test("It should serialize correctly") {
     val coefficients = Seq[Double](0.9, 1, 5, -1)
     val inputFeatures = Seq(
-      new ColumnDef("x1", ColumnType.Double),
-      new ColumnDef("x2", ColumnType.Double),
-      new ColumnDef("temperature", ColumnType.Long),
-      new ColumnDef("humidity", ColumnType.Double)
+      ColumnDef("x1", ColumnType.Double),
+      ColumnDef("x2", ColumnType.Double),
+      ColumnDef("temperature", ColumnType.Long),
+      ColumnDef("humidity", ColumnType.Double)
     )
 
     val intercept = 3.4

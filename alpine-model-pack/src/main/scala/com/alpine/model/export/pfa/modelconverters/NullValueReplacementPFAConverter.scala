@@ -31,10 +31,10 @@ class NullValueReplacementPFAConverter(model: NullValueReplacement) extends PFAC
           (columnName, pfaFunction)
       }.toMap
 
-      Seq(new NewPFAObject(outputContents, outputType))
+      Seq(NewPFAObject(outputContents, outputType))
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = Map.empty,

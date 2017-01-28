@@ -8,16 +8,16 @@ import java.lang.reflect.Type
 
 import com.alpine.common.serialization.json._
 import com.alpine.model._
-import com.google.gson.GsonBuilder
+import com.google.gson.{Gson, GsonBuilder}
 
 /**
- * Utility for Gson augmented with type adapters and known types shorthand.
- */
+  * Utility for Gson augmented with type adapters and known types shorthand.
+  */
 object ModelJsonUtil {
 
-  val prettyGson = compactGsonBuilder.setPrettyPrinting().create()
+  val prettyGson: Gson = compactGsonBuilder.setPrettyPrinting().create()
 
-  val compactGson = compactGsonBuilder.create()
+  val compactGson: Gson = compactGsonBuilder.create()
 
   def compactGsonBuilder: GsonBuilder = {
     JsonUtil.gsonBuilderWithInterfaceAdapters(typesNeedingInterfaceAdapters)
