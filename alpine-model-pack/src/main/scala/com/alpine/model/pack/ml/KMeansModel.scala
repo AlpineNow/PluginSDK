@@ -26,6 +26,7 @@ import com.alpine.transformer.sql.{ClusteringModelSQLExpressions, ClusteringSQLT
  *                      to the model.
  * @param identifier
  */
+@SerialVersionUID(1021343246594647667L)
 case class KMeansModel(clusters: Seq[ClusterInfo],
                        inputFeatures: Seq[ColumnDef],
                        override val identifier: String = "")

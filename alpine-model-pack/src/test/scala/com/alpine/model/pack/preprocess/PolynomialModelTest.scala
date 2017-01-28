@@ -6,10 +6,10 @@ package com.alpine.model.pack.preprocess
 
 import java.io.ObjectStreamClass
 
-import com.alpine.json.JsonTestUtil
+import com.alpine.json.{JsonTestUtil, ModelJsonUtil}
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
-import com.alpine.util.SimpleSQLGenerator
+import com.alpine.util.{FilteredSeq, SimpleSQLGenerator}
 import org.scalatest.FunSuite
 
 /**
@@ -19,14 +19,24 @@ import org.scalatest.FunSuite
 class PolynomialModelTest extends FunSuite {
 
   val exponents = Seq(Seq[java.lang.Double](1.0,2.0,0.0), Seq[java.lang.Double](0.5,3.0,2.0))
-  val inputFeatures = {
+  val inputFeatures: Seq[ColumnDef] = {
     Seq(new ColumnDef("x1", ColumnType.Double), new ColumnDef("x2", ColumnType.Double), new ColumnDef("x3", ColumnType.Double))
   }
 
-  val t = new PolynomialModel(exponents, inputFeatures)
+  val t: PolynomialModel = new PolynomialModel(exponents, inputFeatures, "P")
+
+  private val oldModelJson =
+    """{"exponents":[[1.0,2.0,0.0],[0.5,3.0,2.0]],
+      |"inputFeatures":[{"columnName":"x1","columnType":"Double"},{"columnName":"x2","columnType":"Double"},{"columnName":"x3","columnType":"Double"}],
+      |"identifier":"P"}""".stripMargin
 
   test("Should serialize correctly") {
     JsonTestUtil.testJsonization(t)
+  }
+
+  test("Deserialization of old models should work") {
+    val deserializedModel = ModelJsonUtil.compactGson.fromJson(oldModelJson, classOf[PolynomialModel])
+    assert(deserializedModel === t)
   }
 
   test("Should score correctly") {
@@ -66,6 +76,21 @@ class PolynomialModelTest extends FunSuite {
 
   test("Serial UID should be stable") {
     assert(ObjectStreamClass.lookup(classOf[PolynomialModel]).getSerialVersionUID === -6759725743006372988L)
+  }
+
+  test("Should streamline correctly") {
+    val model: PolynomialModel = PolynomialModel(
+      Seq(Seq[java.lang.Double](1.0, 2.0, 0.0), Seq[java.lang.Double](0.5, 0.0, 2.0)),
+      Seq(ColumnDef("a", ColumnType.Double), ColumnDef("b", ColumnType.Double), ColumnDef("c", ColumnType.Double))
+    )
+    val streamlinedModel = model.streamline(Seq("y_1"))
+    assert(streamlinedModel.outputFeatures.map(_.columnName) === Seq("y_1"))
+    // Should drop column b, because after we drop the y_0 row, then the remaining matrix has 0s in that column.
+    assert(streamlinedModel.inputFeatures.map(_.columnName) === Seq("a", "c"))
+    Range(0, 5).foreach(_ => {
+      val row = Seq(math.random, math.random, math.random)
+      assert(model.transformer.apply(row)(1) === streamlinedModel.transformer.apply(FilteredSeq(row, Seq(0, 2)))(0))
+    })
   }
 
 }

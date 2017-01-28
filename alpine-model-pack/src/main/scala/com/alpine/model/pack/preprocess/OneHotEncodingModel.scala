@@ -12,17 +12,19 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
 import com.alpine.transformer.sql.ColumnarSQLExpression
+import com.alpine.util.{FilteredSeq, ModelUtil}
 
 /**
  * Model to apply one-hot encoding to categorical input features.
  * Result will be a sequence of 1s and 0s.
  */
+@SerialVersionUID(-7558600518234424483L)
 case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature], inputFeatures: Seq[ColumnDef],  override val identifier: String = "")
   extends RowModel with PFAConvertible  {
 
   override def transformer = OneHotEncodingTransformer(oneHotEncodedFeatures)
 
-  def outputFeatures: Seq[ColumnDef] = {
+  @transient lazy val outputFeatures: Seq[ColumnDef] = {
     inputFeatures.indices.flatMap(i => {
       val p = oneHotEncodedFeatures(i)
       p.hotValues.indices.map(j => new ColumnDef(inputFeatures(i).columnName + "_" + j, ColumnType.Int))
@@ -32,6 +34,29 @@ case class OneHotEncodingModel(oneHotEncodedFeatures: Seq[OneHotEncodedFeature],
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(OneHotEncodingSQLTransformer(this, sqlGenerator))
 
   override def getPFAConverter: PFAConverter = new OneHotEncodingPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): RowModel = {
+    val indicesToKeep: Seq[Int] = requiredOutputFeatureNames.map(name => outputFeatures.indexWhere(c => c.columnName == name))
+    /*
+    We have to track down which output features come from which OneHotEncodedFeature.
+    We use the cumulativeSum to work out the boundaries for each the output features of each OneHotEncodedFeature, and call these "fence-posts"/
+    The output features for each one-hot-encoding group start at every fence-post.
+  */
+    val outputFeatureFencePosts = ModelUtil.cumulativeSum(oneHotEncodedFeatures.map(f => f.hotValues.size))
+    val inputFeaturesToKeep: Seq[Int] = oneHotEncodedFeatures.indices.filter(i => {
+      // We want to keep this OneHotEncodedFeature if any of the output features corresponding to it,
+      // which are the index range [min, max) in the outputFeature list of the main model,
+      // are in the list indicesToKeep, which are indices of the features that we still need to keep for the new model.
+      val (min, max) = (outputFeatureFencePosts(i), outputFeatureFencePosts(i + 1))
+      indicesToKeep.exists(j => {min <= j && j < max})
+    })
+    OneHotEncodingModel(
+      oneHotEncodedFeatures = FilteredSeq(oneHotEncodedFeatures, inputFeaturesToKeep),
+      inputFeatures = FilteredSeq(inputFeatures, inputFeaturesToKeep),
+      this.identifier
+    )
+  }
+
 }
 
 /**

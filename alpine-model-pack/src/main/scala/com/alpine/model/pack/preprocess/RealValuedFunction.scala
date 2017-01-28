@@ -9,6 +9,7 @@ import com.alpine.model.RowModel
 import com.alpine.model.export.pfa.expressions.FunctionExecute
 import com.alpine.model.export.pfa.modelconverters.RealValuedFunctionsPFAConverter
 import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
+import com.alpine.model.pack.multiple.PipelineRowModel
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.model.pack.util.CastedDoubleSeq
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -202,10 +203,11 @@ case class Power(p: Double) extends RealValuedFunction {
   }
 }
 
+@SerialVersionUID(-6730039384877850890L)
 case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], inputFeatures: Seq[ColumnDef], override val identifier: String = "") extends RowModel with PFAConvertible{
   override def transformer = RealValuedFunctionTransformer(this)
 
-  override def outputFeatures = {
+  @transient lazy val outputFeatures: Seq[ColumnDef] = {
     functions.map(f => f.function.value.getClass.getSimpleName + "_" + inputFeatures(f.index).columnName).map(name => ColumnDef(name, ColumnType.Double))
   }
 
@@ -222,6 +224,19 @@ case class RealValuedFunctionsModel(functions: Seq[RealFunctionWithIndex], input
   }
 
   override def getPFAConverter: PFAConverter = new RealValuedFunctionsPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): RowModel = {
+    val indices: Seq[Int] = requiredOutputFeatureNames.map(name => this.outputFeatures.indexWhere(c => c.columnName == name))
+    val functionsToKeep = indices.map(i => this.functions(i))
+    val indexOfNeededInputFeatures: Seq[Int] = functionsToKeep.map(f => f.index).distinct.sortBy(index => index)
+    val oldIndexToNewIndexMap = indexOfNeededInputFeatures.zipWithIndex.toMap
+    val newModel = RealValuedFunctionsModel(
+      functionsToKeep.map(f => RealFunctionWithIndex(f.function, oldIndexToNewIndexMap(f.index))),
+      indexOfNeededInputFeatures.map(i => this.inputFeatures(i))
+    )
+    val renamingModel = RenamingModel(newModel.outputFeatures, requiredOutputFeatureNames)
+    PipelineRowModel(Seq(newModel, renamingModel), this.identifier)
+  }
 }
 
 case class RealFunctionWithIndex(function: TypeWrapper[_ <: RealValuedFunction], index: Int)

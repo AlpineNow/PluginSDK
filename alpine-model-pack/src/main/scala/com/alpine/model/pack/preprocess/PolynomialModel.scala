@@ -7,6 +7,7 @@ package com.alpine.model.pack.preprocess
 import com.alpine.model.RowModel
 import com.alpine.model.export.pfa.modelconverters.PolynomialPFAConverter
 import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
+import com.alpine.model.pack.multiple.PipelineRowModel
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
@@ -26,6 +27,7 @@ import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
   * Then the transformation of a row (x1, x2, x3) will be
   * {{{(y1, y2) = (x1 * x2 pow 2, sqrt(x1) * x2 pow 3 * x3 pow 2).}}}
   */
+@SerialVersionUID(-6759725743006372988L)
 case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "")
   extends RowModel with PFAConvertible  {
 
@@ -38,6 +40,17 @@ case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures:
   }
 
   override def getPFAConverter: PFAConverter = new PolynomialPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): RowModel = {
+    val indices: Seq[Int] = requiredOutputFeatureNames.map(name => outputFeatures.indexWhere(c => c.columnName == name))
+    val filteredRows: Seq[Seq[java.lang.Double]] = indices.map(i => exponents(i))
+    val nonZeroColumns: Seq[Int] = inputFeatures.indices.filter(j => filteredRows.exists(row => row(j) != 0))
+    val neededInputFeatures: Seq[ColumnDef] = nonZeroColumns.map(j => inputFeatures(j))
+    val matrixWithNonZeroColumns: Seq[Seq[java.lang.Double]] = filteredRows.map(row => nonZeroColumns.map(j => row(j)))
+    val newModel = new PolynomialModel(matrixWithNonZeroColumns, neededInputFeatures)
+    val renamingModel = RenamingModel(newModel.outputFeatures, requiredOutputFeatureNames)
+    PipelineRowModel(Seq(newModel, renamingModel), this.identifier)
+  }
 }
 
 case class PolynomialTransformer(model: PolynomialModel) extends Transformer {

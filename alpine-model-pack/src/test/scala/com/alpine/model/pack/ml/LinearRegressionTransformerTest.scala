@@ -13,7 +13,7 @@ import org.scalatest.Matchers._
  */
 class LinearRegressionTransformerTest extends FunSuite {
 
-  val coefficients = Seq[java.lang.Double](0.9, 1, 5)
+  val coefficients = Seq[java.lang.Double](0.9D, 1D, 5D)
 
   val intercept = 1d
 

@@ -21,9 +21,11 @@ import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
   *
   * Created by Jennifer Thompson on 1/5/17.
   */
+@SerialVersionUID(5576785112360108164L)
 case class RenamingModel(inputFeatures: Seq[ColumnDef], outputNames: Seq[String], override val identifier: String = "")  extends RowModel with PFAConvertible {
   override def transformer: Transformer = UnitTransformer
-  override def outputFeatures: Seq[ColumnDef] = (inputFeatures zip outputNames).map {
+
+  @transient lazy val outputFeatures: Seq[ColumnDef] = (inputFeatures zip outputNames).map {
     case (ColumnDef(_, inputType), outputName) => ColumnDef(outputName, inputType)
   }
 
@@ -32,6 +34,17 @@ case class RenamingModel(inputFeatures: Seq[ColumnDef], outputNames: Seq[String]
   }
 
   override def getPFAConverter: PFAConverter = new RenamingPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): RenamingModel = {
+    val indices: Seq[Int] = requiredOutputFeatureNames.map(name => outputNames.indexOf(name))
+    RenamingModel(indices.map(i => inputFeatures(i)), requiredOutputFeatureNames, this.identifier)
+  }
+
+  @transient lazy val isRedundant: Boolean = {
+    (inputFeatures zip outputNames).forall {
+      case (c: ColumnDef, outputName: String) => c.columnName == outputName
+    }
+  }
 }
 
 case class RenamingSQLTransformer(model : RenamingModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {

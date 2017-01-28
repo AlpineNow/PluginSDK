@@ -11,6 +11,7 @@ import com.alpine.model.pack.ml.sql.LinearRegressionSQLTransformer
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.SQLGenerator
+import com.alpine.util.FilteredSeq
 
 /**
  * Representation of the classical linear regression model
@@ -28,6 +29,7 @@ import com.alpine.sql.SQLGenerator
  * @param identifier Used to identify this model when in a collection of models. Should be simple characters,
  *                   so it can be used in a feature name.
  */
+@SerialVersionUID(-4888344570084962586L)
 case class LinearRegressionModel(coefficients: Seq[java.lang.Double],
                                  inputFeatures: Seq[ColumnDef],
                                  intercept: Double = 0,
@@ -42,6 +44,19 @@ case class LinearRegressionModel(coefficients: Seq[java.lang.Double],
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(new LinearRegressionSQLTransformer(this, sqlGenerator))
 
   override def getPFAConverter: PFAConverter = new LinearRegressionPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): RegressionRowModel = {
+    // Ignore the requiredOutputFeatureNames, as a regression model always produces the same output.
+    // However, we can drop any input features that are not using (as they have coefficient zero).
+    val nonZeroCoefficientIndices = this.coefficients.indices.filter(i => this.coefficients(i) != 0)
+    LinearRegressionModel(
+      FilteredSeq(this.coefficients, nonZeroCoefficientIndices),
+      FilteredSeq(this.inputFeatures, nonZeroCoefficientIndices),
+      this.intercept,
+      this.dependentFeatureName,
+      this.identifier
+    )
+  }
 }
 
 

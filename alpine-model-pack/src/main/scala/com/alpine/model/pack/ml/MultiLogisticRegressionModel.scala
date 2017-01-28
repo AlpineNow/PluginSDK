@@ -17,6 +17,7 @@ import com.alpine.transformer.sql._
  * @author Jenny Thompson
  *         6/11/15
  */
+@SerialVersionUID(1381676143872694894L)
 case class MultiLogisticRegressionModel(singleLORs: Seq[SingleLogisticRegression],
                                       baseValue: String,
                                       dependentFeatureName: String,
