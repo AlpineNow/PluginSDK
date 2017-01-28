@@ -34,6 +34,7 @@ trait GroupByModel[M <: RowModel] {
   * The keys in modelsByGroup need to be primitive (String, Long, Double etc) to work with serialization.
   * They also need to be of the type of the groupByFeature.
   */
+@SerialVersionUID(-941388806378184495L)
 case class GroupByRegressionModel(groupByFeature: ColumnDef, modelsByGroup: Map[Any, RegressionRowModel], override val identifier: String = "")
   extends RegressionRowModel with GroupByModel[RegressionRowModel] with PFAConvertible {
 
@@ -56,8 +57,16 @@ case class GroupByRegressionModel(groupByFeature: ColumnDef, modelsByGroup: Map[
   }
 
   override def getPFAConverter: PFAConverter = new GroupByPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): RegressionRowModel = {
+    val newModelsByGroup = this.modelsByGroup.map {
+      case (group, model) => (group, model.streamline(requiredOutputFeatureNames))
+    }
+    GroupByRegressionModel(this.groupByFeature, newModelsByGroup, this.identifier)
+  }
 }
 
+@SerialVersionUID(-7994790669603482144L)
 case class GroupByClassificationModel(groupByFeature: ColumnDef, modelsByGroup: Map[Any, ClassificationRowModel], override val identifier: String = "")
   extends ClassificationRowModel with GroupByModel[ClassificationRowModel] with PFAConvertible {
 
@@ -83,4 +92,10 @@ case class GroupByClassificationModel(groupByFeature: ColumnDef, modelsByGroup: 
 
   override def getPFAConverter: PFAConverter = new GroupByPFAConverter(this)
 
+  override def streamline(requiredOutputFeatureNames: Seq[String]): ClassificationRowModel = {
+    val newModelsByGroup = this.modelsByGroup.map {
+      case (group, model) => (group, model.streamline(requiredOutputFeatureNames))
+    }
+    GroupByClassificationModel(this.groupByFeature, newModelsByGroup, this.identifier)
+  }
 }

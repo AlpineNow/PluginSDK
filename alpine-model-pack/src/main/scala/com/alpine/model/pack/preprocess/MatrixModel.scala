@@ -3,27 +3,42 @@ package com.alpine.model.pack.preprocess
 import com.alpine.model.RowModel
 import com.alpine.model.export.pfa.modelconverters.MatrixPFAConverter
 import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
+import com.alpine.model.pack.multiple.PipelineRowModel
 import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.model.pack.util.TransformerUtil
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
 import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
+import com.alpine.util.FilteredSeq
 
 /**
   * Created by Jennifer Thompson on 3/17/16.
   */
+@SerialVersionUID(2821986496045802220L)
 case class MatrixModel(values: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "")
   extends RowModel with PFAConvertible {
   override def transformer: Transformer = MatrixTransformer(this)
 
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = Some(new MatrixSQLTransformer(this, sqlGenerator))
 
-  def outputFeatures = {
+  @transient lazy val outputFeatures: Seq[ColumnDef] = {
     MatrixModel.generateOutputFeatures(values.indices)
   }
 
   override def getPFAConverter: PFAConverter = new MatrixPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): RowModel = {
+    // Filter the matrix to get the relevant rows, then drop the columns that are all zero in the new matrix.
+    val indices: Seq[Int] = requiredOutputFeatureNames.map(name => outputFeatures.indexWhere(c => c.columnName == name))
+    val filteredRows: Seq[Seq[java.lang.Double]] = FilteredSeq(values, indices)
+    val nonZeroColumns: Seq[Int] = inputFeatures.indices.filter(j => filteredRows.exists(row => row(j) != 0))
+    val neededInputFeatures: Seq[ColumnDef] = FilteredSeq(inputFeatures, nonZeroColumns)
+    val matrixWithNonZeroColumns: Seq[Seq[java.lang.Double]] = filteredRows.map(row => nonZeroColumns.map(j => row(j)))
+    val newModel = new MatrixModel(matrixWithNonZeroColumns, neededInputFeatures)
+    val renamingModel = RenamingModel(newModel.outputFeatures, requiredOutputFeatureNames)
+    PipelineRowModel(Seq(newModel, renamingModel), this.identifier)
+  }
 }
 
 object MatrixModel {

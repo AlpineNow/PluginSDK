@@ -1,6 +1,7 @@
 package com.alpine.util
 
 /**
+  * Creates a filtered view on top of the original Sequence.
   * Created by Jennifer Thompson on 2/9/16.
   */
 case class FilteredSeq[A](originalSeq: Seq[A], indicesToUse: Seq[Int]) extends Seq[A] {
@@ -10,7 +11,7 @@ case class FilteredSeq[A](originalSeq: Seq[A], indicesToUse: Seq[Int]) extends S
 
   override def iterator: Iterator[A] = {
     new Iterator[A] {
-      val indexIterator = indicesToUse.iterator
+      private val indexIterator = indicesToUse.iterator
 
       override def hasNext: Boolean = indexIterator.hasNext
 

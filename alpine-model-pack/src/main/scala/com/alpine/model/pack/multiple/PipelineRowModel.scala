@@ -17,6 +17,7 @@ import com.alpine.transformer.sql.RegressionSQLTransformer
  * e.g.
  *  the output of one model is the input to the next.
  */
+@SerialVersionUID(-5456055908821806710L)
 case class PipelineRowModel(transformers: Seq[RowModel], override val identifier: String = "")
   extends RowModel with PFAConvertible {
 
@@ -37,11 +38,18 @@ case class PipelineRowModel(transformers: Seq[RowModel], override val identifier
   }
 
   override def getPFAConverter: PFAConverter = new PipelinePFAConverter(transformers)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): PipelineRowModel = {
+    val newModels = PipelineUtil.streamlineModelList(transformers, requiredOutputFeatureNames)
+    PipelineUtil.validateModelList(newModels)
+    PipelineRowModel(newModels, this.identifier)
+  }
 }
 
 /**
   * Used for combining a Regression model (e.g. Linear Regression) with preprocessors (e.g. One Hot Encoding).
   */
+@SerialVersionUID(381487725247733182L)
 case class PipelineRegressionModel(preProcessors: Seq[RowModel], finalModel: RegressionRowModel, override val identifier: String = "")
   extends RegressionRowModel with PFAConvertible {
 
@@ -67,10 +75,18 @@ case class PipelineRegressionModel(preProcessors: Seq[RowModel], finalModel: Reg
 
   override def getPFAConverter: PFAConverter = new PipelinePFAConverter(preProcessors ++ Seq(finalModel))
 
+  override def streamline(requiredOutputFeatureNames: Seq[String]): PipelineRegressionModel = {
+    val streamlinedFinalModel = finalModel.streamline(requiredOutputFeatureNames)
+    val newPreprocessors = PipelineUtil.streamlineModelList(preProcessors, streamlinedFinalModel.inputFeatures.map(_.columnName))
+    PipelineUtil.validateModelList(newPreprocessors ++ Seq(streamlinedFinalModel))
+    PipelineRegressionModel(newPreprocessors, streamlinedFinalModel, this.identifier)
+  }
+
 }
 /**
   * Used for combining a Clustering model (e.g. K-Means) with preprocessors (e.g. One Hot Encoding).
   */
+@SerialVersionUID(-8221170007141359159L)
 case class PipelineClusteringModel(preProcessors: Seq[RowModel], finalModel: ClusteringRowModel, override val identifier: String = "")
   extends ClusteringRowModel with PFAConvertible {
 
@@ -96,11 +112,19 @@ case class PipelineClusteringModel(preProcessors: Seq[RowModel], finalModel: Clu
 
   override def getPFAConverter: PFAConverter = new PipelinePFAConverter(preProcessors ++ Seq(finalModel))
 
+  override def streamline(requiredOutputFeatureNames: Seq[String]): PipelineClusteringModel = {
+    val streamlinedFinalModel = finalModel.streamline(requiredOutputFeatureNames)
+    val newPreprocessors = PipelineUtil.streamlineModelList(preProcessors, streamlinedFinalModel.inputFeatures.map(_.columnName))
+    PipelineUtil.validateModelList(newPreprocessors ++ Seq(streamlinedFinalModel))
+    PipelineClusteringModel(newPreprocessors, streamlinedFinalModel)
+  }
+
 }
 
 /**
   * Used for combining a Classification model (e.g. Logistic Regression) with preprocessors (e.g. One Hot Encoding).
   */
+@SerialVersionUID(-2407095602660767904L)
 case class PipelineClassificationModel(preProcessors: Seq[RowModel], finalModel: ClassificationRowModel, override val identifier: String = "")
   extends ClassificationRowModel with PFAConvertible {
 
@@ -129,31 +153,55 @@ case class PipelineClassificationModel(preProcessors: Seq[RowModel], finalModel:
 
   override def getPFAConverter: PFAConverter = new PipelinePFAConverter(preProcessors ++ Seq(finalModel))
 
+  override def streamline(requiredOutputFeatureNames: Seq[String]): PipelineClassificationModel = {
+    val streamlinedFinalModel = finalModel.streamline(requiredOutputFeatureNames)
+    val newPreprocessors = PipelineUtil.streamlineModelList(preProcessors, streamlinedFinalModel.inputFeatures.map(_.columnName))
+    PipelineUtil.validateModelList(newPreprocessors ++ Seq(streamlinedFinalModel))
+    PipelineClassificationModel(newPreprocessors, streamlinedFinalModel)
+  }
+
 }
 
-/**
-  * Never used by Alpine.
-  * Does not have sqlTransformer implemented.
-  * Use PipelineClusteringModel or PipelineClassificationModel instead.
-  */
-@Deprecated
-case class PipelineCategoricalModel(preProcessors: Seq[RowModel], finalModel: CategoricalRowModel, override val identifier: String = "")
-  extends CategoricalRowModel with PFAConvertible {
+object PipelineUtil {
 
-  override def transformer = {
-    new PipelineCategoricalTransformer(preProcessors.map(t => t.transformer).toList, finalModel.transformer, preProcessors ++ List(finalModel))
-  }
-  override def classLabels = finalModel.classLabels
-
-  @transient lazy val inputFeatures: Seq[ColumnDef] = preProcessors.head.transformationSchema.inputFeatures
-
-  @transient override lazy val sqlOutputFeatures: Seq[ColumnDef] = finalModel.sqlOutputFeatures
-
-  override def outputFeatures = finalModel.outputFeatures
-
-  override def classesForLoading = {
-    super.classesForLoading ++ preProcessors.flatMap(t => t.classesForLoading).toSet ++ finalModel.classesForLoading
+  def streamlineModelList(models: Seq[RowModel], requiredOutputFeatureNames: Seq[String]): List[RowModel] = {
+    var newModels: List[RowModel] = List()
+    val reverseIterator = models.reverseIterator
+    var currentNeededOutputNames = requiredOutputFeatureNames
+    while(reverseIterator.hasNext) {
+      val newModel = reverseIterator.next.streamline(currentNeededOutputNames)
+      currentNeededOutputNames = newModel.inputFeatures.map(_.columnName)
+      newModels = newModel :: newModels
+    }
+    newModels
   }
 
-  override def getPFAConverter: PFAConverter = new PipelinePFAConverter(preProcessors ++ Seq(finalModel))
+  /**
+    * If the feature names don't match between layers, then the model will not be executable, so we don't want to generate that model.
+    * @param models list of sequential models.
+    */
+  @throws(classOf[Exception])
+  def validateModelList(models: Seq[RowModel]): Unit = {
+    if (models.size < 2) {
+      return
+    }
+    var index = 0
+    while (index < models.size - 1) {
+      val current = models(index)
+      val next = models(index + 1)
+      checkFeaturesAreAvailable(current.outputFeatures, next.inputFeatures)
+      index += 1
+    }
+  }
+
+  @throws(classOf[Exception])
+  def checkFeaturesAreAvailable(previousOutputFeatures: Seq[ColumnDef], nextInputFeatures: Seq[ColumnDef]): Unit = {
+    val previousOutputNames: Set[String] = previousOutputFeatures.map(c => c.columnName).toSet
+    for (inputFeature <- nextInputFeatures) {
+      if (!previousOutputNames.contains(inputFeature.columnName)) {
+        throw new RuntimeException("Feature name " + inputFeature.columnName + " not found in output feature names " + previousOutputNames + " of previous model. " +
+          "This is not a valid list of sequential models.")
+      }
+    }
+  }
 }

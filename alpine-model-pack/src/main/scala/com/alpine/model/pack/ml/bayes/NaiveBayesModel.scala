@@ -15,7 +15,7 @@ import com.alpine.util.SQLUtility
 /**
   * Created by Jennifer Thompson on 7/7/16.
   */
-
+@SerialVersionUID(-2610940394389016692L)
 case class NaiveBayesModel(inputFeatures: Seq[ColumnDef],
                            dependentFeatureName: String,
                            distributions: Seq[Distribution],

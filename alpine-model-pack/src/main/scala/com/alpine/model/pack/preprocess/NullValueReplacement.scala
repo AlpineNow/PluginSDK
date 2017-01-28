@@ -12,18 +12,28 @@ import com.alpine.plugin.core.io.ColumnDef
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
 import com.alpine.transformer.sql.ColumnarSQLExpression
-import com.alpine.util.SQLUtility
+import com.alpine.util.{FilteredSeq, SQLUtility}
 
 /**
  * Model that will replace null values in the input row with specified values.
  */
+@SerialVersionUID(-5428266012734031656L)
 case class NullValueReplacement(replacementValues: Seq[Any], inputFeatures: Seq[ColumnDef], override val identifier: String = "")
   extends RowModel with PFAConvertible  {
 
   override def transformer: Transformer = NullValueReplacer(this)
-  override def outputFeatures = inputFeatures
+  override def outputFeatures: Seq[ColumnDef] = inputFeatures
   override def sqlTransformer(sqlGenerator: SQLGenerator) = Some(new NullValueSQLReplacer(this, sqlGenerator))
   override def getPFAConverter: PFAConverter = new NullValueReplacementPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): NullValueReplacement = {
+    val indices: Seq[Int] = requiredOutputFeatureNames.map(name => this.outputFeatures.indexWhere(c => c.columnName == name))
+    NullValueReplacement(
+      replacementValues = FilteredSeq(this.replacementValues, indices),
+      inputFeatures = FilteredSeq(this.inputFeatures, indices),
+      identifier = this.identifier
+    )
+  }
 }
 
 case class NullValueReplacer(model: NullValueReplacement) extends Transformer {

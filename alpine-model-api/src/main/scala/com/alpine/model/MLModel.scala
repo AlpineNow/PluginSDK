@@ -47,6 +47,20 @@ trait RowModel extends MLModel {
   def transformationSchema: DetailedTransformationSchema = {
     DetailedTransformationSchema(inputFeatures, outputFeatures, identifier)
   }
+
+  /**
+    * Returns a streamlined version of this model, throwing away parts which are not required to produce
+    * the features with names in requiredOutputFeatureNames.
+    *
+    * Behaviour is undefined if requiredOutputFeatureNames is not actually a subset of outputFeatures.map(_columnName).
+    *
+    * The resulting model may still have more output features than those required
+    * (i.e. for ClassificationRowModel implementations which always have the same output features,
+    * or for OneHotEncodingModel whose output features naturally group together).
+    * @param requiredOutputFeatureNames names of the output features that the new model should produce.
+    * @return A model which has the same functionality for those output features listed, but potentially fewer input features.
+    */
+  def streamline(requiredOutputFeatureNames: Seq[String]): RowModel = this
 }
 
 /**
@@ -77,6 +91,9 @@ trait ClassificationRowModel extends CategoricalRowModel {
    */
   def dependentFeature: ColumnDef
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[ClassificationSQLTransformer] = None
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): ClassificationRowModel = this
+
 }
 
 trait ClusteringRowModel extends CategoricalRowModel {
@@ -84,6 +101,9 @@ trait ClusteringRowModel extends CategoricalRowModel {
   def outputFeatures = FeatureUtil.clusteringOutputFeatures
 
   override def sqlTransformer(sqlGenerator: SQLGenerator): Option[ClusteringSQLTransformer] = None
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): ClusteringRowModel = this
+
 }
 
 trait RegressionRowModel extends RowModel {
@@ -98,5 +118,7 @@ trait RegressionRowModel extends RowModel {
     * @return Feature description used to identify the dependent feature in an evaluation dataset.
    */
   def dependentFeature: ColumnDef
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): RegressionRowModel = this
 
 }

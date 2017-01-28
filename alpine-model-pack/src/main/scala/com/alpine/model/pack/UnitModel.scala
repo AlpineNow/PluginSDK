@@ -17,6 +17,7 @@ import com.alpine.transformer.sql.SQLTransformer
  * Represents a model that carries features through without transforming them.
  * Designed to be used in parallel to other models in the CombinerModel.
  */
+@SerialVersionUID(-75224626855321481L)
 case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: String = "")
   extends RowModel with PFAConvertible {
   override def transformer: Transformer = UnitTransformer
@@ -27,6 +28,10 @@ case class UnitModel(inputFeatures: Seq[ColumnDef], override val identifier: Str
   }
 
   override def getPFAConverter: PFAConverter = new UnitPFAConverter(this)
+
+  override def streamline(requiredOutputFeatureNames: Seq[String]): UnitModel = {
+    UnitModel(inputFeatures.filter(c => requiredOutputFeatureNames.contains(c.columnName)), this.identifier)
+  }
 }
 
 /**

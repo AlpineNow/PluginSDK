@@ -11,7 +11,7 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
 import com.alpine.transformer.sql._
-import com.alpine.util.SQLUtility
+import com.alpine.util.{ModelUtil, SQLUtility}
 
 /**
   * Created by Jennifer Thompson on 2/12/16.
@@ -32,7 +32,7 @@ class GroupByClassificationSQLTransformer(val model: GroupByClassificationModel,
 
     val groupBySQLExpression = combinedIntermediateLayers.layers.last.last._2.asColumnarSQLExpression(sqlGenerator)
 
-    val startingFeatureIndexByModel = modelsByGroup.map(_._1) zip cumulativeSum(modelsByGroup.map(_._2.classLabels.size))
+    val startingFeatureIndexByModel = modelsByGroup.map(_._1) zip ModelUtil.cumulativeSum(modelsByGroup.map(_._2.classLabels.size))
 
     val finalLayerConfidences = model.classLabels.map(l => {
       (l, SQLUtility.groupBySQL(
@@ -55,12 +55,6 @@ class GroupByClassificationSQLTransformer(val model: GroupByClassificationModel,
     val intermediateLayers = combinedIntermediateLayers.layers ++ Seq(finalLayerConfidences.map(_._2) zip confidenceColumnNames)
 
     ClassificationModelSQLExpressions.apply(finalLayerConfidences.map(_._1) zip confidenceColumnNames, intermediateLayers, sqlGenerator)
-  }
-
-  private def cumulativeSum(values: Seq[Int]): Seq[Int] = {
-    values.foldLeft(List[Int](0))((sumSoFar, value) => {
-      (value + sumSoFar.head) :: sumSoFar
-    }).reverse
   }
 
   /**
@@ -96,6 +90,8 @@ class GroupByClassificationSQLTransformer(val model: GroupByClassificationModel,
     }
 
     override def outputFeatures: Seq[ColumnDef] = ???
+
+    override def streamline(requiredOutputFeatureNames: Seq[String]): RowModel = ???
   }
 
 }
