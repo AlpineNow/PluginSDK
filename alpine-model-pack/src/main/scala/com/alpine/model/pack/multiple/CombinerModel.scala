@@ -43,11 +43,11 @@ case class CombinerModel(models: Seq[ModelWithID], override val identifier: Stri
     CombinerModel.getOutputFeaturesWithGroupID(models.map(m => (m.id, m.model.sqlOutputFeatures)))
   }
 
-  override def classesForLoading = {
+  override def classesForLoading: Set[Class[_]] = {
     super.classesForLoading ++ models.flatMap(t => t.model.classesForLoading).toSet
   }
 
-  override def sqlTransformer(sqlGenerator: SQLGenerator) = {
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[CombinerSQLTransformer] = {
     CombinerSQLTransformer.make(this, sqlGenerator)
   }
 
@@ -141,7 +141,7 @@ case class CombinerTransformer(model: CombinerModel) extends Transformer {
     )
   }
 
-  def apply(row: Row) = {
+  def apply(row: Row): Seq[Any] = {
     scorersWithIndices.flatMap {
       case (transformer, indices) => transformer.apply(FilteredSeq(row, indices))
     }
@@ -158,7 +158,7 @@ object CombinerModel {
     for (subFeatures <- subOutputFeatures) {
       val suffix = getSuffixForConcatenation(featureBuilder, subFeatures)
       for (feature <- subFeatures) {
-        featureBuilder.append(new ColumnDef(feature.columnName + suffix, feature.columnType))
+        featureBuilder.append(ColumnDef(feature.columnName + suffix, feature.columnType))
       }
     }
     featureBuilder
@@ -171,7 +171,7 @@ object CombinerModel {
       val groupID = subFeatures._1
       val suffix = getSuffixForConcatenation(featureBuilder, subFeatureDescs, groupID)
       for (feature <- subFeatureDescs) {
-        featureBuilder.append(new ColumnDef(feature.columnName + suffix, feature.columnType))
+        featureBuilder.append(ColumnDef(feature.columnName + suffix, feature.columnType))
       }
     }
     featureBuilder

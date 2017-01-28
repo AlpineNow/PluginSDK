@@ -14,17 +14,17 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
   */
 class CombinerPFAConverterTest extends AlpinePFAConversionTest {
 
-  val testModel = {
+  val testModel: CombinerModel = {
     val oneHotModel = OneHotEncodingModel(Seq(
       OneHotEncodedFeature(List("sunny", "overcast"), "rain"),
       OneHotEncodedFeature(List("true"), "false")
     ),
-      Seq(new ColumnDef("outlook", ColumnType.String), new ColumnDef("wind", ColumnType.String))
+      Seq(ColumnDef("outlook", ColumnType.String), ColumnDef("wind", ColumnType.String))
     )
 
-    val unitModel = new UnitModel(Seq(
-      new ColumnDef("temperature", ColumnType.Long),
-      new ColumnDef("humidity", ColumnType.Long)
+    val unitModel = UnitModel(Seq(
+      ColumnDef("temperature", ColumnType.Long),
+      ColumnDef("humidity", ColumnType.Long)
     ))
 
     CombinerModel.make(Seq(oneHotModel, unitModel))

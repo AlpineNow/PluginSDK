@@ -46,7 +46,7 @@ class GroupByPFAConverter(model: GroupByModel[_ <: RowModel] with RowModel) exte
       )
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = cells,
@@ -55,7 +55,7 @@ class GroupByPFAConverter(model: GroupByModel[_ <: RowModel] with RowModel) exte
     )
   }
 
-  def doExpressionForSubModel(subPFA: PFAComponents, nameSpaceID: Option[String], outputType: AvroType) = {
+  def doExpressionForSubModel(subPFA: PFAComponents, nameSpaceID: Option[String], outputType: AvroType): DoExpression = {
     // Have to redefine the return type name, so that all of the results have the same type.
     // Otherwise it results in a UnionType, which is impossible (as far as I can tell),
     // to turn back into a RecordType, even if all of the fields are identical.

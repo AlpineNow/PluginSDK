@@ -18,9 +18,9 @@ import org.scalatest.{FunSuite, Matchers}
 /**
   * Created by Jennifer Thompson on 6/1/16.
   */
-trait AlpinePFAConversionTest extends FunSuite with Matchers  {
+trait AlpinePFAConversionTest extends FunSuite with Matchers {
 
-  def fullCorrectnessTest(testModel: RowModel, testRows: Seq[Seq[Any]], printPFA: Boolean = false) = {
+  def fullCorrectnessTest(testModel: RowModel, testRows: Seq[Seq[Any]], printPFA: Boolean = false): Unit = {
     simpleCorrectnessTest(testModel, testRows, printPFA)
     nameSpacingCorrectnessTest(testModel, testRows, printPFA)
     nameCollisionsCorrectnessTest(testModel, testRows, printPFA)
@@ -95,7 +95,7 @@ trait AlpinePFAConversionTest extends FunSuite with Matchers  {
   }
 
   def assertDoublesEqual(x: Double, y: Double, tolerance: Double = 1e-7): Unit = {
-    x should be (y +- 1e-7)
+    x should be(y +- 1e-7)
   }
 
   def assertRecordOfDoublesEqual(pfaRecord: PFARecord, alpineResult: Seq[Any]): Unit = {

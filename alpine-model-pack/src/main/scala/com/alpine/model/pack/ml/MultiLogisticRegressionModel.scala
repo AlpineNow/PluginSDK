@@ -14,15 +14,15 @@ import com.alpine.transformer.ClassificationTransformer
 import com.alpine.transformer.sql._
 
 /**
- * @author Jenny Thompson
- *         6/11/15
- */
+  * @author Jenny Thompson
+  *         6/11/15
+  */
 @SerialVersionUID(1381676143872694894L)
 case class MultiLogisticRegressionModel(singleLORs: Seq[SingleLogisticRegression],
-                                      baseValue: String,
-                                      dependentFeatureName: String,
-                                      inputFeatures: Seq[ColumnDef],
-                                      override val identifier: String = "")
+                                        baseValue: String,
+                                        dependentFeatureName: String,
+                                        inputFeatures: Seq[ColumnDef],
+                                        override val identifier: String = "")
   extends ClassificationRowModel with PFAConvertible {
   override def transformer = LogisticRegressionTransformer(this)
 
@@ -36,15 +36,15 @@ case class MultiLogisticRegressionModel(singleLORs: Seq[SingleLogisticRegression
 }
 
 /**
- * Represents a SingleLogisticRegression to be used as one of several in a MultiLogisticRegressionModel.
- *
- * We use java.lang.Double for the type of the numeric values, because the scala Double type information
- * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
- *
- * @param dependentValue The dependent value that the coefficients correspond to.
- * @param coefficients The coefficients for the single Logistic Regression model.
- * @param bias The constant term, that is added to the dot product of the feature coefficient vectors.
- */
+  * Represents a SingleLogisticRegression to be used as one of several in a MultiLogisticRegressionModel.
+  *
+  * We use java.lang.Double for the type of the numeric values, because the scala Double type information
+  * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
+  *
+  * @param dependentValue The dependent value that the coefficients correspond to.
+  * @param coefficients   The coefficients for the single Logistic Regression model.
+  * @param bias           The constant term, that is added to the dot product of the feature coefficient vectors.
+  */
 case class SingleLogisticRegression(dependentValue: String, coefficients: Seq[java.lang.Double], bias: Double = 0)
 
 case class LogisticRegressionTransformer(model: MultiLogisticRegressionModel) extends ClassificationTransformer {
@@ -88,10 +88,10 @@ case class LogisticRegressionTransformer(model: MultiLogisticRegressionModel) ex
   }
 
   /**
-   * The result must always return the labels in the order specified here.
- *
-   * @return The class labels in the order that they will be returned by the result.
-   */
+    * The result must always return the labels in the order specified here.
+    *
+    * @return The class labels in the order that they will be returned by the result.
+    */
   override def classLabels: Seq[String] = model.classLabels
 
 }

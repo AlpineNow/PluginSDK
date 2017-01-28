@@ -18,7 +18,7 @@ import com.alpine.util.{ModelUtil, SQLUtility}
   */
 class GroupByClassificationSQLTransformer(val model: GroupByClassificationModel, val sqlGenerator: SQLGenerator) extends ClassificationSQLTransformer {
 
-  override def getClassificationSQL = {
+  override def getClassificationSQL: ClassificationModelSQLExpressions = {
     val modelsByGroup = model.modelsByGroup.toSeq
 
     /**
@@ -26,7 +26,7 @@ class GroupByClassificationSQLTransformer(val model: GroupByClassificationModel,
       * We could make this more efficient by consolidating duplicate expressions,
       * but this will work for now.
       */
-    val combinedModels = CombinerModel.make(modelsByGroup.map(m => ConfidenceColumnsModel(m._2)) ++ Seq(new UnitModel(Seq(model.groupByFeature))))
+    val combinedModels = CombinerModel.make(modelsByGroup.map(m => ConfidenceColumnsModel(m._2)) ++ Seq(UnitModel(Seq(model.groupByFeature))))
 
     val combinedIntermediateLayers = combinedModels.sqlTransformer(sqlGenerator).get.getSQL
 
@@ -39,7 +39,7 @@ class GroupByClassificationSQLTransformer(val model: GroupByClassificationModel,
         groupBySQLExpression,
         startingFeatureIndexByModel.map {
           case (value, startingIndex) =>
-            val offset = model.modelsByGroup.get(value).get.classLabels.indexOf(l)
+            val offset = model.modelsByGroup(value).classLabels.indexOf(l)
             val valueAsExpression: ColumnarSQLExpression = ColumnarSQLExpression(SQLUtility.wrapAsValue(value))
             if (offset > -1) {
               (valueAsExpression, combinedIntermediateLayers.layers.last(startingIndex + offset)._2.asColumnarSQLExpression(sqlGenerator))
@@ -83,7 +83,7 @@ class GroupByClassificationSQLTransformer(val model: GroupByClassificationModel,
       )
     }
 
-    override def inputFeatures = c.inputFeatures
+    override def inputFeatures: Seq[ColumnDef] = c.inputFeatures
 
     override def sqlOutputFeatures: Seq[ColumnDef] = {
       c.classLabels.indices.map(i => ColumnDef("CONF" + i, ColumnType.Double))

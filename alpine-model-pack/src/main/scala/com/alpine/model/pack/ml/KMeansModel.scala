@@ -14,18 +14,19 @@ import com.alpine.transformer.ClusteringTransformer
 import com.alpine.transformer.sql.{ClusteringModelSQLExpressions, ClusteringSQLTransformer, ColumnName, ColumnarSQLExpression}
 
 /**
- * A model representing results of the K-Means clustering algorithm.
- * Each cluster is a vector in a fixed dimensional space, and the transformer
- * assigns the input row to its closest cluster using the Euclidean (L2) distance.
- *
- * The clusters should all be of the same dimension, which should be equal to the
- * number of input features.
- *
- * @param clusters The clusters of the model. These should have distinct names.
- * @param inputFeatures A seq of numeric feature descriptions describing the input
- *                      to the model.
- * @param identifier
- */
+  * A model representing results of the K-Means clustering algorithm.
+  * Each cluster is a vector in a fixed dimensional space, and the transformer
+  * assigns the input row to its closest cluster using the Euclidean (L2) distance.
+  *
+  * The clusters should all be of the same dimension, which should be equal to the
+  * number of input features.
+  *
+  * @param clusters      The clusters of the model. These should have distinct names.
+  * @param inputFeatures A seq of numeric feature descriptions describing the input
+  *                      to the model.
+  *                      * @param identifier Used to identify this model when in a collection of models. Should be simple characters,
+  *                      so it can be used in a feature name.
+  */
 @SerialVersionUID(1021343246594647667L)
 case class KMeansModel(clusters: Seq[ClusterInfo],
                        inputFeatures: Seq[ColumnDef],
@@ -41,20 +42,20 @@ case class KMeansModel(clusters: Seq[ClusterInfo],
 }
 
 /**
- * Representation of a single cluster.
- *
- * We use java.lang.Double for the type of the numeric values, because the scala Double type information
- * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
- *
- * @param name Name used to distinguish this cluster from others in the same model.
- * @param centroid A vector representation of the cluster in orthogonal coordinates.
- */
+  * Representation of a single cluster.
+  *
+  * We use java.lang.Double for the type of the numeric values, because the scala Double type information
+  * is lost by scala/Gson and the deserialization fails badly for edge cases (e.g. Double.NaN).
+  *
+  * @param name     Name used to distinguish this cluster from others in the same model.
+  * @param centroid A vector representation of the cluster in orthogonal coordinates.
+  */
 case class ClusterInfo(name: String, centroid: Seq[java.lang.Double])
 
 case class KMeansTransformer(model: KMeansModel) extends ClusteringTransformer {
 
-  val dim = model.clusters.head.centroid.length
-  val numClasses = model.clusters.size
+  val dim: Int = model.clusters.head.centroid.length
+  val numClasses: Int = model.clusters.size
   // Use Arrays for faster indexing.
   private val clustersArray: Array[Array[Double]] = model.clusters.map(c => TransformerUtil.javaDoubleSeqToArray(c.centroid)).toArray
   // Reuse of this means that the scoring method is not thread safe.
@@ -75,7 +76,7 @@ case class KMeansTransformer(model: KMeansModel) extends ClusteringTransformer {
   private def L2Distance(row: Array[Double], cluster: Array[Double]): Double = {
     var d = 0d
     var i = 0
-    while(i < dim) {
+    while (i < dim) {
       val diff = row(i) - cluster(i)
       d += diff * diff
       i += 1
@@ -84,10 +85,10 @@ case class KMeansTransformer(model: KMeansModel) extends ClusteringTransformer {
   }
 
   /**
-   * The result must always return the labels in the order specified here.
- *
-   * @return The class labels in the order that they will be returned by the result.
-   */
+    * The result must always return the labels in the order specified here.
+    *
+    * @return The class labels in the order that they will be returned by the result.
+    */
   lazy val classLabels: Seq[String] = model.classLabels
 
 }

@@ -19,7 +19,7 @@ class RealValuedFunctionsPFAConverterTest extends AlpinePFAConversionTest {
     (Log1p(), 0), (Multiply(3.2), 0), (Divide(4.6), 0), (Add(5.2), 0), (Subtract(5.2), 0), (LinearFunction(4, 5), 0))
   val testModel = RealValuedFunctionsModel(functions.map(t => RealFunctionWithIndex(TypeWrapper(t._1), t._2)), inputFeatures)
 
-  val testRows = {
+  private val testRows = {
     Range(0, 10).map(i => testModel.inputFeatures.indices.map(i => math.random * 7))
   }
 

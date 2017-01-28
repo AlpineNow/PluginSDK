@@ -24,7 +24,7 @@ class PipelineTransformerTest extends FunSuite {
       ColumnDef("a", ColumnType.String),
       ColumnDef("e", ColumnType.String)
     ))
-    val pipelineModel = new PipelineRowModel(Seq(firstModel, secondModel))
+    val pipelineModel = PipelineRowModel(Seq(firstModel, secondModel))
     val transformer = pipelineModel.transformer
     val actual = transformer.apply(Seq("A", "B", "C", "D", "E"))
     val expected = Seq("B", "D", "A", "E")
@@ -54,7 +54,7 @@ class PipelineTransformerTest extends FunSuite {
         ColumnDef("e", ColumnType.Double)
       )
     )
-    val pipelineModel = new PipelineRegressionModel(Seq(firstModel, secondModel), lir)
+    val pipelineModel = PipelineRegressionModel(Seq(firstModel, secondModel), lir)
     val transformer = pipelineModel.transformer
     val actual = transformer.predict(Seq(1.0, -5, 200, 3, 5))
     val expected = 3 + 2.0 - 5

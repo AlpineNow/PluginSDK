@@ -20,7 +20,7 @@ case class MatrixModel(values: Seq[Seq[java.lang.Double]], inputFeatures: Seq[Co
   extends RowModel with PFAConvertible {
   override def transformer: Transformer = MatrixTransformer(this)
 
-  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = Some(new MatrixSQLTransformer(this, sqlGenerator))
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = Some(MatrixSQLTransformer(this, sqlGenerator))
 
   @transient lazy val outputFeatures: Seq[ColumnDef] = {
     MatrixModel.generateOutputFeatures(values.indices)

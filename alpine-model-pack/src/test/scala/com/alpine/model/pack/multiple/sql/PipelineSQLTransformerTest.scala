@@ -23,7 +23,7 @@ class PipelineSQLTransformerTest extends FunSuite {
     val oneHotModel = (new OneHotEncodingModelTest).oneHotEncoderModel
     val linearRegressionModel = LinearRegressionModel.make(Seq[Double](0.9, 1, 5), oneHotModel.outputFeatures, 0.2)
 
-    val pipe = new PipelineRowModel(Seq(oneHotModel, linearRegressionModel)).sqlTransformer(simpleSQLGenerator).get
+    val pipe = PipelineRowModel(Seq(oneHotModel, linearRegressionModel)).sqlTransformer(simpleSQLGenerator).get
     val sqlExpr = pipe.getSQL
     val expected = LayeredSQLExpressions(
       Seq(

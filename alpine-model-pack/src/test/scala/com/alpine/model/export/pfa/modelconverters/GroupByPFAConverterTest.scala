@@ -15,8 +15,8 @@ import scala.collection.JavaConverters._
   */
 class GroupByPFAConverterTest extends AlpinePFAConversionTest {
 
-  val testModel = {
-    val modelA = new MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
+  val testModel: GroupByClassificationModel = {
+    val modelA = MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
       "yes",
       Seq(0.5, -0.5).map(java.lang.Double.valueOf), 1.0)),
       "no",
@@ -24,7 +24,7 @@ class GroupByPFAConverterTest extends AlpinePFAConversionTest {
       Seq(ColumnDef("temperature", ColumnType.Long), ColumnDef("humidity", ColumnType.Long))
     )
 
-    val modelB = new MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
+    val modelB = MultiLogisticRegressionModel(Seq(SingleLogisticRegression(
       "yes",
       Seq(0.1).map(java.lang.Double.valueOf), -10)),
       "no",
@@ -32,10 +32,10 @@ class GroupByPFAConverterTest extends AlpinePFAConversionTest {
       Seq(ColumnDef("temperature", ColumnType.Long))
     )
 
-    new GroupByClassificationModel(ColumnDef("wind", ColumnType.String), Map("true" -> modelA, "false" -> modelB))
+    GroupByClassificationModel(ColumnDef("wind", ColumnType.String), Map("true" -> modelA, "false" -> modelB))
   }
 
-  val testRows = {
+  val testRows: Seq[Seq[Any]] = {
     val r = scala.util.Random
     Seq(Seq("true", -1, 1), Seq("false", -4, -2)) ++ Range(0, 100).map(i => r.nextBoolean().toString :: testModel.inputFeatures.indices.map(i => r.nextInt(14) - 7).toList)
   }
@@ -46,7 +46,8 @@ class GroupByPFAConverterTest extends AlpinePFAConversionTest {
 
   override def assertResultsEqual(pfaRecord: PFARecord, alpineResult: Seq[Any]): Unit = {
     //    println(alpineResult + ", " + pfaRecord)
-    if (!(alpineResult(1) == 0.5)) { // In this case either prediction is valid.
+    if (!(alpineResult(1) == 0.5)) {
+      // In this case either prediction is valid.
       assert(alpineResult.head === pfaRecord.get(0), alpineResult + ", " + pfaRecord)
     }
     assertDoublesEqual(alpineResult(1).asInstanceOf[Double], pfaRecord.get(1).asInstanceOf[Double])

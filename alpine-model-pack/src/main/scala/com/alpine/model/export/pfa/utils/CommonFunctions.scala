@@ -14,12 +14,12 @@ object CommonFunctions {
     `do` = FunctionExecute("cast.double", "x")
   )
 
-  val zipDoubleMap = zipArraysToMap(AvroTypes.double)
+  val zipDoubleMap: PFAFunction = zipArraysToMap(AvroTypes.double)
 
   def zipArraysToMap(valueType: AvroType): PFAFunction = {
-    val resultType: MapType = new MapType(valueType)
+    val resultType: MapType = MapType(valueType)
     new PFAFunction(
-      params = Map("keys" -> AvroTypes.arrayString, "values" -> new ArrayType(valueType)),
+      params = Map("keys" -> AvroTypes.arrayString, "values" -> ArrayType(valueType)),
       ret = resultType,
       `do` = Seq(
         FunctionExecute("map.join",

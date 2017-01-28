@@ -27,7 +27,7 @@ case class NaiveBayesModel(inputFeatures: Seq[ColumnDef],
 
   override def classLabels: Seq[String] = distributions.map(_.classLabel)
 
-  override def sqlTransformer(sqlGenerator: SQLGenerator) = {
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Some[NaiveBayesSQLTransformer] = {
     Some(new NaiveBayesSQLTransformer(this, sqlGenerator))
   }
 }
@@ -70,11 +70,12 @@ case class Distribution(classLabel: String, priorProbability: Double, likelihood
     var i = 0
     while (i < row.length) {
       val value = row(i)
-      if (value != null) { // Skip feature if value is null. This is natural for Naive Bayes.
-      val multiplier = likelihoods(i) match {
-        case TypeWrapper(g: GaussianLikelihood) => g.likelihood(TransformerUtil.anyToDouble(value))
-        case TypeWrapper(c: CategoricalLikelihood) => c.map.getOrElse(value.toString, 0d) // If unseen in training set, then it counts as 0 prob.
-      }
+      if (value != null) {
+        // Skip feature if value is null. This is natural for Naive Bayes.
+        val multiplier = likelihoods(i) match {
+          case TypeWrapper(g: GaussianLikelihood) => g.likelihood(TransformerUtil.anyToDouble(value))
+          case TypeWrapper(c: CategoricalLikelihood) => c.map.getOrElse(value.toString, 0d) // If unseen in training set, then it counts as 0 prob.
+        }
         start *= math.max(multiplier, threshold)
       }
       i += 1
@@ -102,12 +103,13 @@ class NaiveBayesSQLTransformer(val model: NaiveBayesModel, sqlGenerator: SQLGene
     val labelValuesToColumnNames = model.distributions.map(d => (d.classLabel, ColumnName(aliasGenerator.getNextAlias))).toMap
 
     val unNormalizedConfs: Seq[(ColumnarSQLExpression, ColumnName)] = model.distributions.map {
-      case Distribution(classLabel: String, priorProbability: Double, likelihoods: Seq[TypeWrapper[BayesLikelihood]]) => {
+      case Distribution(classLabel: String, priorProbability: Double, likelihoods: Seq[TypeWrapper[BayesLikelihood]]) =>
         val totalMultiplier = (this.inputColumnNames zip likelihoods.map(_.value)).map {
           case (columnName, likelihood) =>
             val quotedFeatureName = columnName.escape(sqlGenerator)
             // Null values go to 1, equivalent to skipping the feature.
-            val whenNullThen1: String = s"""WHEN $quotedFeatureName IS NULL THEN 1"""
+            val whenNullThen1: String =
+              s"""WHEN $quotedFeatureName IS NULL THEN 1"""
             likelihood match {
               case GaussianLikelihood(mu, sigma) =>
                 if (sigma != 0) {
@@ -128,7 +130,6 @@ class NaiveBayesSQLTransformer(val model: NaiveBayesModel, sqlGenerator: SQLGene
         }.map(s => s"($s)")
 
         (ColumnarSQLExpression(priorProbability + " * " + totalMultiplier.mkString(" * ")), labelValuesToColumnNames(classLabel))
-      }
     }
     val sumName: ColumnName = ColumnName("sum")
     val unNormalizedConfNames: Seq[ColumnName] = unNormalizedConfs.unzip._2

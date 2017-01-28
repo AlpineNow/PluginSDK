@@ -12,10 +12,10 @@ import com.alpine.util.FilteredSeq
 import scala.collection.mutable.ListBuffer
 
 /**
- * Transformer to apply several transformers in sequence.
- * The output of each sub-transformer is used as input to the next,
- * and the output of the final sub-transformer is the final output.
- */
+  * Transformer to apply several transformers in sequence.
+  * The output of each sub-transformer is used as input to the next,
+  * and the output of the final sub-transformer is the final output.
+  */
 class PipelineTransformer(transformers: List[Transformer], subModels: Seq[RowModel]) extends Transformer {
 
   protected val reorderingIndices: List[Option[Array[Int]]] = {
@@ -33,12 +33,12 @@ class PipelineTransformer(transformers: List[Transformer], subModels: Seq[RowMod
         }).toArray
         indicesSoFar.append(Some(newIndices))
       }
-      i+= 1
+      i += 1
     }
     indicesSoFar.toList
   }
 
-  protected val lastReordering = reorderingIndices.last
+  protected val lastReordering: Option[Array[Int]] = reorderingIndices.last
 
   override def apply(row: Row): Row = {
     apply(row, transformers, reorderingIndices)
@@ -72,6 +72,7 @@ class PipelineMLTransformer[R <: MLResult](preProcessors: List[_ <: Transformer]
   }
 
 }
+
 class PipelineRegressionTransformer[R <: MLResult](preProcessors: List[_ <: Transformer], finalTransformer: RegressionTransformer, subModels: Seq[RowModel])
   extends PipelineMLTransformer(preProcessors, finalTransformer, subModels) with RegressionTransformer {
 
@@ -96,10 +97,10 @@ class PipelineCategoricalTransformer[R <: CategoricalResult](preProcessors: List
   }
 
   /**
-   * The result must always return the labels in the order specified here.
+    * The result must always return the labels in the order specified here.
     *
     * @return The class labels in the order that they will be returned by the result.
-   */
+    */
   override def classLabels: Seq[String] = finalTransformer.classLabels
 }
 

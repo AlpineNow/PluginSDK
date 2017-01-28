@@ -24,7 +24,7 @@ class KMeansPFAConverter(model: KMeansModel) extends PFAConverter {
 
     val cells = Map(
       modelCellName -> CellInit(
-        new ArrayType(AvroTypes.arrayDouble),
+        ArrayType(AvroTypes.arrayDouble),
         model.clusters.map(_.centroid)
       ),
       clusterNamesCellName -> CellInit(
@@ -44,7 +44,7 @@ class KMeansPFAConverter(model: KMeansModel) extends PFAConverter {
       val kMeansDistances = let("distances", FunctionExecute(
         functionName = "a.map",
         firstArg = CellAccess(modelCellName),
-        secondArg = new PFAFunction(
+        secondArg = PFAFunction(
           Seq(Map("x" -> AvroTypes.arrayDouble)),
           AvroTypes.double,
           FunctionExecute("metric.euclidean", FcnRef("metric.absDiff"), "x", "vector")
@@ -60,14 +60,14 @@ class KMeansPFAConverter(model: KMeansModel) extends PFAConverter {
 
       val outputValues = Seq(prediction, minDistance, FunctionExecute(UDFAccess(zipDoubleMapFcnName), CellAccess(clusterNamesCellName), "distances"))
 
-      val record = new NewPFAObject(
+      val record = NewPFAObject(
         (model.outputFeatures.map(_.columnName) zip outputValues).toMap,
         outputType
       )
       Seq(convertToVector, kMeansDistances, record)
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = AvroTypes.fromAlpineSchema("input", model.inputFeatures),
       output = outputType,
       cells = cells,

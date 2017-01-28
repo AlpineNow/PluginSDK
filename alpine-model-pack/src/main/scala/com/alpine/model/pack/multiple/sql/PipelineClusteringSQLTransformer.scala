@@ -14,7 +14,7 @@ import com.alpine.transformer.sql.{ClusteringModelSQLExpressions, ClusteringSQLT
 class PipelineClusteringSQLTransformer(val model: PipelineClusteringModel, sqlGenerator: SQLGenerator) extends ClusteringSQLTransformer {
 
   override def getClusteringSQL: ClusteringModelSQLExpressions = {
-    val sqlT = new PipelineRowModel(model.preProcessors).sqlTransformer(sqlGenerator).get.getSQL
+    val sqlT = PipelineRowModel(model.preProcessors).sqlTransformer(sqlGenerator).get.getSQL
     val lastSQL = model.finalModel.sqlTransformer(sqlGenerator).get.getClusteringSQL
     ClusteringModelSQLExpressions(lastSQL.labelColumnSQL, lastSQL.distanceSQL, sqlT.layers ++ lastSQL.intermediateLayers)
   }

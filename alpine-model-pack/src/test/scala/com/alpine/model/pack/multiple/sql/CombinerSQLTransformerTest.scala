@@ -22,7 +22,7 @@ class CombinerSQLTransformerTest extends FunSuite {
 
     val oneHotModel = (new OneHotEncodingModelTest).oneHotEncoderModel
     val lirModel = LinearRegressionModel.make(Seq[Double](0.9, 1, 5), oneHotModel.outputFeatures, 0.2)
-    val pipeModel = new PipelineRowModel(Seq(oneHotModel, lirModel))
+    val pipeModel = PipelineRowModel(Seq(oneHotModel, lirModel))
 
     val combiner = new CombinerModel(Seq(ModelWithID("", pipeModel), ModelWithID("", pipeModel)))
     val sqlTransformer = combiner.sqlTransformer(simpleSQLGenerator).get
@@ -53,7 +53,7 @@ class CombinerSQLTransformerTest extends FunSuite {
 
     val oneHotModel = (new OneHotEncodingModelTest).oneHotEncoderModel
     val lirModel = LinearRegressionModel.make(Seq[Double](0.9, 1, 5), oneHotModel.outputFeatures, 0.2)
-    val pipeModel = new PipelineRowModel(Seq(oneHotModel, lirModel))
+    val pipeModel = PipelineRowModel(Seq(oneHotModel, lirModel))
 
     val combiner = new CombinerModel(Seq(ModelWithID("first", pipeModel), ModelWithID("second", pipeModel)))
     val sqlTransformer = combiner.sqlTransformer(simpleSQLGenerator).get
@@ -81,7 +81,7 @@ class CombinerSQLTransformerTest extends FunSuite {
   }
 
   test("SQL Expression for Logistic Regression combined with carryover columns") {
-    val lor = new MultiLogisticRegressionModel(
+    val lor = MultiLogisticRegressionModel(
       Seq(
         SingleLogisticRegression(
           "yes",
@@ -156,8 +156,8 @@ class CombinerSQLTransformerTest extends FunSuite {
   }
 
   test("Should handle name conflicts when column_* is used as a name") {
-    val modelA = new UnitModel(Seq(ColumnDef("column_0", ColumnType.String), ColumnDef("column_1", ColumnType.String)))
-    val modelB = new UnitModel(Seq(ColumnDef("column_0", ColumnType.String), ColumnDef("column_1", ColumnType.String), ColumnDef("column_2", ColumnType.String)))
+    val modelA = UnitModel(Seq(ColumnDef("column_0", ColumnType.String), ColumnDef("column_1", ColumnType.String)))
+    val modelB = UnitModel(Seq(ColumnDef("column_0", ColumnType.String), ColumnDef("column_1", ColumnType.String), ColumnDef("column_2", ColumnType.String)))
 
     val combinerModel = CombinerModel.make(Seq(PipelineRowModel(Seq(modelA, modelA)), PipelineRowModel(Seq(modelB, modelB))))
     val sqlExpressions = combinerModel.sqlTransformer(simpleSQLGenerator).get.getSQL

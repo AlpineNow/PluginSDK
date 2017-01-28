@@ -4,7 +4,7 @@
 
 package com.alpine.model.export.pfa.utils
 
-import com.alpine.model.export.pfa.avrotypes.{ArrayType, AvroType, AvroTypes, MapType}
+import com.alpine.model.export.pfa.avrotypes._
 import com.alpine.model.export.pfa.expressions.{FunctionExecute, LetExpression, NewPFAObject, SetExpression}
 import com.alpine.plugin.core.io.ColumnDef
 
@@ -13,32 +13,32 @@ import com.alpine.plugin.core.io.ColumnDef
   */
 object ExpressionUtil {
 
-  def let(fieldName: String, value: Any) = {
+  def let(fieldName: String, value: Any): LetExpression = {
     new LetExpression(fieldName, value)
   }
 
-  def set(fieldName: String, value: Any) = {
+  def set(fieldName: String, value: Any): SetExpression = {
     new SetExpression(fieldName, value)
   }
 
-  def recordAsArray(inputName: String, valuesToSelect: Seq[String], itemType: AvroType) = {
+  def recordAsArray(inputName: String, valuesToSelect: Seq[String], itemType: AvroType): NewPFAObject = {
     NewPFAObject(
       valuesToSelect.map(v => inputName + "." + v),
-      new ArrayType(itemType)
+      ArrayType(itemType)
     )
   }
 
-  def arrayAsMap(inputName: String, fieldNames: Seq[String], itemType: AvroType) = {
+  def arrayAsMap(inputName: String, fieldNames: Seq[String], itemType: AvroType): NewPFAObject = {
     NewPFAObject(
       fieldNames.zipWithIndex.map {
         case (name, i) =>
           (name, inputName + "." + i)
       }.toMap,
-      new MapType(itemType)
+      MapType(itemType)
     )
   }
 
-  def arrayAsRecord(inputName: String, fieldNames: Seq[String], recordType: AvroType) = {
+  def arrayAsRecord(inputName: String, fieldNames: Seq[String], recordType: AvroType): NewPFAObject = {
     NewPFAObject(
       fieldNames.zipWithIndex.map {
         case (name, i) =>
@@ -48,7 +48,7 @@ object ExpressionUtil {
     )
   }
 
-  def recordAsNewRecord(inputName: String, fieldNames: Seq[String], recordType: AvroType) = {
+  def recordAsNewRecord(inputName: String, fieldNames: Seq[String], recordType: AvroType): NewPFAObject = {
     NewPFAObject(
       fieldNames.map {
         case (name) =>
@@ -58,7 +58,7 @@ object ExpressionUtil {
     )
   }
 
-  def outputTypeFromAlpineSchema(nameSpaceID: Option[String], outputFeatures: Seq[ColumnDef]) = {
+  def outputTypeFromAlpineSchema(nameSpaceID: Option[String], outputFeatures: Seq[ColumnDef]): RecordType = {
     AvroTypes.fromAlpineSchema(appendNameSpaceID(nameSpaceID, "output"), outputFeatures)
   }
 
@@ -68,6 +68,7 @@ object ExpressionUtil {
       case None => s
     }
   }
+
   def appendNameSpaceID(nameSpaceID: Option[String], s: String): String = {
     nameSpaceID match {
       case Some(t) => s + "_" + t
@@ -95,11 +96,11 @@ object ExpressionUtil {
     }
   }
 
-  def qualifyLiteralValue(a: Any) = {
+  def qualifyLiteralValue(a: Any): Any = {
     a match {
       // Strings have to be qualified to avoid confusion with variable names.
-      case string: String => Map("string" -> a)
-      case _ =>  a
+      case string: String => Map("string" -> string)
+      case _ => a
     }
   }
 

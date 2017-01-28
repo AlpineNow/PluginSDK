@@ -50,12 +50,12 @@ class CombinerPFAConverter(model: CombinerModel) extends PFAConverter {
 
       val finalRecordContents = (completeOutputFeatures.map(_.columnName) zip namesToSelect).toMap
 
-      val finalRecord = new NewPFAObject(finalRecordContents, outputType)
+      val finalRecord = NewPFAObject(finalRecordContents, outputType)
 
       middleActions ++ Seq(finalRecord)
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = cells,

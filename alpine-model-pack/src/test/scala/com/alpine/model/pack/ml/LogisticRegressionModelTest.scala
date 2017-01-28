@@ -12,7 +12,7 @@ import org.scalatest.FunSuite
   */
 class LogisticRegressionModelTest extends FunSuite {
 
-  val lor = new MultiLogisticRegressionModel(Seq(
+  val lor = MultiLogisticRegressionModel(Seq(
     SingleLogisticRegression(
       "yes",
       Seq(2.0, 3.0).map(java.lang.Double.valueOf), 4.0

@@ -11,11 +11,11 @@ trait SQLTransformer {
 
   def inputFeatures: Seq[ColumnDef] = model.inputFeatures
 
-  def inputColumnNames = inputFeatures.map(f => ColumnName(f.columnName))
+  def inputColumnNames: Seq[ColumnName] = inputFeatures.map(f => ColumnName(f.columnName))
 
   def outputFeatures: Seq[ColumnDef] = model.sqlOutputFeatures
 
-  def outputColumnNames = outputFeatures.map(f => ColumnName(f.columnName))
+  def outputColumnNames: Seq[ColumnName] = outputFeatures.map(f => ColumnName(f.columnName))
 
   def model: RowModel
 

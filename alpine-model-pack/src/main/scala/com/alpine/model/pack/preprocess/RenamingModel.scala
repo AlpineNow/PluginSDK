@@ -22,7 +22,7 @@ import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
   * Created by Jennifer Thompson on 1/5/17.
   */
 @SerialVersionUID(5576785112360108164L)
-case class RenamingModel(inputFeatures: Seq[ColumnDef], outputNames: Seq[String], override val identifier: String = "")  extends RowModel with PFAConvertible {
+case class RenamingModel(inputFeatures: Seq[ColumnDef], outputNames: Seq[String], override val identifier: String = "") extends RowModel with PFAConvertible {
   override def transformer: Transformer = UnitTransformer
 
   @transient lazy val outputFeatures: Seq[ColumnDef] = (inputFeatures zip outputNames).map {
@@ -47,7 +47,7 @@ case class RenamingModel(inputFeatures: Seq[ColumnDef], outputNames: Seq[String]
   }
 }
 
-case class RenamingSQLTransformer(model : RenamingModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+case class RenamingSQLTransformer(model: RenamingModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
   override def getSQLExpressions: Seq[ColumnarSQLExpression] = {
     inputColumnNames.map(_.asColumnarSQLExpression(sqlGenerator))
   }

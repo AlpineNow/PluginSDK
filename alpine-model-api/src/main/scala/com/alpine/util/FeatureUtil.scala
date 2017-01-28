@@ -8,8 +8,8 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import org.apache.commons.lang3.StringUtils
 
 /**
- * This class is a utility for defining features, in particular the output features of models.
- */
+  * This class is a utility for defining features, in particular the output features of models.
+  */
 object FeatureUtil {
 
   val PRED = "PRED"
@@ -18,26 +18,26 @@ object FeatureUtil {
   val INFO = "INFO"
 
   val simpleModelOutputFeatures: Seq[ColumnDef] = {
-    Seq(new ColumnDef(PRED, ColumnType.String))
+    Seq(ColumnDef(PRED, ColumnType.String))
   }
 
   val regressionOutputFeatures: Seq[ColumnDef] = {
-    Seq(new ColumnDef(PRED, ColumnType.Double))
+    Seq(ColumnDef(PRED, ColumnType.Double))
   }
 
   val classificationOutputFeatures: Seq[ColumnDef] = {
     Seq(
-      new ColumnDef(PRED, ColumnType.String),
-      new ColumnDef(CONF, ColumnType.Double),
-      new ColumnDef(INFO, ColumnType.Sparse)
+      ColumnDef(PRED, ColumnType.String),
+      ColumnDef(CONF, ColumnType.Double),
+      ColumnDef(INFO, ColumnType.Sparse)
     )
   }
 
   val clusteringOutputFeatures: Seq[ColumnDef] = {
     Seq(
-      new ColumnDef(PRED, ColumnType.String),
-      new ColumnDef(DIST, ColumnType.Double),
-      new ColumnDef(INFO, ColumnType.Sparse)
+      ColumnDef(PRED, ColumnType.String),
+      ColumnDef(DIST, ColumnType.Double),
+      ColumnDef(INFO, ColumnType.Sparse)
     )
   }
 
@@ -50,7 +50,8 @@ object FeatureUtil {
     * replacing non-alphanumeric characters with "_";
     * prefixing with an "_" if the string starts with a digit;
     * truncating characters beyond the maximum length (optional).
-    * @param s String to be sanitized.
+    *
+    * @param s         String to be sanitized.
     * @param maxLength Optional, length to truncate the string at.
     * @return Processed string suitable for use as a column name.
     */
@@ -78,6 +79,7 @@ object FeatureUtil {
     * Adds integer suffices to column names, to makes sure none are duplicated in the list.
     * The returned Seq of will be same length and have column types in the same order as the original,
     * but column names may be changed.
+    *
     * @param columns Seq of column definitions, which may contain duplicate names.
     * @return New Seq of column definitions with non-duplicate names.
     */
@@ -90,7 +92,7 @@ object FeatureUtil {
           while (columnsSoFar.map(_.columnName).contains(column.columnName + "_" + suffix)) {
             suffix += 1
           }
-          new ColumnDef(column.columnName + "_" + suffix, column.columnType)
+          ColumnDef(column.columnName + "_" + suffix, column.columnType)
         } else {
           column
         }

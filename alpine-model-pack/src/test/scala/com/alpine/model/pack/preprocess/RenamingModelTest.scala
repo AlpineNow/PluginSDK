@@ -14,23 +14,24 @@ import org.scalatest.FunSuite
   */
 class RenamingModelTest extends FunSuite {
 
-  private val oldModelJson = """{
-                               |   "inputFeatures":[
-                               |      {
-                               |         "columnName":"LinearFunction_temperature",
-                               |         "columnType":"Double"
-                               |      },
-                               |      {
-                               |         "columnName":"LinearFunction_humidity",
-                               |         "columnType":"Double"
-                               |      }
-                               |   ],
-                               |   "outputNames":[
-                               |      "temperature",
-                               |      "humidity"
-                               |   ],
-                               |   "identifier":"R"
-                               |}""".stripMargin
+  private val oldModelJson =
+    """{
+      |   "inputFeatures":[
+      |      {
+      |         "columnName":"LinearFunction_temperature",
+      |         "columnType":"Double"
+      |      },
+      |      {
+      |         "columnName":"LinearFunction_humidity",
+      |         "columnType":"Double"
+      |      }
+      |   ],
+      |   "outputNames":[
+      |      "temperature",
+      |      "humidity"
+      |   ],
+      |   "identifier":"R"
+      |}""".stripMargin
 
   private val testModel = RenamingModel(
     inputFeatures = Seq(

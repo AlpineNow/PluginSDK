@@ -15,9 +15,9 @@ class GroupByRegressionSQLTransformerTest extends FunSuite {
 
   private val groupByModelTest = new GroupByRegressionModelTest
 
-  val model = groupByModelTest.groupByModel
-  val integerModel = groupByModelTest.integerModel
-  val doubleModel = groupByModelTest.doubleModel
+  private val model = groupByModelTest.groupByModel
+  private val integerModel = groupByModelTest.integerModel
+  private val doubleModel = groupByModelTest.doubleModel
 
   private val sqlGenerator: SimpleSQLGenerator = new SimpleSQLGenerator
 
@@ -45,11 +45,11 @@ class GroupByRegressionSQLTransformerTest extends FunSuite {
         OneHotEncodedFeature(List("sunny", "overcast"), "rain"),
         OneHotEncodedFeature(List("true"), "false")
       ),
-        Seq(new ColumnDef("outlook", ColumnType.String))
+        Seq(ColumnDef("outlook", ColumnType.String))
       )
       val oneHotModel = (new OneHotEncodingModelTest).oneHotEncoderModel
       val linearRegressionModel = LinearRegressionModel.make(Seq[Double](0.9, 1, 5), oneHotModel.outputFeatures, 0.2)
-      new PipelineRegressionModel(Seq(oneHotEncoderModel), linearRegressionModel)
+      PipelineRegressionModel(Seq(oneHotEncoderModel), linearRegressionModel)
     }
 
     val pipe2 = {
@@ -57,13 +57,13 @@ class GroupByRegressionSQLTransformerTest extends FunSuite {
         OneHotEncodedFeature(List("sunny", "overcast"), "rain"),
         OneHotEncodedFeature(List("true"), "false")
       ),
-        Seq(new ColumnDef("outlook", ColumnType.String))
+        Seq(ColumnDef("outlook", ColumnType.String))
       )
       val linearRegressionModel = LinearRegressionModel.make(Seq[Double](0.5, -1, 3), oneHotEncoderModel.outputFeatures, 0.2)
-      new PipelineRegressionModel(Seq(oneHotEncoderModel), linearRegressionModel)
+      PipelineRegressionModel(Seq(oneHotEncoderModel), linearRegressionModel)
     }
 
-    val groupByModel = new GroupByRegressionModel(new ColumnDef("wind", ColumnType.String), Map("true" -> pipe1, "false" -> pipe2))
+    val groupByModel = GroupByRegressionModel(ColumnDef("wind", ColumnType.String), Map("true" -> pipe1, "false" -> pipe2))
 
     val sqlTransformer = groupByModel.sqlTransformer(sqlGenerator).get
     val selectSQL = SQLUtility.getSelectStatement(sqlTransformer.getSQL, "demo.golfnew", new AliasGenerator(), sqlGenerator)

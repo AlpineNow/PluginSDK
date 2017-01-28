@@ -36,7 +36,7 @@ case class PipelinePFAConverter(modelPipeline: Seq[RowModel]) extends PFAConvert
       middleActions ++ Seq(lastAction)
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = subPFAs.head.input,
       output = subPFAs.last.output,
       cells = cells,

@@ -13,17 +13,17 @@ import com.alpine.util.{FilteredSeq, SimpleSQLGenerator}
 import org.scalatest.FunSuite
 
 /**
- * Tests serialization of PolynomialModel
- * and application of PolynomialTransformer.
- */
+  * Tests serialization of PolynomialModel
+  * and application of PolynomialTransformer.
+  */
 class PolynomialModelTest extends FunSuite {
 
-  val exponents = Seq(Seq[java.lang.Double](1.0,2.0,0.0), Seq[java.lang.Double](0.5,3.0,2.0))
+  val exponents = Seq(Seq[java.lang.Double](1.0, 2.0, 0.0), Seq[java.lang.Double](0.5, 3.0, 2.0))
   val inputFeatures: Seq[ColumnDef] = {
-    Seq(new ColumnDef("x1", ColumnType.Double), new ColumnDef("x2", ColumnType.Double), new ColumnDef("x3", ColumnType.Double))
+    Seq(ColumnDef("x1", ColumnType.Double), ColumnDef("x2", ColumnType.Double), ColumnDef("x3", ColumnType.Double))
   }
 
-  val t: PolynomialModel = new PolynomialModel(exponents, inputFeatures, "P")
+  val t: PolynomialModel = PolynomialModel(exponents, inputFeatures, "P")
 
   private val oldModelJson =
     """{"exponents":[[1.0,2.0,0.0],[0.5,3.0,2.0]],
@@ -40,10 +40,10 @@ class PolynomialModelTest extends FunSuite {
   }
 
   test("Should score correctly") {
-    assert(Seq(1d, 1d) === t.transformer.apply(Seq(1,1,1)))
-    assert(Seq(1d, 0d) === t.transformer.apply(Seq(1,1,0)))
-    assert(Seq(1 * 4d, 1 * 8 * 9d) === t.transformer.apply(Seq(1,2,3)))
-    assert(Seq(4 * 1d, 2 * 1 * 2.25) === t.transformer.apply(Seq(4,1,1.5)))
+    assert(Seq(1d, 1d) === t.transformer.apply(Seq(1, 1, 1)))
+    assert(Seq(1d, 0d) === t.transformer.apply(Seq(1, 1, 0)))
+    assert(Seq(1 * 4d, 1 * 8 * 9d) === t.transformer.apply(Seq(1, 2, 3)))
+    assert(Seq(4 * 1d, 2 * 1 * 2.25) === t.transformer.apply(Seq(4, 1, 1.5)))
   }
 
   test("Should generate correct SQL") {
@@ -57,8 +57,8 @@ class PolynomialModelTest extends FunSuite {
   }
 
   test("Should return 1 if all exponents are 0") {
-    val emptyExponents = Seq(Seq[java.lang.Double](0.0,0.0,0.0), Seq[java.lang.Double](0.0,3.0,2.0))
-    val model: PolynomialModel = new PolynomialModel(emptyExponents, inputFeatures)
+    val emptyExponents = Seq(Seq[java.lang.Double](0.0, 0.0, 0.0), Seq[java.lang.Double](0.0, 3.0, 2.0))
+    val model: PolynomialModel = PolynomialModel(emptyExponents, inputFeatures)
 
     val sqlTransformer = model.sqlTransformer(new SimpleSQLGenerator).get
     val sql = sqlTransformer.getSQL
@@ -68,10 +68,10 @@ class PolynomialModelTest extends FunSuite {
     )))
     assert(expected === sql)
 
-    assert(Seq(1d, 1d) === model.transformer.apply(Seq(1,1,1)))
-    assert(Seq(1d, 0d) === model.transformer.apply(Seq(1,1,0)))
-    assert(Seq(1, 8 * 9d) === model.transformer.apply(Seq(1,2,3)))
-    assert(Seq(1, 1 * 2.25) === model.transformer.apply(Seq(4,1,1.5)))
+    assert(Seq(1d, 1d) === model.transformer.apply(Seq(1, 1, 1)))
+    assert(Seq(1d, 0d) === model.transformer.apply(Seq(1, 1, 0)))
+    assert(Seq(1, 8 * 9d) === model.transformer.apply(Seq(1, 2, 3)))
+    assert(Seq(1, 1 * 2.25) === model.transformer.apply(Seq(4, 1, 1.5)))
   }
 
   test("Serial UID should be stable") {
@@ -89,7 +89,7 @@ class PolynomialModelTest extends FunSuite {
     assert(streamlinedModel.inputFeatures.map(_.columnName) === Seq("a", "c"))
     Range(0, 5).foreach(_ => {
       val row = Seq(math.random, math.random, math.random)
-      assert(model.transformer.apply(row)(1) === streamlinedModel.transformer.apply(FilteredSeq(row, Seq(0, 2)))(0))
+      assert(model.transformer.apply(row)(1) === streamlinedModel.transformer.apply(FilteredSeq(row, Seq(0, 2))).head)
     })
   }
 

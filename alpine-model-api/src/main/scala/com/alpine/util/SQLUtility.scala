@@ -39,7 +39,8 @@ object SQLUtility {
           comparisonSQL(columnNamesAndLabelValues.tail)
       }
     }
-    nullWhenAnyColumnNull(labelValuesToColumnNames.map(_._2), sqlGenerator,"(CASE" + comparisonSQL(labelValuesToColumnNames) + " END)")
+
+    nullWhenAnyColumnNull(labelValuesToColumnNames.map(_._2), sqlGenerator, "(CASE" + comparisonSQL(labelValuesToColumnNames) + " END)")
   }
 
   def minOrMaxByRowSQL(columnNames: Seq[ColumnName], comparator: String, sqlGenerator: SQLGenerator): String = {
@@ -51,6 +52,7 @@ object SQLUtility {
           comparisonSQL(columnNamesSubList.tail)
       }
     }
+
     "(CASE" + comparisonSQL(columnNames) + " END)"
   }
 
@@ -67,7 +69,7 @@ object SQLUtility {
   }
 
   def groupBySQL(groupByFeature: ColumnarSQLExpression, valuesToColumnNames: Map[ColumnarSQLExpression, ColumnarSQLExpression]): ColumnarSQLExpression = {
-    val innards = valuesToColumnNames.map{
+    val innards = valuesToColumnNames.map {
       case (value, valueToSelect) => s"""WHEN (${groupByFeature.sql} = ${value.sql}) THEN ${valueToSelect.sql}"""
     }.mkString(" ")
     ColumnarSQLExpression(s"""(CASE $innards ELSE NULL END)""")
@@ -89,10 +91,10 @@ object SQLUtility {
   }
 
   def createTempTable(sql: LayeredSQLExpressions,
-                  inputTableName: String,
-                  outputTableName: String,
-                  aliasGenerator: AliasGenerator,
-                  sqlGenerator: SQLGenerator): String = {
+                      inputTableName: String,
+                      outputTableName: String,
+                      aliasGenerator: AliasGenerator,
+                      sqlGenerator: SQLGenerator): String = {
     val selectStatement: String = getSelectStatement(sql, inputTableName, aliasGenerator, sqlGenerator)
     s"""CREATE TEMP TABLE $outputTableName AS $selectStatement"""
   }

@@ -53,7 +53,7 @@ case class GroupByRegressionTransformer(model: GroupByRegressionModel)
     val groupByValue = getGroupByValue(row.head)
     scorersWithIndices.get(groupByValue) match {
       case Some((scorer, indices)) => scorer.predict(FilteredSeq(row, indices))
-      case None =>  Double.NaN
+      case None => Double.NaN
     }
   }
 }
@@ -94,7 +94,8 @@ case class GroupByClassificationTransformer(model: GroupByClassificationModel)
     val reordering = confidenceReordering.get(groupByValue)
     reordering match {
       case Some(confIndices) =>
-        val output = Array.ofDim[Double](classLabels.length) // Initializes to 0 by default.
+        val output = Array.ofDim[Double](classLabels.length)
+        // Initializes to 0 by default.
         var i = 0
         while (i < rawConfidences.length) {
           output(confIndices(i)) = rawConfidences(i)

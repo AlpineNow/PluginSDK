@@ -16,10 +16,10 @@ class LinearRegressionPFAConverterTest extends AlpinePFAConversionTest {
   val testModel: LinearRegressionModel = {
     val coefficients = Seq[Double](0.9, 1, 5, -1)
     val inputFeatures = Seq(
-      new ColumnDef("x1", ColumnType.Double),
-      new ColumnDef("x2", ColumnType.Double),
-      new ColumnDef("temperature", ColumnType.Double),
-      new ColumnDef("humidity", ColumnType.Double)
+      ColumnDef("x1", ColumnType.Double),
+      ColumnDef("x2", ColumnType.Double),
+      ColumnDef("temperature", ColumnType.Double),
+      ColumnDef("humidity", ColumnType.Double)
     )
 
     val intercept = 3.4
@@ -27,7 +27,7 @@ class LinearRegressionPFAConverterTest extends AlpinePFAConversionTest {
   }
 
   // Want something like:
-  val samplePFA =
+  private val samplePFA =
     """
       |input: {type: array, items: double}
       |output: double
@@ -48,7 +48,7 @@ class LinearRegressionPFAConverterTest extends AlpinePFAConversionTest {
       |    - cell: model
     """.stripMargin
 
-  val testRows = {
+  private val testRows = {
     Range(0, 100).map(i => testModel.coefficients.indices.map(i => math.random * 7))
   }
 

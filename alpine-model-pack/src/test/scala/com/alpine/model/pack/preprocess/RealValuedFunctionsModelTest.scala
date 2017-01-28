@@ -12,10 +12,11 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.transformer.sql.ColumnarSQLExpression
 import com.alpine.util.{FilteredSeq, SimpleSQLGenerator}
 import org.scalatest.FunSuite
+
 /**
- * Tests serialization of RealValuedFunctionsModel
- * and application of RealValuedFunctionTransformer.
- */
+  * Tests serialization of RealValuedFunctionsModel
+  * and application of RealValuedFunctionTransformer.
+  */
 class RealValuedFunctionsModelTest extends FunSuite {
 
   val inputFeatures = Seq(ColumnDef("x1", ColumnType.Double), ColumnDef("x2", ColumnType.Double))
@@ -28,7 +29,7 @@ class RealValuedFunctionsModelTest extends FunSuite {
 
   test("Should score properly") {
     val scorer = model.transformer
-    assert(Seq(math.exp(2), math.E, 0, 4, 13) === scorer(Seq(2,1.0)))
+    assert(Seq(math.exp(2), math.E, 0, 4, 13) === scorer(Seq(2, 1.0)))
   }
 
   test("Should generate correct SQL") {
@@ -56,7 +57,7 @@ class RealValuedFunctionsModelTest extends FunSuite {
     assert(m2.inputFeatures.map(_.columnName).toSet === Set("x2"))
     assert(mBoth.inputFeatures.map(_.columnName).toSet === Set("x1", "x2"))
     val (t, t1, t2, tBoth) = (model.transformer, m1.transformer, m2.transformer, mBoth.transformer)
-    Range(0,5).foreach { _ =>
+    Range(0, 5).foreach { _ =>
       val x1 = math.random
       val x2 = math.random
       val originalOutput = t.apply(Seq(x1, x2))
@@ -74,60 +75,61 @@ class RealValuedFunctionsModelTest extends FunSuite {
     assert(deserializedModel === model)
   }
 
-  private val oldModelJson = """{
-                       |  "functions": [
-                       |    {
-                       |      "function": {
-                       |        "type": "com.alpine.model.pack.preprocess.Exp",
-                       |        "data": {}
-                       |      },
-                       |      "index": 0
-                       |    },
-                       |    {
-                       |      "function": {
-                       |        "type": "com.alpine.model.pack.preprocess.Exp",
-                       |        "data": {}
-                       |      },
-                       |      "index": 1
-                       |    },
-                       |    {
-                       |      "function": {
-                       |        "type": "com.alpine.model.pack.preprocess.Log",
-                       |        "data": {}
-                       |      },
-                       |      "index": 1
-                       |    },
-                       |    {
-                       |      "function": {
-                       |        "type": "com.alpine.model.pack.preprocess.Power",
-                       |        "data": {
-                       |          "p": 2.0
-                       |        }
-                       |      },
-                       |      "index": 0
-                       |    },
-                       |    {
-                       |      "function": {
-                       |        "type": "com.alpine.model.pack.preprocess.LinearFunction",
-                       |        "data": {
-                       |          "m": 4.0,
-                       |          "c": 5.0
-                       |        }
-                       |      },
-                       |      "index": 0
-                       |    }
-                       |  ],
-                       |  "inputFeatures": [
-                       |    {
-                       |      "columnName": "x1",
-                       |      "columnType": "Double"
-                       |    },
-                       |    {
-                       |      "columnName": "x2",
-                       |      "columnType": "Double"
-                       |    }
-                       |  ],
-                       |  "identifier": "RV"
-                       |}""".stripMargin
+  private val oldModelJson =
+    """{
+      |  "functions": [
+      |    {
+      |      "function": {
+      |        "type": "com.alpine.model.pack.preprocess.Exp",
+      |        "data": {}
+      |      },
+      |      "index": 0
+      |    },
+      |    {
+      |      "function": {
+      |        "type": "com.alpine.model.pack.preprocess.Exp",
+      |        "data": {}
+      |      },
+      |      "index": 1
+      |    },
+      |    {
+      |      "function": {
+      |        "type": "com.alpine.model.pack.preprocess.Log",
+      |        "data": {}
+      |      },
+      |      "index": 1
+      |    },
+      |    {
+      |      "function": {
+      |        "type": "com.alpine.model.pack.preprocess.Power",
+      |        "data": {
+      |          "p": 2.0
+      |        }
+      |      },
+      |      "index": 0
+      |    },
+      |    {
+      |      "function": {
+      |        "type": "com.alpine.model.pack.preprocess.LinearFunction",
+      |        "data": {
+      |          "m": 4.0,
+      |          "c": 5.0
+      |        }
+      |      },
+      |      "index": 0
+      |    }
+      |  ],
+      |  "inputFeatures": [
+      |    {
+      |      "columnName": "x1",
+      |      "columnType": "Double"
+      |    },
+      |    {
+      |      "columnName": "x2",
+      |      "columnType": "Double"
+      |    }
+      |  ],
+      |  "identifier": "RV"
+      |}""".stripMargin
 
 }

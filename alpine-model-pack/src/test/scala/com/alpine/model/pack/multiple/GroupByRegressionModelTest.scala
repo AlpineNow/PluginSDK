@@ -12,7 +12,7 @@ import org.scalatest.FunSuite
   */
 class GroupByRegressionModelTest extends FunSuite {
 
-  val lir1 = LinearRegressionModel.make(
+  private val lir1 = LinearRegressionModel.make(
     Seq(1.0, 2.0, -1.0),
     Seq(
       ColumnDef("d", ColumnType.Double),
@@ -23,7 +23,7 @@ class GroupByRegressionModelTest extends FunSuite {
     "money"
   )
 
-  val lir2 = LinearRegressionModel.make(
+  private val lir2 = LinearRegressionModel.make(
     Seq(-1.0, -2.0, 1.0),
     Seq(
       ColumnDef("b", ColumnType.Double),
@@ -34,7 +34,7 @@ class GroupByRegressionModelTest extends FunSuite {
     "money"
   )
 
-  val groupByModel = new GroupByRegressionModel(ColumnDef("z", ColumnType.String), Map("zee" -> lir1, "zed" -> lir2))
+  val groupByModel = GroupByRegressionModel(ColumnDef("z", ColumnType.String), Map("zee" -> lir1, "zed" -> lir2))
 
   test("Serialization should work.") {
     JsonTestUtil.testJsonization(groupByModel)
@@ -47,7 +47,7 @@ class GroupByRegressionModelTest extends FunSuite {
     Range(0, 20).foreach(i => {
       val row = List(math.random, math.random, math.random, math.random, math.random)
       val p1 = groupByTransformer.predict("zee" :: row)
-      val q1 = t1.predict(Seq(row(0), row(1), row(2)))
+      val q1 = t1.predict(Seq(row.head, row(1), row(2)))
       assert(p1 == q1)
       val p2 = groupByTransformer.predict("zed" :: row)
       val q2 = t2.predict(Seq(row(3), row(4), row(2)))
@@ -64,19 +64,19 @@ class GroupByRegressionModelTest extends FunSuite {
       ColumnDef("b", ColumnType.Double),
       ColumnDef("c", ColumnType.Double)
     ) ===
-    groupByModel.inputFeatures)
+      groupByModel.inputFeatures)
 
   }
 
   test("testDependentFeature") {
     assert(
       ColumnDef("money", ColumnType.Double)
-     ===
-      groupByModel.dependentFeature
+        ===
+        groupByModel.dependentFeature
     )
   }
 
-  val integerModel = new GroupByRegressionModel(ColumnDef("z", ColumnType.Long), Map(0 -> lir1, 1 -> lir2))
+  val integerModel = GroupByRegressionModel(ColumnDef("z", ColumnType.Long), Map(0 -> lir1, 1 -> lir2))
 
   test("testTransformer for integer group by") {
     val groupByTransformer = integerModel.transformer
@@ -85,7 +85,7 @@ class GroupByRegressionModelTest extends FunSuite {
     Range(0, 20).foreach(i => {
       val row = List(math.random, math.random, math.random, math.random, math.random)
       val p1 = groupByTransformer.predict(0 :: row)
-      val q1 = t1.predict(Seq(row(0), row(1), row(2)))
+      val q1 = t1.predict(Seq(row.head, row(1), row(2)))
       assert(p1 == q1)
       val p2 = groupByTransformer.predict(1 :: row)
       val q2 = t2.predict(Seq(row(3), row(4), row(2)))
@@ -93,7 +93,7 @@ class GroupByRegressionModelTest extends FunSuite {
     })
   }
 
-  val doubleModel = new GroupByRegressionModel(ColumnDef("z", ColumnType.Double), Map(0.0 -> lir1, 1.5 -> lir2))
+  val doubleModel = GroupByRegressionModel(ColumnDef("z", ColumnType.Double), Map(0.0 -> lir1, 1.5 -> lir2))
 
   test("testTransformer for double group by") {
     val groupByTransformer = doubleModel.transformer
@@ -102,7 +102,7 @@ class GroupByRegressionModelTest extends FunSuite {
     Range(0, 20).foreach(i => {
       val row = List(math.random, math.random, math.random, math.random, math.random)
       val p1 = groupByTransformer.predict(0.0 :: row)
-      val q1 = t1.predict(Seq(row(0), row(1), row(2)))
+      val q1 = t1.predict(Seq(row.head, row(1), row(2)))
       assert(p1 == q1)
       val p2 = groupByTransformer.predict(1.5 :: row)
       val q2 = t2.predict(Seq(row(3), row(4), row(2)))

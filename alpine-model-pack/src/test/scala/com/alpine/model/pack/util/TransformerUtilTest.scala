@@ -1,6 +1,6 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 package com.alpine.model.pack.util
 
 import org.scalatest.FunSuite

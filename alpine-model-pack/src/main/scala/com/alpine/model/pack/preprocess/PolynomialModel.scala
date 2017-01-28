@@ -15,6 +15,8 @@ import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
 import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
 
+import scala.collection.immutable.IndexedSeq
+
 /**
   * Model that creates output features that are polynomial combinations of the input features.
   *
@@ -29,13 +31,13 @@ import com.alpine.transformer.sql.{ColumnarSQLExpression, SQLTransformer}
   */
 @SerialVersionUID(-6759725743006372988L)
 case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures: Seq[ColumnDef], override val identifier: String = "")
-  extends RowModel with PFAConvertible  {
+  extends RowModel with PFAConvertible {
 
   override def transformer: Transformer = PolynomialTransformer(this)
 
-  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = Some(new PolynomialSQLTransformer(this, sqlGenerator))
+  override def sqlTransformer(sqlGenerator: SQLGenerator): Option[SQLTransformer] = Some(PolynomialSQLTransformer(this, sqlGenerator))
 
-  def outputFeatures = {
+  def outputFeatures: IndexedSeq[ColumnDef] = {
     exponents.indices.map(i => ColumnDef("y_" + i, ColumnType.Double))
   }
 
@@ -47,7 +49,7 @@ case class PolynomialModel(exponents: Seq[Seq[java.lang.Double]], inputFeatures:
     val nonZeroColumns: Seq[Int] = inputFeatures.indices.filter(j => filteredRows.exists(row => row(j) != 0))
     val neededInputFeatures: Seq[ColumnDef] = nonZeroColumns.map(j => inputFeatures(j))
     val matrixWithNonZeroColumns: Seq[Seq[java.lang.Double]] = filteredRows.map(row => nonZeroColumns.map(j => row(j)))
-    val newModel = new PolynomialModel(matrixWithNonZeroColumns, neededInputFeatures)
+    val newModel = PolynomialModel(matrixWithNonZeroColumns, neededInputFeatures)
     val renamingModel = RenamingModel(newModel.outputFeatures, requiredOutputFeatureNames)
     PipelineRowModel(Seq(newModel, renamingModel), this.identifier)
   }

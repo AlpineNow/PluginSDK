@@ -34,10 +34,10 @@ class PolynomialPFAConverter(model: PolynomialModel) extends PFAConverter {
           (colDef.columnName, multiply(exponentiatedValues))
       }.toMap
 
-      Seq(new NewPFAObject(outputContents, outputType))
+      Seq(NewPFAObject(outputContents, outputType))
     }
 
-    new PFAComponents(
+    PFAComponents(
       input = inputType,
       output = outputType,
       cells = Map.empty,
