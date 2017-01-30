@@ -1,6 +1,5 @@
 package com.alpine.plugin.test.mock
 
-import com.alpine.plugin.core.annotation.Disabled
 import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.dialog._
 import com.alpine.plugin.core.io.{ColumnDef, IOBase, TabularSchema}
@@ -134,9 +133,6 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   }
 
   override def getDialogElement(id: String): DialogElement = dialogElements.get(id).get
-
-  @Disabled
-  override def addChildOperatorDialog(label: String): OperatorDialog = new OperatorDialogMock(overrideParams, input, inputSchema)
 
   override def getDialogElements(): Seq[DialogElement] = dialogElements.values.toSeq
 
@@ -347,8 +343,6 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     val de = new DBTableDropdownBoxImpl
     updateDialogElements(id, de)
   }
-
-  override def getChildOperatorDialogs(): Seq[OperatorDialog] = null
 
   override def addParentOperatorDropdownBox(id: String, label: String): ParentOperatorDropdownBox = null
 

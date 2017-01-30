@@ -6,7 +6,7 @@ package com.alpine.plugin.core.dialog
 
 import java.util.regex.Pattern
 
-import com.alpine.plugin.core.annotation.{AlpineSdkApi, Disabled}
+import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 
@@ -22,23 +22,6 @@ trait OperatorDialog {
    * @return Get the label.
    */
   def getLabel(): String
-
-  /**
-   * Add a button that will open a child dialog box to this one.
-   * @param label The label for the child dialog box button.
-   * @return A new child dialog object.
-   */
-  @Disabled
-  def addChildOperatorDialog(
-    label: String
-  ): OperatorDialog
-
-  /**
-   * Get an iterator of child operator dialogs.
-   * @return An iterator of child operator dialogs.
-   */
-  @Disabled
-  def getChildOperatorDialogs(): Seq[OperatorDialog]
 
   /**
    * Get an iterator of dialog elements.
