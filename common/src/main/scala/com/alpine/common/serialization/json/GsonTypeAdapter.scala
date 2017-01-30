@@ -9,19 +9,19 @@ import java.lang.reflect.Type
 import com.google.gson._
 
 /**
- * Gson adapter to be used to serialize and serialize [[TypeWrapper]] to and from JSON
- * with Gson.
- *
- * To be used when the developer wishes to to include a interface type in the model object,
- * or one of its fields.
- *
- * e.g. to store a List[Bird], or just val b: Bird, where
- * trait Bird
- * class Robin() extends Bird
- * class Eagle() extends Bird
- * the Bird type should be wrapped in TypeWrapper:
- * case class Aviary(specialBird: TypeWrapper[Bird], commonBirds: List[TypeWrapper[Bird]])
- */
+  * Gson adapter to be used to serialize and serialize [[TypeWrapper]] to and from JSON
+  * with Gson.
+  *
+  * To be used when the developer wishes to to include a interface type in the model object,
+  * or one of its fields.
+  *
+  * e.g. to store a List[Bird], or just val b: Bird, where
+  * trait Bird
+  * class Robin() extends Bird
+  * class Eagle() extends Bird
+  * the Bird type should be wrapped in TypeWrapper:
+  * case class Aviary(specialBird: TypeWrapper[Bird], commonBirds: List[TypeWrapper[Bird]])
+  */
 class GsonTypeAdapter(classLoaderUtil: Option[ClassLoaderUtil] = None) extends JsonSerializer[TypeWrapper[_]] with JsonDeserializer[TypeWrapper[_]] {
 
   private val helper = new ClassSerializer(classLoaderUtil)
@@ -35,7 +35,7 @@ class GsonTypeAdapter(classLoaderUtil: Option[ClassLoaderUtil] = None) extends J
     try {
       val clz = helper.getTypeForKey(className)
       val newValue: Any = jdc.deserialize(value, clz)
-      new TypeWrapper(newValue)
+      TypeWrapper(newValue)
     } catch {
       case e: ClassNotFoundException => throw new JsonParseException(e)
     }

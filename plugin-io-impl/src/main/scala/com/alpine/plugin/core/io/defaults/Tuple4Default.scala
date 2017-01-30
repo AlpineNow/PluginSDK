@@ -1,6 +1,6 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.core.io.defaults
 
@@ -9,10 +9,11 @@ import com.alpine.plugin.core.io.{Tuple3, IOBase, OperatorInfo, Tuple4}
 /**
   * Abstract implementation of [[Tuple3]].
   * Can be extended by developers who want custom behaviour not provided by [[Tuple3Default]].
-  * @param _1 The first element of the tuple.
-  * @param _2 The second element of the tuple.
-  * @param _3 The third element of the tuple.
-  * @param _4 The fourth element of the tuple.
+  *
+  * @param _1       The first element of the tuple.
+  * @param _2       The second element of the tuple.
+  * @param _3       The third element of the tuple.
+  * @param _4       The fourth element of the tuple.
   * @param addendum Map containing additional information.
   * @tparam T1 Type of the first element of the tuple.
   * @tparam T2 Type of the second element of the tuple.
@@ -35,10 +36,11 @@ T4 <: IOBase
 
 /**
   * Default implementation of [[Tuple4]].
-  * @param _1 The first element of the tuple.
-  * @param _2 The second element of the tuple.
-  * @param _3 The third element of the tuple.
-  * @param _4 The fourth element of the tuple.
+  *
+  * @param _1       The first element of the tuple.
+  * @param _2       The second element of the tuple.
+  * @param _3       The third element of the tuple.
+  * @param _4       The fourth element of the tuple.
   * @param addendum Map containing additional information.
   * @tparam T1 Type of the first element of the tuple.
   * @tparam T2 Type of the second element of the tuple.
@@ -73,11 +75,12 @@ object Tuple4Default {
   T2 <: IOBase,
   T3 <: IOBase,
   T4 <: IOBase
-  ](displayName: String, _1: T1,  _2: T2, _3: T3, _4: T4,
+  ](displayName: String, _1: T1, _2: T2, _3: T3, _4: T4,
     sourceOperatorInfo: Option[OperatorInfo],
     addendum: Map[String, AnyRef] = Map[String, AnyRef]()): Tuple4Default[T1, T2, T3, T4] = {
     Tuple4Default(_1, _2, _3, _4, addendum)
   }
+
   def apply[
   T1 <: IOBase,
   T2 <: IOBase,

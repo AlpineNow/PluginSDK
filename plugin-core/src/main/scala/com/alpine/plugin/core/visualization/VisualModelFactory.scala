@@ -10,8 +10,8 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io.{DBTable, IOBase, TabularDataset}
 
 /**
- * :: AlpineSdkApi ::
- */
+  * :: AlpineSdkApi ::
+  */
 @AlpineSdkApi
 trait VisualModelFactory {
   /**

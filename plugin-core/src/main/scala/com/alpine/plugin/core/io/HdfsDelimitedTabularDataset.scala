@@ -1,14 +1,14 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.core.io
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 
 /**
- * :: AlpineSdkApi ::
- */
+  * :: AlpineSdkApi ::
+  */
 @AlpineSdkApi
 trait HdfsDelimitedTabularDataset extends HdfsTabularDataset {
   def tsvAttributes: TSVAttributes
@@ -19,7 +19,7 @@ case class TSVAttributes(delimiter: Char,
                          escapeStr: Char,
                          quoteStr: Char,
                          containsHeader: Boolean,
-                         nullString : String = "") extends Serializable {
+                         nullString: String = "") extends Serializable {
   @transient lazy val toMap: Map[String, String] = Map(
     "delimiter" -> delimiter.toString,
     "escape" -> escapeStr.toString,

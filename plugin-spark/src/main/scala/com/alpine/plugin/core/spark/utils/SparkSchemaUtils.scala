@@ -106,7 +106,6 @@ trait SparkSchemaUtils {
     *
     * @param tabularSchema An Alpine 'TabularSchemaOutline' object with fixed column definitions
     *                      containing a name and Alpine specific type.
-    *
     * @return
     */
   def convertTabularSchemaToSparkSQLSchema(tabularSchema: TabularSchema): StructType = {
@@ -223,7 +222,7 @@ object SparkSqlDateTimeUtils {
     * Add a custom date format to a column definition so that the date will be re-formatted by the
     * 'saveDataFrame method.
     */
-  def addDateFormatInfo(field: StructField, format: String) = {
+  def addDateFormatInfo(field: StructField, format: String): StructField = {
     StructField(
       name = field.name,
       dataType = field.dataType,

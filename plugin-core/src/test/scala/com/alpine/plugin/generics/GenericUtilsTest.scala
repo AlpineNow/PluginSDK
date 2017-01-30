@@ -1,25 +1,32 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.generics
 
 import org.scalatest.FunSuite
 
 object GenericUtilsTest {
+
   class A[A1, A2, A3] {}
+
   class B[B1, B2] extends A[B1, B2, ATest] {}
+
   class C[C1] extends B[C1, BTest] {}
+
   class D extends C[CTest] {}
 
   class CTest
+
   class BTest
+
   class ATest
+
 }
 
 /**
- * Tests for generic utils.
- */
+  * Tests for generic utils.
+  */
 class GenericUtilsTest extends FunSuite {
   test("Test ancestor generic type determination.") {
     val clazz = classOf[GenericUtilsTest.D]

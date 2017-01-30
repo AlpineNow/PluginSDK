@@ -1,14 +1,15 @@
 package com.alpine.plugin.core.utils
 
 import java.text.SimpleDateFormat
-import java.util.{Date, Calendar}
+import java.util.{Calendar, Date}
 import java.util.concurrent.TimeUnit
+
 import com.alpine.plugin.core.io.{IOBase, TabularDataset}
-import com.alpine.plugin.core.visualization.{VisualModelFactory, CompositeVisualModel, VisualModel}
+import com.alpine.plugin.core.visualization.{CompositeVisualModel, HtmlVisualModel, VisualModel, VisualModelFactory}
 
 /**
- * Utilities for writing the addendum for custom operators in a consistent manner
- */
+  * Utilities for writing the addendum for custom operators in a consistent manner
+  */
 object AddendumWriter {
 
   val SUMMARY_DISPLAY_NAME = "Summary"
@@ -27,7 +28,7 @@ object AddendumWriter {
     reportNullDataSize(input, output, "due to null values")
   }
 
-  def reportNullDataSize(input: Long, output: Long, reason: String) = {
+  def reportNullDataSize(input: Long, output: Long, reason: String): List[String] = {
     val badRows = input - output
     val badPercent = ((badRows / input.toDouble) * 100).round
     if (badRows == 0)
@@ -37,14 +38,14 @@ object AddendumWriter {
   }
 
   /**
-   * Given the input size and output size, generates a report as a list of lists (which can
-   * then be formatted as an HTML table with the tabulator class about how much bad data was
-   * removed. If, for example, the input had 100 rows and the output had ninety the report would
-   * read:
-   * Input data size:  100 rows
+    * Given the input size and output size, generates a report as a list of lists (which can
+    * then be formatted as an HTML table with the tabulator class about how much bad data was
+    * removed. If, for example, the input had 100 rows and the output had ninety the report would
+    * read:
+    * Input data size:  100 rows
     * Input data size after removing rows with null values: 90 rows
     * Rows removed (due to null values) : 10 rows (10%)
-   */
+    */
   def generateBadDataReport(inputSize: Long, outputSize: Long) = List(reportInputSize(inputSize),
     reportOutputSize(outputSize), reportBadDataSize(inputSize, outputSize))
 
@@ -56,6 +57,7 @@ object AddendumWriter {
     * Input data size:  100 rows
     * Input data size after removing rows + REASON + : 90 rows
     * Rows removed (REASON) : 10 rows (10%)
+    *
     * @param inputSize
     * @param outputSize
     * @param reason - why the data was removed e.g. "due to null values"
@@ -65,25 +67,26 @@ object AddendumWriter {
     reportOutputSize(outputSize, reason), reportNullDataSize(inputSize, outputSize, reason))
 
   /**
-   * Returns a string describing the name of the results and where they are stored.
-   * Has html <br> tags afterwards.
-   */
+    * Returns a string describing the name of the results and where they are stored.
+    * Has html <br> tags afterwards.
+    */
   def reportOutputLocation(outputPath: String, resultMessage: String =
-  "The output of the operator is stored at"): String = resultMessage +"<br>" + outputPath + "<br>"
+  "The output of the operator is stored at"): String = resultMessage + "<br>" + outputPath + "<br>"
 
   /**
-   * Add to a list that will be used by Tabulator. It creates an empty row in the table
-   */
+    * Add to a list that will be used by Tabulator. It creates an empty row in the table
+    */
   val emptyRow = List("&nbsp", "&nbsp")
 
   /**
     * Create a map which can be used as the addendum with one (key, value) pair added.
     * Add more values to the map with map.updated(newKey, newValue)
+    *
     * @param summaryText The text which should appear in the summary tab of the result output.
     * @return
     */
-  def createStandardAddendum(summaryText : String) : Map[String, AnyRef] = {
-    Map[String,AnyRef](summaryKey -> summaryText)
+  def createStandardAddendum(summaryText: String): Map[String, AnyRef] = {
+    Map[String, AnyRef](summaryKey -> summaryText)
   }
 
   /**
@@ -93,24 +96,23 @@ object AddendumWriter {
     * - an HtmlVisualModel of the summary if it has been added to the addendum (nothing will be
     * - added if the addendum doesn't include anything with the visual key 'summaryKey'
     */
-  def createCompositeVisualModel[O <: TabularDataset]( visualModelFactory: VisualModelFactory,
-    outputData : O, additionalVisualModels : Array[(String,VisualModel)] = Array.empty[(String, VisualModel)]
-     ) : CompositeVisualModel = {
+  def createCompositeVisualModel[O <: TabularDataset](visualModelFactory: VisualModelFactory,
+                                                      outputData: O, additionalVisualModels: Array[(String, VisualModel)] = Array.empty[(String, VisualModel)]
+                                                     ): CompositeVisualModel = {
 
-    val model = visualModelFactory.createCompositeVisualModel()
+    val model = new CompositeVisualModel
     model.addVisualModel(OUTPUT_DISPLAY_NAME, visualModelFactory.createTabularDatasetVisualization(outputData))
     additionalVisualModels.foldLeft(model)(
-      (compositeModel, visualModelPair) =>
-        {
-          compositeModel.addVisualModel(visualModelPair._1, visualModelPair._2)
-          compositeModel
-        } )
+      (compositeModel, visualModelPair) => {
+        compositeModel.addVisualModel(visualModelPair._1, visualModelPair._2)
+        compositeModel
+      })
 
     val summaryText = outputData.asInstanceOf[IOBase].addendum.get(summaryKey)
 
     summaryText match {
       case Some(text) =>
-        val summaryVisualModel = visualModelFactory.createHtmlTextVisualization(text.toString)
+        val summaryVisualModel = HtmlVisualModel(text.toString)
         model.addVisualModel(SUMMARY_DISPLAY_NAME, summaryVisualModel)
         model
       case None => model
@@ -142,11 +144,11 @@ class Timer() {
   }
 
   /**
-   * Given an array of java TimeUnits
-   * Converts a long representing milli seconds to an array of number of each of the given TimeUnits
-   * which should be used to report it. I.e.
-   * convertMilliesToOtherUnits(61,000, Array(TimeUnit.MINUTES< TImeUnit.SECONDS)) would return Array(1, 1)
-   */
+    * Given an array of java TimeUnits
+    * Converts a long representing milli seconds to an array of number of each of the given TimeUnits
+    * which should be used to report it. I.e.
+    * convertMilliesToOtherUnits(61,000, Array(TimeUnit.MINUTES< TImeUnit.SECONDS)) would return Array(1, 1)
+    */
   def convertMilliesToOtherUnits(millies: Long, allTimeUnits: Array[TimeUnit]): Array[Long] = {
     var milliesInRest: Long = millies
     val timeMap = Array.ofDim[Long](allTimeUnits.length)
@@ -163,24 +165,24 @@ class Timer() {
   }
 
   /**
-   * Reports the start time of a timer, the end time, and the duration in hours, minutes, and seconds.
-   */
+    * Reports the start time of a timer, the end time, and the duration in hours, minutes, and seconds.
+    */
   def report(dataFormat: SimpleDateFormat): List[List[String]] =
     totalTime match {
-    case (None) => List(List("Timer never started"))
-    case Some(diffInMillies) =>
-      val reportStartTime = dataFormat.format(startTime.get)
-      val reportEndTime = dataFormat.format(endTime.get)
-      val allTimeUnits = Array(TimeUnit.HOURS, TimeUnit.MINUTES,
-        TimeUnit.SECONDS, TimeUnit.MILLISECONDS)
-      val timeMap = convertMilliesToOtherUnits(diffInMillies, allTimeUnits)
-      val reportingTime = timeMap.mkString(":")
-      List(
-        List("Time to run: ", reportingTime + " "),
-        List(" ", "Start time: " + reportStartTime),
-        List(" ", "End time: " + reportEndTime)
-      )
-  }
+      case (None) => List(List("Timer never started"))
+      case Some(diffInMillies) =>
+        val reportStartTime = dataFormat.format(startTime.get)
+        val reportEndTime = dataFormat.format(endTime.get)
+        val allTimeUnits = Array(TimeUnit.HOURS, TimeUnit.MINUTES,
+          TimeUnit.SECONDS, TimeUnit.MILLISECONDS)
+        val timeMap = convertMilliesToOtherUnits(diffInMillies, allTimeUnits)
+        val reportingTime = timeMap.mkString(":")
+        List(
+          List("Time to run: ", reportingTime + " "),
+          List(" ", "Start time: " + reportStartTime),
+          List(" ", "End time: " + reportEndTime)
+        )
+    }
 
   def report(): List[List[String]] = this.report(DEFAULT_DATE_FORMAT)
 

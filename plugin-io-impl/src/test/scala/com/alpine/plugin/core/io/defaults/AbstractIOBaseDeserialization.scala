@@ -8,6 +8,7 @@ import java.lang.reflect.Type
 import com.alpine.common.serialization.json.JsonUtil
 import com.alpine.plugin.core.io.IOBase
 import com.alpine.plugin.core.serialization.json.CoreJsonUtil
+import com.google.gson.Gson
 import org.scalatest.FunSuite
 
 /**
@@ -15,7 +16,7 @@ import org.scalatest.FunSuite
   */
 trait AbstractIOBaseDeserialization extends FunSuite {
 
-  val gson = JsonUtil.gsonBuilderWithInterfaceAdapters(CoreJsonUtil.typesNeedingInterfaceAdapters).create
+  val gson: Gson = JsonUtil.gsonBuilderWithInterfaceAdapters(CoreJsonUtil.typesNeedingInterfaceAdapters).create
 
   def testSerialization[T <: IOBase](ioBase: T, previousJson: Option[String] = None, t: Type = classOf[IOBase]): T = {
     val json = gson.toJson(ioBase, t)

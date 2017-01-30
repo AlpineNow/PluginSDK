@@ -7,11 +7,11 @@ import com.alpine.plugin.core.OperatorListener
 
 class SimpleOperatorListener extends OperatorListener {
 
-  override def notifyMessage(msg: String) = {
+  override def notifyMessage(msg: String): Unit = {
     println(msg)
   }
 
-  override def notifyError(error: String) = {
+  override def notifyError(error: String): Unit = {
     println(error)
   }
 

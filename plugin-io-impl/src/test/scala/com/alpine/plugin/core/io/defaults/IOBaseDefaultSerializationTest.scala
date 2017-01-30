@@ -4,9 +4,6 @@ import java.lang.reflect.Type
 import com.alpine.plugin.core.io._
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 
-/**
- * TODO: Refactor serialization code so this can be in plugin-io-impl.
- */
 class IOBaseDefaultSerializationTest extends AbstractIOBaseDeserialization {
 
   val schema: TabularSchema = TabularSchema(Seq(ColumnDef("name1", ColumnType.Long)))

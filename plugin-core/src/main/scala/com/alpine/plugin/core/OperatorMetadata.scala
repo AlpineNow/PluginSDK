@@ -1,6 +1,6 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.core
 
@@ -14,16 +14,16 @@ import OperatorMetadata._
   * And is used by the plugin engine to define how the operator will show up in the GUI.
   *
   * @constructor create metadata class by defining each of its fields.
-  * @param name           the name of the operator as it shows up in the GUI
-  * @param category       the category of operator i.e. "transformation".
-  *                       Used to filter operator in the left hand panel of the workflow GUI.
-  * @param author         the writer of the operator
-  * @param version        the version number of this operator.
-  * @param helpURL        A link to documentation about the operator
-  * @param icon           Name and shape of the custom icon. To use the default icon,
-  *                       use Option.empty().
-  * @param toolTipText    The text of the tool tip which appears when the user hovers over the icon
-  *                       for the operator in the left hand "operators" dropdown.
+  * @param name        the name of the operator as it shows up in the GUI
+  * @param category    the category of operator i.e. "transformation".
+  *                    Used to filter operator in the left hand panel of the workflow GUI.
+  * @param author      the writer of the operator
+  * @param version     the version number of this operator.
+  * @param helpURL     A link to documentation about the operator
+  * @param icon        Name and shape of the custom icon. To use the default icon,
+  *                    use Option.empty().
+  * @param toolTipText The text of the tool tip which appears when the user hovers over the icon
+  *                    for the operator in the left hand "operators" dropdown.
   */
 @AlpineSdkApi
 case class OperatorMetadata(name: String,

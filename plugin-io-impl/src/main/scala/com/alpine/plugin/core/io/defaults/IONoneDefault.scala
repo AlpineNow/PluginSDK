@@ -5,12 +5,14 @@ import com.alpine.plugin.core.io.{IONone, OperatorInfo}
 /**
   * Abstract implementation of [[IONone]].
   * Can be extended by developers who want custom behaviour not provided by [[IONoneDefault]].
+  *
   * @param addendum Map containing additional information.
   */
 abstract class AbstractIONone(val addendum: Map[String, AnyRef]) extends IONone
 
 /**
   * Default implementation of [[IONone]].
+  *
   * @param addendum Map containing additional information.
   */
 case class IONoneDefault(override val addendum: Map[String, AnyRef])

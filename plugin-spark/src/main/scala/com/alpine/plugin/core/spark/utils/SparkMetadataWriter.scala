@@ -5,6 +5,7 @@ import com.google.gson.{FieldNamingPolicy, GsonBuilder, Gson}
 import org.apache.hadoop.fs.permission.{FsAction, FsPermission}
 import org.apache.hadoop.fs.{Path, FileSystem}
 import scala.collection.JavaConverters._
+
 /**
   * Created by rachelwarren on 5/23/16.
   */
@@ -31,31 +32,24 @@ object SparkMetadataWriter {
   def writeMetadataForDelimitedDatasets(ioBase: IOBase, hdfs: FileSystem): Array[Path] = {
     try {
       ioBase match {
-        case dataset: HdfsDelimitedTabularDataset => {
-         val p = writeMetadataForDataset(dataset, hdfs)
-         p match {
-           case Some(p) => Array(p)
-           case None => Array()
-         }
-        }
-        case list: IOList[_] => {
-         list.elements.flatMap(element =>
-           writeMetadataForDelimitedDatasets(element, hdfs)).toArray
-        }
-        case tuple: com.alpine.plugin.core.io.Tuple => {
+        case dataset: HdfsDelimitedTabularDataset =>
+          val pathOption: Option[Path] = writeMetadataForDataset(dataset, hdfs)
+          pathOption.toArray
+        case list: IOList[_] =>
+          list.elements.flatMap(element =>
+            writeMetadataForDelimitedDatasets(element, hdfs)).toArray
+        case tuple: com.alpine.plugin.core.io.Tuple =>
           tuple.elements.flatMap(element =>
             writeMetadataForDelimitedDatasets(element, hdfs)).toArray
-        }
         case _ => println("warning: can not write metadata for IOBase Type " + ioBase.getClass)
           Array()
       }
     }
     catch {
-      case e: Exception => {
+      case e: Exception =>
         println("Non-fatal error occurred when writing .alpine_metadata file(s):")
         Array()
         // Do nothing, as the output may still be usable.
-      }
     }
   }
 
@@ -64,7 +58,7 @@ object SparkMetadataWriter {
     * location
     * of the metada. None otherwise.
     */
-  def writeMetadataForDataset(dataset: HdfsDelimitedTabularDataset, hdfs: FileSystem): Option[Path]  = {
+  def writeMetadataForDataset(dataset: HdfsDelimitedTabularDataset, hdfs: FileSystem): Option[Path] = {
     val datasetPath = new Path(dataset.path)
     if (hdfs.isDirectory(datasetPath)) {
       val metadata: HadoopMetadata = convertToMetadataObject(dataset)
@@ -73,7 +67,7 @@ object SparkMetadataWriter {
       val metadataPath = new Path(datasetPath, METADATA_FILENAME)
       if (!hdfs.exists(metadataPath)) {
         writeSmallTextFile(hdfs, metadataPath, metadataJSON)
-       Some(metadataPath)
+        Some(metadataPath)
       } else {
         // Maybe the user is passing along an input object as output, where the folder already has metadata.
         None
@@ -88,37 +82,37 @@ object SparkMetadataWriter {
   def convertToMetadataObject(dataset: HdfsDelimitedTabularDataset): HadoopMetadata = {
     val fixedColumns = dataset.tabularSchema.getDefinedColumns
     val columnNames = fixedColumns.map(c => c.columnName)
-    val columnTypes= fixedColumns.map(c => convertToAlpineType(c.columnType))
+    val columnTypes = fixedColumns.map(c => convertToAlpineType(c.columnType))
 
-     new HadoopMetadata(columnNames.asJava,
-       columnTypes = columnTypes.asJava,
-       delimiter = dataset.tsvAttributes.delimiter.toString,
-       quote = dataset.tsvAttributes.quoteStr.toString,
-       escape = dataset.tsvAttributes.escapeStr.toString,
-       isFirstLineHeader = dataset.tsvAttributes.containsHeader)
+    HadoopMetadata(columnNames.asJava,
+      columnTypes = columnTypes.asJava,
+      delimiter = dataset.tsvAttributes.delimiter.toString,
+      quote = dataset.tsvAttributes.quoteStr.toString,
+      escape = dataset.tsvAttributes.escapeStr.toString,
+      isFirstLineHeader = dataset.tsvAttributes.containsHeader)
   }
 
   def convertToAlpineType(colType: ColumnType.TypeValue): String = {
     if (colType == ColumnType.Int) {
-       HadoopDataType.INT
+      HadoopDataType.INT
     }
     else if (colType == ColumnType.Long) {
-       HadoopDataType.LONG
+      HadoopDataType.LONG
     }
     else if (colType == ColumnType.Float) {
-       HadoopDataType.FLOAT
+      HadoopDataType.FLOAT
     }
     else if (colType == ColumnType.Double) {
-       HadoopDataType.DOUBLE
+      HadoopDataType.DOUBLE
     }
     else if (colType == ColumnType.String) {
-       HadoopDataType.CHARARRAY
+      HadoopDataType.CHARARRAY
     }
     else if (colType == ColumnType.DateTime) {
       HadoopDataType.DATETIME
     }
     else if (colType == ColumnType.Sparse) {
-       HadoopDataType.SPARSE
+      HadoopDataType.SPARSE
     }
     else {
       HadoopDataType.CHARARRAY
@@ -139,13 +133,12 @@ object SparkMetadataWriter {
   }
 }
 
-case class HadoopMetadata(
-   columnNames: java.util.List[String],
-   columnTypes: java.util.List[String],
-   delimiter: String,
-   escape: String,
-   quote: String,
-   isFirstLineHeader: Boolean = false,
-   totalNumberOfRows: Long = -1){
+case class HadoopMetadata(columnNames: java.util.List[String],
+                          columnTypes: java.util.List[String],
+                          delimiter: String,
+                          escape: String,
+                          quote: String,
+                          isFirstLineHeader: Boolean = false,
+                          totalNumberOfRows: Long = -1) {
 }
 

@@ -11,10 +11,11 @@ import com.google.gson._
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 
 /**
- * Gson adapter to be used to serialize and serialize [[scala.collection.Seq]] to and from JSON
- * with Gson.
- */
+  * Gson adapter to be used to serialize and serialize [[scala.collection.Seq]] to and from JSON
+  * with Gson.
+  */
 case class GsonSeqAdapter() extends JsonSerializer[Seq[_]] with JsonDeserializer[Seq[_]] {
+
   import scala.collection.JavaConverters._
 
   @throws(classOf[JsonParseException])

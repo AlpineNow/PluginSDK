@@ -68,7 +68,7 @@ class TestGui extends SparkDataFrameGUINode[TestSparkJob] {
 class TestSparkJob extends SparkDataFrameJob {
 
   override def transformWithAddendum(operatorParameters: OperatorParameters, dataFrame: DataFrame,
-                                     sparkUtils: SparkRuntimeUtils, listener: OperatorListener) = {
+                                     sparkUtils: SparkRuntimeUtils, listener: OperatorListener): (DataFrame, Map[String, AnyRef]) = {
     val col: String = operatorParameters.getTabularDatasetSelectedColumn("addTabularDatasetColumnDropdownBox")._2
     val col2: Array[String] = operatorParameters.getTabularDatasetSelectedColumns("addTabularDatasetColumnCheckboxes")._2
 

@@ -1,6 +1,6 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.core.utils
 
@@ -9,9 +9,9 @@ import com.alpine.plugin.core.dialog.OperatorDialog
 import com.alpine.plugin.core.dialog.SparkParameter
 
 /**
- * Convenience functions for directly adding Spark related options to the
- * dialog window.
- */
+  * Convenience functions for directly adding Spark related options to the
+  * dialog window.
+  */
 object SparkParameterUtils {
 
   val sparkNumExecutorsElementId = "spark_numExecutors"
@@ -21,14 +21,14 @@ object SparkParameterUtils {
   val storageLevelParamId = "spark_storage_level"
   val disableDynamicAllocationParamId = "noDynamicAllocation"
 
-  def addStandardSparkOptions(operatorDialog: OperatorDialog, additionalSparkParameters: List[SparkParameter]): Unit ={
+  def addStandardSparkOptions(operatorDialog: OperatorDialog, additionalSparkParameters: List[SparkParameter]): Unit = {
     val list = List(
-      new SparkParameter(disableDynamicAllocationParamId,
-        "Disable Dynamic Allocation", false.toString, false, false),
-      new SparkParameter(sparkNumExecutorsElementId, "Number of Executors", "3", false, false),
-      new SparkParameter(sparkExecutorMBElementId, "Executor Memory in MB", "-1", false, false),
-      new SparkParameter(sparkDriverMBElementId, "Driver Memory in MB", "-1", false, false),
-      new SparkParameter(sparkNumExecutorCoresElementId, "Number of Executor Cores", "-1", false, false)
+      SparkParameter(disableDynamicAllocationParamId,
+        "Disable Dynamic Allocation", false.toString, userSpecified = false, overridden = false),
+      SparkParameter(sparkNumExecutorsElementId, "Number of Executors", "3", userSpecified = false, overridden = false),
+      SparkParameter(sparkExecutorMBElementId, "Executor Memory in MB", "-1", userSpecified = false, overridden = false),
+      SparkParameter(sparkDriverMBElementId, "Driver Memory in MB", "-1", userSpecified = false, overridden = false),
+      SparkParameter(sparkNumExecutorCoresElementId, "Number of Executor Cores", "-1", userSpecified = false, overridden = false)
     )
     operatorDialog.addAdvancedSparkSettingsBox("sparkSettings", "Advanced Spark Settings",
       list ++ additionalSparkParameters)
@@ -36,13 +36,13 @@ object SparkParameterUtils {
 
   @deprecated("The default values are no longer used due to the auto tuning. If you " +
     "would like to maintain the old behavior use 'operatorDialog.addAdvancedSparkSettingsBox' directly" +
-     "otherwise use signature without integer params")
+    "otherwise use signature without integer params")
   def addStandardSparkOptions(
-    operatorDialog: OperatorDialog,
-    defaultNumExecutors: Int,
-    defaultExecutorMemoryMB: Int,
-    defaultDriverMemoryMB: Int,
-    defaultNumExecutorCores: Int, additionalSparkParameters: List[SparkParameter]) {
+                               operatorDialog: OperatorDialog,
+                               defaultNumExecutors: Int,
+                               defaultExecutorMemoryMB: Int,
+                               defaultDriverMemoryMB: Int,
+                               defaultNumExecutorCores: Int, additionalSparkParameters: List[SparkParameter]) {
 
     addStandardSparkOptions(operatorDialog, additionalSparkParameters)
   }
@@ -51,11 +51,11 @@ object SparkParameterUtils {
     "would like to maintain the old behavior use 'operatorDialog.addAdvancedSparkSettingsBox' directly" +
     "otherwise use signature without integer params")
   def addStandardSparkOptions(
-    operatorDialog: OperatorDialog,
-    defaultNumExecutors: Int,
-    defaultExecutorMemoryMB: Int,
-    defaultDriverMemoryMB: Int,
-    defaultNumExecutorCores: Int) {
+                               operatorDialog: OperatorDialog,
+                               defaultNumExecutors: Int,
+                               defaultExecutorMemoryMB: Int,
+                               defaultDriverMemoryMB: Int,
+                               defaultNumExecutorCores: Int) {
 
     addStandardSparkOptions(operatorDialog, List[SparkParameter]())
   }
@@ -67,7 +67,8 @@ object SparkParameterUtils {
     * NOTE: The storage level parameter cannot be set automatically during runtime.
     * To have any effect the custom operator developer must implement RDD persistence with this value
     * (retrievable with 'getStorageLevel' method) in the Spark Job class of their operator.
-    * @param defaultStorageLevel - default storage level e.g. NONE or "MEMORY_AND_DISK.
+    *
+    * @param defaultStorageLevel       - default storage level e.g. NONE or "MEMORY_AND_DISK.
     * @param additionalSparkParameters - a list of a additional Spark Parameters.
     */
   def addStandardSparkOptionsWithStorageLevel(operatorDialog: OperatorDialog,
@@ -79,8 +80,8 @@ object SparkParameterUtils {
                                               additionalSparkParameters: List[SparkParameter] =
                                               List.empty[SparkParameter]) {
     val list = List(
-      new SparkParameter(storageLevelParamId, "Storage Level", defaultStorageLevel, false, false))
-    addStandardSparkOptions(operatorDialog,list ++ additionalSparkParameters)
+      SparkParameter(storageLevelParamId, "Storage Level", defaultStorageLevel, userSpecified = false, overridden = false))
+    addStandardSparkOptions(operatorDialog, list ++ additionalSparkParameters)
   }
 
   def getStorageLevel(operatorParameters: OperatorParameters): Option[String] = {

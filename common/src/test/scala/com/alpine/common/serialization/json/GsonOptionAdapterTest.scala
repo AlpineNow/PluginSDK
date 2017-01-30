@@ -7,9 +7,9 @@ package com.alpine.common.serialization.json
 import org.scalatest.FunSuite
 
 /**
- * @author Jenny Thompson
- *         8/5/15
- */
+  * @author Jenny Thompson
+  *         8/5/15
+  */
 class GsonOptionAdapterTest extends FunSuite {
 
   test("Should serialize None options correctly") {

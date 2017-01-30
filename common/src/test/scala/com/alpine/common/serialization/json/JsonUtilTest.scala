@@ -8,9 +8,9 @@ import com.google.gson.reflect.TypeToken
 import org.scalatest.FunSuite
 
 /**
- * @author Jenny Thompson
- *         6/16/15
- */
+  * @author Jenny Thompson
+  *         6/16/15
+  */
 class JsonUtilTest extends FunSuite {
 
   test("Lists serialize and deserialize properly.") {
@@ -40,16 +40,17 @@ class JsonUtilTest extends FunSuite {
     val newValues: List[TypeWrapper[Any]] = gson.fromJson(stringJson, anyListType)
     assert(anyValues === newValues)
     //   println(stringJson)
-    val expectedJson = """[
-                         |  {
-                         |    "type": "java.lang.Double",
-                         |    "data": 1.3
-                         |  },
-                         |  {
-                         |    "type": "java.lang.Boolean",
-                         |    "data": true
-                         |  }
-                         |]""".stripMargin
+    val expectedJson =
+      """[
+        |  {
+        |    "type": "java.lang.Double",
+        |    "data": 1.3
+        |  },
+        |  {
+        |    "type": "java.lang.Boolean",
+        |    "data": true
+        |  }
+        |]""".stripMargin
     assert(expectedJson === stringJson)
   }
 

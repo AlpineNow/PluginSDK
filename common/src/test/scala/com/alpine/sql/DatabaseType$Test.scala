@@ -7,12 +7,12 @@ import org.scalatest.FunSpec
   */
 class DatabaseType$Test extends FunSpec {
 
-    import DatabaseType._
+  import DatabaseType._
 
-    describe("general tests") {
-        it("should handle lookup") {
-            assert(postgres === DatabaseType.TypeValue("postgres"))
-            //assert(postgres === DatabaseType.TypeValue("postgresql"))
-        }
+  describe("general tests") {
+    it("should handle lookup") {
+      assert(postgres === DatabaseType.TypeValue("postgres"))
+      //assert(postgres === DatabaseType.TypeValue("postgresql"))
     }
+  }
 }

@@ -4,7 +4,6 @@ import com.alpine.plugin.core.spark.utils.BadDataReportingUtils
 import com.alpine.plugin.core.utils.HdfsParameterUtils
 import com.alpine.plugin.test.mock.OperatorParametersMock
 import com.alpine.plugin.test.utils.{OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SQLContext}
@@ -14,6 +13,7 @@ import scala.util.Try
 
 
 class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
+
   import TestSparkContexts._
 
   val inputRows = List(Row("Masha", 22), Row("Ulia", 21), Row("Nastya", 23))
@@ -92,7 +92,7 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
     assert(message.contains("Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows"))
   }
 
-  test("Bad data with nothing in it "){
+  test("Bad data with nothing in it ") {
     val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows), inputSchema)
     val (badDataFile, badDataDf, message) = testBadDataReporting(HdfsParameterUtils.badDataReportALL, goodInputData)
     assert(!badDataFile.isDirectory)
@@ -115,11 +115,11 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   test("Bad Data Reporting with old parameter values  ") {
     val inputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
 
-   val badDataReportNO_COUNT = {
-     //Testing in the not counting and not writing to file case
-     val (badDataFile, df, msg) = testBadDataReporting("No and Do Not Count Rows Removed (Fastest)", inputData)
-     testNotRemovingTheRows(badDataFile, df, msg)
-   }
+    val badDataReportNO_COUNT = {
+      //Testing in the not counting and not writing to file case
+      val (badDataFile, df, msg) = testBadDataReporting("No and Do Not Count Rows Removed (Fastest)", inputData)
+      testNotRemovingTheRows(badDataFile, df, msg)
+    }
 
     val badDataReport_NO = {
       val (badDataFile, df, msg) = testBadDataReporting("No", inputData)
@@ -137,7 +137,7 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
     }
 
     val badDataReport_PARTIAL = {
-      val (badDataFile, df, msg) = testBadDataReporting("Partial (" + HdfsParameterUtils.DEFAULT_NUMBER_ROWS +") Rows", inputData)
+      val (badDataFile, df, msg) = testBadDataReporting("Partial (" + HdfsParameterUtils.DEFAULT_NUMBER_ROWS + ") Rows", inputData)
       assert(badDataFile.isDirectory)
       assert(df.count() == inputRows.length)
       assert(msg.contains("Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows"))
@@ -146,13 +146,13 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
 
   }
 
-  def testBadDataReporting(badDataOption : String, inputData : DataFrame): (File, DataFrame, String) ={
+  def testBadDataReporting(badDataOption: String, inputData: DataFrame): (File, DataFrame, String) = {
     val mockParams = new OperatorParametersMock("Thing", "One")
     OperatorParameterMockUtil.addHdfsParamsDefault(mockParams, "BadDataTest")
     mockParams.setValue(HdfsParameterUtils.badDataReportParameterID, badDataOption)
 
     val f = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
-    if(f.isDirectory){
+    if (f.isDirectory) {
       f.deleteRecursively();
     }
     val (goodData, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
@@ -163,7 +163,7 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   }
 
 
-  def testNotRemovingTheRows(badDataFile : File, badDataDF: DataFrame, msg : String) = {
+  def testNotRemovingTheRows(badDataFile: File, badDataDF: DataFrame, msg: String) = {
     assert(badDataDF.count() == inputRows.length)
     assert(!badDataFile.isDirectory)
     assert(msg.contains("You have selected not to count the number" +

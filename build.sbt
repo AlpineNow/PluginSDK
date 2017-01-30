@@ -24,7 +24,7 @@ def publishParameters(module: String) = Seq(
   homepage := Some(url("https://github.com/AlpineNow/PluginSDK")),
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
   },
   licenses := Seq("Apache License 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
   scalacOptions in(Compile, doc) ++= Seq("-doc-footer", "Copyright (c) 2015 Alpine Data Labs."),
@@ -52,7 +52,7 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 def excludeFromAll(items: Seq[ModuleID], group: String, artifacts: Seq[String]) =
   items.flatMap(x => artifacts.map(x.exclude(group, _)))
 
-def excludeJPMML(items: Seq[ModuleID]) : Seq[ModuleID] = {
+def excludeJPMML(items: Seq[ModuleID]): Seq[ModuleID] = {
   excludeFromAll(items, "org.jpmml", Seq("pmml-model", "pmml-evaluator"))
 }
 
@@ -61,7 +61,7 @@ def sparkDependencies = excludeJPMML({
     "org.apache.spark" % s"spark-core_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-mllib_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-catalyst_$scalaMajorVersion" % sparkVersion,
-    "org.apache.spark" % s"spark-sql_$scalaMajorVersion" % sparkVersion ,
+    "org.apache.spark" % s"spark-sql_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-hive_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-yarn_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-unsafe_$scalaMajorVersion" % sparkVersion,
@@ -153,7 +153,7 @@ lazy val ModelPack = Project(
   base = file("alpine-model-pack"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep  % "test",
+      scalaTestDep % "test",
       hadrianDependency % "test"
       //  prestoParserDependency
     )
@@ -208,16 +208,16 @@ lazy val CompleteModule = Project(
 
 lazy val root = (project in file("."))
   .settings(unidocSettings: _*)
-//  .settings(site.settings ++ ghpages.settings: _*)
-//  .settings(
-//    site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
-//    GitKeys.gitRemoteRepo := "git@github.com:AlpineNow/PluginSDK.git",
-//  )
+  //  .settings(site.settings ++ ghpages.settings: _*)
+  //  .settings(
+  //    site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
+  //    GitKeys.gitRemoteRepo := "git@github.com:AlpineNow/PluginSDK.git",
+  //  )
   // No need to publish the root
   .settings(publish := {}, publishLocal := {}, packagedArtifacts := Map.empty)
   // Junk publishTo (should not be used)
   .settings(publishTo :=
-    Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
+  Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
   .aggregate(
     Common,
     PluginCore,

@@ -12,35 +12,37 @@ import org.scalatest.FunSuite
 
 
 class SimpleAbstractSparkJobSuite extends FunSuite {
+
   import TestSparkContexts._
-  lazy val sparkUtils = {
+
+  lazy val sparkUtils: SparkRuntimeUtils = {
     new SparkRuntimeUtils(sc)
   }
 
   /**
-   * Writes the contents of the dataFrame to a file and creates and "HdfsTabularDatasetObject"
-   * corresponding to that data. Use this method to convert from a dataFrame,
-   * to the HdfsTabularDataset
-   * type which Custom Operators take as input.
-   * This method deletes what is written at the path before writing to it.
-   */
+    * Writes the contents of the dataFrame to a file and creates and "HdfsTabularDatasetObject"
+    * corresponding to that data. Use this method to convert from a dataFrame,
+    * to the HdfsTabularDataset
+    * type which Custom Operators take as input.
+    * This method deletes what is written at the path before writing to it.
+    */
   def createHdfsTabularDatasetLocal(dataFrame: DataFrame, opInfo: Option[OperatorInfo],
-                                    path: String) = {
+                                    path: String): HdfsDelimitedTabularDatasetDefault = {
     sparkUtils.deleteFilePathIfExists(path)
     sparkUtils.saveAsCSV(path, dataFrame, TSVAttributes.defaultCSV, opInfo)
   }
 
   /**
-   * Test the transform with addendum method of an operator written using the DataFrame template.
-   */
-  def runDataFrameThroughDFTemplate(dataFrame: DataFrame, operator: SparkDataFrameJob, params: OperatorParametersMock) = {
+    * Test the transform with addendum method of an operator written using the DataFrame template.
+    */
+  def runDataFrameThroughDFTemplate(dataFrame: DataFrame, operator: SparkDataFrameJob, params: OperatorParametersMock): (DataFrame, Map[String, AnyRef]) = {
     operator.transformWithAddendum(params, dataFrame, sparkUtils, new SimpleOperatorListener)
   }
 
   /**
-   * Use to test the saving and reading of a Operator with HdfsTabularDataset as input and Output.
-   * Will work for plugins written using DataFrame template.
-   */
+    * Use to test the saving and reading of a Operator with HdfsTabularDataset as input and Output.
+    * Will work for plugins written using DataFrame template.
+    */
   def runDataFrameThroughOperator(dataFrame: DataFrame,
                                   operator: SparkIOTypedPluginJob[HdfsTabularDataset, HdfsTabularDataset],
                                   appConf: collection.mutable.Map[String, String] = collection.mutable.Map.empty,
@@ -53,15 +55,15 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
   }
 
   /**
-   * Use to test Custom Operators that use SparkIOTypedPluginJob, but do not use the DataFrame
-   * template. This method runs the onExecution method with using the giving input, operator, and
-   * parameters.
-   * Default appConf is an empty map.
-   */
+    * Use to test Custom Operators that use SparkIOTypedPluginJob, but do not use the DataFrame
+    * template. This method runs the onExecution method with using the giving input, operator, and
+    * parameters.
+    * Default appConf is an empty map.
+    */
   def runInputThroughOperator[I <: IOBase, O <: IOBase](input: I,
                                                         operator: SparkIOTypedPluginJob[I, O], parameters: OperatorParametersMock,
                                                         appConf: collection.mutable.Map[String, String] =
-                                                        collection.mutable.Map.empty) = {
+                                                        collection.mutable.Map.empty): O = {
     operator.onExecution(sc, appConf, input, parameters, new SimpleOperatorListener)
   }
 
@@ -70,15 +72,15 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
                                                               inputParameteres: OperatorParametersMock,
                                                               tabularSchema: Option[TabularSchema],
                                                               appConf: collection.mutable.Map[String, String] =
-                                                              collection.mutable.Map.empty) = {
+                                                              collection.mutable.Map.empty): O = {
     val newParameters = getNewParametersFromGUI(input, operatorGUINode, inputParameteres, tabularSchema)
-     operatorSparkJob.onExecution(sc, appConf, input, newParameters, new SimpleOperatorListener)
+    operatorSparkJob.onExecution(sc, appConf, input, newParameters, new SimpleOperatorListener)
   }
 
   def getNewParametersFromGUI[I <: IOBase, O <: IOBase](input: I, operatorGUINode: OperatorGUINode[I, O],
                                                         inputParameters: OperatorParametersMock,
                                                         tabularSchema: Option[TabularSchema],
-                                                        dataSourceName: String = "dataSource") = {
+                                                        dataSourceName: String = "dataSource"): OperatorParametersMock = {
     val operatorDialogMock = new OperatorDialogMock(inputParameters, input, tabularSchema)
     operatorGUINode.onPlacement(operatorDialogMock,
       OperatorDataSourceManagerMock(dataSourceName),
@@ -89,7 +91,7 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
   def getNewParametersFromDataFrameGui[T <: SparkDataFrameJob](testGUI: SparkDataFrameGUINode[T],
                                                                inputHdfs: HdfsTabularDataset,
                                                                inputParameters: OperatorParametersMock,
-                                                               dataSourceName: String = "dataSource") = {
+                                                               dataSourceName: String = "dataSource"): OperatorParametersMock = {
     val operatorDialogMock = new OperatorDialogMock(inputParameters,
       inputHdfs, Some(inputHdfs.tabularSchema))
     testGUI.onPlacement(operatorDialogMock,
@@ -101,9 +103,9 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
   def runDataFrameThroughEntireDFTemplate[T <: SparkDataFrameJob](operatorGUI: SparkDataFrameGUINode[T],
                                                                   operatorJob: T,
                                                                   inputParams: OperatorParametersMock,
-    dataFrameInput: DataFrame, path: String = "target/testResults") = {
+                                                                  dataFrameInput: DataFrame, path: String = "target/testResults"): (DataFrame, Map[String, AnyRef]) = {
     val inputHdfs = HdfsDelimitedTabularDatasetDefault(
-      path, sparkUtils.convertSparkSQLSchemaToTabularSchema(dataFrameInput.schema), TSVAttributes.defaultCSV, None)
+      path, sparkUtils.convertSparkSQLSchemaToTabularSchema(dataFrameInput.schema), TSVAttributes.defaultCSV)
     val parameters = getNewParametersFromDataFrameGui(operatorGUI, inputHdfs, inputParams)
     runDataFrameThroughDFTemplate(dataFrameInput, operatorJob, parameters)
   }

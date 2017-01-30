@@ -1,5 +1,5 @@
 // Based on EvilSql tools from Sparkling Pandas (Apache Licensed)
-package org.apache.spark.sql;
+package org.apache.spark.sql
 
 import org.apache.spark.sql.hive.HiveSqlTools
 import org.apache.spark.sql.catalyst.expressions._
