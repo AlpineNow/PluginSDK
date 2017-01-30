@@ -1,17 +1,19 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.core.dialog
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 
 /**
- * :: AlpineSdkApi ::
- */
+  * :: AlpineSdkApi ::
+  */
 @AlpineSdkApi
 trait StringBox extends DialogElement {
   def setValue(value: String): Unit
+
   def getValue: String
+
   def getRegex: String
 }

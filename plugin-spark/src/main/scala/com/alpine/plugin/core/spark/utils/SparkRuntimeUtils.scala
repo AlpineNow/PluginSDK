@@ -24,7 +24,7 @@ import scala.util.Try
 @AlpineSdkApi
 class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
 
-  lazy val driverHdfs = FileSystem.get(sc.hadoopConfiguration)
+  lazy val driverHdfs: FileSystem = FileSystem.get(sc.hadoopConfiguration)
 
   // ======================================================================
   // Storage util functions.
@@ -214,7 +214,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
   def saveAsCSV(path: String, dataFrame: DataFrame,
                 tSVAttributes: TSVAttributes,
                 sourceOperatorInfo: Option[OperatorInfo],
-                addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+                addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsDelimitedTabularDatasetDefault = {
     val dataset = saveAsCSVoMetadata(path, dataFrame, tSVAttributes, sourceOperatorInfo, addendum)
     val fileSystem = FileSystem.get(sc.hadoopConfiguration)
     SparkMetadataWriter.writeMetadataForDataset(dataset, fileSystem)
@@ -271,7 +271,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
   def saveAsCSVoMetadata(path: String, dataFrame: DataFrame,
                          tSVAttributes: TSVAttributes,
                          sourceOperatorInfo: Option[OperatorInfo],
-                         addendum: Map[String, AnyRef] = Map[String, AnyRef]()) = {
+                         addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsDelimitedTabularDatasetDefault = {
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
     withDatesChanged.saveAsCsvFile(path, tSVAttributes.toMap)
     new HdfsDelimitedTabularDatasetDefault(
@@ -291,7 +291,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     * @param outputPathStr - the full HDFS path
     * @return
     */
-  def deleteFilePathIfExists(outputPathStr: String) = {
+  def deleteFilePathIfExists(outputPathStr: String): AnyVal = {
     val outputPath = new Path(outputPathStr)
     if (driverHdfs.exists(outputPath)) {
       println("The path exists already.")
@@ -465,7 +465,8 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     }
     else {
       try {
-        validateDateFormatMap(map) //verify that all of the formats in the date format map are correct
+        validateDateFormatMap(map)
+        //verify that all of the formats in the date format map are correct
         val selectExpression = dataFrame.schema.fieldNames.map(colDef =>
           map.get(colDef) match {
             case None => dataFrame(colDef)

@@ -6,10 +6,10 @@ import com.google.gson._
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 
 /**
- * For serializing/deserializing arbitrary interface types.
- * From stackoverflow with some modifications to handle generic
- * interfaces.
- */
+  * For serializing/deserializing arbitrary interface types.
+  * From stackoverflow with some modifications to handle generic
+  * interfaces.
+  */
 class InterfaceAdapter[T](classLoaderUtil: Option[_ <: ClassLoaderUtil] = None)
   extends JsonSerializer[T] with JsonDeserializer[T] {
 
@@ -35,8 +35,8 @@ class InterfaceAdapter[T](classLoaderUtil: Option[_ <: ClassLoaderUtil] = None)
   }
 
   /**
-   * Takes parameter types from the interfaceType (if it is parameterized), and attaches them to the rawType.
-   */
+    * Takes parameter types from the interfaceType (if it is parameterized), and attaches them to the rawType.
+    */
   private def getCompleteType(rawType: Class[_], interfaceType: Type): Type = {
     if (interfaceType.isInstanceOf[ParameterizedType]) {
       ParameterizedTypeImpl.make(rawType, interfaceType.asInstanceOf[ParameterizedType].getActualTypeArguments, null)
@@ -56,13 +56,13 @@ class InterfaceAdapter[T](classLoaderUtil: Option[_ <: ClassLoaderUtil] = None)
 
 object InterfaceAdapter {
 
-  def apply[T](classLoaderUtil: ClassLoaderUtil) = {
+  def apply[T](classLoaderUtil: ClassLoaderUtil): InterfaceAdapter[T] = {
     new InterfaceAdapter[T](Some(classLoaderUtil))
   }
 }
 
 trait ClassLoaderUtil {
-  def getExportTypeClassLoader(className: String) : Option[ClassLoader]
+  def getExportTypeClassLoader(className: String): Option[ClassLoader]
 }
 
 private class ClassSerializer(classLoaderUtil: Option[ClassLoaderUtil]) {

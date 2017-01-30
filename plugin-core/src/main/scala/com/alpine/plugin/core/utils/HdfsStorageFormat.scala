@@ -1,10 +1,11 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.core.utils
 
 /** *
+  *
   * @deprecated
   * Use HdfsStorageFormatTypes which are case classes inheriting from the sealed trait HdfsStorageFormatType instead.
   */
@@ -31,7 +32,7 @@ case class CSV() extends HdfsStorageFormatType {
   override def toString: String = "CSV"
 }
 
-@deprecated("Use TSV ")
+@deprecated("Use CSV")
 case class TSV() extends HdfsStorageFormatType {
   override def toString: String = "CSV"
 }

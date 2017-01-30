@@ -10,22 +10,22 @@ import com.google.gson.stream.{JsonReader, JsonWriter}
 import com.google.gson.{Gson, GsonBuilder}
 
 /**
- * Utility for Json used to serialize / deserialize IOBase and MLModel types.
- */
+  * Utility for Json used to serialize / deserialize IOBase and MLModel types.
+  */
 object JsonUtil {
 
   val typeKey: String = "type"
   val dataKey: String = "data"
   val charset: Charset = Charset.forName("UTF-8")
 
-  def simpleGsonBuilder(classLoaderUtil: Option[ClassLoaderUtil] = None) = {
+  def simpleGsonBuilder(classLoaderUtil: Option[ClassLoaderUtil] = None): GsonBuilder = {
     new GsonBuilder()
       .serializeSpecialFloatingPointValues
       .addDeserializationExclusionStrategy(new SuperClassExclusionStrategy)
       .addSerializationExclusionStrategy(new SuperClassExclusionStrategy())
-      .registerTypeHierarchyAdapter(classOf[Seq[_]], new GsonSeqAdapter())
-      .registerTypeHierarchyAdapter(classOf[Map[_,_]], new GsonMapAdapter())
-      .registerTypeHierarchyAdapter(classOf[Option[_]], new GsonOptionAdapter())
+      .registerTypeHierarchyAdapter(classOf[Seq[_]], GsonSeqAdapter())
+      .registerTypeHierarchyAdapter(classOf[Map[_, _]], new GsonMapAdapter())
+      .registerTypeHierarchyAdapter(classOf[Option[_]], GsonOptionAdapter())
       .registerTypeHierarchyAdapter(classOf[TypeWrapper[_]], new GsonTypeAdapter(classLoaderUtil))
       .registerTypeAdapter(classOf[ColumnDef], new ColumnDefTypeAdapter)
   }

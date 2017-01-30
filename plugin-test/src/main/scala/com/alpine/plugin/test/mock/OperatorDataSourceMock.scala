@@ -22,12 +22,12 @@ class OperatorDataSourceManagerMock(source: DataSourceMock,
     if (name == source.getName)
       source
     else {
-      allSource.find(_.getName.equals(name)).get
+      allSource.find(s => s.getName.equals(name)).get
     }
 }
 
 object OperatorDataSourceManagerMock {
-  def apply(dataSourceName: String) = new OperatorDataSourceManagerMock(new DataSourceMock(dataSourceName))
+  def apply(dataSourceName: String) = new OperatorDataSourceManagerMock(DataSourceMock(dataSourceName))
 }
 
 

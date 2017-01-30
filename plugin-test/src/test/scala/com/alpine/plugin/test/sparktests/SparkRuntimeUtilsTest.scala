@@ -1,13 +1,12 @@
 package com.alpine.plugin.test.sparktests
 
-import java.io.{FileReader, File}
+import java.io.File
 
-import com.alpine.plugin.core.io.{HdfsTabularDataset, OperatorInfo, TSVAttributes}
 import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
+import com.alpine.plugin.core.io.{OperatorInfo, TSVAttributes}
 import com.alpine.plugin.core.spark.utils.{SparkMetadataWriter, SparkRuntimeUtils}
-import com.alpine.plugin.core.utils.{HdfsStorageFormatType,  HdfsStorageFormat}
+import com.alpine.plugin.core.utils.HdfsStorageFormatType
 import com.alpine.plugin.test.utils.TestSparkContexts
-import org.apache.hadoop.fs.{Path, FileSystem}
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 import org.scalatest.FunSuite
@@ -33,7 +32,7 @@ class SparkRuntimeUtilsTest extends FunSuite {
 
   test("Check read dirty data") {
     val f = HdfsDelimitedTabularDatasetDefault(path,
-      sparkUtils.convertSparkSQLSchemaToTabularSchema(carsSchema), TSVAttributes.defaultCSV, None)
+      sparkUtils.convertSparkSQLSchemaToTabularSchema(carsSchema), TSVAttributes.defaultCSV)
     val results = sparkUtils.getDataFrame(f)
     val resultRows = results.collect()
     assert(resultRows.toSet.equals(Set(
@@ -57,15 +56,15 @@ class SparkRuntimeUtilsTest extends FunSuite {
 
     val dataFrame = sqlContext.createDataFrame(sc.parallelize(originalFishData))
 
-    val fishDataOutput = sparkUtils.saveDataFrame(fishPath+"_PipeDelim", dataFrame, HdfsStorageFormatType.TSV,
+    val fishDataOutput = sparkUtils.saveDataFrame(fishPath + "_PipeDelim", dataFrame, HdfsStorageFormatType.TSV,
       overwrite = true, None, Map[String, AnyRef](), pipeAttributes)
     val readData = sparkUtils.getDataFrame(fishDataOutput).collect()
     val nulls = readData.filter(row => row.anyNull)
 
     assert(readData.length == 3)
     assert(nulls.length == 1)
-    val metadata = new File(fishDataOutput.path +"/" + SparkMetadataWriter.METADATA_FILENAME)
-    assert(metadata.isFile(), "Failed to write metadata")
+    val metadata = new File(fishDataOutput.path + "/" + SparkMetadataWriter.METADATA_FILENAME)
+    assert(metadata.isFile, "Failed to write metadata")
     val s: String = Source.fromFile(metadata).getLines().next()
     assert(s.equals(
       "{\"column_names\":[\"color\",\"fish\"],\"column_types\":[\"chararray\",\"chararray\"],\"delimiter\":\"|\",\"escape\":\"\\\\\",\"quote\":\"\\\"\",\"is_first_line_header\":false,\"total_number_of_rows\":-1}"), "Metadata is not correct")
@@ -86,9 +85,9 @@ class SparkRuntimeUtilsTest extends FunSuite {
     assert(m == 1)
   }
 
-  test("Default delim is CSV"){
+  test("Default delim is CSV") {
     val f = HdfsDelimitedTabularDatasetDefault(path,
-      sparkUtils.convertSparkSQLSchemaToTabularSchema(carsSchema), TSVAttributes.defaultCSV, None)
+      sparkUtils.convertSparkSQLSchemaToTabularSchema(carsSchema), TSVAttributes.defaultCSV)
     val results = sparkUtils.getDataFrame(f)
 
     val savedASDF: HdfsDelimitedTabularDatasetDefault = sparkUtils.saveDataFrameDefault(
@@ -97,7 +96,7 @@ class SparkRuntimeUtilsTest extends FunSuite {
       sourceOperatorInfo = Some(OperatorInfo("1", "2"))).asInstanceOf[HdfsDelimitedTabularDatasetDefault]
 
     assert(savedASDF.tsvAttributes == TSVAttributes.defaultCSV, "Save Data Frame default should save data frame as a csv")
-    
+
   }
 
 }

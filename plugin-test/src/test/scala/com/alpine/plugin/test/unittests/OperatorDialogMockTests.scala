@@ -21,7 +21,7 @@ class OperatorDialogMockTests extends FunSuite {
     ColumnDef("play", ColumnType.String)
   ))
 
-  val dataSourceMock = new DataSourceMock("TestDataSource")
+  val dataSourceMock = DataSourceMock("TestDataSource")
   val schemaManagerMockOneTabular = new OperatorSchemaManagerMock()
   val schemaManagerMockNoSchema = new OperatorSchemaManagerMock()
 
@@ -97,7 +97,7 @@ class OperatorDialogMockTests extends FunSuite {
 
     mockDialog.addTabularDatasetColumnDropdownBox("tabularColumn", "label", ColumnFilter.All, "a")
     mockDialog.addTabularDatasetColumnCheckboxes("tabularColumns", "label", ColumnFilter.All, "b")
-    mockDialog.addChorusFileDropdownBox("chorusFile", "label", Set(".afm"), true)
+    mockDialog.addChorusFileDropdownBox("chorusFile", "label", Set(".afm"), isRequired = true)
 
     val p1 = p.getStringValue("tabularColumn")
     assert(p1.equalsIgnoreCase("outlook"))

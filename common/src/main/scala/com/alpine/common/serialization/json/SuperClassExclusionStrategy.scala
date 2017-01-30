@@ -5,9 +5,9 @@ import java.lang.reflect.Field
 import com.google.gson.{FieldAttributes, ExclusionStrategy}
 
 /**
- * Taken from Stackoverflow (and translated to scala).
- * http://stackoverflow.com/questions/16476513/class-a-declares-multiple-json-fields
- */
+  * Taken from Stackoverflow (and translated to scala).
+  * http://stackoverflow.com/questions/16476513/class-a-declares-multiple-json-fields
+  */
 class SuperClassExclusionStrategy extends ExclusionStrategy {
   def shouldSkipClass(arg0: Class[_]): Boolean = {
     false

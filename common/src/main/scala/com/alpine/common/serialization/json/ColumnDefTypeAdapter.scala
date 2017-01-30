@@ -28,6 +28,6 @@ class ColumnDefTypeAdapter extends JsonSerializer[ColumnDef] with JsonDeserializ
     val columnType: JsonElement = jsonObj.get(columnTypeKey)
     val columnTypeFormat: JsonElement = jsonObj.get(columnTypeFormatKey)
     val format = Option.apply(columnTypeFormat).map(_.getAsString)
-    new ColumnDef(columnName.getAsString, new ColumnType.TypeValue(columnType.getAsString, format))
+    ColumnDef(columnName.getAsString, new ColumnType.TypeValue(columnType.getAsString, format))
   }
 }

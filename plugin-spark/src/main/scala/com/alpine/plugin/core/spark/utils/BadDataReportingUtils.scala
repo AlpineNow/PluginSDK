@@ -13,17 +13,17 @@ object BadDataReportingUtils {
   val defaultDataRemovedMessage = "due to null values"
 
   /**
-   * Given a dataFrame, the parameters and an instance of sparkRuntimeUtils, filters out all the
-   * rows containing null values. Writes those rows to a file according to the values of the 'dataToWriteParam'
-   * and the 'badDataPathParam' (provided in the HdfsParameterUtils class). The method returns the data
-   * frame which does not contain nulls as well as a string containing an HTML formatted table with
-   * the information about the what data was removed and if/where it was stored.
-   * The message is generated using the 'AddendumWriter' object in the Plugin Core module.
+    * Given a dataFrame, the parameters and an instance of sparkRuntimeUtils, filters out all the
+    * rows containing null values. Writes those rows to a file according to the values of the 'dataToWriteParam'
+    * and the 'badDataPathParam' (provided in the HdfsParameterUtils class). The method returns the data
+    * frame which does not contain nulls as well as a string containing an HTML formatted table with
+    * the information about the what data was removed and if/where it was stored.
+    * The message is generated using the 'AddendumWriter' object in the Plugin Core module.
     *
     * Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
     * in numeric columns. We use the Drop Malformed option, so in the case of dirty data, the operator will not
     * fail, but will silently remove those rows.
-   */
+    */
   def filterNullDataAndReport(inputDataFrame: DataFrame,
                               operatorParameters: OperatorParameters,
                               sparkRuntimeUtils: SparkRuntimeUtils): (DataFrame, String) = {
@@ -46,7 +46,7 @@ object BadDataReportingUtils {
     * Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
     * in numeric columns. We use the Drop Malformed option, so in the case of dirty data, the operator will not
     * fail, but will silently remove those rows.
-   */
+    */
   def filterNullDataAndReportGeneral(removeRow: Row => Boolean, inputDataFrame: DataFrame,
                                      operatorParameters: OperatorParameters,
                                      sparkRuntimeUtils: SparkRuntimeUtils, dataRemovedDueTo: String): (DataFrame, String) = {
@@ -101,7 +101,7 @@ object BadDataReportingUtils {
     * Dirty Data: Spark SQL cannot process CSV files with dirty data (i.e. String values
     * in numeric columns. We use the Drop Malformed option, so in the case of dirty data, the operator will not
     * fail, but will silently remove those rows.
-   */
+    */
   def reportNullDataAsStringRDD(amountOfDataToWriteParam: Option[Long], badDataPath: String,
                                 inputDataSize: Long, outputSize: Long, badData: Option[RDD[String]],
                                 dataRemovedDueTo: String): String = {
@@ -127,9 +127,9 @@ object BadDataReportingUtils {
 
   /**
     *
-    * @deprecated  Use the method with the signature that includes a value of type
-    *              HDFSStorageFormatType rather than the HdfsStorage format enum. Or handleBadDataAsDataFrameDefault
-   */
+    * @deprecated Use the method with the signature that includes a value of type
+    *             HDFSStorageFormatType rather than the HdfsStorage format enum. Or handleBadDataAsDataFrameDefault
+    */
   @deprecated("Use signature with HdfsStorageFormatType or handelNullDataAsDataFrame")
   def handleBadDataAsDataFrame(amountOfDataToWriteParam: Option[Long], badDataPath: String,
                                inputDataSize: Long,
@@ -172,6 +172,7 @@ object BadDataReportingUtils {
 
   /**
     * If applicable writes bad data as a CSV with default attributes.
+    *
     * @return
     */
   def handleNullDataAsDataFrameDefault[T <: HdfsStorageFormatType](amountOfDataToWriteParam: Option[Long], badDataPath: String,
@@ -181,6 +182,7 @@ object BadDataReportingUtils {
     handleNullDataAsDataFrame(amountOfDataToWriteParam, badDataPath, inputDataSize, outputSize,
       nullData, sparkRuntimeUtils, HdfsStorageFormatType.CSV, overwrite = true, None, dataRemovedDueTo)
   }
+
   /**
     * Helper function which uses the AddendumWriter object to generate a message about the bad data and* get the data, if any, to write to the bad data file.
     * The data removed parameter is the message for what the bad data was removed. It will be of the form
@@ -189,7 +191,7 @@ object BadDataReportingUtils {
     *
     * Note: This method should NOT be called in the event that the user selected the
     * "Do Not Count # of Rows Removed (Faster)" option.
-   */
+    */
   def getNullDataToWriteMessage(amountOfDataToWriteParam: Option[Long], badDataPath: String,
                                 inputDataSize: Long,
                                 outputSize: Long, badData: Option[DataFrame], dataRemovedDueTo: String): (Option[DataFrame], String) = {
@@ -234,15 +236,15 @@ object BadDataReportingUtils {
     * in numeric columns). We use the Drop Malformed option, so in the case of dirty data, the operator will not
     * fail, but will silently remove those rows.
     *
-    * @param removeRow A function from spark.sql.Row to boolean. Should return true if the row is
-    *                  false.
-    * @param inputDataFrame Input data read without null or bad data removed.
+    * @param removeRow        A function from spark.sql.Row to boolean. Should return true if the row is
+    *                         false.
+    * @param inputDataFrame   Input data read without null or bad data removed.
     * @param dataToWriteParam None if write no data. Some(n) if parameter value is write n rows.
     * @return
     */
   def removeDataFromDataFrame(removeRow: Row => Boolean, inputDataFrame: DataFrame,
                               dataToWriteParam: Option[Long] = Some(Long.MaxValue)
-                               ): (DataFrame, Option[DataFrame]) = {
+                             ): (DataFrame, Option[DataFrame]) = {
     //tag each row as true, if it contains null, or false otherwise
     val schema = inputDataFrame.schema
     val sqlContext = inputDataFrame.sqlContext

@@ -7,9 +7,9 @@ package com.alpine.common.serialization.json
 import org.scalatest.FunSuite
 
 /**
- * @author Jenny Thompson
- *         7/16/15
- */
+  * @author Jenny Thompson
+  *         7/16/15
+  */
 class GsonMapAdapterTest extends FunSuite {
 
   test("Should serialize and deserialize map correctly") {

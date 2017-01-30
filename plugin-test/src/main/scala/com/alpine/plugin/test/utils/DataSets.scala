@@ -12,10 +12,10 @@ import org.apache.spark.sql.{Row, DataFrame, SQLContext}
   * to the dataFrames schema
   */
 case class IrisFlower(
-  sepalLength: Double,
-  sepalWidth: Double,
-  petaLlength: Double,
-  petalWidth: Double)
+                       sepalLength: Double,
+                       sepalWidth: Double,
+                       petaLlength: Double,
+                       petalWidth: Double)
 
 
 object IrisFlowerPrediction {
@@ -35,7 +35,7 @@ object IrisFlowerPrediction {
 }
 
 
-object GolfData{
+object GolfData {
   val golfRows: Seq[String] = {
     "sunny,85,85,false,no" ::
       "sunny,80,90,true,no" ::
@@ -55,23 +55,23 @@ object GolfData{
   }
 
   val nullRows = Seq(
-    Row.fromTuple( "overcast", null ,null ,"","yes" ),
-    Row.fromTuple( null, null ,76L ,"","yes" )
+    Row.fromTuple("overcast", null, null, "", "yes"),
+    Row.fromTuple(null, null, 76L, "", "yes")
   )
 
   val zeroRows = Seq(
-    Row.fromTuple( "sunny", 0L, 1L, "false", "yes"),
+    Row.fromTuple("sunny", 0L, 1L, "false", "yes"),
     Row.fromTuple("sunny", 75L, 0L, "false", "yes")
   )
 
 
   val golfSchema = StructType(Array(
-    StructField("outlook", StringType) ,
-    StructField( "humidity", LongType, nullable = true ),
-    StructField( "temperature", LongType, nullable = true),
-    StructField("wind", StringType), StructField( "play" , StringType)))
+    StructField("outlook", StringType),
+    StructField("humidity", LongType, nullable = true),
+    StructField("temperature", LongType, nullable = true),
+    StructField("wind", StringType), StructField("play", StringType)))
 
-  def createGolfDFWithNullRows(sc : SparkContext ) : DataFrame = {
+  def createGolfDFWithNullRows(sc: SparkContext): DataFrame = {
     val sqlContext = new SQLContext(sc)
     val rowRDD = sc.parallelize(nullRows)
     val badData = sqlContext.createDataFrame(rowRDD, golfSchema)
@@ -79,7 +79,7 @@ object GolfData{
     createGolfDF(sc).unionAll(badData)
   }
 
-  def createGolfDFWithNullAndZeroRows(sc : SparkContext) : DataFrame = {
+  def createGolfDFWithNullAndZeroRows(sc: SparkContext): DataFrame = {
     val sqlContext = new SQLContext(sc)
     val rowRDD = sc.parallelize(zeroRows)
     val badData = sqlContext.createDataFrame(rowRDD, golfSchema)
@@ -87,7 +87,7 @@ object GolfData{
     createGolfDFWithNullRows(sc).unionAll(badData)
   }
 
-  def createGolfDF(sc : SparkContext) : DataFrame = {
+  def createGolfDF(sc: SparkContext): DataFrame = {
     val sqlContext = new SQLContext(sc)
     val rows = golfRows.map(s => {
       val split = s.split(",")

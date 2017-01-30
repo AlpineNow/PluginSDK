@@ -16,7 +16,6 @@ object DateTimeUdfs extends Serializable {
     * format specified (in Joda standard) by the column definition.
     * This is now "safe" if the date format cannot be parsed, this will return a null.
     */
-
   def toDateStringViaJoda(format: String): UserDefinedFunction = {
     import org.apache.spark.sql.functions.udf
     udf((timeStamp: java.sql.Timestamp) => {
@@ -32,7 +31,7 @@ object DateTimeUdfs extends Serializable {
             e.isInstanceOf[IllegalArgumentException]) {
             println("Exception converting  date time object to date format string. Could not parse string "
               + Try(timeStamp.toString).getOrElse(" null") + " to Joda date format " + format)
-          }else{
+          } else {
             println(e.getMessage)
           }
           null
@@ -49,17 +48,17 @@ object DateTimeUdfs extends Serializable {
   def nullableStringToTimeStampViaJoda(format: String): UserDefinedFunction = {
     import org.apache.spark.sql.functions.udf
     udf((dateString: String) => {
-      try{
+      try {
         val millis = DateTimeFormat.forPattern(format).parseDateTime(dateString).getMillis
         new Timestamp(millis)
-      }catch {
+      } catch {
         case (e: Throwable) => {
           if (e.isInstanceOf[NullPointerException] ||
             e.isInstanceOf[NumberFormatException] ||
             e.isInstanceOf[IllegalArgumentException]) {
             println("Exception converting date format string to date time object. Could not parse string "
               + dateString + " to Joda date format " + format)
-          }else{
+          } else {
             println(e.getMessage)
           }
           null

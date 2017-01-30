@@ -5,7 +5,7 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType, TSVAttributes, TabularS
 import com.alpine.plugin.core.spark.utils.{SparkRuntimeUtils, SparkSchemaUtils, SparkSqlDateTimeUtils}
 import com.alpine.plugin.test.utils.TestSparkContexts
 import org.apache.spark._
-
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 import org.scalatest.FunSuite
 
@@ -28,7 +28,7 @@ class DateUtilsTest extends FunSuite {
     ColumnDef("RowValue", ColumnType.String),
     ColumnDef("StandardDateType", standardDateType)))
 
-  val dateFormatMap = dateSchema.definedColumns
+  val dateFormatMap: Map[String, String] = dateSchema.definedColumns
     .filter(_.columnType.format.isDefined)
     .map(column => (column.columnName, column.columnType.format.get)).toMap
 
@@ -38,7 +38,7 @@ class DateUtilsTest extends FunSuite {
     StructField("RowValue", StringType),
     StructField("StandardDateType", StringType)))
 
-  val rows = Seq("12/07/1991,6:30,1,1991-12-07",
+  val rows: Seq[Row] = Seq("12/07/1991,6:30,1,1991-12-07",
     "07/07/1991,5:25,2,1991-07-07").map(r => sql.Row.fromSeq(r.split(",")))
 
   test("DateCorrect Method ") {
@@ -111,7 +111,7 @@ class DateUtilsTest extends FunSuite {
     val alpineSchema = schemaUtils.convertSparkSQLSchemaToTabularSchema(myNewSparkSchema)
 
 
-   // assert(alpineSchema.getDefinedColumns.map(_.columnType).sameElements(expectedAlpineTypes))
+    // assert(alpineSchema.getDefinedColumns.map(_.columnType).sameElements(expectedAlpineTypes))
 
     //round trip to Spark Schema
     // when we convert the alpine schema we always return time stamp types
@@ -159,8 +159,8 @@ class DateUtilsTest extends FunSuite {
 
   test("Pig Date Time Format") {
     val schema = TabularSchema(Seq(
-      new ColumnDef("ISOFormat", ColumnType.DateTime("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")),
-      new ColumnDef("DefaultDateFormat", ColumnType.DateTime)))
+      ColumnDef("ISOFormat", ColumnType.DateTime("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")),
+      ColumnDef("DefaultDateFormat", ColumnType.DateTime)))
     val input = HdfsDelimitedTabularDatasetDefault("plugin-test/src/test/resources/PigDates.csv",
       schema, TSVAttributes.defaultCSV)
     val df = sparkUtils.getDataFrame(input)

@@ -1,6 +1,6 @@
 /**
- * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
- */
+  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
+  */
 
 package com.alpine.plugin.core.io
 
@@ -13,14 +13,14 @@ object ColumnType {
   val PIG_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ"
 
   //add another field for format. Which we can use for the date time format
-  case class TypeValue(name: String, format : Option[String]) {
+  case class TypeValue(name: String, format: Option[String]) {
     def this(name: String) {
       this(name, None)
     }
   }
 
 
-  object TypeValue{
+  object TypeValue {
     def apply(name: String): TypeValue = new TypeValue(name)
   }
 
@@ -34,17 +34,16 @@ object ColumnType {
   val DateTime = TypeValue("DateTime", Some(PIG_DATE_FORMAT))
 
   def DateTime(format: String): TypeValue = TypeValue(DateTime.name, Some(format))
-  /**
-   * Map of Strings to Doubles, serialized in standard JSON.
-   */
-  val Sparse = TypeValue("Sparse")
 
+  /**
+    * Map of Strings to Doubles, serialized in standard JSON.
+    */
+  val Sparse = TypeValue("Sparse")
 
 }
 
 /**
- * :: AlpineSdkApi ::
- */
+  * :: AlpineSdkApi ::
+  */
 @AlpineSdkApi
 case class ColumnDef(columnName: String, columnType: ColumnType.TypeValue)
-

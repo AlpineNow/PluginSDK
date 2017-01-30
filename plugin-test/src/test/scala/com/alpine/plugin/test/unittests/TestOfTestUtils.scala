@@ -2,14 +2,15 @@ package com.alpine.plugin.test.unittests
 
 import com.alpine.plugin.core.spark.templates.SparkDataFrameJob
 import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
-import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormat}
+import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormatType}
 import com.alpine.plugin.core.{OperatorListener, OperatorParameters}
 import com.alpine.plugin.test.mock.{OperatorParametersMock, SimpleOperatorListener}
-import com.alpine.plugin.test.utils.{TestSparkContexts, OperatorParameterMockUtil, SimpleAbstractSparkJobSuite}
+import com.alpine.plugin.test.utils.{OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row}
 
 class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
+
   import TestSparkContexts._
 
   test("Test Methods In SimpleAbstractSpark Job Suite with Column Selector Plugin") {
@@ -38,7 +39,7 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
     val expectedRows = Array(Row("Masha"), Row("Ulia"), Row("Nastya"))
 
     OperatorParameterMockUtil.addTabularColumn(parameters, columnParamId, "name")
-    OperatorParameterMockUtil.addHdfsParams(parameters, "ColumnSelector")
+    OperatorParameterMockUtil.addHdfsParamsDefault(parameters, "ColumnSelector")
 
     val result = operator.transform(parameters, dataFrame = dataFrameInput,
       new SparkRuntimeUtils(sc), new SimpleOperatorListener)
@@ -51,9 +52,11 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
     val outputDir = "dir"
     val outputName = "name"
     val operatorParametersMock = new OperatorParametersMock("123", "thing")
-    OperatorParameterMockUtil.addHdfsParams(operatorParametersMock, outputName,
+    OperatorParameterMockUtil.addHdfsParams(
+      operatorParametersMock = operatorParametersMock,
+      outputName = outputName,
       outputDirectory = outputDir,
-      storageFormat = HdfsStorageFormat.TSV,
+      storageFormat = HdfsStorageFormatType.CSV,
       overwrite = false)
 
     //test that we can use HdfsParameterUtils to retrieve all these parameters
@@ -74,7 +77,7 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
     val operatorParametersMock = new OperatorParametersMock("123", "thing")
     OperatorParameterMockUtil.addTabularColumns(operatorParametersMock, "id", "col1", "col2")
     val (_, parameterValue) = operatorParametersMock.getTabularDatasetSelectedColumns("id")
-    assert(parameterValue.sameElements(Array("col1", "col2")))
+    assert(parameterValue.toSet.equals(Set("col1", "col2")))
   }
 
 }

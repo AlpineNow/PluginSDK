@@ -15,12 +15,11 @@ import com.alpine.plugin.core.io._
   * @param tsvAttributes Attributes describing the particular CSV format.
   * @param addendum      Map containing additional information.
   */
-abstract class AbstractHdfsDelimitedTabularDataset(
-  val path: String,
-  val tabularSchema: TabularSchema,
-  val tsvAttributes: TSVAttributes,
-  val addendum: Map[String, AnyRef]
-) extends HdfsDelimitedTabularDataset
+abstract class AbstractHdfsDelimitedTabularDataset(val path: String,
+                                                   val tabularSchema: TabularSchema,
+                                                   val tsvAttributes: TSVAttributes,
+                                                   val addendum: Map[String, AnyRef]
+                                                  ) extends HdfsDelimitedTabularDataset
 
 /**
   * Default implementation of [[HdfsDelimitedTabularDataset]].
@@ -30,12 +29,11 @@ abstract class AbstractHdfsDelimitedTabularDataset(
   * @param tsvAttributes Attributes describing the particular CSV format.
   * @param addendum      Map containing additional information.
   */
-case class HdfsDelimitedTabularDatasetDefault(
-  override val path: String,
-  override val tabularSchema: TabularSchema,
-  override val tsvAttributes: TSVAttributes,
-  override val addendum: Map[String, AnyRef]
-) extends AbstractHdfsDelimitedTabularDataset(path, tabularSchema, tsvAttributes, addendum) {
+case class HdfsDelimitedTabularDatasetDefault(override val path: String,
+                                              override val tabularSchema: TabularSchema,
+                                              override val tsvAttributes: TSVAttributes,
+                                              override val addendum: Map[String, AnyRef]
+                                             ) extends AbstractHdfsDelimitedTabularDataset(path, tabularSchema, tsvAttributes, addendum) {
 
   @deprecated("Use constructor without sourceOperatorInfo.")
   def this(path: String,

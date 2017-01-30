@@ -75,9 +75,9 @@ object OperatorParameterMockUtil {
     addHdfsParams(operatorParametersMock, outputName, defaultOutputDirectory, HdfsStorageFormatType.CSV, overwrite = true)
   }
 
-  def makeArrayList(selections : String*) = {
+  def makeArrayList(selections: String*): util.ArrayList[String] = {
     val arrayList = new util.ArrayList[String]()
-    selections.foreach(arrayList.add(_))
+    selections.foreach(arrayList.add)
     arrayList
   }
 

@@ -6,6 +6,7 @@ import org.scalatest.FunSuite
 
 
 class TimerTest extends FunSuite {
+
   test("Test Convert to Other Units Method ") {
     //testing for 2 hours, 10 minuts, 3 seconds, and 11 milliseconds
     val timeArray = Array(TimeUnit.HOURS,
@@ -22,7 +23,7 @@ class TimerTest extends FunSuite {
       TimeUnit.MINUTES, TimeUnit.SECONDS, TimeUnit.MILLISECONDS), Array[Long](0, 0, 10, 20))
   }
 
-  def compareTimes(timeUnits: Array[TimeUnit], times: Array[Long]) = {
+  def compareTimes(timeUnits: Array[TimeUnit], times: Array[Long]): Unit = {
     val timerObject = new Timer()
     val totalMillies = timeUnits.zip(times).foldLeft(0L) {
       case (acc, (timeUnit, t)) => acc + timeUnit.toMillis(t)
