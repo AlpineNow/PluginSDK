@@ -91,7 +91,7 @@ class SparkRuntimeUtilsTest extends FunSuite {
     val results = sparkUtils.getDataFrame(f)
 
     val savedASDF: HdfsDelimitedTabularDatasetDefault = sparkUtils.saveDataFrameDefault(
-      path = "plugin-test/src/test/resources/TestSavingAsCSV.csv",
+      path = "plugin-test/testing-temp/TestSavingAsCSV",
       dataFrame = results,
       sourceOperatorInfo = Some(OperatorInfo("1", "2"))).asInstanceOf[HdfsDelimitedTabularDatasetDefault]
 
