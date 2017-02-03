@@ -10,4 +10,8 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
   * :: AlpineSdkApi ::
   */
 @AlpineSdkApi
-trait DataSourceDropdownBox extends DropdownBox
+trait DataSourceDropdownBox extends DialogElement {
+  def getAvailableValues: Seq[String]
+
+  def getSelectedValue: String
+}

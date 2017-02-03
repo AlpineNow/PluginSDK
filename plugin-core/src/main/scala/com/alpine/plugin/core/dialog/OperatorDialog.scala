@@ -22,14 +22,14 @@ trait OperatorDialog {
     *
     * @return Get the label.
     */
-  def getLabel(): String
+  def getLabel: String
 
   /**
     * Get an iterator of dialog elements.
     *
     * @return The dialog elements.
     */
-  def getDialogElements(): Seq[DialogElement]
+  def getDialogElements: Seq[DialogElement]
 
   /**
     * Get a dialog element by the Id.
@@ -353,12 +353,29 @@ trait OperatorDialog {
     * This is useful to point to a particular parent's output for a particular
     * use.
     *
+    * Equivalent to [[addParentOperatorDropdownBox(id, label, true)]]
+    *
     * @param id    String id of this input box.
     * @param label The visual label of this input box.
     * @return A parent operator dropdown box.
     */
   def addParentOperatorDropdownBox(id: String,
                                    label: String
+                                  ): ParentOperatorDropdownBox
+
+  /**
+    * Add a drop down box that can be used to select a parent operator name.
+    * This is useful to point to a particular parent's output for a particular
+    * use.
+    *
+    * @param id       String id of this input box.
+    * @param label    The visual label of this input box.
+    * @param required Whether the user is required to select a value for this parameter.
+    * @return A parent operator dropdown box.
+    */
+  def addParentOperatorDropdownBox(id: String,
+                                   label: String,
+                                   required: Boolean
                                   ): ParentOperatorDropdownBox
 
   /**

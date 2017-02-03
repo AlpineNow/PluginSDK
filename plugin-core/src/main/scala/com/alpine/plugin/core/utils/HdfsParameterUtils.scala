@@ -56,7 +56,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
     operatorDialog.addDropdownBox(
       storageFormatParameterID,
       "Storage Format",
-      formats.toSeq,
+      formats,
       defaultFormat.toString
     )
   }
@@ -89,7 +89,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
         outputNameParameterID,
         "Output Name",
         defaultOutputName,
-        ".+", true)
+        ".+", required = true)
     outputName
   }
 
@@ -230,15 +230,15 @@ object HdfsParameterUtils extends OutputParameterUtils {
   }
 
   //bad data Reporting:
-  val badDataReportParameterID = "badData"
-  val badDataReportNO = "Do Not Write Null Rows to File"
-  val badDataReportALL = "Write All Null Rows to File"
-  val DEFAULT_NUMBER_ROWS = 1000
-  val badDataReportNROWS = "Write Up to " + DEFAULT_NUMBER_ROWS + " Null Rows to File"
-  val badDataReportNO_COUNT = "Do Not Write or Count Null Rows (Fastest)"
-  val badDataParameterOptions = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL,
+  val badDataReportParameterID: String = "badData"
+  val badDataReportNO: String = "Do Not Write Null Rows to File"
+  val badDataReportALL: String = "Write All Null Rows to File"
+  val DEFAULT_NUMBER_ROWS: Int = 1000
+  val badDataReportNROWS: String = "Write Up to " + DEFAULT_NUMBER_ROWS + " Null Rows to File"
+  val badDataReportNO_COUNT: String = "Do Not Write or Count Null Rows (Fastest)"
+  val badDataParameterOptions: Seq[String] = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL,
     badDataReportNO_COUNT)
-  val badDataLocation = "_BadData"
+  val badDataLocation: String = "_BadData"
 
   @deprecated("Use addNullDataReportParameter")
   def addBadDataReportParameter(operatorDialog: OperatorDialog): DialogElement = {
@@ -254,7 +254,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
   }
 
   def getNullDataReportParameter(parameters: OperatorParameters): String = {
-    convertParamaterValueFromLegacy(parameters.getStringValue(badDataReportParameterID))
+    convertParameterValueFromLegacy(parameters.getStringValue(badDataReportParameterID))
   }
 
   def getAmountOfBadDataToWrite(parameters: OperatorParameters): Option[Long] = {
@@ -270,7 +270,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
     }
   }
 
-  private def convertParamaterValueFromLegacy(oldValue: String) = {
+  private def convertParameterValueFromLegacy(oldValue: String) = {
     if (badDataParameterOptions.contains(oldValue)) {
       oldValue
     } else
@@ -279,10 +279,9 @@ object HdfsParameterUtils extends OutputParameterUtils {
         case ("Yes") => badDataReportALL
         case ("Partial (1000) Rows") => badDataReportNROWS
         case ("No and Do Not Count Rows Removed (Fastest)") => badDataReportNO_COUNT
-        case (_) => {
+        case (_) =>
           println(" Warning could not find reference for parameter value " + oldValue)
           badDataReportNO
-        }
       }
   }
 
