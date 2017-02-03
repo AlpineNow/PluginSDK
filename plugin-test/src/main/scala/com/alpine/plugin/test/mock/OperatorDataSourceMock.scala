@@ -10,13 +10,13 @@ class OperatorDataSourceManagerMock(source: DataSourceMock,
 
   private var runtimeSource: DataSource = source
 
-  override def getRuntimeDataSource(): DataSource = runtimeSource
+  override def getRuntimeDataSource: DataSource = runtimeSource
 
   override def setRuntimeDataSource(dataSource: DataSource): Unit = {
     runtimeSource = dataSource
   }
 
-  override def getDataSources: Iterator[DataSource] = (source :: allSource).toIterator
+  override def getDataSources: Iterator[DataSource] = getAvailableDataSources.toIterator
 
   override def getDataSource(name: String): DataSource =
     if (name == source.getName)
@@ -24,6 +24,8 @@ class OperatorDataSourceManagerMock(source: DataSourceMock,
     else {
       allSource.find(s => s.getName.equals(name)).get
     }
+
+  override def getAvailableDataSources: Seq[DataSource] = source :: allSource
 }
 
 object OperatorDataSourceManagerMock {

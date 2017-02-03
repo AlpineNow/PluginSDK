@@ -59,6 +59,9 @@ trait AlpinePFAConversionTest extends FunSuite with Matchers {
 
   def testPFA(config: EngineConfig, model: RowModel, testRows: Seq[Seq[Any]]): Unit = {
     val pfaEngine = PFAEngine.fromAst(config).head
+    val outputType = pfaEngine.outputType
+    val pfaOutputNames = outputType.asInstanceOf[AvroRecord].fieldNames
+    assert(model.outputFeatures.map(_.columnName) === pfaOutputNames)
     val alpineTransformer = model.transformer
     testRows.foreach(row => {
       testRow(pfaEngine, alpineTransformer, row)

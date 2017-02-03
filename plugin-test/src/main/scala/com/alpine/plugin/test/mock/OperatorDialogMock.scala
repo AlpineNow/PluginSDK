@@ -92,7 +92,7 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     assert(!group.contains(column), "The selection group id: " + selectionGroupId +
       " already contains the column " + column)
     assert(column.matches(filter.acceptedNameRegex))
-    val t = nameTypeMap.get(column).get
+    val t = nameTypeMap(column)
     assert(filter.accepts(ColumnDef(column, t)), "The column, " + column + " has type " + t.name +
       " which is not one of the accepted type for the column filter which accepts: ")
     selectionGroupIdMap.update(selectionGroupId, group.union(Set(column)))
@@ -102,9 +102,9 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   /**
     * Returns a new mock parameters object with all the parameters that were added to this dialog object.
     */
-  def getNewParameters = operatorParametersMock
+  def getNewParameters: OperatorParametersMock = operatorParametersMock
 
-  override def getLabel(): String = "Label"
+  override def getLabel: String = "Label"
 
   override def addStringBox(id: String, label: String, defaultValue: String, regex: String, width: Int, height: Int): StringBox = {
     addStringBox(id, label, defaultValue, regex, required = true)
@@ -132,9 +132,9 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     addStringBox(id, label, defaultValue, regex, required)
   }
 
-  override def getDialogElement(id: String): DialogElement = dialogElements.get(id).get
+  override def getDialogElement(id: String): DialogElement = dialogElements(id)
 
-  override def getDialogElements(): Seq[DialogElement] = dialogElements.values.toSeq
+  override def getDialogElements: Seq[DialogElement] = dialogElements.values.toSeq
 
   override def addCheckboxes(id: String, label: String, values: Seq[String], defaultSelections: Seq[String], required: Boolean): Checkboxes = {
     val selections: Seq[String] = Try(overrideParams.getStringArrayValue(id)) match {
@@ -196,11 +196,13 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
   override def addDataSourceDropdownBox(id: String, label: String,
                                         dataSourceManager: OperatorDataSourceManager): DataSourceDropdownBox = {
-    val selectedValue = setStringValue(id, dataSourceManager.getRuntimeDataSource().getName)
-    val allSources = dataSourceManager.getDataSources.map(_.getName)
-    class DataSourceDropdownBoxImpl extends
-    SingleElementSelectorMock(allSources.toSeq, selectedValue, id,
-      dataSourceManager.getRuntimeDataSource().getName) with DataSourceDropdownBox {
+    val selectedValue = setStringValue(id, dataSourceManager.getRuntimeDataSource.getName)
+    val allSources = dataSourceManager.getAvailableDataSources.map(_.getName)
+    class DataSourceDropdownBoxImpl extends DefaultDialogElementMock(id, label, true) with DataSourceDropdownBox {
+      override def getAvailableValues: Seq[String] = allSources
+
+      override def getSelectedValue: String = selectedValue
+
     }
 
     val de = new DataSourceDropdownBoxImpl
@@ -334,10 +336,12 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   }
 
   override def addDBTableDropdownBox(id: String, label: String, schemaBoxID: String): DBTableDropdownBox = {
+    val _schemaBoxID = schemaBoxID
+    // Rename to avoid complaint about recursive call.
     // DBTableDropdownBox does not use available values. We need to refactor this to not extend SingleItemSelector.
     class DBTableDropdownBoxImpl extends SingleElementSelectorMock(Seq("mockValue"), "mockValue",
       id, label) with DBTableDropdownBox {
-      override def schemaBoxID: String = schemaBoxID
+      override def schemaBoxID: String = _schemaBoxID
     }
 
     val de = new DBTableDropdownBoxImpl
@@ -345,6 +349,8 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   }
 
   override def addParentOperatorDropdownBox(id: String, label: String): ParentOperatorDropdownBox = null
+
+  override def addParentOperatorDropdownBox(id: String, label: String, required: Boolean): ParentOperatorDropdownBox = null
 
   override def addDoubleBox(id: String, label: String, min: Double, max: Double,
                             inclusiveMin: Boolean, inclusiveMax: Boolean, defaultValue: Double): DoubleBox = {

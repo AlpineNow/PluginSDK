@@ -4,6 +4,8 @@
 package com.alpine.model.export.pfa.modelconverters
 
 import com.alpine.model.export.pfa.avrotypes.AvroTypes
+import com.alpine.model.export.pfa.expressions.NewPFAObject
+import com.alpine.model.export.pfa.utils.ExpressionUtil.outputTypeFromAlpineSchema
 import com.alpine.model.export.pfa.{PFAComponents, PFAConverter}
 import com.alpine.model.pack.preprocess.RenamingModel
 
@@ -14,13 +16,18 @@ class RenamingPFAConverter(model: RenamingModel) extends PFAConverter {
 
   override def toPFAComponents(inputName: String, nameSpaceID: Option[String]): PFAComponents = {
     val inputType = AvroTypes.fromAlpineSchema("input", model.inputFeatures)
-    val outputType = AvroTypes.fromAlpineSchema("output", model.outputFeatures)
+    val outputType = outputTypeFromAlpineSchema(nameSpaceID, model.outputFeatures)
+    val outputContents = (model.outputFeatures zip model.inputFeatures).map {
+      case (outputColumn, inputColumn) => (outputColumn.columnName, inputName + "." + inputColumn.columnName)
+    }.toMap
+
+    val action = NewPFAObject(outputContents, outputType)
 
     PFAComponents(
       input = inputType,
       output = outputType,
       cells = Map.empty,
-      action = Seq(inputName)
+      action = Seq(action)
     )
   }
 }

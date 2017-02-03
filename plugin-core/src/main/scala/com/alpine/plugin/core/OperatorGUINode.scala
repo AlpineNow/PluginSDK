@@ -11,31 +11,6 @@ import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.visualization.{VisualModel, VisualModelFactory}
 
 /**
-  * This is the required return type for the onInputOrParameterChange function
-  * in OperatorGUINode class. If the schemas of connected inputs or selected
-  * parameters are invalid, this should be false, along with an optional message
-  * about why this is false.
-  *
-  * @param isValid true if the operator is valid. false otherwise.
-  * @param msg     An optional message that will show up in the UI. You can return a
-  *                message even if the operator is valid.
-  */
-case class OperatorStatus(
-                           isValid: Boolean,
-                           msg: Option[String]
-                         )
-
-object OperatorStatus {
-  def apply(isValid: Boolean): OperatorStatus = {
-    OperatorStatus(isValid = isValid, msg = None)
-  }
-
-  def apply(isValid: Boolean, msg: String): OperatorStatus = {
-    OperatorStatus(isValid = isValid, msg = Some(msg))
-  }
-}
-
-/**
   * :: AlpineSdkApi ::
   * Control the behavior of the operator GUI node within the editor.
   */
@@ -63,10 +38,9 @@ abstract class OperatorGUINode[I <: IOBase, O <: IOBase] {
     *                                  the nature of the output/input schemas.
     *                              E.g., provide the output schema.
     */
-  def onPlacement(
-                   operatorDialog: OperatorDialog,
-                   operatorDataSourceManager: OperatorDataSourceManager,
-                   operatorSchemaManager: OperatorSchemaManager): Unit
+  def onPlacement(operatorDialog: OperatorDialog,
+                  operatorDataSourceManager: OperatorDataSourceManager,
+                  operatorSchemaManager: OperatorSchemaManager): Unit
 
   /**
     * If there's a change in the inputs/connections or parameters then this
@@ -82,10 +56,9 @@ abstract class OperatorGUINode[I <: IOBase, O <: IOBase] {
     *         The default implementation assumes that the connected inputs and/or
     *         parameters are valid.
     */
-  def onInputOrParameterChange(
-                                inputSchemas: Map[String, TabularSchema],
-                                params: OperatorParameters,
-                                operatorSchemaManager: OperatorSchemaManager): OperatorStatus = {
+  def onInputOrParameterChange(inputSchemas: Map[String, TabularSchema],
+                               params: OperatorParameters,
+                               operatorSchemaManager: OperatorSchemaManager): OperatorStatus = {
     OperatorStatus(isValid = true, msg = None)
   }
 
@@ -99,10 +72,9 @@ abstract class OperatorGUINode[I <: IOBase, O <: IOBase] {
     * @param visualFactory For creating visual models.
     * @return The visual model to be sent to the GUI for visualization.
     */
-  def onOutputVisualization(
-                             params: OperatorParameters,
-                             output: O,
-                             visualFactory: VisualModelFactory): VisualModel = {
+  def onOutputVisualization(params: OperatorParameters,
+                            output: O,
+                            visualFactory: VisualModelFactory): VisualModel = {
     visualFactory.createDefaultVisualModel(output)
   }
 }
