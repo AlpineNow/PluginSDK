@@ -26,6 +26,7 @@ trait SparkSchemaUtils {
       case ColumnType.Float.name => (FloatType, None)
       case ColumnType.Double.name => (DoubleType, None)
       case ColumnType.String.name => (StringType, None)
+      case ColumnType.Boolean.name => (BooleanType, None)
       case ColumnType.DateTime.name =>
         val formatStr = columnType.format match {
           case Some(format: String) => columnType.format
@@ -59,6 +60,7 @@ trait SparkSchemaUtils {
       case DoubleType => ColumnType.Double
       case StringType => ColumnType.String
       case DateType => ColumnType.DateTime
+      case BooleanType => ColumnType.Boolean
       case TimestampType => ColumnType.DateTime
       case _ =>
         throw new UnsupportedOperationException(
@@ -73,13 +75,14 @@ trait SparkSchemaUtils {
     */
   def convertSparkSQLDataTypeToColumnType(structField: StructField): ColumnDef = {
     val name = structField.name
-    val dataType = structField.dataType
+    val dataType: DataType = structField.dataType
     dataType match {
       case IntegerType => ColumnDef(name, ColumnType.Int)
       case LongType => ColumnDef(name, ColumnType.Long)
       case FloatType => ColumnDef(name, ColumnType.Float)
       case DoubleType => ColumnDef(name, ColumnType.Double)
       case StringType => ColumnDef(name, ColumnType.String)
+      case BooleanType => ColumnDef(name, ColumnType.Boolean)
       case DateType =>
         ColumnDef(name, ColumnType.DateTime(
           SparkSqlDateTimeUtils.getDatFormatInfo(structField)

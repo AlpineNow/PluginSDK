@@ -3,7 +3,6 @@ package com.alpine.plugin.test.unittests
 import com.alpine.plugin.core.dialog.{ChorusFile, ColumnFilter}
 import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType, TSVAttributes, TabularSchema}
-import com.alpine.plugin.test.mock.ChorusAPICallerMock.ChorusFileInWorkspaceMock
 import com.alpine.plugin.test.mock._
 import com.alpine.plugin.test.utils.OperatorParameterMockUtil
 import org.scalatest.FunSuite
@@ -62,7 +61,7 @@ class OperatorDialogMockTests extends FunSuite {
 
   test("Chorus workfile selector ") {
     val chorusFile = ChorusFile("workFileName.afm", "workFileId")
-    val workfileInWorkspace = Seq(ChorusFileInWorkspaceMock(chorusFile, None, None))
+    val workfileInWorkspace = Seq(ChorusFileInWorkspaceMock(chorusFile, None))
     inputParams.updateChorusAPICaller(new ChorusAPICallerMock(workfileInWorkspace))
     inputParams.setValue("paramId", chorusFile)
 
@@ -83,7 +82,7 @@ class OperatorDialogMockTests extends FunSuite {
 
   test("Using string array value and string value to return column selectors") {
     val chorusFile = ChorusFile("workFileName.afm", "workFileId")
-    val workfileInWorkspace = Seq(ChorusFileInWorkspaceMock(chorusFile, None, None))
+    val workfileInWorkspace = Seq(ChorusFileInWorkspaceMock(chorusFile, None))
     val p = new OperatorParametersMock("name", "uuid",
       new ChorusAPICallerMock(workfileInWorkspace))
     p.setValue("chorusFile", chorusFile)

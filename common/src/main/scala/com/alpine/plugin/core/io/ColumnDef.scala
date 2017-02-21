@@ -31,6 +31,7 @@ object ColumnType {
   val Long = TypeValue("Long")
   val Float = TypeValue("Float")
   val Double = TypeValue("Double")
+  val Boolean = TypeValue("Boolean")
   val DateTime = TypeValue("DateTime", Some(PIG_DATE_FORMAT))
 
   def DateTime(format: String): TypeValue = TypeValue(DateTime.name, Some(format))

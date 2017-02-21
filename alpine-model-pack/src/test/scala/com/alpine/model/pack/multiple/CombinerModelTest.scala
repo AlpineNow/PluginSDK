@@ -28,7 +28,7 @@ class CombinerModelTest extends FunSuite {
   }
 
   test("Serial UID should be stable") {
-    assert(ObjectStreamClass.lookup(classOf[CombinerModel]).getSerialVersionUID === -8313917981243536138L)
+    assert(ObjectStreamClass.lookup(classOf[CombinerModel]).getSerialVersionUID === 7750323944753065824L)
   }
 
   test("Streamlining should work") {

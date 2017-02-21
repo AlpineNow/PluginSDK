@@ -40,7 +40,7 @@ trait OperatorDataSourceManager {
   /**
     * Set the DataSource that will be used at runtime (there can only be one)
     *
-    * @param dataSource
+    * @param dataSource The DataSource to use at runtime
     */
   def setRuntimeDataSource(dataSource: DataSource): Unit
 }

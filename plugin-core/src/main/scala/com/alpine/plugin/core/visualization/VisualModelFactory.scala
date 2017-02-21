@@ -7,7 +7,7 @@ package com.alpine.plugin.core.visualization
 import java.util.Locale
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
-import com.alpine.plugin.core.io.{DBTable, IOBase, TabularDataset}
+import com.alpine.plugin.core.io.{DBTable, HdfsFile, IOBase, TabularDataset}
 
 /**
   * :: AlpineSdkApi ::
@@ -46,11 +46,32 @@ trait VisualModelFactory {
   def createTabularDatasetVisualization(dataset: TabularDataset): VisualModel
 
   /**
+    * Gets the first few lines of the HdfsFile as plain text.
+    *
+    * @param hdfsFile The file to preview.
+    * @return The first few lines of the file as a visual model.
+    */
+  def createPlainTextVisualModel(hdfsFile: HdfsFile): TextVisualModel
+
+  /**
    * Create a visualization for a DB table.
+    * This pulls a preview of the DB table, for display in the results console.
+    * Equivalent to [[createDBTableVisualization(dbTable.schemaName, dbTable.tableName)]]
+    *
    * @param dbTable A DB table that we want to visualize.
    * @return A visualization of the sample.
    */
   def createDBTableVisualization(dbTable: DBTable): VisualModel
+
+  /**
+    * Create a visualization for a DB table.
+    * This pulls a preview of the DB table, for display in the results console.
+    *
+    * @param schemaName The schema name of the table to preview.
+    * @param tableName  The schema name of the table to preview.
+    * @return A visualization of a sample of the table.
+    */
+  def createDBTableVisualization(schemaName: String, tableName: String): VisualModel
 
   /**
    * Create a visualization of an HTML text element.

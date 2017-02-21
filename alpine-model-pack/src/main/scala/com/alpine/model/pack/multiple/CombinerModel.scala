@@ -23,7 +23,7 @@ import scala.collection.mutable.ListBuffer
   * the output features are the concatenation of the output features of the sub-models
   * (with string suffices added to ensure uniqueness of names).
   */
-@SerialVersionUID(-8313917981243536138L)
+@SerialVersionUID(7750323944753065824L)
 case class CombinerModel(models: Seq[ModelWithID], override val identifier: String = "")
   extends RowModel with PFAConvertible {
 

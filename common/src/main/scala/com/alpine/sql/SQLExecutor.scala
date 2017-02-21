@@ -4,7 +4,9 @@
 
 package com.alpine.sql
 
-import java.sql.{Connection, ResultSet}
+import java.sql.{Connection, ResultSet, SQLException}
+
+import com.alpine.plugin.core.io.ColumnDef
 
 /**
   * Created by Paul Chang 2016-07-12 (6.1 release)
@@ -77,7 +79,7 @@ trait SQLExecutor {
     *
     * @param tableName name of the table to be dropped
     */
-  def ddlDropTableIfExists(tableName: String)
+  def ddlDropTableIfExists(tableName: String): Unit
 
   /**
     * Drops table if it exists, optionally cascade drop all dependent objects
@@ -89,7 +91,7 @@ trait SQLExecutor {
     * @param tableName   name of the table to be dropped
     * @param cascadeFlag if true, drop any dependent objects as well (not supported on all databases)
     */
-  def ddlDropTableIfExists(tableName: String, cascadeFlag: Boolean)
+  def ddlDropTableIfExists(tableName: String, cascadeFlag: Boolean): Unit
 
   /**
     * Drops view if it exists
@@ -98,7 +100,7 @@ trait SQLExecutor {
     *
     * @param viewName name of the view to be dropped
     */
-  def ddlDropViewIfExists(viewName: String)
+  def ddlDropViewIfExists(viewName: String): Unit
 
   /**
     * Drops view if it exists, optionally cascade drop all dependent objects
@@ -110,7 +112,7 @@ trait SQLExecutor {
     * @param viewName    name of the view to be dropped
     * @param cascadeFlag if true, drop any dependent objects as well (not supported on all databases)
     */
-  def ddlDropViewIfExists(viewName: String, cascadeFlag: Boolean)
+  def ddlDropViewIfExists(viewName: String, cascadeFlag: Boolean): Unit
 
   /**
     * Drops table or view if it exists.
@@ -121,7 +123,7 @@ trait SQLExecutor {
     *
     * @param tableOrViewName name of the table or view to be dropped
     */
-  def ddlDropTableOrViewIfExists(tableOrViewName: String)
+  def ddlDropTableOrViewIfExists(tableOrViewName: String): Unit
 
   /**
     * Drops table or view if it exists, optionally cascade drop all dependent objects.
@@ -136,7 +138,7 @@ trait SQLExecutor {
     * @param tableOrViewName name of the table or view to be dropped
     * @param cascadeFlag     if true, drop any dependent objects as well (not supported on all databases)
     */
-  def ddlDropTableOrViewIfExists(tableOrViewName: String, cascadeFlag: Boolean)
+  def ddlDropTableOrViewIfExists(tableOrViewName: String, cascadeFlag: Boolean): Unit
 
   /**
     * Generates a table based on a SELECT query from the specified table and column list.
@@ -150,7 +152,7 @@ trait SQLExecutor {
     * @param sourceTable      name of source table from which we SELECT
     * @param destinationTable name of destination table to be created from SELECT query
     */
-  def ddlCreateTableAsSelect(columns: String, sourceTable: String, destinationTable: String)
+  def ddlCreateTableAsSelect(columns: String, sourceTable: String, destinationTable: String): Unit
 
   /**
     * Generates a table based on a SELECT query from the specified table, column list, and where clause.
@@ -169,7 +171,7 @@ trait SQLExecutor {
     * @param destinationTable name of destination table to be created from SELECT query
     * @param whereClause      where clause of the SELECT query, including the literal "WHERE" keyword
     */
-  def ddlCreateTableAsSelect(columns: String, sourceTable: String, destinationTable: String, whereClause: String)
+  def ddlCreateTableAsSelect(columns: String, sourceTable: String, destinationTable: String, whereClause: String): Unit
 
   /**
     * Generates a table based on a given SELECT query, not necessarily from any particular table.
@@ -188,7 +190,7 @@ trait SQLExecutor {
     * @param selectQuery      query (not necessary SELECT) to be used for CREATE TABLE
     * @param destinationTable name of destination table to be created from SELECT query
     */
-  def ddlCreateTableAsSelect(selectQuery: String, destinationTable: String)
+  def ddlCreateTableAsSelect(selectQuery: String, destinationTable: String): Unit
 
   /**
     * Generates a view based on a SELECT query from the specified table and column list.
@@ -203,7 +205,7 @@ trait SQLExecutor {
     * @param sourceTable     name of source table from which we SELECT
     * @param destinationView name of destination view to be created from SELECT query
 		*/
-  def ddlCreateViewAsSelect(columns: String, sourceTable: String, destinationView: String)
+  def ddlCreateViewAsSelect(columns: String, sourceTable: String, destinationView: String): Unit
 
   /**
     * Generates a view based on a SELECT query from the specified table, column list, and where clause.
@@ -223,7 +225,7 @@ trait SQLExecutor {
     * @param destinationView name of destination view to be created from SELECT query
     * @param whereClause      where clause of the SELECT query, including the literal "WHERE" keyword
     */
-  def ddlCreateViewAsSelect(columns: String, sourceTable: String, destinationView: String, whereClause: String)
+  def ddlCreateViewAsSelect(columns: String, sourceTable: String, destinationView: String, whereClause: String): Unit
 
   /**
     * Generates a view based on a given SELECT query, not necessarily from any particular table.
@@ -239,7 +241,7 @@ trait SQLExecutor {
     * @param selectQuery     query (not necessary SELECT) to be used for CREATE VIEW
     * @param destinationView name of destination table to be created from SELECT query
     */
-  def ddlCreateViewAsSelect(selectQuery: String, destinationView: String)
+  def ddlCreateViewAsSelect(selectQuery: String, destinationView: String): Unit
 
   /**
     * Generates a table or view based on a SELECT query from an existing table and column list.
@@ -255,7 +257,7 @@ trait SQLExecutor {
     * @param destinationTableOrView name of destination table or view to be created from SELECT query
     * @param isView                 true if we are generating a view, false if we are generating a table
     */
-  def ddlCreateTableOrViewAsSelect(columns: String, sourceTable: String, destinationTableOrView: String, isView: Boolean)
+  def ddlCreateTableOrViewAsSelect(columns: String, sourceTable: String, destinationTableOrView: String, isView: Boolean): Unit
 
   /**
     * Generates a table or view based on a SELECT query from an existing table, column list, and where clause.
@@ -299,6 +301,15 @@ trait SQLExecutor {
     */
   def ddlCreateTableOrViewAsSelect(selectQuery: String, destinationTableOrView: String, isView: Boolean)
 
+  /**
+    * Generates the ColumnDef representations for columns of the given object.
+    *
+    * @param objectName The fully quoted object name.
+    * @throws java.sql.SQLException Throws exception if the object does not exist.
+    * @return The ColumnDefs of the object.
+    */
+  @throws(classOf[SQLException])
+  def getColumnDefs(objectName: String): Seq[ColumnDef]
   /**
     * Checks if table or view exists, and if so, returns true.
     *

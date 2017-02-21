@@ -101,6 +101,10 @@ object OperatorMetadata {
       Some(OperatorIcon(iconNamePrefix, StarBurst))
     }
   }
+
+  val alpineHelpLinkPrefix: String = "https://alpine.atlassian.net/wiki/display/V6/"
+
+  def alpineHelpLink(helpLinkSuffix: String): String = alpineHelpLinkPrefix + helpLinkSuffix
 }
 
 object OperatorCategories {
@@ -125,7 +129,7 @@ object OperatorCategories {
     */
   val EXPLORE = "Explore"
 
-  val LOAD_DATA = "Load"
+  val LOAD_DATA = "Load Data"
 
   /**
     * Use for predictors and evaluator operators which
