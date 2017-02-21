@@ -236,8 +236,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
   val DEFAULT_NUMBER_ROWS: Int = 1000
   val badDataReportNROWS: String = "Write Up to " + DEFAULT_NUMBER_ROWS + " Null Rows to File"
   val badDataReportNO_COUNT: String = "Do Not Write or Count Null Rows (Fastest)"
-  val badDataParameterOptions: Seq[String] = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL,
-    badDataReportNO_COUNT)
+  val badDataParameterOptions: Seq[String] = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL, badDataReportNO_COUNT)
   val badDataLocation: String = "_BadData"
 
   @deprecated("Use addNullDataReportParameter")

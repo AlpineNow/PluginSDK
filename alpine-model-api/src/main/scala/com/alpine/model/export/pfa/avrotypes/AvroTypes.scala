@@ -38,6 +38,7 @@ object AvroTypes {
       case ColumnType.Int => int
       case ColumnType.Long => long
       case ColumnType.Double => double
+      case ColumnType.Boolean => boolean
       case ColumnType.Float => float
       case ColumnType.Sparse => MapType(double)
       case ColumnType.DateTime => ???

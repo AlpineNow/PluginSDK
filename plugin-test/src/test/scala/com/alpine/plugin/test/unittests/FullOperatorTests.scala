@@ -10,8 +10,7 @@ import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
 import com.alpine.plugin.core.utils.{AddendumWriter, HdfsParameterUtils}
 import com.alpine.plugin.core.visualization._
 import com.alpine.plugin.core.{OperatorGUINode, OperatorListener, OperatorParameters}
-import com.alpine.plugin.test.mock.ChorusAPICallerMock.ChorusFileInWorkspaceMock
-import com.alpine.plugin.test.mock.{ChorusAPICallerMock, OperatorParametersMock, VisualModelFactoryMock}
+import com.alpine.plugin.test.mock.{ChorusAPICallerMock, ChorusFileInWorkspaceMock, OperatorParametersMock, VisualModelFactoryMock}
 import com.alpine.plugin.test.utils.{GolfData, OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.types._
@@ -216,10 +215,8 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
     val workfile = ChorusFile("PigDates", "1")
     //These are the workfile that the chorus api caller will have access to.
     //They will also be used for validation in the mock operator dialog class
-    val workfilesInWorkspace =
-    Seq(ChorusFileInWorkspaceMock(workfile, Some(workFilePath), None))
-    val inputChorusAPICaller =
-      new ChorusAPICallerMock(workfilesInWorkspace)
+    val workfilesInWorkspace = Seq(ChorusFileInWorkspaceMock(workfile, Some(workFilePath)))
+    val inputChorusAPICaller = new ChorusAPICallerMock(workfilesInWorkspace)
 
     val inputParams = new OperatorParametersMock("test operator", "uuid", inputChorusAPICaller)
     inputParams.setValue("addChorusFileDropdownBox", workfile)

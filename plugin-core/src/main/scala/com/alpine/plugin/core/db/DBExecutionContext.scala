@@ -6,8 +6,9 @@ package com.alpine.plugin.core.db
 
 import java.sql.Connection
 
-import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.ExecutionContext
+import com.alpine.plugin.core.annotation.AlpineSdkApi
+import com.alpine.plugin.core.visualization.DBVisualModelHelper
 import com.alpine.sql.{SQLExecutor, SQLGenerator}
 
 /**
@@ -40,4 +41,6 @@ trait DBExecutionContext extends ExecutionContext {
   def getSQLGenerator: SQLGenerator
 
   def getSQLExecutor: SQLExecutor
+
+  def visualModelHelper: DBVisualModelHelper
 }

@@ -1,11 +1,9 @@
 package com.alpine.plugin.test.mock
 
-import java.io.{FileInputStream, File, InputStream}
-import java.util
+import java.io.{File, FileInputStream, InputStream}
 
-import com.alpine.plugin.core.dialog.{PythonNotebook, ChorusFile}
+import com.alpine.plugin.core.dialog.{ChorusFile, PythonNotebook}
 import com.alpine.plugin.core.utils.ChorusAPICaller
-import com.alpine.plugin.test.mock.ChorusAPICallerMock.ChorusFileInWorkspaceMock
 
 import scala.util.{Failure, Try}
 
@@ -32,15 +30,6 @@ class ChorusAPICallerMock(val workfiles: Seq[ChorusFileInWorkspaceMock]) extends
   }
 
   /**
-    * Returns the permission for the work file as a list.
-    * Will throw an exception if the key does not exist in the map
-    */
-  override def getWorkFilePermissions(workfileID: String): util.List[String] = {
-    val mockWf = this.workfileMap(workfileID)
-    mockWf.workFilePermissions.get
-  }
-
-  /**
     * Runs a workfile and returns the workfile object if successful
     * Note: this will not fail if the workfile exists but cannot be run (e.g. if the notebook server
     * is down, the query may appear successful).
@@ -61,8 +50,6 @@ object ChorusAPICallerMock {
     new ChorusAPICallerMock(emptyWorkfiles)
   }
 
-
-  case class ChorusFileInWorkspaceMock(wf: ChorusFile,
-                                       workfilePath: Option[String], workFilePermissions: Option[java.util.List[String]])
-
 }
+
+case class ChorusFileInWorkspaceMock(wf: ChorusFile, workfilePath: Option[String])

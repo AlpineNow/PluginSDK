@@ -5,12 +5,14 @@
 package com.alpine.plugin.core.spark
 
 import java.io.{InputStream, OutputStream}
+
 import org.apache.hadoop.fs.FileSystem
 
 import scala.concurrent.Future
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.{ExecutionContext, OperatorListener, OperatorParameters}
 import com.alpine.plugin.core.io.IOBase
+import com.alpine.plugin.core.visualization.HDFSVisualModelHelper
 
 /**
   * :: AlpineSdkApi ::
@@ -105,4 +107,6 @@ trait SparkExecutionContext extends ExecutionContext {
     * @return true if it succeeds, false otherwise.
     */
   def mkdir(path: String): Boolean
+
+  def visualModelHelper: HDFSVisualModelHelper
 }
