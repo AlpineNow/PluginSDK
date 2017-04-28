@@ -113,4 +113,8 @@ class SimpleSQLGenerator extends SQLGenerator {
       s"""DROP VIEW IF EXISTS $viewName CASCADE"""
     }
   }
+
+  override def getCreateTempTableAsSelectSQL(selectQuery: String, destinationTable: String): String = {
+    s"""CREATE TEMP TABLE $destinationTable AS ($selectQuery)"""
+  }
 }

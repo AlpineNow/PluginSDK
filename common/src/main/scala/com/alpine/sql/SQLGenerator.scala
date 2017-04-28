@@ -353,4 +353,24 @@ trait SQLGenerator {
 	def doubleToString(d: Double): String = {
 		d.toString
 	}
+
+	/**
+		* Returns a SQL DDL statement to generate a temporary table based on a SELECT query,
+		* not necessarily from any particular table. The entire SELECT query must be supplied
+		* to generate something like "CREATE TEMP TABLE destinationTable AS selectQuery".
+		* This method is useful for calls to UDFs or stored procedures that might be database-specific
+		* and don't conform to selecting columns from a source table.
+		* <p>
+		* NOTE: Currently, this works only on certain databases that support temporary tables.
+		* <p>
+		* Table name should be fully qualified and delimited, if necessary (i.e. "schemaname"."tablename").
+		* <p>
+		* selectQuery is not necessarily a SELECT query, but any query that can feed the CREATE TABLE statement.
+		*
+		* @param selectQuery      query (not necessary SELECT) to be used for CREATE TABLE
+		* @param destinationTable name of destination table to be created from SELECT query
+		* @return generated SQL statement
+		*/
+	def getCreateTempTableAsSelectSQL(selectQuery: String, destinationTable: String): String
+
 }
