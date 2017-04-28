@@ -11,11 +11,5 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
   */
 @AlpineSdkApi
 trait Checkboxes extends DialogElement {
-  def getValues: Iterator[String]
 
-  def addValue(value: String): Unit
-
-  def setCheckboxSelection(value: String, selected: Boolean): Unit
-
-  def getSelectedValues: Iterator[String]
 }

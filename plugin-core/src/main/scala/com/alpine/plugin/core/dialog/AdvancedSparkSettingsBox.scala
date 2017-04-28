@@ -3,18 +3,7 @@ package com.alpine.plugin.core.dialog
 /**
   * The advanced spark settings window
   */
-trait AdvancedSparkSettingsBox extends DialogElement {
-
-  def setAvailableValues(options: Iterator[String]): Unit
-
-  def setAvailableValues(options: Map[String, String]): Unit
-
-  def setParameters(options: Iterator[SparkParameter]): Unit
-
-  def addSetting(name: String, value: String): Unit
-
-  def getSetting(settingId: String): String
-}
+trait AdvancedSparkSettingsBox extends DialogElement
 
 case class SparkParameter(name: String,
                           displayName: String,

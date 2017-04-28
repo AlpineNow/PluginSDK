@@ -10,10 +10,4 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
   * :: AlpineSdkApi ::
   */
 @AlpineSdkApi
-trait HdfsFileSelector extends DialogElement {
-  def isDirectorySelector: Boolean
-
-  def getSelectedPath: String
-
-  def setSelectedPath(path: String): Unit
-}
+trait HdfsFileSelector extends DialogElement

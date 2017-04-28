@@ -4,7 +4,8 @@
  */
 package com.alpine.metadata
 
-import com.alpine.plugin.core.io.ColumnDef
+import com.alpine.plugin.core.io.{ColumnDef, IOMetadata}
+import com.alpine.util.FeatureUtil
 
 /**
   * We need this information to figure out the output structure of the Predictor,
@@ -22,3 +23,59 @@ case class DetailedTransformationSchema(inputFeatures: Seq[ColumnDef],
                                         override val outputFeatures: Seq[ColumnDef],
                                         override val identifier: String = "")
   extends TransformationSchema(outputFeatures, identifier)
+
+trait RowModelMetadata extends IOMetadata {
+  def transformationSchema: TransformationSchema
+
+  def sqlScorable: Boolean
+
+  def sqlOutputFeatures: Seq[ColumnDef]
+
+}
+
+case class RowModelMetadataDefault(transformationSchema: TransformationSchema,
+                                   sqlScorable: Boolean,
+                                   sqlOutputFeatures: Seq[ColumnDef]
+                                  ) extends RowModelMetadata
+
+class ClassificationModelMetadata(inputFeatures: Option[Seq[ColumnDef]],
+                                  identifier: String,
+                                  val sqlScorable: Boolean,
+                                  val dependentColumn: Option[ColumnDef]) extends RowModelMetadata {
+  override def transformationSchema: TransformationSchema = {
+    inputFeatures match {
+      case Some(f) => DetailedTransformationSchema(inputFeatures = f, outputFeatures = FeatureUtil.classificationOutputFeatures, identifier)
+      case None => new TransformationSchema(FeatureUtil.classificationOutputFeatures, identifier)
+    }
+  }
+
+  override def sqlOutputFeatures: Seq[ColumnDef] = FeatureUtil.simpleModelOutputFeatures
+}
+
+class RegressionModelMetadata(inputFeatures: Option[Seq[ColumnDef]],
+                              identifier: String,
+                              val sqlScorable: Boolean,
+                              val dependentColumn: Option[ColumnDef]) extends RowModelMetadata {
+  override def transformationSchema: TransformationSchema = {
+    inputFeatures match {
+      case Some(f) => DetailedTransformationSchema(inputFeatures = f, outputFeatures = FeatureUtil.regressionOutputFeatures, identifier)
+      case None => new TransformationSchema(FeatureUtil.regressionOutputFeatures, identifier)
+    }
+  }
+
+  override def sqlOutputFeatures: Seq[ColumnDef] = FeatureUtil.regressionOutputFeatures
+}
+
+class ClusteringModelMetadata(inputFeatures: Option[Seq[ColumnDef]],
+                              identifier: String,
+                              val sqlScorable: Boolean) extends RowModelMetadata {
+  override def transformationSchema: TransformationSchema = {
+    inputFeatures match {
+      case Some(f) => DetailedTransformationSchema(inputFeatures = f, outputFeatures = FeatureUtil.classificationOutputFeatures, identifier)
+      case None => new TransformationSchema(FeatureUtil.classificationOutputFeatures, identifier)
+    }
+  }
+
+  override def sqlOutputFeatures: Seq[ColumnDef] = FeatureUtil.simpleModelOutputFeatures
+
+}

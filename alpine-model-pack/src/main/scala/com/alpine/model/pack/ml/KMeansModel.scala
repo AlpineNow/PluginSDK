@@ -100,7 +100,7 @@ class KMeansSQLTransformer(val model: KMeansModel, sqlGenerator: SQLGenerator) e
     val clusterExpressions = model.clusters.map(cluster => {
       val s = (cluster.centroid zip inputColumnNames).map {
         case (coordinate, name) =>
-          val diff = coordinate + " - " + name.escape(sqlGenerator)
+          val diff = sqlGenerator.doubleToString(coordinate) + " - " + name.escape(sqlGenerator)
           "(" + diff + ") * (" + diff + ")"
       }.mkString(" + ")
       // Use SQRT instead of POWER(s, 0.5) doesn't work for s = 0 (uses log in the implementation).

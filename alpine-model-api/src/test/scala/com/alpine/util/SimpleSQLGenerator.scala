@@ -92,9 +92,9 @@ class SimpleSQLGenerator extends SQLGenerator {
 
   override def getCreateTableOrViewAsSelectSQL(selectQuery: String, destinationTable: String, isView: Boolean): String = {
     if (isView) {
-      s"""CREATE TABLE $destinationTable AS ($selectQuery)"""
-    } else {
       s"""CREATE VIEW $destinationTable AS ($selectQuery)"""
+    } else {
+      s"""CREATE TABLE $destinationTable AS ($selectQuery)"""
     }
   }
 

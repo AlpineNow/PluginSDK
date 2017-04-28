@@ -10,14 +10,4 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
   * :: AlpineSdkApi ::
   */
 @AlpineSdkApi
-trait DoubleBox extends DialogElement {
-  def getValue: Double
-
-  def getMin: Double
-
-  def getMax: Double
-
-  def getInclusiveMin: Boolean
-
-  def getInclusiveMax: Boolean
-}
+trait DoubleBox extends DialogElement

@@ -60,10 +60,8 @@ class OperatorDialogMockTests extends FunSuite {
   }
 
   test("Chorus workfile selector ") {
-    val chorusFile = ChorusFile("workFileName.afm", "workFileId")
-    val workfileInWorkspace = Seq(ChorusFileInWorkspaceMock(chorusFile, None))
-    inputParams.updateChorusAPICaller(new ChorusAPICallerMock(workfileInWorkspace))
-    inputParams.setValue("paramId", chorusFile)
+    val chorusFile = ChorusFile("workFileName.afm", "17")
+    inputParams.setChorusFile("paramId", chorusFile)
 
     val mockDialog = new OperatorDialogMock(
       overrideParams = inputParams,
@@ -73,19 +71,11 @@ class OperatorDialogMockTests extends FunSuite {
     mockDialog.addChorusFileDropdownBox("paramId", "ChorusFileDropDown", Set(".afm"), isRequired = true)
     val newParams = mockDialog.getNewParameters
     val paramValue = newParams.getChorusFile("paramId")
-    assert(paramValue.equals(chorusFile))
-
-    val mockDialogWOMap = new OperatorDialogMock(inputParams.updateChorusAPICaller(ChorusAPICallerMock()), hdfIOInput, None)
-    assert(Try(mockDialogWOMap.addChorusFileDropdownBox("paramId", "ChorusFileDropDown",
-      Set(".afm"), isRequired = true)).isFailure)
+    assert(paramValue.get === chorusFile)
   }
 
   test("Using string array value and string value to return column selectors") {
-    val chorusFile = ChorusFile("workFileName.afm", "workFileId")
-    val workfileInWorkspace = Seq(ChorusFileInWorkspaceMock(chorusFile, None))
-    val p = new OperatorParametersMock("name", "uuid",
-      new ChorusAPICallerMock(workfileInWorkspace))
-    p.setValue("chorusFile", chorusFile)
+    val p = new OperatorParametersMock("name", "uuid")
     OperatorParameterMockUtil.addTabularColumns(p, "tabularColumns", "outlook", "play")
     OperatorParameterMockUtil.addTabularColumn(p, "tabularColumn", "outlook")
 
@@ -96,12 +86,9 @@ class OperatorDialogMockTests extends FunSuite {
 
     mockDialog.addTabularDatasetColumnDropdownBox("tabularColumn", "label", ColumnFilter.All, "a")
     mockDialog.addTabularDatasetColumnCheckboxes("tabularColumns", "label", ColumnFilter.All, "b")
-    mockDialog.addChorusFileDropdownBox("chorusFile", "label", Set(".afm"), isRequired = true)
 
     val p1 = p.getStringValue("tabularColumn")
-    assert(p1.equalsIgnoreCase("outlook"))
-    val p2 = p.getStringValue("chorusFile")
-    assert(p2.equalsIgnoreCase("workFileId"))
+    assert(p1 === "outlook")
     val p3 = p.getStringArrayValue("tabularColumns")
     assert(p3.contains("outlook") && p3.contains("play"))
 

@@ -2,7 +2,9 @@ package com.alpine.plugin.core.utils
 
 import java.io.{File, InputStream}
 
-import com.alpine.plugin.core.dialog.{ChorusFile, PythonNotebook}
+import com.alpine.plugin.core.dialog.ChorusFile
+import com.alpine.plugin.core.{NotebookDetails, PythonNotebookExecution, PythonNotebook}
+
 
 import scala.util.Try
 
@@ -11,14 +13,46 @@ import scala.util.Try
   */
 abstract class ChorusAPICaller {
 
+
+  def getNotebookDetails(notebookID: String): Try[NotebookDetails]
+
   /**
-    * If the workfile can be downloaded, returns an input stream containing the text of the file.
-    * Warning, afm files cannot be downloaded with the chorus api.
+    * Gets the workfile from Chorus as an input stream, applies the read function,
+    * closes the input stream and then returns the result of the read function.
     *
-    * @param workFileId - Id of the workfile to retrieve
-    * @return Try(input stream of text of workfile)
+    * @param workFileID   Id of the file to download.
+    * @param readFunction The function to apply to the file input stream.
+    * @tparam R The return type of the read function.
+    * @return The output of the readFunction applied to the downloaded file input stream.
     */
-  def getWorkfileAsInputStream(workFileId: String): Try[InputStream]
+  def readWorkfileInputStream[R](workFileID: String, readFunction: InputStream => R): Try[R]
+
+  /**
+    * Equivalent to [[readWorkfileInputStream(workfile.id, readFunction)]]
+    *
+    * @param workfile     The file to download.
+    * @param readFunction The function to apply to the file input stream.
+    * @tparam R The return type of the read function.
+    * @return The output of the readFunction applied to the downloaded file input stream.
+    */
+  def readWorkfileInputStream[R](workfile: ChorusFile, readFunction: InputStream => R): Try[R]
+
+  /**
+    * Downloads the workfile with the referenced id from Chorus,
+    * and reads the content as a text file.
+    *
+    * @param workFileID Id of the file to download.
+    * @return The contents of the file as a string.
+    */
+  def readWorkfileAsText(workFileID: String): Try[String]
+
+  /**
+    * Equivalent to [[readWorkfileAsText(workfile.id)]]
+    *
+    * @param workfile The file to download.
+    * @return The contents of the file as a string.
+    */
+  def readWorkfileAsText(workfile: ChorusFile): Try[String]
 
   /**
     * Runs a workfile and returns the workfile object if successful
@@ -30,6 +64,25 @@ abstract class ChorusAPICaller {
 
   def runNotebook(workfileId: String): Try[PythonNotebook]
 
-  def createOrUpdateChorusFile(workspaceId: String, file: File, overwrite: Boolean): Try[ChorusFile]
+  /**
+    * Runs a notebook by substituting the output path (and possibly input path(s)).
+    * This will only work if the notebook attribute "ready_to_execute" is true.
+    *
+    * @param notebook_id Id of the notebook to retrieve
+    * @param input_path1 input path to substitute to the path defined in the notebook
+    * @param outputPath  output path to substitute to the path defined in the notebook.
+    * @return
+    */
+  def runNotebookExecution(notebook_id: String, input_path1: String, outputPath: String): Try[PythonNotebookExecution]
+
+  /**
+    * Queries the status of the notebook execution.
+    *
+    * @param notebook_id  Id of the notebook
+    * @param execution_id Id of the execution to retrieve from PythonNotebookExecution response.
+    */
+  def getNotebookExecutionStatus(notebook_id: String, execution_id: String): Try[PythonNotebookExecution]
+
+  def createOrUpdateChorusFile(currentWorkflowID: String, file: File, overwrite: Boolean): Try[ChorusFile]
 
 }

@@ -47,7 +47,6 @@ trait VisualModelFactory {
 
   /**
     * Gets the first few lines of the HdfsFile as plain text.
-    *
     * @param hdfsFile The file to preview.
     * @return The first few lines of the file as a visual model.
     */

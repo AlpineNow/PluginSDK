@@ -342,4 +342,15 @@ trait SQLGenerator {
     * @return         generated SQL statement
 	  */
   def getDropViewIfExistsSQL(viewName: String, cascade: Boolean = false): String
+
+	/**
+		* Converts a double to String representation. For most database vendors, this is just invoking toString on the double
+		* object. For Teradata, this will format the number of digits to no more than 15.
+		*
+		* @param d the double
+		* @return String representation of the double, limited to 15 characters for Teradata
+		*/
+	def doubleToString(d: Double): String = {
+		d.toString
+	}
 }

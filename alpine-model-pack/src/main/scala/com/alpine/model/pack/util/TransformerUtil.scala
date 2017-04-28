@@ -47,12 +47,9 @@ object TransformerUtil {
     * @return Double representation of the number, or Double.NaN if impossible.
     */
   def anyToDouble(a: Any): Double = {
-    try {
-      a.asInstanceOf[Number].doubleValue()
-    }
-    catch {
-      case _: NullPointerException => Double.NaN
-      case _: ClassCastException => Double.NaN
+    a match {
+      case x: Number => x.doubleValue()
+      case _ => Double.NaN
     }
   }
 

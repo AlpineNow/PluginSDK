@@ -4,8 +4,24 @@
 package com.alpine.plugin
 
 import com.alpine.plugin.core.OperatorParameters
+import com.alpine.plugin.core.config.CustomOperatorConfig
 import com.alpine.plugin.core.datasource.{DataSource, OperatorDataSourceManager}
 import com.alpine.plugin.core.io.{IOMetadata, OperatorInfo, TabularSchema}
+import com.alpine.plugin.core.utils.ChorusAPICaller
+
+trait OperatorDesignContext {
+  def inputMetadata: Map[OperatorInfo, IOMetadata]
+
+  def inputSchemas: Map[String, TabularSchema]
+
+  def parameters: OperatorParameters
+
+  def operatorDataSourceManager: OperatorDataSourceManager
+
+  def chorusAPICaller: ChorusAPICaller
+
+  def config: CustomOperatorConfig
+}
 
 /**
   * Contains information that the operator may need in OperatorGUINode#getOperatorStatus.
@@ -19,10 +35,12 @@ import com.alpine.plugin.core.io.{IOMetadata, OperatorInfo, TabularSchema}
   *                                  (filtered for hadoop or database depending on the operator runtime class)
   *                                  that could be used by the operator at runtime.
   */
-class OperatorDesignContext(val inputMetadata: Map[OperatorInfo, IOMetadata],
-                            val parameters: OperatorParameters,
-                            val operatorDataSourceManager: OperatorDataSourceManager
-                           ) {
+class OperatorDesignContextImpl(val inputMetadata: Map[OperatorInfo, IOMetadata],
+                                val parameters: OperatorParameters,
+                                val operatorDataSourceManager: OperatorDataSourceManager,
+                                val chorusAPICaller: ChorusAPICaller,
+                                val config: CustomOperatorConfig
+                               ) extends OperatorDesignContext {
   /**
     * Equivalent to the input schemas argument that used to be passed directly to the
     * onInputOrParameterChange of OperatorGUINode by the Alpine Engine.
@@ -34,6 +52,7 @@ class OperatorDesignContext(val inputMetadata: Map[OperatorInfo, IOMetadata],
         case _ => None
       }
     }
+
 }
 
 /**
@@ -50,7 +69,6 @@ trait TabularIOMetadata extends IOMetadata {
 
   def datasource: DataSource
 }
-
 /**
   * The default class for pass along TabularSchema and data-source information.
   *

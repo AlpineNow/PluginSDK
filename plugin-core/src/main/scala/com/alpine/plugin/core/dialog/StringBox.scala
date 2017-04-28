@@ -10,10 +10,4 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
   * :: AlpineSdkApi ::
   */
 @AlpineSdkApi
-trait StringBox extends DialogElement {
-  def setValue(value: String): Unit
-
-  def getValue: String
-
-  def getRegex: String
-}
+trait StringBox extends DialogElement

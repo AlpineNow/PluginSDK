@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat
 import java.util.{Calendar, Date}
 import java.util.concurrent.TimeUnit
 
-import com.alpine.plugin.core.io.{IOBase, TabularDataset}
-import com.alpine.plugin.core.visualization.{CompositeVisualModel, HtmlVisualModel, VisualModel, VisualModelFactory}
+import com.alpine.plugin.core.io.{DBTable, IOBase, TabularDataset}
+import com.alpine.plugin.core.visualization._
 
 /**
   * Utilities for writing the addendum for custom operators in a consistent manner
@@ -97,18 +97,41 @@ object AddendumWriter {
     * - added if the addendum doesn't include anything with the visual key 'summaryKey'
     */
   def createCompositeVisualModel[O <: TabularDataset](visualModelFactory: VisualModelFactory,
-                                                      outputData: O, additionalVisualModels: Array[(String, VisualModel)] = Array.empty[(String, VisualModel)]
+                                                      outputData: O,
+                                                      additionalVisualModels: Array[(String, VisualModel)] = Array.empty[(String, VisualModel)]
                                                      ): CompositeVisualModel = {
+    val tabularDataPreview = visualModelFactory.createTabularDatasetVisualization(outputData)
+    createCompositeModel(tabularDataPreview, outputData, additionalVisualModels)
+  }
 
+  def createCompositeVisualModel(visualModelHelper: DBVisualModelHelper,
+                                 outputData: DBTable,
+                                 additionalVisualModels: Seq[(String, VisualModel)]
+                                ): CompositeVisualModel = {
+    val tabularDataPreview = visualModelHelper.createDBTableVisualization(outputData)
+    createCompositeModel(tabularDataPreview, outputData, additionalVisualModels)
+  }
+
+  def createCompositeVisualModel(visualModelHelper: HDFSVisualModelHelper,
+                                 outputData: TabularDataset,
+                                 additionalVisualModels: Seq[(String, VisualModel)]
+                                ): CompositeVisualModel = {
+    val tabularDataPreview = visualModelHelper.createTabularDatasetVisualization(outputData)
+    createCompositeModel(tabularDataPreview, outputData, additionalVisualModels)
+  }
+
+  private def createCompositeModel(tabularDataPreview: VisualModel,
+                                   outputData: IOBase,
+                                   additionalVisualModels: Seq[(String, VisualModel)]) = {
     val model = new CompositeVisualModel
-    model.addVisualModel(OUTPUT_DISPLAY_NAME, visualModelFactory.createTabularDatasetVisualization(outputData))
+    model.addVisualModel(OUTPUT_DISPLAY_NAME, tabularDataPreview)
     additionalVisualModels.foldLeft(model)(
       (compositeModel, visualModelPair) => {
         compositeModel.addVisualModel(visualModelPair._1, visualModelPair._2)
         compositeModel
       })
 
-    val summaryText = outputData.asInstanceOf[IOBase].addendum.get(summaryKey)
+    val summaryText = outputData.addendum.get(summaryKey)
 
     summaryText match {
       case Some(text) =>

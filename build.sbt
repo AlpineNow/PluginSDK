@@ -2,7 +2,7 @@ import sbtassembly.Plugin._
 import AssemblyKeys._
 //import com.typesafe.sbt.SbtGit.GitKeys
 
-val sdkVersion = "1.9-alpha"
+val sdkVersion = "1.9-alpha-1"
 lazy val javaSourceVersion = "1.7"
 lazy val javaTargetVersion = "1.7"
 lazy val scalaMajorVersion = "2.10"

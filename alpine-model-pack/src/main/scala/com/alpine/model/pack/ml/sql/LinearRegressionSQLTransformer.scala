@@ -12,10 +12,10 @@ import com.alpine.util.SQLUtility
 class LinearRegressionSQLTransformer(val model: LinearRegressionModel, sqlGenerator: SQLGenerator) extends RegressionSQLTransformer {
 
   def predictionExpression: String = {
-    model.intercept + " + " +
+    sqlGenerator.doubleToString(model.intercept) + " + " +
       SQLUtility.dotProduct(
         inputColumnNames.map(name => name.escape(sqlGenerator)),
-        model.coefficients.map(_.toString)
+        model.coefficients.map(sqlGenerator.doubleToString(_))
       )
   }
 
