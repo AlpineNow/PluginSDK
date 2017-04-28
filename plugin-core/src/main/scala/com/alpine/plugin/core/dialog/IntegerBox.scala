@@ -10,10 +10,4 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
   * :: AlpineSdkApi ::
   */
 @AlpineSdkApi
-trait IntegerBox extends DialogElement {
-  def getValue: Int
-
-  def getMin: Int
-
-  def getMax: Int
-}
+trait IntegerBox extends DialogElement

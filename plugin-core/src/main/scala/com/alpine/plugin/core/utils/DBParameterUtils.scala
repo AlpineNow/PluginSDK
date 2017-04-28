@@ -12,7 +12,7 @@ object DBParameterUtils extends TableOutputParameterUtils {
   @deprecated
   def addStandardDatabaseOutputParameters(operatorDialog: OperatorDialog,
                                           dataSourceManager: OperatorDataSourceManager,
-                                          defaultOutputName: String = operatorNameUUIDVariable
+                                          defaultOutputName: String = defaultTableName
                                          ): Seq[DialogElement] = {
     addStandardDBOutputParameters(operatorDialog, defaultOutputName)
   }
@@ -37,11 +37,11 @@ object DBParameterUtils extends TableOutputParameterUtils {
     * @return A sequence of each of the parameters that were created and added to the operatorDialog
     */
   def addStandardDBOutputParameters(operatorDialog: OperatorDialog,
-                                    defaultOutputName: String = operatorNameUUIDVariable
+                                    defaultOutputName: String = defaultTableName
                                    ): Seq[DialogElement] = {
     val outputType = addViewOrTableRadioButton(operatorDialog)
     val schema = addDBSchemaDropDownBox(operatorDialog)
-    val tableName = addResultTableNameParameter(operatorDialog, defaultTableName, "Output Table")
+    val tableName = addResultTableNameParameter(operatorDialog, defaultOutputName, "Output Table")
     val dropIfExists = addDropIfExistsParameter(operatorDialog)
     Seq(schema, outputType, dropIfExists, tableName)
   }

@@ -382,8 +382,7 @@ trait OperatorDialog {
     * Add a button for column checkboxes for a dataset input.
     * This can be used to select multiple columns from a tabular dataset
     * input. I.e., this will match tabular datasets coming in as inputs.
-    * In case of multiple dataset inputs, there'll be a separate
-    * column selector per dataset input.
+    * In case of multiple dataset inputs, use the method with parameter parentBoxId.
     *
     * @param id               String id for this parameter set.
     * @param label            The label (prefix) for this parameter set. In case there are
@@ -406,10 +405,41 @@ trait OperatorDialog {
                                        ): TabularDatasetColumnCheckboxes
 
   /**
+    * Add a button for column checkboxes for a dataset input.
+    * This can be used to select multiple columns from a tabular dataset
+    * input. I.e., this will match tabular datasets coming in as inputs.
+    * In case of multiple dataset inputs, you'll need a separate
+    * column selector per dataset input (with a distinct parentBoxId).
+    *
+    * @param id               String id for this parameter set.
+    * @param label            The label (prefix) for this parameter set. In case there are
+    *                         multiple input datasets, each column selector button will be
+    *                         prefixed by this label.
+    * @param columnFilter     Filter the columns that are selectable by their types.
+    * @param selectionGroupId If we want the available selections in this group
+    *                         to be dependent on other column selectors such
+    *                         that there's no duplicate selections, one could
+    *                         put multiple column selectors (checkboxes and/or
+    *                         dropboxes) in the same group.
+    * @param required         Whether the user is required to select a value for this parameter.
+    * @param parentBoxId      This parameter should be different from None if you have multiple dataset inputs. The Option value needs to be the id of a
+    *                         (required) ParentOperatorDropdownBox dialog element from which the dataset columns checkboxes will be generated according
+    *                         to the parent operator name selected.
+    * @return An input column checkboxes element.
+    */
+  def addTabularDatasetColumnCheckboxes(id: String,
+                                        label: String,
+                                        columnFilter: ColumnFilter,
+                                        selectionGroupId: String,
+                                        required: Boolean,
+                                        parentBoxId: Option[String]
+                                       ): TabularDatasetColumnCheckboxes
+
+
+  /**
     * Add a column selector dropdown box for a dataset input.
     * This can be used to select a single column from a tabular dataset.
-    * In case of multiple tabular dataset inputs, there'll be a separate
-    * column selector per dataset input.
+    * In case of multiple dataset inputs, use the method with parameter parentBoxId.
     *
     * @param id               String id for this parameter set.
     * @param label            The label (prefix) for this parameter set. In case there are
@@ -431,6 +461,39 @@ trait OperatorDialog {
                                           selectionGroupId: String,
                                           required: Boolean = true
                                         ): TabularDatasetColumnDropdownBox
+
+
+  /**
+    * Add a column selector dropdown box for a dataset input.
+    * This can be used to select a single column from a tabular dataset.
+    * In case of multiple tabular dataset inputs, you'll need a separate
+    * column selector per dataset input (with a distinct parentBoxId).
+    *
+    * @param id               String id for this parameter set.
+    * @param label            The label (prefix) for this parameter set. In case there are
+    *                         multiple input datasets, each column selector button will be
+    *                         prefixed by this label.
+    * @param columnFilter     Filter the columns that are selectable by their types.
+    * @param selectionGroupId If we want the available selections in this group
+    *                         to be dependent on other column selectors such
+    *                         that there's no duplicate selections, one could
+    *                         put multiple column selectors (checkboxes and/or
+    *                         dropboxes) in the same group.
+    * @param required         Whether the user is required to select a value for this parameter.
+    * @param parentBoxId      This parameter should be different from None if you have multiple dataset inputs. The Option value needs to be the id of a
+    *                         (required) ParentOperatorDropdownBox dialog element from which the dataset column dropdown will be generated according
+    *                         to the parent operator name selected.
+    * @return A single column selector dropdown box element.
+    */
+  def addTabularDatasetColumnDropdownBox(
+                                          id: String,
+                                          label: String,
+                                          columnFilter: ColumnFilter,
+                                          selectionGroupId: String,
+                                          required: Boolean,
+                                          parentBoxId: Option[String]
+                                        ): TabularDatasetColumnDropdownBox
+
 }
 
 /**

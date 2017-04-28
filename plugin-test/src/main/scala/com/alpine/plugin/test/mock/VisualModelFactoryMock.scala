@@ -5,6 +5,7 @@ import java.util.Locale
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.visualization._
 
+@deprecated("Use new DBVisualModelFactoryImpl(DBVisualModelHelperMock) or new HDFSVisualModelFactoryImpl(HDFSVisualModelHelperMock) instead.")
 class VisualModelFactoryMock extends VisualModelFactory {
 
   override def createCompositeVisualModel(): CompositeVisualModel = {

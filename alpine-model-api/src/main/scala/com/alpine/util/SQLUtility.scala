@@ -4,7 +4,7 @@
  */
 package com.alpine.util
 
-import com.alpine.sql.{AliasGenerator, SQLGenerator}
+import com.alpine.sql.{AliasGenerator, DatabaseType, SQLGenerator}
 import com.alpine.transformer.sql._
 
 object SQLUtility {
@@ -87,7 +87,11 @@ object SQLUtility {
                   aliasGenerator: AliasGenerator,
                   sqlGenerator: SQLGenerator): String = {
     val selectStatement: String = getSelectStatement(sql, inputTableName, aliasGenerator, sqlGenerator)
-    s"""CREATE TABLE $outputTableName AS $selectStatement"""
+    sqlGenerator.dbType match {
+      // basically retain old functionality just in case
+      case DatabaseType.postgres | DatabaseType.greenplum | DatabaseType.oracle => s"""CREATE TABLE $outputTableName AS $selectStatement"""
+      case _ => sqlGenerator.getCreateTableAsSelectSQL(selectStatement, outputTableName)
+    }
   }
 
   def createTempTable(sql: LayeredSQLExpressions,

@@ -303,7 +303,6 @@ trait SQLExecutor {
 
   /**
     * Generates the ColumnDef representations for columns of the given object.
-    *
     * @param objectName The fully quoted object name.
     * @throws java.sql.SQLException Throws exception if the object does not exist.
     * @return The ColumnDefs of the object.

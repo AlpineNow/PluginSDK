@@ -1,5 +1,7 @@
 package com.alpine.plugin.core
 
+import com.alpine.plugin.core.dialog.ChorusFile
+
 /**
   * ChorusUserInfo
   *
@@ -14,3 +16,22 @@ case class ChorusUserInfo(userID: String, userName: String, sessionID: String)
   *                   ChorusAPICaller to get the workspace ID.
   */
 case class WorkflowInfo(workflowID: String)
+
+case class NotebookDetails(readyToExecute: Boolean,
+                           inputMetadata: NotebookIOInfo,
+                           outputMetadata: NotebookIOInfo)
+
+
+case class PythonNotebook(chorusFile: ChorusFile,
+                          userModifiedAt: String,
+                          serverStatus: String)
+
+
+case class PythonNotebookExecution(notebookId: String,
+                                   executionId: String,
+                                   status: String,
+                                   response: Option[String],
+                                   error: Option[String],
+                                   isFinished: Boolean)
+
+case class NotebookIOInfo(delimiter: String, quote: String, escape: String, columns: Seq[(String, String)])

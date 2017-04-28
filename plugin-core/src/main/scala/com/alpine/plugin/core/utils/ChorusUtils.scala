@@ -1,3 +1,6 @@
+/**
+  * COPYRIGHT (C) 2017 Alpine Data Labs Inc. All Rights Reserved.
+  */
 package com.alpine.plugin.core.utils
 
 import java.io._
@@ -8,10 +11,6 @@ import com.alpine.plugin.core.dialog.ChorusFile
 import scala.util.Try
 
 /**
-  * COPYRIGHT (C) 2015 Alpine Data Labs Inc. All Rights Reserved.
-  */
-
-/**
   * Created by emiliedelongueau on 2/14/17.
   */
 object ChorusUtils {
@@ -20,19 +19,16 @@ object ChorusUtils {
     *
     * @param chorusFileName     the final name of the Chorus file to create (including the extension)
     * @param text               text to write (html-formatted, etc...)
-    * @param chorusAPICaller    created from getChorusAPICaller in OperatorParameters class
     * @param context            the Execution Context
     * @param newVersionIfExists if set to true and the chorusFileName already exists, a new version will be created
     * @return either Success[ChorusFile] or a Failure with the error message
     */
-  def writeTextChorusFile(
-                           chorusFileName: String,
-                           text: String,
-                           chorusAPICaller: ChorusAPICaller,
-                           context: ExecutionContext,
-                           newVersionIfExists: Boolean): Try[ChorusFile] = {
+  def writeTextChorusFile(chorusFileName: String,
+                          text: String,
+                          context: ExecutionContext,
+                          newVersionIfExists: Boolean): Try[ChorusFile] = {
 
-    val workspaceID = context.workflowInfo.workflowID
+    val currentWorkflowID = context.workflowInfo.workflowID
 
     //A temporary file is created, which we will then try to push to Chorus workspace.
     val tmpDir = context.recommendedTempDir
@@ -53,7 +49,7 @@ object ChorusUtils {
       fw.close()
     }
 
-    val chorusFile = chorusAPICaller.createOrUpdateChorusFile(workspaceID, outputFile, newVersionIfExists)
+    val chorusFile = context.chorusAPICaller.createOrUpdateChorusFile(currentWorkflowID, outputFile, newVersionIfExists)
     outputFile.delete()
     chorusFile
   }

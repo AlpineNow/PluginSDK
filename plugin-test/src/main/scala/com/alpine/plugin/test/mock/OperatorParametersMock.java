@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import com.alpine.plugin.core.dialog.ChorusFile;
 import com.alpine.plugin.core.io.OperatorInfo;
-import com.alpine.plugin.core.utils.ChorusAPICaller;
+import scala.Option;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
 
@@ -26,28 +26,11 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
 
     private final String operatorName;
     private final String operatorUUID;
-    public String sessionId; //I am not sure if this is useful to expose
-    public ChorusAPICallerMock chorusAPICaller;
-
-    public OperatorParametersMock(String operatorName, String uuid, ChorusAPICallerMock apiCallerMock) {
-        this.operatorName = operatorName;
-        this.operatorUUID = uuid;
-        this.sessionId = Math.random() + "";
-        this.chorusAPICaller = apiCallerMock;
-        this.parameterMap = new HashMap<>();
-    }
 
     public OperatorParametersMock(String operatorName, String operatorUUID) {
         this.operatorName = operatorName;
         this.operatorUUID = operatorUUID;
         this.parameterMap = new HashMap<>();
-        this.sessionId = Math.random() + "";
-        this.chorusAPICaller = ChorusAPICallerMock.apply();
-    }
-
-    public OperatorParametersMock updateChorusAPICaller(ChorusAPICallerMock newAPICaller) {
-        this.chorusAPICaller = newAPICaller;
-        return this;
     }
 
     @Override
@@ -61,11 +44,6 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
 
     public void setValue(String parameterId, Object value) {
         this.parameterMap.put(parameterId, value);
-    }
-
-    @Override
-    public ChorusAPICaller getChorusAPICaller() {
-        return chorusAPICaller;
     }
 
     public Object getValue(String parameterId) {
@@ -137,9 +115,13 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
     }
 
     @Override
-    public ChorusFile getChorusFile(String parameterId) {
+    public Option<ChorusFile> getChorusFile(String parameterId) {
         //return type is the same as getTabularDatasetSelectedColumn
-        return (ChorusFile) this.parameterMap.get(parameterId);
+        return (Option<ChorusFile>) this.parameterMap.get(parameterId);
+    }
+
+    public void setChorusFile(String parameterId, ChorusFile file) {
+        this.parameterMap.put(parameterId, Option.apply(file));
     }
 
     public String getTabularDatasetSelectedColumnName(String parameterId) {
@@ -151,8 +133,6 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
         if (param instanceof java.util.Map) {
             //Is a column selector
             return getTabularDatasetSelectedColumnName(parameterId);
-        } else if (param instanceof ChorusFile) {
-            return getChorusFile(parameterId).fileId();
         } else {
             return param.toString();
         }

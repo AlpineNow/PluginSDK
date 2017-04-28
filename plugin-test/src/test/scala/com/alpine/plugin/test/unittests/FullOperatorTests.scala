@@ -4,13 +4,13 @@ import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.dialog.{ChorusFile, ColumnFilter, OperatorDialog}
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsDelimitedTabularDatasetDefault, IONoneDefault}
-import com.alpine.plugin.core.spark.SparkIOTypedPluginJob
 import com.alpine.plugin.core.spark.templates.{SparkDataFrameGUINode, SparkDataFrameJob}
 import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
+import com.alpine.plugin.core.spark.{SparkExecutionContext, SparkIOTypedPluginJob, SparkRuntime}
 import com.alpine.plugin.core.utils.{AddendumWriter, HdfsParameterUtils}
 import com.alpine.plugin.core.visualization._
 import com.alpine.plugin.core.{OperatorGUINode, OperatorListener, OperatorParameters}
-import com.alpine.plugin.test.mock.{ChorusAPICallerMock, ChorusFileInWorkspaceMock, OperatorParametersMock, VisualModelFactoryMock}
+import com.alpine.plugin.test.mock._
 import com.alpine.plugin.test.utils.{GolfData, OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.types._
@@ -165,13 +165,21 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
       operatorSchemaManager.setOutputSchema(outputSchema)
     }
 
-    override def onOutputVisualization(params: OperatorParameters, output: HdfsDelimitedTabularDataset,
-                                       visualFactory: VisualModelFactory): VisualModel = {
+  }
 
-      val chorusWorkFile = params.getChorusFile("addChorusFileDropdownBox")
-      val chorusAPICaller = params.getChorusAPICaller
-      val downloadWorkFile = chorusAPICaller.getWorkfileAsInputStream(chorusWorkFile.fileId).get
-      val workfileText = scala.io.Source.fromInputStream(downloadWorkFile).mkString
+  class HelloWorldRuntime extends SparkRuntime[IONone, HdfsDelimitedTabularDataset] {
+
+    override def onExecution(context: SparkExecutionContext, input: IONone, params: OperatorParameters, listener: OperatorListener): HdfsDelimitedTabularDataset = ???
+
+    override def onStop(context: SparkExecutionContext, listener: OperatorListener): Unit = ???
+
+    override def createVisualResults(context: SparkExecutionContext,
+                                     input: IONone,
+                                     output: HdfsDelimitedTabularDataset,
+                                     params: OperatorParameters,
+                                     listener: OperatorListener): VisualModel = {
+      val chorusWorkFile: Option[ChorusFile] = params.getChorusFile("addChorusFileDropdownBox")
+      val workfileText: String = context.chorusAPICaller.readWorkfileAsText(chorusWorkFile.get).get
 
       val additionalModels: Array[(String, VisualModel)] = Array(
         ("ModelOne", TextVisualModel("One Fish")),
@@ -180,9 +188,9 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
         ("Workfile", TextVisualModel(workfileText))
       )
 
-      AddendumWriter.createCompositeVisualModel(visualFactory, output, additionalModels)
-    }
+      AddendumWriter.createCompositeVisualModel(context.visualModelHelper, output, additionalModels)
 
+    }
   }
 
   class HelloWorldInSparkJob extends SparkIOTypedPluginJob[
@@ -218,15 +226,18 @@ class FullOperatorTests extends SimpleAbstractSparkJobSuite {
     val workfilesInWorkspace = Seq(ChorusFileInWorkspaceMock(workfile, Some(workFilePath)))
     val inputChorusAPICaller = new ChorusAPICallerMock(workfilesInWorkspace)
 
-    val inputParams = new OperatorParametersMock("test operator", "uuid", inputChorusAPICaller)
-    inputParams.setValue("addChorusFileDropdownBox", workfile)
+    val inputParams = new OperatorParametersMock("test operator", "uuid")
+    inputParams.setChorusFile("addChorusFileDropdownBox", workfile)
     OperatorParameterMockUtil.addHdfsParamsDefault(inputParams, "result")
     val gui = new HelloWorldInSparkGUINode
-    val output: HdfsDelimitedTabularDataset = runInputThroughEntireOperator(IONoneDefault(),
-      gui, new HelloWorldInSparkJob, inputParams, None)
-    assert(output.tsvAttributes == TSVAttributes.defaultCSV,
-      "The dataframe template should return CSV results by default")
-    val visualModel = gui.onOutputVisualization(inputParams, output, new VisualModelFactoryMock)
+    val input = IONoneDefault()
+    val output: HdfsDelimitedTabularDataset =
+      runInputThroughEntireOperator(input, gui, new HelloWorldInSparkJob, inputParams, None)
+    assert(output.tsvAttributes == TSVAttributes.defaultCSV, "The dataframe template should return CSV results by default")
+
+    val visualModel = new HelloWorldRuntime().createVisualResults(
+      new SparkExecutionContextMock(inputChorusAPICaller), input, output, inputParams, new SimpleOperatorListener()
+    )
     val models = visualModel.asInstanceOf[CompositeVisualModel].subModels
 
     assert(models.toMap.apply("Workfile").asInstanceOf[TextVisualModel].content.contains("2016-09-06T09"))

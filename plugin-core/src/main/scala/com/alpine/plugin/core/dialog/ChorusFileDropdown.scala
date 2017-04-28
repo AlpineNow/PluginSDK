@@ -3,13 +3,12 @@ package com.alpine.plugin.core.dialog
 /**
   * Created by rachelwarren on 11/18/16.
   */
-trait ChorusFileDropdown extends DialogElement {
-  def getExtensionFilter: Seq[String]
-}
 
-case class ChorusFile(fileName: String, fileId: String) {
+trait ChorusFileDropdown extends DialogElement
+
+case class ChorusFile(id: String, name: String) {
   val extension: String = {
-    val splits = fileName.split('.')
+    val splits = name.split('.')
     if (splits.length < 2) {
       // Chorus references Workflows just by name, without the .afm extension.
       ".afm"
@@ -18,7 +17,3 @@ case class ChorusFile(fileName: String, fileId: String) {
     }
   }
 }
-
-case class PythonNotebook(chorusFile: ChorusFile,
-                          userModifiedAt: String,
-                          serverStatus: String)

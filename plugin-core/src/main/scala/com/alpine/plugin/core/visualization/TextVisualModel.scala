@@ -18,3 +18,5 @@ case class TextVisualModel(content: String) extends VisualModel
   * @param html An HTML String
   */
 case class HtmlVisualModel(html: String) extends VisualModel
+
+case class JavascriptVisualModel(functionName: String, data: Option[Any]) extends VisualModel

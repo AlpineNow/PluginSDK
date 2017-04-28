@@ -14,7 +14,6 @@ trait HDFSVisualModelHelper {
 
   /**
     * Create a visualization for an Hdfs tabular dataset.
-    *
     * @param dataset A Hdfs tabular dataset that we want to visualize.
     * @return A visualization of the sample.
     */
@@ -22,7 +21,6 @@ trait HDFSVisualModelHelper {
 
   /**
     * Gets the first few lines of the HdfsFile as plain text.
-    *
     * @param hdfsFile The file to preview.
     * @return The first few lines of the file as a visual model.
     */

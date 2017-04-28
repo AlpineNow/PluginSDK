@@ -153,7 +153,7 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
 
     val f = new File(new java.io.File(HdfsParameterUtils.getBadDataPath(mockParams)))
     if (f.isDirectory) {
-      f.deleteRecursively();
+      f.deleteRecursively()
     }
     val (goodData, message) = BadDataReportingUtils.filterNullDataAndReportGeneral(_.anyNull,
       inputData, mockParams, sparkUtils, "because it is evil")

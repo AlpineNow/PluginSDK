@@ -114,22 +114,22 @@ class NaiveBayesSQLTransformer(val model: NaiveBayesModel, sqlGenerator: SQLGene
               case GaussianLikelihood(mu, sigma) =>
                 if (sigma != 0) {
                   val sigmaSq2 = 2 * sigma * sigma
-                  val expExpression = s"""EXP(-($quotedFeatureName - $mu)*($quotedFeatureName - $mu) / $sigmaSq2) / $sigma"""
+                  val expExpression = s"""EXP(-($quotedFeatureName - ${sqlGenerator.doubleToString(mu)})*($quotedFeatureName - ${sqlGenerator.doubleToString(mu)}) / ${sqlGenerator.doubleToString(sigmaSq2)}) / ${sqlGenerator.doubleToString(sigma)}"""
                   s"""CASE $whenNullThen1 ELSE $expExpression END"""
                 } else {
-                  s"""CASE $whenNullThen1 WHEN $quotedFeatureName = $mu THEN 1 ELSE ${model.threshold} END"""
+                  s"""CASE $whenNullThen1 WHEN $quotedFeatureName = ${sqlGenerator.doubleToString(mu)} THEN 1 ELSE ${sqlGenerator.doubleToString(model.threshold)} END"""
                 }
               case c: CategoricalLikelihood =>
                 val innards = c.map.map {
                   case (category: String, prob: Double) =>
-                    s"""WHEN $quotedFeatureName = ${SQLUtility.wrapInSingleQuotes(category)} THEN $prob"""
+                    s"""WHEN $quotedFeatureName = ${SQLUtility.wrapInSingleQuotes(category)} THEN ${sqlGenerator.doubleToString(prob)}"""
                 }.mkString(" ")
                 // Null values go to 1, unseen values go to model.threshold (i.e. rare probability in training set).
-                s"""CASE $whenNullThen1 $innards ELSE ${model.threshold} END"""
+                s"""CASE $whenNullThen1 $innards ELSE ${sqlGenerator.doubleToString(model.threshold)} END"""
             }
         }.map(s => s"($s)")
 
-        (ColumnarSQLExpression(priorProbability + " * " + totalMultiplier.mkString(" * ")), labelValuesToColumnNames(classLabel))
+        (ColumnarSQLExpression(sqlGenerator.doubleToString(priorProbability) + " * " + totalMultiplier.mkString(" * ")), labelValuesToColumnNames(classLabel))
     }
     val sumName: ColumnName = ColumnName("sum")
     val unNormalizedConfNames: Seq[ColumnName] = unNormalizedConfs.unzip._2

@@ -12,6 +12,7 @@ import com.alpine.plugin.core.utils.{HdfsStorageFormat, HdfsStorageFormatType}
 import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
+import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.types.TimestampType
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.joda.time.format.DateTimeFormat
@@ -359,6 +360,48 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
           .withEscape(tsvAttributes.escapeStr)
           .withSchema(schema)
           .csvFile(sqlContext, path)
+    }
+    //map dateTime columns from string to java.sql.Date objects. Will appear in schema as TimeStampType objects
+    mapDFtoUnixDateTime(tabularData, dateFormats)
+  }
+
+  /**
+    * Returns a DataFrame from an Alpine HdfsTabularDataset, created using a HiveContext (vs SQLContext in getDataFrame).
+    * Using a Hive Context allows for window function calls on the DataFrame and Hive UDFs access.
+    * It does not require a previous Hive setup, but creating a Hive Context comes with large dependencies, hence this method
+    * should not be used if there is no need to leverage Hive UDFs.
+    *
+    * (NOTE: loading the Hive dependencies might require to modify the "spark.driver.extraJavaOptions" by increasing MaxPermSize and enabling
+    * CMSClassUnloadingEnabled, UseConcMarkSweepGC. This parameter can be added in the "Advanced Spark Settings" dialog window of the operator).
+    *
+    * @param dataset Alpine specific object. Usually input or output of operator.
+    * @return Spark SQL DataFrame that allows window function calls and Hive UDFs access.
+    */
+  def getDataFrameHiveContext(dataset: HdfsTabularDataset) = {
+    val tabularSchema = dataset.tabularSchema
+    val schema = convertTabularSchemaToSparkSQLSchema(tabularSchema, keepDatesAsStrings = true)
+    val dateFormats = getDateMap(tabularSchema)
+    val hiveContext = new HiveContext(sc)
+    val path = dataset.path
+
+    val tabularData = dataset match {
+      case _: HdfsAvroDataset =>
+        hiveContext.read.format("com.databricks.spark.avro").load(path)
+      case _: HdfsParquetDataset =>
+        hiveContext.read.load(path)
+      case _ =>
+        val delimitedDataset = dataset.asInstanceOf[HdfsDelimitedTabularDataset]
+        val tsvAttributes: TSVAttributes = delimitedDataset.tsvAttributes
+
+        new CsvParser()
+          .withParseMode("DROPMALFORMED")
+          .withTreatEmptyValuesAsNulls(true)
+          .withUseHeader(tsvAttributes.containsHeader)
+          .withDelimiter(tsvAttributes.delimiter)
+          .withQuoteChar(tsvAttributes.quoteStr)
+          .withEscape(tsvAttributes.escapeStr)
+          .withSchema(schema)
+          .csvFile(hiveContext, path)
     }
     //map dateTime columns from string to java.sql.Date objects. Will appear in schema as TimeStampType objects
     mapDFtoUnixDateTime(tabularData, dateFormats)

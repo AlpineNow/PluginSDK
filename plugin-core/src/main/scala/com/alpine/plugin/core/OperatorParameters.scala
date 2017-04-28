@@ -7,7 +7,6 @@ package com.alpine.plugin.core
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.dialog.ChorusFile
 import com.alpine.plugin.core.io.OperatorInfo
-import com.alpine.plugin.core.utils.ChorusAPICaller
 
 /**
   * :: AlpineSdkApi ::
@@ -18,18 +17,11 @@ import com.alpine.plugin.core.utils.ChorusAPICaller
 @AlpineSdkApi
 trait OperatorParameters extends Serializable {
 
-  /**
-    * This object contains the session id. It exposes a few supported methods to interact with
-    * the chorus API such as those to download a workfile.
-    */
-  def getChorusAPICaller: ChorusAPICaller
-
   def operatorInfo: OperatorInfo
 
   /**
     * Find out whether or not the given parameter Id is contained
     * in the object.
-    *
     * @param parameterId The Id of the parameter that we want to search for.
     * @return true if the parameter is contained. false otherwise.
     */
@@ -37,7 +29,6 @@ trait OperatorParameters extends Serializable {
 
   /**
     * Get the value of a parameter as a reference object.
-    *
     * @param parameterId The parameter Id that was used with an input field
     *                    in the OperatorDialog object.
     * @return The parameter value as a reference object.
@@ -46,7 +37,6 @@ trait OperatorParameters extends Serializable {
 
   /**
     * Get the string array value of a parameter (a checkboxes parameter).
-    *
     * @param parameterId The parameter Id of the multi item selector (checkboxes).
     * @return An array of selected values.
     */
@@ -56,7 +46,6 @@ trait OperatorParameters extends Serializable {
     * Get the selected columns from a tabular dataset output of an input operator.
     * NOTE: If the parameter was not required and the user did not input a value then this method
     * will return and empty array.
-    *
     * @param parameterId The parameter Id of the column checkboxes dialog element.
     * @return A tuple of a source operator name and an array of selected column
     *         names.
@@ -77,7 +66,6 @@ trait OperatorParameters extends Serializable {
     * Get the selected column from a tabular dataset output of an input operator.
     * NOTE: If the parameter was not required and the user didn't select a column this will return
     * an empty string.
-    *
     * @param parameterId The parameter Id of the column dropdown dialog element.
     * @return A tuple of a source operator name and a selected column name.
     */
@@ -109,7 +97,6 @@ trait OperatorParameters extends Serializable {
 
   /**
     * Get the value of a parameter as an integer.
-    *
     * @param parameterId The parameter Id that was used with an input field
     *                    in the OperatorDialog object.
     * @return The parameter value as an integer.
@@ -118,7 +105,6 @@ trait OperatorParameters extends Serializable {
 
   /**
     * Get the value of a parameter as a double.
-    *
     * @param parameterId The parameter Id that was used with an input field
     *                    in the OperatorDialog object.
     * @return The parameter value as a double.
@@ -127,18 +113,17 @@ trait OperatorParameters extends Serializable {
 
   /**
     * Get an iterator of parameter Ids.
-    *
     * @return An iterator of parameter Ids.
     */
   def getParameterIds: Iterator[String]
 
   /**
     * Get the chorus file stored added by a "ChorusFileSelector" parameter.
-    * The return type is a case class with a fileId and a fileName field.
-    * NOTE: If the parameter was not required and the user didn't select a Chorus file, this will return
-    * a ChorusFile with empty strings for fileId and fileName.
+    * The return type is a case class with a id and a name field.
+    *
+    * If no file was selected, this will return None.
     */
-  def getChorusFile(parameterId: String): ChorusFile
+  def getChorusFile(parameterId: String): Option[ChorusFile]
 
   def getAdvancedSparkParameters: scala.collection.mutable.Map[String, String]
 }

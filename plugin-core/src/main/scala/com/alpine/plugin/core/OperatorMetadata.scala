@@ -32,7 +32,8 @@ case class OperatorMetadata(name: String,
                             version: Int,
                             helpURL: Option[String],
                             icon: Option[OperatorIcon],
-                            toolTipText: Option[String]) {
+                            toolTipText: Option[String],
+                            usesJavascript: Boolean) {
 
   def this(name: String,
            category: String,
@@ -46,7 +47,8 @@ case class OperatorMetadata(name: String,
       version,
       emptyOptionIfEmptyString(helpURL),
       iconNamePrefixToIcon(iconNamePrefix),
-      None
+      None,
+      false
     )
   }
 
@@ -63,12 +65,50 @@ case class OperatorMetadata(name: String,
       version,
       emptyOptionIfEmptyString(helpURL),
       Option.apply(icon),
-      emptyOptionIfEmptyString(toolTipText)
+      emptyOptionIfEmptyString(toolTipText),
+      false
+    )
+  }
+
+  def this(name: String,
+           category: String,
+           author: String,
+           version: Int,
+           helpURL: String,
+           icon: OperatorIcon,
+           toolTipText: String,
+           usesJavascript: Boolean) = {
+    this(name,
+      category,
+      emptyOptionIfEmptyString(author),
+      version,
+      emptyOptionIfEmptyString(helpURL),
+      Option.apply(icon),
+      emptyOptionIfEmptyString(toolTipText),
+      usesJavascript
+    )
+  }
+
+  def this(name: String,
+           category: String,
+           author: Option[String],
+           version: Int,
+           helpURL: Option[String],
+           icon: Option[OperatorIcon],
+           toolTipText: Option[String]) = {
+    this(name,
+      category,
+      author,
+      version,
+      helpURL,
+      icon,
+      toolTipText,
+      false
     )
   }
 
   def this(name: String, category: String, version: Int = 1) = {
-    this(name, category, None, version, None, None, None)
+    this(name, category, None, version, None, None, None, false)
   }
 
   val resolvedToolTip: String = toolTipText.getOrElse("A " + category + " operator.")
