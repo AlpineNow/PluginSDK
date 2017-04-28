@@ -100,7 +100,7 @@ object SQLUtility {
                       aliasGenerator: AliasGenerator,
                       sqlGenerator: SQLGenerator): String = {
     val selectStatement: String = getSelectStatement(sql, inputTableName, aliasGenerator, sqlGenerator)
-    s"""CREATE TEMP TABLE $outputTableName AS $selectStatement"""
+    sqlGenerator.getCreateTempTableAsSelectSQL(selectStatement, outputTableName)
   }
 
   def getSelectStatement(sql: LayeredSQLExpressions,
