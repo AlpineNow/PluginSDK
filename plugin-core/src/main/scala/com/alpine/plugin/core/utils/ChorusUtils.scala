@@ -23,10 +23,12 @@ object ChorusUtils {
     * @param newVersionIfExists if set to true and the chorusFileName already exists, a new version will be created
     * @return either Success[ChorusFile] or a Failure with the error message
     */
-  def writeTextChorusFile(chorusFileName: String,
-                          text: String,
-                          context: ExecutionContext,
-                          newVersionIfExists: Boolean): Try[ChorusFile] = {
+  def writeTextChorusFile(
+    chorusFileName: String,
+    text: String,
+    context: ExecutionContext,
+    newVersionIfExists: Boolean
+  ): Try[ChorusFile] = {
 
     val currentWorkflowID = context.workflowInfo.workflowID
 

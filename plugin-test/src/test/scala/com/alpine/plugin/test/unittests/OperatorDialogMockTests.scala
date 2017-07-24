@@ -1,11 +1,12 @@
 package com.alpine.plugin.test.unittests
 
 import com.alpine.plugin.core.dialog.{ChorusFile, ColumnFilter}
-import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
-import com.alpine.plugin.core.io.{ColumnDef, ColumnType, TSVAttributes, TabularSchema}
+import com.alpine.plugin.core.io._
+import com.alpine.plugin.core.io.defaults.{HdfsDelimitedTabularDatasetDefault, IOListDefault}
 import com.alpine.plugin.test.mock._
 import com.alpine.plugin.test.utils.OperatorParameterMockUtil
 import org.scalatest.FunSuite
+
 import scala.util.Try
 
 
@@ -33,7 +34,7 @@ class OperatorDialogMockTests extends FunSuite {
     val id = "id1"
     OperatorParameterMockUtil.addTabularColumn(inputParams, id, "outlook")
 
-    val mockDialog = new OperatorDialogMock(inputParams, hdfIOInput, Some(golfInputSchema))
+    val mockDialog = new OperatorDialogMock(inputParams, hdfIOInput)
     mockDialog.addTabularDatasetColumnDropdownBox(id, "Single Column Outlook",
       ColumnFilter.All, "main", required = true)
     val t = Try(mockDialog.addTabularDatasetColumnDropdownBox(id,
@@ -52,7 +53,7 @@ class OperatorDialogMockTests extends FunSuite {
   test("test multi value selectors ") {
     val id = "valueSelector"
     OperatorParameterMockUtil.addCheckBoxSelections(inputParams, id, "Red", "Yellow")
-    val mockDialog = new OperatorDialogMock(inputParams, hdfIOInput, Some(golfInputSchema))
+    val mockDialog = new OperatorDialogMock(inputParams, hdfIOInput)
     mockDialog.addCheckboxes(id, "Checkboxes", Seq("Red", "Yellow", "Blue"), Seq("Blue"))
 
     val newParams = mockDialog.getNewParameters
@@ -65,8 +66,7 @@ class OperatorDialogMockTests extends FunSuite {
 
     val mockDialog = new OperatorDialogMock(
       overrideParams = inputParams,
-      input = hdfIOInput,
-      inputSchema = Some(golfInputSchema))
+      input = hdfIOInput)
 
     mockDialog.addChorusFileDropdownBox("paramId", "ChorusFileDropDown", Set(".afm"), isRequired = true)
     val newParams = mockDialog.getNewParameters
@@ -81,8 +81,7 @@ class OperatorDialogMockTests extends FunSuite {
 
     val mockDialog = new OperatorDialogMock(
       overrideParams = p,
-      input = hdfIOInput,
-      inputSchema = Some(golfInputSchema))
+      input = hdfIOInput)
 
     mockDialog.addTabularDatasetColumnDropdownBox("tabularColumn", "label", ColumnFilter.All, "a")
     mockDialog.addTabularDatasetColumnCheckboxes("tabularColumns", "label", ColumnFilter.All, "b")
@@ -92,6 +91,48 @@ class OperatorDialogMockTests extends FunSuite {
     val p3 = p.getStringArrayValue("tabularColumns")
     assert(p3.contains("outlook") && p3.contains("play"))
 
+  }
+
+  test("Test Multiple Column selectors for io list") {
+    val secondInput = HdfsDelimitedTabularDatasetDefault("path",
+      TabularSchema(golfInputSchema.getDefinedColumns.map(c => new ColumnDef(c.columnName + "_2",
+        c.columnType))), TSVAttributes.default)
+    val input = IOListDefault(Seq(hdfIOInput, secondInput),
+      Seq(OperatorInfo("1", "golf"),
+        OperatorInfo("2", "golf_1")))
+
+    val params = new OperatorParametersMock("3", "output")
+    params.setValue("parent1", "1")
+    OperatorParameterMockUtil.addTabularColumns(params, "col_select1", "play", "wind")
+    params.setValue("parent2", "2")
+    OperatorParameterMockUtil.addTabularColumns(params, "col_select2", "play_2", "wind_2")
+    val dialog = new OperatorDialogMock(params, input)
+    dialog.addParentOperatorDropdownBox("parent1", "Parent 1")
+    dialog.addParentOperatorDropdownBox("parent2", "Parent 2")
+    dialog.addTabularDatasetColumnCheckboxes("col_select1", "Column Selector 1", ColumnFilter.All, "a", true, Some("parent1"))
+    dialog.addTabularDatasetColumnCheckboxes("col_select2", "Column Selector 2", ColumnFilter.All, "b", true, Some("parent2"))
+    assert(dialog.getNewParameters.contains("col_select2"))
+  }
+
+  test("Test Single Column selectors for io list") {
+    val secondInput = HdfsDelimitedTabularDatasetDefault("path",
+      TabularSchema(golfInputSchema.getDefinedColumns.map(c => new ColumnDef(c.columnName + "_2",
+        c.columnType))), TSVAttributes.default)
+    val input = IOListDefault(Seq(hdfIOInput, secondInput),
+      Seq(OperatorInfo("1", "golf"),
+        OperatorInfo("2", "golf_1")))
+
+    val params = new OperatorParametersMock("3", "output")
+    params.setValue("parent1", "1")
+    OperatorParameterMockUtil.addTabularColumn(params, "col_select1", "play")
+    params.setValue("parent2", "2")
+    OperatorParameterMockUtil.addTabularColumn(params, "col_select2", "play_2")
+    val dialog = new OperatorDialogMock(params, input)
+    dialog.addParentOperatorDropdownBox("parent1", "Parent 1")
+    dialog.addParentOperatorDropdownBox("parent2", "Parent 2")
+    dialog.addTabularDatasetColumnDropdownBox("col_select1", "Column Selector 1", ColumnFilter.All, "a", true, Some("parent1"))
+    dialog.addTabularDatasetColumnDropdownBox("col_select2", "Column Selector 2", ColumnFilter.All, "b", true, Some("parent2"))
+    assert(dialog.getNewParameters.contains("col_select2"))
   }
 
 }

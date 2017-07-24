@@ -87,6 +87,7 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
     val model: RowModel = ModelJsonUtil.compactGsonBuilder.create().fromJson(GroupBySampleModels.model, classOf[TypeWrapper[RowModel]]).value
     val sql = model.sqlTransformer(simpleSQLGenerator).get.getSQL
     val selectStatement = SQLUtility.getSelectStatement(sql, "\"demo\".\"golfnew\"", new AliasGenerator(), simpleSQLGenerator)
+    // println(selectStatement)
 
     /**
       * There is redundancy in the SQL, which we should fix at some point.
@@ -94,9 +95,9 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
     val expectedSQL =
       """SELECT CASE WHEN "CONF0" IS NULL OR "CONF1" IS NULL
         |  THEN NULL
-        |        ELSE (CASE WHEN ("CONF0" > "CONF1")
-        |          THEN 'yes'
-        |              ELSE 'no' END) END AS "PRED"
+        |       ELSE (CASE WHEN ("CONF0" > "CONF1")
+        |         THEN 'yes'
+        |             ELSE 'no' END) END AS "PRED"
         |FROM (SELECT
         |        (CASE WHEN ("outlook" = 'overcast')
         |          THEN "CONF0"
@@ -115,78 +116,95 @@ class GroupByClassificationSQLTransformerTest extends FunSuite {
         |      FROM (SELECT
         |              "ce0"       AS "CONF0",
         |              "baseVal"   AS "CONF1",
-        |              "column_8"  AS "CONF0_1",
-        |              "column_9"  AS "CONF1_1",
-        |              "column_19" AS "CONF0_2",
-        |              "column_20" AS "CONF1_2",
+        |              "column_12" AS "CONF0_1",
+        |              "column_13" AS "CONF1_1",
+        |              "column_26" AS "CONF0_2",
+        |              "column_27" AS "CONF1_2",
         |              "column_0"  AS "outlook"
         |            FROM (SELECT
         |                    1 / "sum"                 AS "baseVal",
         |                    "e0" / "sum"              AS "ce0",
-        |                    1 / "column_6"            AS "column_9",
-        |                    "column_7" / "column_6"   AS "column_8",
-        |                    1 / "column_17"           AS "column_20",
-        |                    "column_18" / "column_17" AS "column_19",
+        |                    1 / "column_10"           AS "column_13",
+        |                    "column_11" / "column_10" AS "column_12",
+        |                    1 / "column_24"           AS "column_27",
+        |                    "column_25" / "column_24" AS "column_26",
         |                    "column_0"                AS "column_0"
         |                  FROM (SELECT
         |                          1 + "e0"        AS "sum",
         |                          "e0"            AS "e0",
-        |                          1 + "column_5"  AS "column_6",
-        |                          "column_5"      AS "column_7",
-        |                          1 + "column_16" AS "column_17",
-        |                          "column_16"     AS "column_18",
+        |                          1 + "column_9"  AS "column_10",
+        |                          "column_9"      AS "column_11",
+        |                          1 + "column_23" AS "column_24",
+        |                          "column_23"     AS "column_25",
         |                          "column_0"      AS "column_0"
         |                        FROM (SELECT
         |                                EXP(11.566053522376023 + "temperature" * 1.1368683772161603E-13 +
         |                                    "humidity" * 1.4210854715202004E-13 + "wind_0" * 3.637978807091713E-12 +
         |                                    "wind_1" * 0.0)    AS "e0",
-        |                                EXP(11.566053522373863 + "column_1" * -4.884981308350689E-15 +
-        |                                    "column_3" * 5.828670879282072E-16 + "column_4" * -23.132107044747375 +
-        |                                    "column_2" * 0.0)  AS "column_5",
-        |                                EXP(-4.217191318784561 + "column_12" * -0.022443258429683213 +
-        |                                    "column_14" * -0.052069985289528796 + "column_15" * 22.74983888277704 +
-        |                                    "column_13" * 0.0) AS "column_16",
+        |                                EXP(11.566053522373863 + "column_5" * -4.884981308350689E-15 +
+        |                                    "column_7" * 5.828670879282072E-16 + "column_8" * -23.132107044747375 +
+        |                                    "column_6" * 0.0)  AS "column_9",
+        |                                EXP(-4.217191318784561 + "column_19" * -0.022443258429683213 +
+        |                                    "column_21" * -0.052069985289528796 + "column_22" * 22.74983888277704 +
+        |                                    "column_20" * 0.0) AS "column_23",
         |                                "column_0"             AS "column_0"
         |                              FROM (SELECT
-        |                                      "temperature" AS "temperature",
-        |                                      "humidity"    AS "humidity",
+        |                                      "column_0"      AS "temperature",
+        |                                      "column_1"      AS "humidity",
         |                                      (CASE WHEN ("wind" = 'true')
         |                                        THEN 1
-        |                                       WHEN ("wind" = 'false')
+        |                                       WHEN "wind" IS NOT NULL
         |                                         THEN 0
         |                                       ELSE NULL END) AS "wind_0",
         |                                      (CASE WHEN ("wind" = 'false')
         |                                        THEN 1
-        |                                       WHEN ("wind" = 'true')
+        |                                       WHEN "wind" IS NOT NULL
         |                                         THEN 0
         |                                       ELSE NULL END) AS "wind_1",
-        |                                      "temperature"   AS "column_1",
-        |                                      "humidity"      AS "column_3",
-        |                                      (CASE WHEN ("wind" = 'true')
+        |                                      "column_3"      AS "column_5",
+        |                                      "column_2"      AS "column_7",
+        |                                      (CASE WHEN ("column_4" = 'true')
         |                                        THEN 1
-        |                                       WHEN ("wind" = 'false')
+        |                                       WHEN "column_4" IS NOT NULL
         |                                         THEN 0
-        |                                       ELSE NULL END) AS "column_4",
-        |                                      (CASE WHEN ("wind" = 'false')
+        |                                       ELSE NULL END) AS "column_8",
+        |                                      (CASE WHEN ("column_4" = 'false')
         |                                        THEN 1
-        |                                       WHEN ("wind" = 'true')
+        |                                       WHEN "column_4" IS NOT NULL
         |                                         THEN 0
-        |                                       ELSE NULL END) AS "column_2",
-        |                                      "temperature"   AS "column_12",
-        |                                      "humidity"      AS "column_14",
-        |                                      (CASE WHEN ("wind" = 'true')
+        |                                       ELSE NULL END) AS "column_6",
+        |                                      "column_17"     AS "column_19",
+        |                                      "column_16"     AS "column_21",
+        |                                      (CASE WHEN ("column_18" = 'true')
         |                                        THEN 1
-        |                                       WHEN ("wind" = 'false')
+        |                                       WHEN "column_18" IS NOT NULL
         |                                         THEN 0
-        |                                       ELSE NULL END) AS "column_15",
-        |                                      (CASE WHEN ("wind" = 'false')
+        |                                       ELSE NULL END) AS "column_22",
+        |                                      (CASE WHEN ("column_18" = 'false')
         |                                        THEN 1
-        |                                       WHEN ("wind" = 'true')
+        |                                       WHEN "column_18" IS NOT NULL
         |                                         THEN 0
-        |                                       ELSE NULL END) AS "column_13",
-        |                                      "outlook"     AS "column_0"
-        |                                    FROM
-        |                                      "demo"."golfnew") AS alias_0) AS alias_1) AS alias_2) AS alias_3) AS alias_4) AS alias_5"""
+        |                                       ELSE NULL END) AS "column_20",
+        |                                      "column_30"     AS "column_0"
+        |                                    FROM (SELECT
+        |                                            "temperature"   AS "column_0",
+        |                                            "humidity"      AS "column_1",
+        |                                            (CASE WHEN "wind" IN ('true', 'false')
+        |                                              THEN "wind"
+        |                                             ELSE NULL END) AS "wind",
+        |                                            "temperature"   AS "column_3",
+        |                                            "humidity"      AS "column_2",
+        |                                            (CASE WHEN "wind" IN ('true', 'false')
+        |                                              THEN "wind"
+        |                                             ELSE NULL END) AS "column_4",
+        |                                            "temperature"   AS "column_17",
+        |                                            "humidity"      AS "column_16",
+        |                                            (CASE WHEN "wind" IN ('true', 'false')
+        |                                              THEN "wind"
+        |                                             ELSE NULL END) AS "column_18",
+        |                                            "outlook"       AS "column_30"
+        |                                          FROM
+        |                                            "demo"."golfnew") AS alias_0) AS alias_1) AS alias_2) AS alias_3) AS alias_4) AS alias_5) AS alias_6"""
         .stripMargin.replaceAll("\\s+", " ").replaceAllLiterally("\n", "")
 
     assert(expectedSQL === selectStatement)

@@ -4,6 +4,8 @@
 package com.alpine.model.pack.ast.expressions
 
 import com.alpine.common.serialization.json.TypeWrapper
+import com.alpine.sql.SQLGenerator
+import com.alpine.transformer.sql.ColumnarSQLExpression
 
 /**
   * Created by Jennifer Thompson on 2/23/17.
@@ -19,6 +21,12 @@ case class AndExpression(left: TypeWrapper[ASTExpression], right: TypeWrapper[AS
       case _ => null
     }
   }
+
+  override def toColumnarSQL(sqlGenerator: SQLGenerator): ColumnarSQLExpression = {
+    val leftAsSQL = left.toColumnarSQL(sqlGenerator).sql
+    val rightAsSQL = right.toColumnarSQL(sqlGenerator).sql
+    ColumnarSQLExpression(s"($leftAsSQL) AND ($rightAsSQL)")
+  }
 }
 
 case class OrExpression(left: TypeWrapper[ASTExpression], right: TypeWrapper[ASTExpression]) extends BinaryASSTExpression {
@@ -31,6 +39,12 @@ case class OrExpression(left: TypeWrapper[ASTExpression], right: TypeWrapper[AST
       case (_, true) => true
       case _ => null
     }
+  }
+
+  override def toColumnarSQL(sqlGenerator: SQLGenerator): ColumnarSQLExpression = {
+    val leftAsSQL = left.toColumnarSQL(sqlGenerator).sql
+    val rightAsSQL = right.toColumnarSQL(sqlGenerator).sql
+    ColumnarSQLExpression(s"($leftAsSQL) OR ($rightAsSQL)")
   }
 }
 
@@ -47,6 +61,18 @@ case class CaseWhenExpression(conditions: Seq[WhenThenClause], elseExpr: TypeWra
     }
     elseExpr.execute(input)
   }
+
+  override def toColumnarSQL(sqlGenerator: SQLGenerator): ColumnarSQLExpression = {
+    if (true) {
+      val innerSQL = conditions.map {
+        condition: WhenThenClause =>
+          s"WHEN (${condition.whenExpr.toColumnarSQL(sqlGenerator).sql}) THEN (${condition.thenExpr.toColumnarSQL(sqlGenerator).sql})"
+      }.mkString(" ") + " ELSE (" + elseExpr.value.toColumnarSQL(sqlGenerator).sql + ")"
+      ColumnarSQLExpression(s"CASE $innerSQL END")
+    } else {
+      ColumnarSQLExpression(elseExpr.toColumnarSQL(sqlGenerator).sql)
+    }
+  }
 }
 
 case class WhenThenClause(whenExpr: TypeWrapper[ASTExpression], thenExpr: TypeWrapper[ASTExpression]) {
@@ -61,5 +87,9 @@ case class NotExpression(argument: TypeWrapper[ASTExpression]) extends SingleArg
       case false => true
       case _ => null
     }
+  }
+
+  override def toColumnarSQL(sqlGenerator: SQLGenerator): ColumnarSQLExpression = {
+    ColumnarSQLExpression(s"NOT (${argument.toColumnarSQL(sqlGenerator).sql})")
   }
 }

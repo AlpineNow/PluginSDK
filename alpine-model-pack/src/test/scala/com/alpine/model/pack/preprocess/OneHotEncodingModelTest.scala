@@ -18,6 +18,8 @@ import org.scalatest.FunSuite
   */
 class OneHotEncodingModelTest extends FunSuite {
 
+  import OneHotEncodingModelTest._
+
   /**
     * In February 2016 I changed the baseValue from String to Option[String].
     */
@@ -88,16 +90,7 @@ class OneHotEncodingModelTest extends FunSuite {
     val model = (new OneHotEncodingModelTest).oneHotEncoderModel
     val transformer = OneHotEncodingSQLTransformer(model, new SimpleSQLGenerator)
     val sql = transformer.getSQL
-    val expected = LayeredSQLExpressions(
-      Seq(
-        Seq(
-          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END)"""), ColumnName("outlook_0")),
-          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END)"""), ColumnName("outlook_1")),
-          (ColumnarSQLExpression("""(CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END)"""), ColumnName("wind_0"))
-        )
-      )
-    )
-
+    val expected: LayeredSQLExpressions = expectedSQLExpressions
     assert(expected === sql)
   }
 
@@ -105,4 +98,24 @@ class OneHotEncodingModelTest extends FunSuite {
     assert(ObjectStreamClass.lookup(classOf[OneHotEncodingModel]).getSerialVersionUID === -7558600518234424483L)
   }
 
+}
+
+// This is used for several tests, so make it accessible.
+object OneHotEncodingModelTest {
+  def expectedSQLExpressions: LayeredSQLExpressions = {
+    val expected = LayeredSQLExpressions(
+      Seq(
+        Seq(
+          (ColumnarSQLExpression("""(CASE WHEN "outlook" IN ('sunny', 'overcast', 'rain') THEN "outlook" ELSE NULL END)"""), ColumnName("outlook")),
+          (ColumnarSQLExpression("""(CASE WHEN "wind" IN ('true', 'false') THEN "wind" ELSE NULL END)"""), ColumnName("wind"))
+        ),
+        Seq(
+          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN "outlook" IS NOT NULL THEN 0 ELSE NULL END)"""), ColumnName("outlook_0")),
+          (ColumnarSQLExpression("""(CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN "outlook" IS NOT NULL THEN 0 ELSE NULL END)"""), ColumnName("outlook_1")),
+          (ColumnarSQLExpression("""(CASE WHEN ("wind" = 'true') THEN 1 WHEN "wind" IS NOT NULL THEN 0 ELSE NULL END)"""), ColumnName("wind_0"))
+        )
+      )
+    )
+    expected
+  }
 }

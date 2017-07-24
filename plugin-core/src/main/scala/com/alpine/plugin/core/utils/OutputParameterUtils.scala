@@ -82,7 +82,8 @@ trait OutputParameterUtils {
 }
 
 object OutputParameterUtils extends OutputParameterUtils {
-  def toTrueFalseString(bool : Boolean) : String = {
-    if(bool) trueStr else falseStr
+  @deprecated("Just use bool.toString")
+  def toTrueFalseString(bool: Boolean): String = {
+    bool.toString
   }
 }

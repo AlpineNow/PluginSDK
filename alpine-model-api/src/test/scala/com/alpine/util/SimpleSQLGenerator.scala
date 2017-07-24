@@ -14,9 +14,9 @@ import com.alpine.sql.{DatabaseType, SQLGenerator}
   */
 class SimpleSQLGenerator extends SQLGenerator {
 
-  private var databaseType:    TypeValue = postgres
-  private var quoteString:     String    = "\""
-  private var isAliasRequired: Boolean   = true
+  private var databaseType: TypeValue = postgres
+  private var quoteString: String = "\""
+  private var isAliasRequired: Boolean = true
 
   // single arg constructor for DatabaseType
   def this(dbType: TypeValue) = {
@@ -30,6 +30,7 @@ class SimpleSQLGenerator extends SQLGenerator {
   override def dbType: TypeValue = databaseType
 
   override def quoteChar: String = quoteString
+
   override def useAliasForSelectSubQueries: Boolean = isAliasRequired
 
   @deprecated("Please use quoteIdentifier instead [Paul]", "2016-04-22")
@@ -40,7 +41,7 @@ class SimpleSQLGenerator extends SQLGenerator {
   override def quoteObjectName(schemaName: String, objectName: String): String = {
     schemaName match {
       case null | "" => quoteIdentifier(objectName)
-      case _         => quoteIdentifier(schemaName) + "." + quoteIdentifier(objectName)
+      case _ => quoteIdentifier(schemaName) + "." + quoteIdentifier(objectName)
     }
   }
 

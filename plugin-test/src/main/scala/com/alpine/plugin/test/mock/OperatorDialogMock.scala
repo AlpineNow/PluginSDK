@@ -2,21 +2,22 @@ package com.alpine.plugin.test.mock
 
 import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.dialog._
-import com.alpine.plugin.core.io.{ColumnDef, IOBase, TabularSchema}
+import com.alpine.plugin.core.io.ColumnType.TypeValue
+import com.alpine.plugin.core.io._
 import com.alpine.plugin.test.utils.OperatorParameterMockUtil
 
 import scala.collection.JavaConversions._
 import scala.util.{Success, Try}
 
 abstract class DefaultDialogElementMock(val getId: String,
-                                        val getLabel: String,
-                                        val isRequired: Boolean = true) extends DialogElement {}
+  val getLabel: String,
+  val isRequired: Boolean = true) extends DialogElement {}
 
 abstract class SingleElementSelectorMock(availableValues: Seq[String],
-                                         val getSelectedValue: String,
-                                         val getId: String,
-                                         val getLabel: String,
-                                         val isRequired: Boolean = true) extends SingleItemSelector {
+  val getSelectedValue: String,
+  val getId: String,
+  val getLabel: String,
+  val isRequired: Boolean = true) extends SingleItemSelector {
 
   assert(availableValues.distinct.length.equals(availableValues.length),
     "The available values for the parameters " + getLabel + "are not distinct")
@@ -25,10 +26,10 @@ abstract class SingleElementSelectorMock(availableValues: Seq[String],
 }
 
 abstract class AbstractCheckboxMock(availableValues: Seq[String],
-                                    selected: Seq[String],
-                                    val getId: String,
-                                    val getLabel: String,
-                                    val isRequired: Boolean = true) extends Checkboxes {
+  selected: Seq[String],
+  val getId: String,
+  val getLabel: String,
+  val isRequired: Boolean = true) extends Checkboxes {
 
   //validation logic
   selected.foreach(v =>
@@ -39,18 +40,57 @@ abstract class AbstractCheckboxMock(availableValues: Seq[String],
 }
 
 class OperatorDialogMock(overrideParams: OperatorParametersMock,
-                         input: IOBase,
-                         inputSchema: Option[TabularSchema]) extends OperatorDialog {
+  input: IOBase) extends OperatorDialog {
 
   private val dialogElements = scala.collection.mutable.Map[String, DialogElement]()
   private val selectionGroupIdMap = scala.collection.mutable.Map[String, Set[String]]()
-  private val nameTypeMap = inputSchema.getOrElse(TabularSchema(Seq())).getDefinedColumns.map(x => (x.columnName, x.columnType)).toMap
-  private val inputColumns = nameTypeMap.keySet
+
+  val schemas = getSchemas(input)
 
   private val operatorParametersMock = new OperatorParametersMock(
     overrideParams.operatorInfo().name,
     overrideParams.operatorInfo().uuid
   )
+
+  private val uuids: Seq[String] = {
+    input match {
+      case i: IOList[IOBase] => i.sources.map(_.uuid)
+      case _ => Seq[String]()
+    }
+  }
+
+  private def getSchemas(input: IOBase): Seq[(String, TabularSchema)] = {
+    input match {
+      case i: IOList[IOBase] => i.sources.zip(i.elements).map { case (o, e) => (o.uuid, getSchemas(e).head._2) }
+      case t: com.alpine.plugin.core.io.Tuple => t.elements.map(getSchemas(_).head)
+      case table: TabularDataset => Seq(("", table.tabularSchema))
+      case _ => Seq[(String, TabularSchema)]()
+    }
+  }
+
+  def getTypeMapForColumnSelector(parentBoxID: Option[String],
+    id: String): Map[String, TypeValue] = {
+
+    assert(schemas.nonEmpty, "Cannot create tabular dataset column dropdown " + id + " for " +
+      "non tabular input")
+
+    val tabularSchema = if (parentBoxID.nonEmpty) {
+      val de = dialogElements.get(parentBoxID.get)
+      assert(de.isDefined && de.get.isInstanceOf[ParentOperatorDropdownBox],
+        "Column selector " + id + " " +
+          "contains parent id " + parentBoxID + "" +
+          " but no parent box with this id has been added to this operator dialog.")
+      val selectedValue = de.get.asInstanceOf[SingleElementSelectorMock].getSelectedValue
+      schemas.filter(selectedValue == _._1).head._2
+
+    } else {
+      schemas.head._2
+    }
+
+    val nameTypeMap: Map[String, TypeValue] = tabularSchema.getDefinedColumns.map(x =>
+      (x.columnName, x.columnType)).toMap
+    nameTypeMap
+  }
 
   private def updateDialogElements[T <: DialogElement](id: String, de: T): T = {
     assert(!dialogElements.contains(id), " You have already added a dialog element with key " + id)
@@ -68,8 +108,11 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     selection
   }
 
-  private def validateColumnSelectionAndUpdateSelectionGroup(
-                                                              column: String, selectionGroupId: String, filter: ColumnFilter): String = {
+  private def validateColumnSelectionAndUpdateSelectionGroup(column: String,
+    selectionGroupId: String, filter: ColumnFilter, nameTypeMap: Map[String, TypeValue]): String = {
+
+    val inputColumns = nameTypeMap.keySet
+
     assert(inputColumns.contains(column), "Column: " + column + " is not present in input schema.")
 
     val group = selectionGroupIdMap.getOrElseUpdate(selectionGroupId, Set())
@@ -107,6 +150,11 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
   override def addLargeStringBox(id: String, label: String, defaultValue: String, regex: String, required: Boolean): StringBox = {
     addStringBox(id, label, defaultValue, regex, required)
+  }
+
+
+  override def addPasswordBox(id: String, label: String, regex: String, required: Boolean): StringBox = {
+    addStringBox(id, label, "", regex, required)
   }
 
   override def getDialogElement(id: String): DialogElement = dialogElements(id)
@@ -151,7 +199,7 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   }
 
   override def addHdfsDirectorySelector(id: String, label: String, defaultPath: String, required: Boolean): HdfsFileSelector = {
-    val path = setStringValue(id, defaultPath)
+    setStringValue(id, defaultPath)
 
     class HdfsFileSelectorImp extends DefaultDialogElementMock(id, label, required) with HdfsFileSelector
 
@@ -161,8 +209,8 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
 
   override def addDataSourceDropdownBox(id: String, label: String,
-                                        dataSourceManager: OperatorDataSourceManager): DataSourceDropdownBox = {
-    val selectedValue = setStringValue(id, dataSourceManager.getRuntimeDataSource.getName)
+    dataSourceManager: OperatorDataSourceManager): DataSourceDropdownBox = {
+    setStringValue(id, dataSourceManager.getRuntimeDataSource.getName)
     val allSources = dataSourceManager.getAvailableDataSources.map(_.getName)
     class DataSourceDropdownBoxImpl extends DefaultDialogElementMock(id, label, true) with DataSourceDropdownBox
 
@@ -172,9 +220,9 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
 
   override def addTabularDatasetColumnDropdownBox(id: String, label: String,
-                                                  columnFilter: ColumnFilter,
-                                                  selectionGroupId: String,
-                                                  required: Boolean): TabularDatasetColumnDropdownBox = {
+    columnFilter: ColumnFilter,
+    selectionGroupId: String,
+    required: Boolean): TabularDatasetColumnDropdownBox = {
     addTabularDatasetColumnDropdownBox(id,
       label,
       columnFilter,
@@ -185,17 +233,16 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
 
   override def addTabularDatasetColumnDropdownBox(id: String, label: String,
-                                                  columnFilter: ColumnFilter,
-                                                  selectionGroupId: String,
-                                                  required: Boolean,
-                                                  parentBoxID: Option[String]): TabularDatasetColumnDropdownBox = {
-    assert(inputSchema.isDefined, "Cannot create tabular dataset column drop down " + label + " for " +
-      "non tabular input")
+    columnFilter: ColumnFilter,
+    selectionGroupId: String,
+    required: Boolean,
+    parentBoxID: Option[String]): TabularDatasetColumnDropdownBox = {
+    val columnTypeMap = getTypeMapForColumnSelector(parentBoxID, id)
 
     val selection: String = Try(overrideParams.getTabularDatasetSelectedColumn(id)) match {
       case Success(s) =>
         val column = s._2
-        validateColumnSelectionAndUpdateSelectionGroup(column, selectionGroupId, columnFilter)
+        validateColumnSelectionAndUpdateSelectionGroup(column, selectionGroupId, columnFilter, columnTypeMap)
       case _ => ""
     }
 
@@ -205,10 +252,11 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
 
     class TabularDatasetColumnDropdownBoxImpl extends
-      SingleElementSelectorMock(availableValues = inputColumns.toSeq, getSelectedValue = selection,
-        getId = id, getLabel = label, isRequired = required) with
-      TabularDatasetColumnDropdownBox {
-      assert(inputColumns.contains(selection),
+      SingleElementSelectorMock(
+        columnTypeMap.keys.toSeq, selection, id, label, isRequired = required)
+      with TabularDatasetColumnDropdownBox {
+
+      assert(columnTypeMap.keySet.contains(selection),
         "The input of this operator does not contain the column " + selection +
           "in the input schema.")
     }
@@ -268,9 +316,9 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
   //toDo: Refactor to use column checkboxes
   override def addTabularDatasetColumnCheckboxes(id: String, label: String,
-                                                 columnFilter: ColumnFilter,
-                                                 selectionGroupId: String,
-                                                 required: Boolean): TabularDatasetColumnCheckboxes = {
+    columnFilter: ColumnFilter,
+    selectionGroupId: String,
+    required: Boolean): TabularDatasetColumnCheckboxes = {
     addTabularDatasetColumnCheckboxes(id, label,
       columnFilter,
       selectionGroupId,
@@ -279,20 +327,16 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   }
 
   override def addTabularDatasetColumnCheckboxes(id: String, label: String,
-                                                 columnFilter: ColumnFilter,
-                                                 selectionGroupId: String,
-                                                 required: Boolean,
-                                                 parentBoxID: Option[String]): TabularDatasetColumnCheckboxes = {
+    columnFilter: ColumnFilter,
+    selectionGroupId: String,
+    required: Boolean,
+    parentBoxID: Option[String]): TabularDatasetColumnCheckboxes = {
 
-    assert(inputSchema.isDefined, "Cannot create tabular dataset column dropdown " + label + " for " +
-      "non tabular input")
-
-    val _parentBoxID = parentBoxID
-
+    val columnTypeMap = getTypeMapForColumnSelector(parentBoxID, id)
     val selection: Array[String] = Try(overrideParams.getTabularDatasetSelectedColumns(id)) match {
       case Success(s) =>
         val columns = s._2.filter(_.length > 0)
-        columns.map(col => this.validateColumnSelectionAndUpdateSelectionGroup(col, selectionGroupId, columnFilter))
+        columns.map(col => this.validateColumnSelectionAndUpdateSelectionGroup(col, selectionGroupId, columnFilter, columnTypeMap))
 
       case _ => Array[String]()
     }
@@ -302,14 +346,17 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
     OperatorParameterMockUtil.addTabularColumns(operatorParametersMock, id, selection: _ *)
 
-    class TabularDatasetColumnCheckboxesImpl extends AbstractCheckboxMock(availableValues = inputColumns.toSeq,
-      selected = selection, getId = id, getLabel = label, isRequired = required) with TabularDatasetColumnCheckboxes {}
+    class TabularDatasetColumnCheckboxesImpl extends
+      AbstractCheckboxMock(availableValues = columnTypeMap.keys.toSeq,
+        selected = selection, getId = id, getLabel = label, isRequired = required) with TabularDatasetColumnCheckboxes {}
 
     val de = new TabularDatasetColumnCheckboxesImpl
     updateDialogElements(id, de)
   }
 
   override def addDBTableDropdownBox(id: String, label: String, schemaBoxID: String): DBTableDropdownBox = {
+    val _schemaBoxID = schemaBoxID
+    // Rename to avoid complaint about recursive call.
     // DBTableDropdownBox does not use available values. We need to refactor this to not extend SingleItemSelector.
     class DBTableDropdownBoxImpl extends SingleElementSelectorMock(Seq("mockValue"), "mockValue",
       id, label) with DBTableDropdownBox
@@ -318,12 +365,22 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     updateDialogElements(id, de)
   }
 
-  override def addParentOperatorDropdownBox(id: String, label: String): ParentOperatorDropdownBox = null
+  override def addParentOperatorDropdownBox(id: String, label: String): ParentOperatorDropdownBox = {
+    addParentOperatorDropdownBox(id, label, required = true)
+  }
 
-  override def addParentOperatorDropdownBox(id: String, label: String, required: Boolean): ParentOperatorDropdownBox = null
+  override def addParentOperatorDropdownBox(id: String, label: String, required: Boolean): ParentOperatorDropdownBox = {
+    val userSet = overrideParams.getStringValue(id)
+    operatorParametersMock.setValue(id, userSet)
+
+    class ParentOperatorDropdownBoxMock extends
+      SingleElementSelectorMock(uuids, userSet, id, label) with ParentOperatorDropdownBox
+    val de = new ParentOperatorDropdownBoxMock()
+    updateDialogElements(id, de)
+  }
 
   override def addDoubleBox(id: String, label: String, min: Double, max: Double,
-                            inclusiveMin: Boolean, inclusiveMax: Boolean, defaultValue: Double): DoubleBox = {
+    inclusiveMin: Boolean, inclusiveMax: Boolean, defaultValue: Double): DoubleBox = {
 
     val selection: Double = Try(overrideParams.getDoubleValue(id)) match {
       case Success(s) => s
@@ -356,6 +413,13 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     updateDialogElements(id, de)
   }
 
+  override def addChorusFileDropdownBox(id: String, label: String, extensionFilter: Set[String], isRequired: Boolean, linkText: Option[String]): ChorusFileDropdown = {
+    class ChorusFileDropdownImpl extends ChorusFileDropdown
+    val de = new ChorusFileDropdownImpl()
+    operatorParametersMock.setValue(id, overrideParams.getChorusFile(id))
+    updateDialogElements(id, de)
+  }
+
   override def addAdvancedSparkSettingsBox(id: String, label: String, availableValues: List[SparkParameter]): DialogElement = {
     class AdvancedSparkSettingsBoxImpl extends DefaultDialogElementMock(id, label) with AdvancedSparkSettingsBox
     val de = new AdvancedSparkSettingsBoxImpl
@@ -365,10 +429,15 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 }
 
 object OperatorDialogMock {
+  @deprecated("Use constructor without tabular schema")
   def apply(params: OperatorParametersMock, input: IOBase, tabularSchema: TabularSchema) =
-    new OperatorDialogMock(params, input, Some(tabularSchema))
+    new OperatorDialogMock(params, input)
 
   def apply(params: OperatorParametersMock, input: IOBase) =
-    new OperatorDialogMock(params, input, None)
+    new OperatorDialogMock(params, input)
+
+  @deprecated("Use constructor without tabular schema")
+  def apply(params: OperatorParametersMock, input: IOBase, tabularSchema: Option[TabularSchema]) =
+    new OperatorDialogMock(params, input)
 }
 

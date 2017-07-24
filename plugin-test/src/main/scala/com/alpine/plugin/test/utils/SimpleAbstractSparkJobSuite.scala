@@ -81,7 +81,7 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
                                                         inputParameters: OperatorParametersMock,
                                                         tabularSchema: Option[TabularSchema],
                                                         dataSourceName: String = "dataSource"): OperatorParametersMock = {
-    val operatorDialogMock = new OperatorDialogMock(inputParameters, input, tabularSchema)
+    val operatorDialogMock = OperatorDialogMock(inputParameters, input)
     operatorGUINode.onPlacement(operatorDialogMock,
       OperatorDataSourceManagerMock(dataSourceName),
       new OperatorSchemaManagerMock())
@@ -92,8 +92,7 @@ class SimpleAbstractSparkJobSuite extends FunSuite {
                                                                inputHdfs: HdfsTabularDataset,
                                                                inputParameters: OperatorParametersMock,
                                                                dataSourceName: String = "dataSource"): OperatorParametersMock = {
-    val operatorDialogMock = new OperatorDialogMock(inputParameters,
-      inputHdfs, Some(inputHdfs.tabularSchema))
+    val operatorDialogMock = new OperatorDialogMock(inputParameters, inputHdfs)
     testGUI.onPlacement(operatorDialogMock,
       OperatorDataSourceManagerMock(dataSourceName),
       new OperatorSchemaManagerMock())

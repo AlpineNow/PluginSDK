@@ -7,6 +7,7 @@ import com.alpine.plugin.test.utils.TestSparkContexts
 import org.apache.spark._
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
+import org.joda.time.format.ISODateTimeFormat
 import org.scalatest.FunSuite
 
 class DateUtilsTest extends FunSuite {
@@ -168,8 +169,14 @@ class DateUtilsTest extends FunSuite {
     assert(withNullsRemoved.count() == 2)
     val writeDates = sparkUtils.saveDataFrameDefault("target/test-results/pigDatesTest", df, None)
     val roundTripAsString = sc.textFile(writeDates.path)
-    assert(roundTripAsString.first().contains(
-      "2016-09-06T09:46:44.191-07:00,2016-09-06T09:46:44.222-07:00"))
+    val isoFormat = ISODateTimeFormat.dateOptionalTimeParser.withOffsetParsed
+    // The machine running this test will produce ISO strings in its local time zone, which may not be
+    // UTC -07:00
+    val expectedDate1 = isoFormat.parseDateTime("2016-09-06T09:46:44.191-07:00").getMillis
+    val expectedDate2 = isoFormat.parseDateTime("2016-09-06T09:46:44.222-07:00").getMillis
+    assert(roundTripAsString.first().split(",").map(isoFormat.parseDateTime(_).getMillis) ===
+      Seq(expectedDate1, expectedDate2)
+    )
   }
 
 }

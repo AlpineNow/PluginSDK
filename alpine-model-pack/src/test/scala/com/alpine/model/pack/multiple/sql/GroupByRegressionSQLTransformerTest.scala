@@ -24,17 +24,18 @@ class GroupByRegressionSQLTransformerTest extends FunSuite {
   test("testGetPredictionSQL") {
     val sqlTransformer = model.sqlTransformer(sqlGenerator).get
     val selectSQL = SQLUtility.getSelectStatement(sqlTransformer.getSQL, "inputTableName", new AliasGenerator(), sqlGenerator)
-    val expected = """
-                  |SELECT (CASE
-                  | WHEN ("z" = 'zee') THEN "PRED"
-                  | WHEN ("z" = 'zed') THEN "PRED_1"
-                  | ELSE NULL END) AS "PRED"
-                  | FROM (SELECT
-                  | 0.0 + "d" * 1.0 + "a" * 2.0 + "e" * -1.0 AS "PRED",
-                  | 0.0 + "b" * -1.0 + "c" * -2.0 + "e" * 1.0 AS "PRED_1",
-                  | "z" AS "z"
-                  | FROM inputTableName) AS alias_0
-                  |""".stripMargin.replaceAllLiterally("\n", "")
+    val expected =
+      """
+        |SELECT (CASE
+        | WHEN ("z" = 'zee') THEN "PRED"
+        | WHEN ("z" = 'zed') THEN "PRED_1"
+        | ELSE NULL END) AS "PRED"
+        | FROM (SELECT
+        | 0.0 + "d" * 1.0 + "a" * 2.0 + "e" * -1.0 AS "PRED",
+        | 0.0 + "b" * -1.0 + "c" * -2.0 + "e" * 1.0 AS "PRED_1",
+        | "z" AS "z"
+        | FROM inputTableName) AS alias_0
+        |""".stripMargin.replaceAllLiterally("\n", "")
     assert(expected === selectSQL)
   }
 
@@ -68,57 +69,86 @@ class GroupByRegressionSQLTransformerTest extends FunSuite {
     val sqlTransformer = groupByModel.sqlTransformer(sqlGenerator).get
     val selectSQL = SQLUtility.getSelectStatement(sqlTransformer.getSQL, "demo.golfnew", new AliasGenerator(), sqlGenerator)
 
-    val expected = """
-                  |SELECT (CASE
-                  | WHEN ("wind" = 'true') THEN "PRED"
-                  | WHEN ("wind" = 'false') THEN "PRED_1"
-                  | ELSE NULL END) AS "PRED"
-                  | FROM (SELECT
-                  | 0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED",
-                  | 0.2 + "column_1" * 0.5 + "column_2" * -1.0 AS "PRED_1",
-                  | "column_0" AS "wind" FROM
-                  | (SELECT
-                  | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_0",
-                  | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_1",
-                  | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_1",
-                  | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_2",
-                  | "wind" AS "column_0"
-                  | FROM demo.golfnew) AS alias_0) AS alias_1
-                  |""".stripMargin.replaceAllLiterally("\n", "")
+    // println(selectSQL)
+
+    val expected =
+      """SELECT (CASE WHEN ("wind" = 'true')
+        |  THEN "PRED"
+        |        WHEN ("wind" = 'false')
+        |          THEN "PRED_1"
+        |        ELSE NULL END) AS "PRED"
+        |FROM (SELECT
+        |        0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED",
+        |        0.2 + "column_2" * 0.5 + "column_3" * -1.0                   AS "PRED_1",
+        |        "column_0"                                                   AS "wind"
+        |      FROM (SELECT
+        |              (CASE WHEN ("outlook" = 'sunny')
+        |                THEN 1
+        |               WHEN "outlook" IS NOT NULL
+        |                 THEN 0
+        |               ELSE NULL END) AS "outlook_0",
+        |              (CASE WHEN ("outlook" = 'overcast')
+        |                THEN 1
+        |               WHEN "outlook" IS NOT NULL
+        |                 THEN 0
+        |               ELSE NULL END) AS "outlook_1",
+        |              (CASE WHEN ("column_1" = 'sunny')
+        |                THEN 1
+        |               WHEN "column_1" IS NOT NULL
+        |                 THEN 0
+        |               ELSE NULL END) AS "column_2",
+        |              (CASE WHEN ("column_1" = 'overcast')
+        |                THEN 1
+        |               WHEN "column_1" IS NOT NULL
+        |                 THEN 0
+        |               ELSE NULL END) AS "column_3",
+        |              "column_0"      AS "column_0"
+        |            FROM (SELECT
+        |                    (CASE WHEN "outlook" IN ('sunny', 'overcast', 'rain')
+        |                      THEN "outlook"
+        |                     ELSE NULL END) AS "outlook",
+        |                    (CASE WHEN "outlook" IN ('sunny', 'overcast', 'rain')
+        |                      THEN "outlook"
+        |                     ELSE NULL END) AS "column_1",
+        |                    "wind"          AS "column_0"
+        |                  FROM demo.golfnew) AS alias_0) AS alias_1) AS alias_2"""
+        .stripMargin.replaceAll("\\s+", " ").replaceAllLiterally("\n", "")
     assert(expected === selectSQL)
   }
 
   test("testGetPredictionSQL for integer group by") {
     val sqlTransformer = integerModel.sqlTransformer(sqlGenerator).get
     val selectSQL = SQLUtility.getSelectStatement(sqlTransformer.getSQL, "inputTableName", new AliasGenerator(), sqlGenerator)
-    val expected = """
-                  |SELECT (CASE
-                  | WHEN ("z" = 0) THEN "PRED"
-                  | WHEN ("z" = 1) THEN "PRED_1"
-                  | ELSE NULL END) AS "PRED"
-                  | FROM (SELECT
-                  | 0.0 + "d" * 1.0 + "a" * 2.0 + "e" * -1.0 AS "PRED",
-                  | 0.0 + "b" * -1.0 + "c" * -2.0 + "e" * 1.0 AS "PRED_1",
-                  | "z" AS "z"
-                  | FROM inputTableName) AS alias_0
-                  |""".stripMargin.replaceAllLiterally("\n", "")
+    val expected =
+      """
+        |SELECT (CASE
+        | WHEN ("z" = 0) THEN "PRED"
+        | WHEN ("z" = 1) THEN "PRED_1"
+        | ELSE NULL END) AS "PRED"
+        | FROM (SELECT
+        | 0.0 + "d" * 1.0 + "a" * 2.0 + "e" * -1.0 AS "PRED",
+        | 0.0 + "b" * -1.0 + "c" * -2.0 + "e" * 1.0 AS "PRED_1",
+        | "z" AS "z"
+        | FROM inputTableName) AS alias_0
+        |""".stripMargin.replaceAllLiterally("\n", "")
     assert(expected === selectSQL)
   }
 
   test("testGetPredictionSQL for double group by") {
     val sqlTransformer = doubleModel.sqlTransformer(sqlGenerator).get
     val selectSQL = SQLUtility.getSelectStatement(sqlTransformer.getSQL, "inputTableName", new AliasGenerator(), sqlGenerator)
-    val expected = """
-                  |SELECT (CASE
-                  | WHEN ("z" = 0.0) THEN "PRED"
-                  | WHEN ("z" = 1.5) THEN "PRED_1"
-                  | ELSE NULL END) AS "PRED"
-                  | FROM (SELECT
-                  | 0.0 + "d" * 1.0 + "a" * 2.0 + "e" * -1.0 AS "PRED",
-                  | 0.0 + "b" * -1.0 + "c" * -2.0 + "e" * 1.0 AS "PRED_1",
-                  | "z" AS "z"
-                  | FROM inputTableName) AS alias_0
-                  |""".stripMargin.replaceAllLiterally("\n", "")
+    val expected =
+      """
+        |SELECT (CASE
+        | WHEN ("z" = 0.0) THEN "PRED"
+        | WHEN ("z" = 1.5) THEN "PRED_1"
+        | ELSE NULL END) AS "PRED"
+        | FROM (SELECT
+        | 0.0 + "d" * 1.0 + "a" * 2.0 + "e" * -1.0 AS "PRED",
+        | 0.0 + "b" * -1.0 + "c" * -2.0 + "e" * 1.0 AS "PRED_1",
+        | "z" AS "z"
+        | FROM inputTableName) AS alias_0
+        |""".stripMargin.replaceAllLiterally("\n", "")
     assert(expected === selectSQL)
   }
 

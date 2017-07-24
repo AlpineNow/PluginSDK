@@ -35,12 +35,13 @@ trait OperatorDesignContext {
   *                                  (filtered for hadoop or database depending on the operator runtime class)
   *                                  that could be used by the operator at runtime.
   */
-class OperatorDesignContextImpl(val inputMetadata: Map[OperatorInfo, IOMetadata],
-                                val parameters: OperatorParameters,
-                                val operatorDataSourceManager: OperatorDataSourceManager,
-                                val chorusAPICaller: ChorusAPICaller,
-                                val config: CustomOperatorConfig
-                               ) extends OperatorDesignContext {
+class OperatorDesignContextImpl(
+  val inputMetadata: Map[OperatorInfo, IOMetadata],
+  val parameters: OperatorParameters,
+  val operatorDataSourceManager: OperatorDataSourceManager,
+  val chorusAPICaller: ChorusAPICaller,
+  val config: CustomOperatorConfig
+) extends OperatorDesignContext {
   /**
     * Equivalent to the input schemas argument that used to be passed directly to the
     * onInputOrParameterChange of OperatorGUINode by the Alpine Engine.
@@ -69,6 +70,7 @@ trait TabularIOMetadata extends IOMetadata {
 
   def datasource: DataSource
 }
+
 /**
   * The default class for pass along TabularSchema and data-source information.
   *
@@ -76,8 +78,10 @@ trait TabularIOMetadata extends IOMetadata {
   * then we may wrap this in AugmentedTabularMetadata, if we can get the full TabularSchema
   * from step run results.
   */
-case class TabularIOMetadataDefault(tabularSchema: TabularSchema,
-                                    datasource: DataSource) extends TabularIOMetadata
+case class TabularIOMetadataDefault(
+  tabularSchema: TabularSchema,
+  datasource: DataSource
+) extends TabularIOMetadata
 
 /**
   * Used when the original metadata produced by the operator had a partial schema.
@@ -87,7 +91,9 @@ case class TabularIOMetadataDefault(tabularSchema: TabularSchema,
   * @param tabularSchema    TabularSchema from step run results.
   * @param originalMetadata Original Metadata, produced by the OperatorGUINode.
   */
-case class AugmentedTabularMetadata(tabularSchema: TabularSchema,
-                                    originalMetadata: TabularIOMetadata) extends TabularIOMetadata {
+case class AugmentedTabularMetadata(
+  tabularSchema: TabularSchema,
+  originalMetadata: TabularIOMetadata
+) extends TabularIOMetadata {
   override def datasource: DataSource = originalMetadata.datasource
 }

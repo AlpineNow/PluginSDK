@@ -7,12 +7,11 @@ package com.alpine.model.pack.preprocess
 import com.alpine.model.RowModel
 import com.alpine.model.export.pfa.modelconverters.OneHotEncodingPFAConverter
 import com.alpine.model.export.pfa.{PFAConverter, PFAConvertible}
-import com.alpine.model.pack.sql.SimpleSQLTransformer
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.Transformer
-import com.alpine.transformer.sql.ColumnarSQLExpression
-import com.alpine.util.{FilteredSeq, ModelUtil}
+import com.alpine.transformer.sql.{ColumnarSQLExpression, LayeredSQLExpressions, SQLTransformer}
+import com.alpine.util.{FilteredSeq, ModelUtil, SQLUtility}
 
 /**
   * Model to apply one-hot encoding to categorical input features.
@@ -139,24 +138,39 @@ case class SingleOneHotEncoder(transform: OneHotEncodedFeature) {
   }
 }
 
-case class OneHotEncodingSQLTransformer(model: OneHotEncodingModel, sqlGenerator: SQLGenerator) extends SimpleSQLTransformer {
+case class OneHotEncodingSQLTransformer(model: OneHotEncodingModel, sqlGenerator: SQLGenerator) extends SQLTransformer {
 
-  override def getSQLExpressions: Seq[ColumnarSQLExpression] = {
-    (inputColumnNames zip model.oneHotEncodedFeatures).flatMap {
-      case (name, oneHotEncodedFeatures) =>
+  def getSQL: LayeredSQLExpressions = {
+    val badDataCheckSQL = (inputColumnNames zip model.oneHotEncodedFeatures).map {
+      case (name, oneHotEncodedFeature) =>
         val inputFeature: String = name.escape(sqlGenerator)
-        oneHotEncodedFeatures.hotValues.map(v1 => {
+        val validValues = oneHotEncodedFeature.hotValues ++ oneHotEncodedFeature.baseValue.toSeq
+        val nullIfBadData =
+          s"""(CASE
+             | WHEN $inputFeature IN (${validValues.map(SQLUtility.wrapInSingleQuotes).mkString(", ")})
+             | THEN $inputFeature
+             | ELSE NULL
+             | END)""".stripMargin.replace("\n", "")
+        (ColumnarSQLExpression(nullIfBadData), name)
+    }
+
+    val oneHotEncodingSQL = (inputColumnNames zip model.oneHotEncodedFeatures).flatMap {
+      case (name, oneHotEncodedFeature) =>
+        val inputFeature: String = name.escape(sqlGenerator)
+        val newFeatureExpressions = oneHotEncodedFeature.hotValues.map(v1 => {
           // If it is the hot value v1, we generate 1.
           // If it is one of the other known values (including base value, if we have one), we generate 0.
           // Otherwise generate null.
-          val otherValues: Seq[String] = oneHotEncodedFeatures.hotValues.filterNot(v => v == v1) ++ oneHotEncodedFeatures.baseValue.toSeq
-          val sql = s"""(CASE WHEN ${featureEqualsValue(inputFeature, v1)} THEN 1 WHEN ${otherValues.map(vOther => featureEqualsValue(inputFeature, vOther)).mkString(" OR ")} THEN 0 ELSE NULL END)"""
+          val sql =
+          s"""(CASE WHEN ${featureEqualsValue(inputFeature, v1)} THEN 1 WHEN $inputFeature IS NOT NULL THEN 0 ELSE NULL END)"""
           ColumnarSQLExpression(sql)
         })
-    }
+        newFeatureExpressions
+    } zip outputColumnNames
+    LayeredSQLExpressions(Seq(badDataCheckSQL, oneHotEncodingSQL))
   }
 
   private def featureEqualsValue(inputFeature: String, v: String) = {
-    s"""($inputFeature = '$v')"""
+    s"""($inputFeature = ${SQLUtility.wrapInSingleQuotes(v)})"""
   }
 }

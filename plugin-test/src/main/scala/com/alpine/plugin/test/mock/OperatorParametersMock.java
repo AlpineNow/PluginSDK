@@ -4,18 +4,17 @@
 
 package com.alpine.plugin.test.mock;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import com.alpine.plugin.core.OperatorParameters;
 import com.alpine.plugin.core.dialog.ChorusFile;
 import com.alpine.plugin.core.io.OperatorInfo;
 import scala.Option;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
-
-import com.alpine.plugin.core.OperatorParameters;
 import scala.collection.mutable.Map;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Plugin 1.0 operator parameters.

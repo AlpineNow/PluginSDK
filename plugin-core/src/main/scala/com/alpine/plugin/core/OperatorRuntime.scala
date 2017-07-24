@@ -33,11 +33,12 @@ O <: IOBase] {
     * @return The output from the execution.
     */
   @throws[Exception]
-  def onExecution(context: CTX,
-                  input: I,
-                  params: OperatorParameters,
-                  listener: OperatorListener
-                 ): O
+  def onExecution(
+    context: CTX,
+    input: I,
+    params: OperatorParameters,
+    listener: OperatorListener
+  ): O
 
   /**
     * This is called when the user clicks on 'stop'. If the operator is
@@ -49,9 +50,10 @@ O <: IOBase] {
     * @param listener The listener object to communicate information back to
     *                 the console.
     */
-  def onStop(context: CTX,
-             listener: OperatorListener
-            ): Unit
+  def onStop(
+    context: CTX,
+    listener: OperatorListener
+  ): Unit
 
   /**
     * This is called to generate the visual output for the results console.
@@ -66,11 +68,12 @@ O <: IOBase] {
     *                 the console.
     * @return
     */
-  def createVisualResults(context: CTX,
-                          input: I,
-                          output: O,
-                          params: OperatorParameters,
-                          listener: OperatorListener): VisualModel = {
+  def createVisualResults(
+    context: CTX,
+    input: I,
+    output: O,
+    params: OperatorParameters,
+    listener: OperatorListener): VisualModel = {
     throw new NotImplementedError()
   }
 

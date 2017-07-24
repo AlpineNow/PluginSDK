@@ -12,9 +12,10 @@ import com.alpine.plugin.core.utils.{HdfsStorageFormat, HdfsStorageFormatType}
 import com.databricks.spark.csv._
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
+import org.apache.spark.sql.catalyst.encoders.RowEncoder
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.types.TimestampType
-import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SQLContext}
 import org.joda.time.format.DateTimeFormat
 
 import scala.util.Try
@@ -175,6 +176,12 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
     withDatesChanged.write.parquet(path)
     new HdfsParquetDatasetDefault(path, tabularSchema, addendum)
+  }
+
+  def saveDatasetAsParquet(path: String,
+    dataset: Dataset[Row],
+    addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsParquetDataset = {
+    saveAsParquet(path, dataset.toDF(), None, addendum)
   }
 
   /**
@@ -418,6 +425,12 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
       case hive: HiveTable => getDataFrame(hive)
       case hdfs: HdfsTabularDataset => getDataFrame(hdfs)
     }
+  }
+
+  def getSparkDataset(dataset: TabularDataset): Dataset[Row] = {
+    val frame = getDataFrameGeneral(dataset)
+    val encoder = RowEncoder(frame.schema)
+    frame.as[Row](encoder)
   }
 
   /**
