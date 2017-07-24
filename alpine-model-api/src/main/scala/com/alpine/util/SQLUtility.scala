@@ -10,11 +10,7 @@ import com.alpine.transformer.sql._
 object SQLUtility {
 
   def comparedToOthers(name: ColumnName, others: Seq[ColumnName], comparator: String, sqlGenerator: SQLGenerator): String = {
-    if (others.isEmpty) ""
-    else name.escape(sqlGenerator) + " " + comparator + " " + others.head.escape(sqlGenerator) + {
-      if (others.size == 1) ""
-      else " AND " + comparedToOthers(name, others.tail, comparator, sqlGenerator)
-    }
+    others.map(o => name.escape(sqlGenerator) + " " + comparator + " " + o.escape(sqlGenerator)).mkString(" AND ")
   }
 
   def wrapInSingleQuotes(s: String): String = "'" + s + "'"
@@ -31,29 +27,47 @@ object SQLUtility {
   }
 
   def argMinOrMaxSQL(labelValuesToColumnNames: Seq[(String, ColumnName)], comparator: String, sqlGenerator: SQLGenerator): String = {
-    def comparisonSQL(columnNamesAndLabelValues: Seq[(String, ColumnName)]): String = {
-      if (columnNamesAndLabelValues.size == 1) " ELSE " + wrapInSingleQuotes(columnNamesAndLabelValues.head._1)
-      else " WHEN (" + {
-        comparedToOthers(columnNamesAndLabelValues.head._2, columnNamesAndLabelValues.tail.map(_._2), comparator, sqlGenerator) +
-          ") THEN " + wrapInSingleQuotes(columnNamesAndLabelValues.head._1) +
-          comparisonSQL(columnNamesAndLabelValues.tail)
+    val builder = new StringBuilder
+    var started = false
+    val (values, names) = labelValuesToColumnNames.unzip
+    var (valuesHead: String, valuesTail: Seq[String]) = (values.head, values.tail)
+    var (namesHead: ColumnName, namesTail: Seq[ColumnName]) = (names.head, names.tail)
+    // Executes for all but the last case.
+    while (namesTail.nonEmpty) {
+      if (started) {
+        builder.append(" ")
+      } else {
+        started = true
       }
+      val comparisonSQL = comparedToOthers(namesHead, namesTail, comparator, sqlGenerator)
+      builder.append(s"WHEN ($comparisonSQL) THEN ${wrapInSingleQuotes(valuesHead)}")
+      namesHead = namesTail.head
+      namesTail = namesTail.tail
+      valuesHead = valuesTail.head
+      valuesTail = valuesTail.tail
     }
 
-    nullWhenAnyColumnNull(labelValuesToColumnNames.map(_._2), sqlGenerator, "(CASE" + comparisonSQL(labelValuesToColumnNames) + " END)")
+    val notNullableSQL = s"(CASE $builder ELSE ${wrapInSingleQuotes(valuesHead)} END)"
+    nullWhenAnyColumnNull(names, sqlGenerator, notNullableSQL)
   }
 
   def minOrMaxByRowSQL(columnNames: Seq[ColumnName], comparator: String, sqlGenerator: SQLGenerator): String = {
-    def comparisonSQL(columnNamesSubList: Seq[ColumnName]): String = {
-      if (columnNamesSubList.size == 1) " ELSE " + columnNamesSubList.head.escape(sqlGenerator)
-      else " WHEN (" + {
-        comparedToOthers(columnNamesSubList.head, columnNamesSubList.tail, comparator, sqlGenerator) +
-          ") THEN " + columnNamesSubList.head.escape(sqlGenerator) +
-          comparisonSQL(columnNamesSubList.tail)
+    var (namesHead: ColumnName, namesTail: Seq[ColumnName]) = (columnNames.head, columnNames.tail)
+    val builder = new StringBuilder
+    var started = false
+    while (namesTail.nonEmpty) {
+      if (started) {
+        builder.append(" ")
+      } else {
+        started = true
       }
+      val comparisonSQL = comparedToOthers(namesHead, namesTail, comparator, sqlGenerator)
+      builder.append(s"WHEN ($comparisonSQL) THEN ${namesHead.escape(sqlGenerator)}")
+      namesHead = namesTail.head
+      namesTail = namesTail.tail
     }
-
-    "(CASE" + comparisonSQL(columnNames) + " END)"
+    builder.append(s" ELSE ${namesHead.escape(sqlGenerator)}")
+    "(CASE " + builder + " END)"
   }
 
   def nullWhenAnyColumnNull(columnNames: Seq[ColumnName], sqlGenerator: SQLGenerator, innards: String): String = {
@@ -81,11 +95,12 @@ object SQLUtility {
     }.mkString(" + ")
   }
 
-  def createTable(sql: LayeredSQLExpressions,
-                  inputTableName: String,
-                  outputTableName: String,
-                  aliasGenerator: AliasGenerator,
-                  sqlGenerator: SQLGenerator): String = {
+  def createTable(
+    sql: LayeredSQLExpressions,
+    inputTableName: String,
+    outputTableName: String,
+    aliasGenerator: AliasGenerator,
+    sqlGenerator: SQLGenerator): String = {
     val selectStatement: String = getSelectStatement(sql, inputTableName, aliasGenerator, sqlGenerator)
     sqlGenerator.dbType match {
       // basically retain old functionality just in case
@@ -94,23 +109,25 @@ object SQLUtility {
     }
   }
 
-  def createTempTable(sql: LayeredSQLExpressions,
-                      inputTableName: String,
-                      outputTableName: String,
-                      aliasGenerator: AliasGenerator,
-                      sqlGenerator: SQLGenerator): String = {
+  def createTempTable(
+    sql: LayeredSQLExpressions,
+    inputTableName: String,
+    outputTableName: String,
+    aliasGenerator: AliasGenerator,
+    sqlGenerator: SQLGenerator): String = {
     val selectStatement: String = getSelectStatement(sql, inputTableName, aliasGenerator, sqlGenerator)
     sqlGenerator.getCreateTempTableAsSelectSQL(selectStatement, outputTableName)
   }
 
   def getSelectStatement(sql: LayeredSQLExpressions,
-                         inputTableName: String,
-                         aliasGenerator: AliasGenerator,
-                         sqlGenerator: SQLGenerator): String = {
+    inputTableName: String,
+    aliasGenerator: AliasGenerator,
+    sqlGenerator: SQLGenerator): String = {
     val reversed = sql.layers.reverse
     s"""SELECT ${selectColumnsAs(reversed.head, sqlGenerator)} FROM ${selectFromInput(reversed.tail, inputTableName, aliasGenerator, sqlGenerator)}"""
   }
 
+  // Recursive, but if our nested select statements are that deep we have a problem.
   def selectFromInput(intermediateLayers: Seq[Seq[(ColumnarSQLExpression, ColumnName)]], input: String, aliasGenerator: AliasGenerator, sqlGenerator: SQLGenerator): String = {
     if (intermediateLayers == Nil) {
       input

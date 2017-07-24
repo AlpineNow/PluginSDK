@@ -156,9 +156,21 @@ trait OperatorDialog {
     * @param id              String id of dropdown box. This corresponds to the id for this parameter in OperatorsParameters.
     * @param label           The visual label of this dropdown box.
     * @param extensionFilter e.g. Seq(.pynb) for python notebooks
+    * @param isRequired      Whether the user is required to select a value for this parameter.
+    * @return A ChorusFileDropdown element.
     */
   def addChorusFileDropdownBox(id: String, label: String, extensionFilter: Set[String], isRequired: Boolean): ChorusFileDropdown
 
+  /**
+    * @param id              String id of dropdown box. This corresponds to the id for this parameter in OperatorsParameters.
+    * @param label           The visual label of this dropdown box.
+    * @param extensionFilter e.g. Seq(.pynb) for python notebooks
+    * @param isRequired      Whether the user is required to select a value for this parameter.
+    * @param linkText        If specified, a link button with label `textLink` will show up at the bottom right of the dropdown selector.
+    *                        Clicking on this button will open a new browser tab with URL of the workfile selected.
+    * @return A ChorusFileDropdown element.
+    */
+  def addChorusFileDropdownBox(id: String, label: String, extensionFilter: Set[String], isRequired: Boolean, linkText: Option[String]): ChorusFileDropdown
   /**
     * Add an integer text box.
     *
@@ -347,6 +359,23 @@ trait OperatorDialog {
                         regex: String,
                         required: Boolean
                        ): StringBox
+
+  /**
+    * Add a string box that obfuscates the characters typed.
+    * Note: In its current implementation, the passowrd cannot be seen in the UI, but is not in any
+    * other way more secure. The value of the password will still show up in a downloaded xml file.
+    *
+    * @param id       String id of this input box.
+    * @param label    The visual label of this input box.
+    * @param regex    The regular expression constraint for the input box. Default is "+." (any char)
+    * @param required Boolean indicating whether the value must be non-empty.
+    * @return
+    */
+  def addPasswordBox(id: String,
+    label: String,
+    regex: String,
+    required: Boolean): StringBox
+
 
   /**
     * Add a drop down box that can be used to select a parent operator name.

@@ -19,9 +19,10 @@ class TransformationSchema(val outputFeatures: Seq[ColumnDef], val identifier: S
   * If the user provides us with the input feature descriptions, then in the Predictor we will be able to verify that
   * the data set for prediction contains all the necessary columns at design-time (not currently implemented but should be easy to do).
   */
-case class DetailedTransformationSchema(inputFeatures: Seq[ColumnDef],
-                                        override val outputFeatures: Seq[ColumnDef],
-                                        override val identifier: String = "")
+case class DetailedTransformationSchema(
+  inputFeatures: Seq[ColumnDef],
+  override val outputFeatures: Seq[ColumnDef],
+  override val identifier: String = "")
   extends TransformationSchema(outputFeatures, identifier)
 
 trait RowModelMetadata extends IOMetadata {
@@ -33,15 +34,16 @@ trait RowModelMetadata extends IOMetadata {
 
 }
 
-case class RowModelMetadataDefault(transformationSchema: TransformationSchema,
-                                   sqlScorable: Boolean,
-                                   sqlOutputFeatures: Seq[ColumnDef]
-                                  ) extends RowModelMetadata
+case class RowModelMetadataDefault(
+  transformationSchema: TransformationSchema,
+  sqlScorable: Boolean,
+  sqlOutputFeatures: Seq[ColumnDef]
+) extends RowModelMetadata
 
 class ClassificationModelMetadata(inputFeatures: Option[Seq[ColumnDef]],
-                                  identifier: String,
-                                  val sqlScorable: Boolean,
-                                  val dependentColumn: Option[ColumnDef]) extends RowModelMetadata {
+  identifier: String,
+  val sqlScorable: Boolean,
+  val dependentColumn: Option[ColumnDef]) extends RowModelMetadata {
   override def transformationSchema: TransformationSchema = {
     inputFeatures match {
       case Some(f) => DetailedTransformationSchema(inputFeatures = f, outputFeatures = FeatureUtil.classificationOutputFeatures, identifier)
@@ -52,10 +54,11 @@ class ClassificationModelMetadata(inputFeatures: Option[Seq[ColumnDef]],
   override def sqlOutputFeatures: Seq[ColumnDef] = FeatureUtil.simpleModelOutputFeatures
 }
 
-class RegressionModelMetadata(inputFeatures: Option[Seq[ColumnDef]],
-                              identifier: String,
-                              val sqlScorable: Boolean,
-                              val dependentColumn: Option[ColumnDef]) extends RowModelMetadata {
+class RegressionModelMetadata(
+  inputFeatures: Option[Seq[ColumnDef]],
+  identifier: String,
+  val sqlScorable: Boolean,
+  val dependentColumn: Option[ColumnDef]) extends RowModelMetadata {
   override def transformationSchema: TransformationSchema = {
     inputFeatures match {
       case Some(f) => DetailedTransformationSchema(inputFeatures = f, outputFeatures = FeatureUtil.regressionOutputFeatures, identifier)
@@ -66,9 +69,10 @@ class RegressionModelMetadata(inputFeatures: Option[Seq[ColumnDef]],
   override def sqlOutputFeatures: Seq[ColumnDef] = FeatureUtil.regressionOutputFeatures
 }
 
-class ClusteringModelMetadata(inputFeatures: Option[Seq[ColumnDef]],
-                              identifier: String,
-                              val sqlScorable: Boolean) extends RowModelMetadata {
+class ClusteringModelMetadata(
+  inputFeatures: Option[Seq[ColumnDef]],
+  identifier: String,
+  val sqlScorable: Boolean) extends RowModelMetadata {
   override def transformationSchema: TransformationSchema = {
     inputFeatures match {
       case Some(f) => DetailedTransformationSchema(inputFeatures = f, outputFeatures = FeatureUtil.classificationOutputFeatures, identifier)

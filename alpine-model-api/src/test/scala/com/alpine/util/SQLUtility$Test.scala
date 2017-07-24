@@ -28,6 +28,55 @@ class SQLUtility$Test extends FunSuite {
         | END""".stripMargin.replace("\n", "") === comparisonSQL)
   }
 
+  test("Should generate min or max SQL correctly for a middle length list") {
+    val list = Range(0, 5).map(i => (s"A$i", ColumnName(s"d$i")))
+    val comparisonSQL: String = argMinOrMaxSQL(list, "<", new SimpleSQLGenerator)
+    val expectedSQL =
+      """CASE
+        | WHEN "d0" IS NULL OR "d1" IS NULL OR "d2" IS NULL OR "d3" IS NULL OR "d4" IS NULL THEN NULL
+        | ELSE (CASE
+        | WHEN ("d0" < "d1" AND "d0" < "d2" AND "d0" < "d3" AND "d0" < "d4") THEN 'A0'
+        | WHEN ("d1" < "d2" AND "d1" < "d3" AND "d1" < "d4") THEN 'A1'
+        | WHEN ("d2" < "d3" AND "d2" < "d4") THEN 'A2'
+        | WHEN ("d3" < "d4") THEN 'A3'
+        | ELSE 'A4' END) END""".stripMargin.replace("\n", "")
+    assert(expectedSQL === comparisonSQL)
+  }
+
+  test("Should generate min or max SQL for a long list") {
+    val list = Range(0, 2000).map(i => (s"A$i", ColumnName(s"d$i")))
+    val comparisonSQL: String = argMinOrMaxSQL(list, "<", new SimpleSQLGenerator)
+    //    println(comparisonSQL)
+  }
+
+  test("Generate test SQL") {
+    // Use this to generate SQL to test performance of argMinOrMaxSQL for different numbers of columns.
+    // I find things start to get laggy at around 200.
+    val list = Range(0, 500).map(i => (s"A$i", ColumnName(s"d$i")))
+    val randomColumns: String = list.map(x => "RANDOM() AS " + x._2.rawName).mkString(", ")
+    val comparisonSQL: String = argMinOrMaxSQL(list, "<", new SimpleSQLGenerator)
+    //   println(s"SELECT $comparisonSQL FROM (SELECT $randomColumns FROM demo.golfnew) AS hi")
+  }
+
+  test("Should generate min or max by row SQL correctly") {
+    val list = Range(0, 5).map(i => ColumnName(s"d$i"))
+    val comparisonSQL: String = minOrMaxByRowSQL(list, "<", new SimpleSQLGenerator)
+    val expectedSQL =
+      s"""(CASE
+         | WHEN ("d0" < "d1" AND "d0" < "d2" AND "d0" < "d3" AND "d0" < "d4") THEN "d0"
+         | WHEN ("d1" < "d2" AND "d1" < "d3" AND "d1" < "d4") THEN "d1"
+         | WHEN ("d2" < "d3" AND "d2" < "d4") THEN "d2"
+         | WHEN ("d3" < "d4") THEN "d3"
+         | ELSE "d4" END)""".stripMargin.replace("\n", "")
+    assert(expectedSQL === comparisonSQL)
+  }
+
+  test("Should generate min or max by row SQL for a long list") {
+    val list = Range(0, 2000).map(i => ColumnName(s"d$i"))
+    val comparisonSQL: String = minOrMaxByRowSQL(list, "<", new SimpleSQLGenerator)
+    //    println(comparisonSQL)
+  }
+
   test("Should generate group by SQL correctly") {
     val expected = """(CASE WHEN ("outlook" = 'rain') THEN "PRED_1" WHEN ("outlook" = 'sunny') THEN "PRED_2" WHEN ("outlook" = 'overcast') THEN "PRED_3" ELSE NULL END)"""
     val actual = groupBySQL(

@@ -17,6 +17,10 @@ class HDFSVisualModelHelperMock extends HDFSVisualModelHelper {
     TabularVisualModel(Seq(), dataset.tabularSchema.definedColumns)
   }
 
+  override def createTabularDatasetVisualization(dataset: TabularDataset, rowsToFetch: Int): TabularVisualModel = {
+    TabularVisualModel(Seq(), dataset.tabularSchema.definedColumns)
+  }
+
   override def createPlainTextVisualModel(hdfsFile: HdfsFile): TextVisualModel = {
     TextVisualModel("In the production environment, this would be replaced with a preview of the contents of the file at "
       + hdfsFile.path + " on the hadoop cluster.")

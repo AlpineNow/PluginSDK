@@ -17,9 +17,12 @@ case class ChorusUserInfo(userID: String, userName: String, sessionID: String)
   */
 case class WorkflowInfo(workflowID: String)
 
-case class NotebookDetails(readyToExecute: Boolean,
-                           inputMetadata: NotebookIOInfo,
-                           outputMetadata: NotebookIOInfo)
+
+case class NotebookDetails(readyToExecuteDB: Boolean,
+  readyToExecuteHD: Boolean,
+  useSpark: Boolean,
+  inputsMetadata: Map[String, NotebookIOInfo],
+  outputsMetadata: Map[String, NotebookIOInfo])
 
 
 case class PythonNotebook(chorusFile: ChorusFile,
@@ -34,4 +37,14 @@ case class PythonNotebookExecution(notebookId: String,
                                    error: Option[String],
                                    isFinished: Boolean)
 
-case class NotebookIOInfo(delimiter: String, quote: String, escape: String, columns: Seq[(String, String)])
+
+case class NotebookIOInfo(dataSourceName: String,
+  isHdfsInput: Boolean,
+  delimiter: String,
+  quote: String,
+  escape: String,
+  columns: Seq[(String, String)],
+  usesSpark: Boolean,
+  inputName: Option[String])
+
+case class ChorusDBSourceInfo(name: String, id: Int)

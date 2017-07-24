@@ -6,11 +6,11 @@ package com.alpine.plugin.test.mock
 import java.io.{File, InputStream, OutputStream}
 
 import com.alpine.plugin.core.config.CustomOperatorConfig
-import com.alpine.plugin.core.{ChorusUserInfo, OperatorListener, OperatorParameters, WorkflowInfo}
 import com.alpine.plugin.core.io.IOBase
 import com.alpine.plugin.core.spark.{SparkExecutionContext, SparkIOTypedPluginJob, SparkJobConfiguration, SubmittedSparkJob}
 import com.alpine.plugin.core.utils.ChorusAPICaller
 import com.alpine.plugin.core.visualization.HDFSVisualModelHelper
+import com.alpine.plugin.core.{ChorusUserInfo, OperatorListener, OperatorParameters, WorkflowInfo}
 import org.apache.hadoop.fs.FileSystem
 
 /**
@@ -49,4 +49,11 @@ class SparkExecutionContextMock(chorusAPICallerMock: ChorusAPICaller) extends Sp
   override def recommendedTempDir: File = ???
 
   override def config: CustomOperatorConfig = ???
+
+  override def getSparkAutoTunedParameters[I <: IOBase, JOB <: SparkIOTypedPluginJob[I, _]](
+    jobClass: Class[JOB],
+    input: I,
+    params: OperatorParameters,
+    sparkConf: SparkJobConfiguration,
+    listener: OperatorListener) = ???
 }

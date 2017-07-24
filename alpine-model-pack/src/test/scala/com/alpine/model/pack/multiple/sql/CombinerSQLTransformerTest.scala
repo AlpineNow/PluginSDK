@@ -12,6 +12,7 @@ import com.alpine.plugin.core.io.{ColumnDef, ColumnType}
 import com.alpine.sql.AliasGenerator
 import com.alpine.transformer.sql.{ColumnName, ColumnarSQLExpression, LayeredSQLExpressions}
 import com.alpine.util.{SQLUtility, SimpleSQLGenerator}
+import org.apache.commons.lang3.StringUtils
 import org.scalatest.FunSuite
 
 class CombinerSQLTransformerTest extends FunSuite {
@@ -29,24 +30,30 @@ class CombinerSQLTransformerTest extends FunSuite {
     val sqlExpressions = sqlTransformer.getSQL
     val createTableSQL = SQLUtility.createTable(sqlExpressions, "demo.golfnew", "demo.delete_me", new AliasGenerator, simpleSQLGenerator)
 
+    // println(createTableSQL)
+
     val expectedSQL =
       """
         |CREATE TABLE demo.delete_me AS
         | SELECT
-        | 0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED",
-        | 0.2 + "column_0" * 0.9 + "column_2" * 1.0 + "column_1" * 5.0 AS "PRED_1"
-        | FROM
-        | (SELECT
-        | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_0",
-        | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_1",
-        | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "wind_0",
-        | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_0",
-        | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_2",
-        | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "column_1"
-        | FROM demo.golfnew
-        |) AS alias_0
-        |""".stripMargin.replace("\n", "")
-    assert(expectedSQL === createTableSQL)
+        |     0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED",
+        |     0.2 + "column_2" * 0.9 + "column_4" * 1.0 + "column_3" * 5.0 AS "PRED_1"
+        |   FROM (SELECT
+        |       (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN "outlook" IS NOT NULL THEN 0 ELSE NULL END) AS "outlook_0",
+        |       (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN "outlook" IS NOT NULL THEN 0 ELSE NULL END) AS "outlook_1",
+        |       (CASE WHEN ("wind" = 'true') THEN 1 WHEN "wind" IS NOT NULL THEN 0 ELSE NULL END) AS "wind_0",
+        |       (CASE WHEN ("column_0" = 'sunny') THEN 1 WHEN "column_0" IS NOT NULL THEN 0 ELSE NULL END) AS "column_2",
+        |       (CASE WHEN ("column_0" = 'overcast') THEN 1 WHEN "column_0" IS NOT NULL THEN 0 ELSE NULL END) AS "column_4",
+        |       (CASE WHEN ("column_1" = 'true') THEN 1 WHEN "column_1" IS NOT NULL THEN 0 ELSE NULL END) AS "column_3"
+        |     FROM (SELECT
+        |         (CASE WHEN "outlook" IN ('sunny', 'overcast', 'rain') THEN "outlook" ELSE NULL END) AS "outlook",
+        |         (CASE WHEN "wind" IN ('true', 'false') THEN "wind" ELSE NULL END) AS "wind",
+        |         (CASE WHEN "outlook" IN ('sunny', 'overcast', 'rain') THEN "outlook" ELSE NULL END) AS "column_0",
+        |         (CASE WHEN "wind" IN ('true', 'false') THEN "wind" ELSE NULL END) AS "column_1"
+        | FROM demo.golfnew) AS alias_0) AS alias_1
+        |""".stripMargin
+
+    assert(StringUtils.normalizeSpace(expectedSQL) === createTableSQL)
   }
 
   test("Model identifiers passed in should take effect in the generated column names.") {
@@ -60,24 +67,29 @@ class CombinerSQLTransformerTest extends FunSuite {
     val sqlExpressions = sqlTransformer.getSQL
     val createTableSQL = SQLUtility.createTable(sqlExpressions, "demo.golfnew", "demo.delete_me", new AliasGenerator, simpleSQLGenerator)
 
+    //println(createTableSQL)
+
     val expectedSQL =
       """
         |CREATE TABLE demo.delete_me AS
         | SELECT
-        | 0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED_first",
-        | 0.2 + "column_0" * 0.9 + "column_2" * 1.0 + "column_1" * 5.0 AS "PRED_second"
-        | FROM
-        | (SELECT
-        | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_0",
-        | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "outlook_1",
-        | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "wind_0",
-        | (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN ("outlook" = 'overcast') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_0",
-        | (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN ("outlook" = 'sunny') OR ("outlook" = 'rain') THEN 0 ELSE NULL END) AS "column_2",
-        | (CASE WHEN ("wind" = 'true') THEN 1 WHEN ("wind" = 'false') THEN 0 ELSE NULL END) AS "column_1"
-        | FROM demo.golfnew
-        |) AS alias_0
-        |""".stripMargin.replace("\n", "")
-    assert(expectedSQL === createTableSQL)
+        |     0.2 + "outlook_0" * 0.9 + "outlook_1" * 1.0 + "wind_0" * 5.0 AS "PRED_first",
+        |     0.2 + "column_2" * 0.9 + "column_4" * 1.0 + "column_3" * 5.0 AS "PRED_second"
+        |   FROM (SELECT
+        |       (CASE WHEN ("outlook" = 'sunny') THEN 1 WHEN "outlook" IS NOT NULL THEN 0 ELSE NULL END) AS "outlook_0",
+        |       (CASE WHEN ("outlook" = 'overcast') THEN 1 WHEN "outlook" IS NOT NULL THEN 0 ELSE NULL END) AS "outlook_1",
+        |       (CASE WHEN ("wind" = 'true') THEN 1 WHEN "wind" IS NOT NULL THEN 0 ELSE NULL END) AS "wind_0",
+        |       (CASE WHEN ("column_0" = 'sunny') THEN 1 WHEN "column_0" IS NOT NULL THEN 0 ELSE NULL END) AS "column_2",
+        |       (CASE WHEN ("column_0" = 'overcast') THEN 1 WHEN "column_0" IS NOT NULL THEN 0 ELSE NULL END) AS "column_4",
+        |       (CASE WHEN ("column_1" = 'true') THEN 1 WHEN "column_1" IS NOT NULL THEN 0 ELSE NULL END) AS "column_3"
+        |     FROM (SELECT
+        |         (CASE WHEN "outlook" IN ('sunny', 'overcast', 'rain') THEN "outlook" ELSE NULL END) AS "outlook",
+        |         (CASE WHEN "wind" IN ('true', 'false') THEN "wind" ELSE NULL END) AS "wind",
+        |         (CASE WHEN "outlook" IN ('sunny', 'overcast', 'rain') THEN "outlook" ELSE NULL END) AS "column_0",
+        |         (CASE WHEN "wind" IN ('true', 'false') THEN "wind" ELSE NULL END) AS "column_1"
+        | FROM demo.golfnew) AS alias_0) AS alias_1
+        |""".stripMargin
+    assert(StringUtils.normalizeSpace(expectedSQL) === createTableSQL)
   }
 
   test("SQL Expression for Logistic Regression combined with carryover columns") {

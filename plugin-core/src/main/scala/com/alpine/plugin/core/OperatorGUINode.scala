@@ -34,9 +34,11 @@ abstract class OperatorGUINode[I <: IOBase, O <: IOBase] {
     *                                  the nature of the output/input schemas.
     *                              E.g., provide the output schema.
     */
-  def onPlacement(operatorDialog: OperatorDialog,
-                  operatorDataSourceManager: OperatorDataSourceManager,
-                  operatorSchemaManager: OperatorSchemaManager): Unit
+  def onPlacement(
+    operatorDialog: OperatorDialog,
+    operatorDataSourceManager: OperatorDataSourceManager,
+    operatorSchemaManager: OperatorSchemaManager
+  ): Unit
 
   /**
     * Since Alpine 6.3, SDK 1.9.
@@ -81,9 +83,11 @@ abstract class OperatorGUINode[I <: IOBase, O <: IOBase] {
     *         The default implementation assumes that the connected inputs and/or
     *         parameters are valid.
     */
-  protected def onInputOrParameterChange(inputSchemas: Map[String, TabularSchema],
-                                         params: OperatorParameters,
-                                         operatorSchemaManager: OperatorSchemaManager): OperatorStatus = {
+  protected def onInputOrParameterChange(
+    inputSchemas: Map[String, TabularSchema],
+    params: OperatorParameters,
+    operatorSchemaManager: OperatorSchemaManager
+  ): OperatorStatus = {
     OperatorStatus(isValid = true, msg = None, EmptyIOMetadata())
   }
 
@@ -101,9 +105,11 @@ abstract class OperatorGUINode[I <: IOBase, O <: IOBase] {
     * @param visualFactory For creating visual models.
     * @return The visual model to be sent to the GUI for visualization.
     */
-  def onOutputVisualization(params: OperatorParameters,
-                            output: O,
-                            visualFactory: VisualModelFactory): VisualModel = {
+  def onOutputVisualization(
+    params: OperatorParameters,
+    output: O,
+    visualFactory: VisualModelFactory
+  ): VisualModel = {
     throw new NotImplementedError()
   }
 }

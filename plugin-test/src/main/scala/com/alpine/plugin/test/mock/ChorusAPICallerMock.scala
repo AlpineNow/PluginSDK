@@ -4,7 +4,7 @@ import java.io.{File, FileInputStream, InputStream}
 
 import com.alpine.plugin.core.dialog.ChorusFile
 import com.alpine.plugin.core.utils.ChorusAPICaller
-import com.alpine.plugin.core.{NotebookDetails, PythonNotebook, PythonNotebookExecution}
+import com.alpine.plugin.core.{ChorusDBSourceInfo, NotebookDetails, PythonNotebook, PythonNotebookExecution}
 
 import scala.util.Try
 
@@ -42,6 +42,7 @@ class ChorusAPICallerMock(val workfiles: Seq[ChorusFileInWorkspaceMock]) extends
   override def readWorkfileAsText(workfile: ChorusFile): Try[String] = {
     readWorkfileAsText(workfile.id)
   }
+
   /**
     * Runs a workfile and returns the workfile object if successful
     * Note: this will not fail if the workfile exists but cannot be run (e.g. if the notebook server
@@ -56,11 +57,18 @@ class ChorusAPICallerMock(val workfiles: Seq[ChorusFileInWorkspaceMock]) extends
 
   override def getNotebookDetails(notebookID: String): Try[NotebookDetails] = ???
 
-  override def runNotebookExecution(notebook_id: String, input_path1: String, outputPath: String): Try[PythonNotebookExecution] = ???
+  override def runNotebookExecution(
+    notebook_id: String,
+    dataSourceName: String,
+    notebookInputs: Option[Seq[com.alpine.plugin.core.NotebookIOForExecution]],
+    notebookOutput: Option[com.alpine.plugin.core.NotebookIOForExecution],
+    sparkParametersMap: Option[scala.collection.immutable.Map[String, String]]): Try[PythonNotebookExecution] = ???
 
   override def getNotebookExecutionStatus(notebook_id: String, execution_id: String): Try[PythonNotebookExecution] = ???
 
   override def createOrUpdateChorusFile(workspaceId: String, file: File, overwrite: Boolean): Try[ChorusFile] = ???
+
+  override def getWorkfileDBDataSources(workfileID: String): Try[List[ChorusDBSourceInfo]] = ???
 
 }
 

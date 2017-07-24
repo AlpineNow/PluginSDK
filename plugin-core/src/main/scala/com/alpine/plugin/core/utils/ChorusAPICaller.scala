@@ -2,10 +2,10 @@ package com.alpine.plugin.core.utils
 
 import java.io.{File, InputStream}
 
+import com.alpine.plugin.core._
 import com.alpine.plugin.core.dialog.ChorusFile
-import com.alpine.plugin.core.{NotebookDetails, PythonNotebookExecution, PythonNotebook}
 
-
+import scala.collection.immutable
 import scala.util.Try
 
 /**
@@ -68,12 +68,19 @@ abstract class ChorusAPICaller {
     * Runs a notebook by substituting the output path (and possibly input path(s)).
     * This will only work if the notebook attribute "ready_to_execute" is true.
     *
-    * @param notebook_id Id of the notebook to retrieve
-    * @param input_path1 input path to substitute to the path defined in the notebook
-    * @param outputPath  output path to substitute to the path defined in the notebook.
+    * @param notebook_id        Id of the notebook to retrieve
+    * @param dataSourceName     name of the data source where inputs come from and where output will be stored
+    * @param notebookInputs     Optional Seq[[NotebookIOForExecution]] of inputs info for substitution in the notebook
+    * @param notebookOutput     Optional [[NotebookIOForExecution]]  or single output substitution in the notebook
+    * @param sparkParametersMap Optional Spark parameters to be substituted in notebook if Spark is used (e.g Map("spark.executor.instances" -> "2")
     * @return
     */
-  def runNotebookExecution(notebook_id: String, input_path1: String, outputPath: String): Try[PythonNotebookExecution]
+  def runNotebookExecution(
+    notebook_id: String,
+    dataSourceName: String,
+    notebookInputs: Option[Seq[NotebookIOForExecution]],
+    notebookOutput: Option[NotebookIOForExecution],
+    sparkParametersMap: Option[immutable.Map[String, String]]): Try[PythonNotebookExecution]
 
   /**
     * Queries the status of the notebook execution.
@@ -84,5 +91,13 @@ abstract class ChorusAPICaller {
   def getNotebookExecutionStatus(notebook_id: String, execution_id: String): Try[PythonNotebookExecution]
 
   def createOrUpdateChorusFile(currentWorkflowID: String, file: File, overwrite: Boolean): Try[ChorusFile]
+
+  /**
+    * Lists the DB connection names (as registered in Chorus 'Data' tab) and ids for a specific workflow
+    *
+    * @param workfileID id of the current workflow
+    * @return The list of Chorus DB data sources [[ChorusDBSourceInfo]] the workflow is connected to.
+    */
+  def getWorkfileDBDataSources(workfileID: String): Try[List[ChorusDBSourceInfo]]
 
 }

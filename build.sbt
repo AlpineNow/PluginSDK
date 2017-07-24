@@ -1,12 +1,15 @@
+import sbtassembly.Plugin.AssemblyKeys._
 import sbtassembly.Plugin._
-import AssemblyKeys._
 //import com.typesafe.sbt.SbtGit.GitKeys
 
-val sdkVersion = "1.9-alpha-1"
-lazy val javaSourceVersion = "1.7"
-lazy val javaTargetVersion = "1.7"
-lazy val scalaMajorVersion = "2.10"
-lazy val sparkVersion = "1.6.1"
+val sdkVersion = "1.9-beta"
+val javaSourceVersion = "1.7"
+val javaTargetVersion = "1.7"
+val scalaMajorVersion = "2.10"
+val scalaFullVersion = "2.10.4"
+val sparkVersion = "1.6.1"
+
+scalaVersion := scalaFullVersion
 
 def publishParameters(module: String) = Seq(
   organization := "com.alpinenow",
@@ -30,6 +33,7 @@ def publishParameters(module: String) = Seq(
     val nexus = "https://oss.sonatype.org/"
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
   },
+  scalaVersion := scalaFullVersion,
   licenses := Seq("Apache License 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
   scalacOptions in(Compile, doc) ++= Seq("-doc-footer", "Copyright (c) 2015 Alpine Data Labs."),
   javacOptions in compile ++= Seq("-source", javaSourceVersion, "-target", javaTargetVersion),
@@ -68,12 +72,12 @@ def sparkDependencies = excludeJPMML({
     "org.apache.spark" % s"spark-network-yarn_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-network-common_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-network-shuffle_$scalaMajorVersion" % sparkVersion,
-    "com.databricks" % "spark-avro_2.10" % "1.0.0",
-    "com.databricks" % "spark-csv_2.10" % "1.3.0"
+    "com.databricks" % s"spark-avro_$scalaMajorVersion" % "1.0.0",
+    "com.databricks" % s"spark-csv_$scalaMajorVersion" % "1.3.0"
   )
 })
 
-val scalaTestDep = "org.scalatest" % "scalatest_2.10" % "2.2.4"
+val scalaTestDep = "org.scalatest" % s"scalatest_$scalaMajorVersion" % "2.2.4"
 val gsonDependency = "com.google.code.gson" % "gson" % "2.3.1"
 val jodaTimeDependency = "joda-time" % "joda-time" % "2.1"
 val commonsIODependency = "commons-io" % "commons-io" % "2.4"
@@ -174,6 +178,7 @@ lazy val CompleteModule = Project(
   id = "alpine-complete-sdk",
   base = file("alpine-complete-sdk"), // Empty.
   settings = assemblySettings ++ Seq(
+    scalaVersion := scalaFullVersion,
     test in assembly := {},
     jarName in assembly := s"alpine-sdk-assembly-$sdkVersion.jar",
     mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) => {
