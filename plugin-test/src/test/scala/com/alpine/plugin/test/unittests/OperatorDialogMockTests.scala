@@ -2,7 +2,7 @@ package com.alpine.plugin.test.unittests
 
 import com.alpine.plugin.core.dialog.{ChorusFile, ColumnFilter}
 import com.alpine.plugin.core.io._
-import com.alpine.plugin.core.io.defaults.{HdfsDelimitedTabularDatasetDefault, IOListDefault}
+import com.alpine.plugin.core.io.defaults.{HdfsDelimitedTabularDatasetDefault, IOListDefault, IOStringDefault, Tuple2Default}
 import com.alpine.plugin.test.mock._
 import com.alpine.plugin.test.utils.OperatorParameterMockUtil
 import org.scalatest.FunSuite
@@ -133,6 +133,26 @@ class OperatorDialogMockTests extends FunSuite {
     dialog.addTabularDatasetColumnDropdownBox("col_select1", "Column Selector 1", ColumnFilter.All, "a", true, Some("parent1"))
     dialog.addTabularDatasetColumnDropdownBox("col_select2", "Column Selector 2", ColumnFilter.All, "b", true, Some("parent2"))
     assert(dialog.getNewParameters.contains("col_select2"))
+  }
+
+  test("Test schema method for tuple  "){
+
+    val tupleInput = Tuple2Default(hdfIOInput, IOStringDefault("I am just a string"), hdfIOInput.addendum)
+    val p = new OperatorParametersMock("name", "uuid")
+    OperatorParameterMockUtil.addTabularColumns(p, "tabularColumns", "outlook", "play")
+    OperatorParameterMockUtil.addTabularColumn(p, "tabularColumn", "outlook")
+
+    val mockDialog = new OperatorDialogMock(
+      overrideParams = p,
+      input = tupleInput )
+
+    mockDialog.addTabularDatasetColumnDropdownBox("tabularColumn", "label", ColumnFilter.All, "a")
+    mockDialog.addTabularDatasetColumnCheckboxes("tabularColumns", "label", ColumnFilter.All, "b")
+
+    val p1 = p.getStringValue("tabularColumn")
+    assert(p1 === "outlook")
+    val p3 = p.getStringArrayValue("tabularColumns")
+    assert(p3.contains("outlook") && p3.contains("play"))
   }
 
 }
