@@ -61,8 +61,11 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
   private def getSchemas(input: IOBase): Seq[(String, TabularSchema)] = {
     input match {
-      case i: IOList[IOBase] => i.sources.zip(i.elements).map { case (o, e) => (o.uuid, getSchemas(e).head._2) }
-      case t: com.alpine.plugin.core.io.Tuple => t.elements.map(getSchemas(_).head)
+        //This doesn't actually address  the case of nested lists, since in that case we are perhaps
+      // overriding the UUId of the nested list with the "parent" list operator UUID however it
+      // will handle the case when we have a list of object  that do not have tabular schemas
+      case i: IOList[IOBase] => i.sources.zip(i.elements).flatMap{ case (o, e) => getSchemas(e).map(x => (o.uuid, x._2)) }
+      case t: com.alpine.plugin.core.io.Tuple => t.elements.flatMap(getSchemas(_))
       case table: TabularDataset => Seq(("", table.tabularSchema))
       case _ => Seq[(String, TabularSchema)]()
     }
