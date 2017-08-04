@@ -4,17 +4,13 @@ import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.sql.ColumnarSQLExpression
 
 /**
+  * TODO: Add DB Specific types to SQL Generator and use them here.
+  *
   * Created by meganchanglee on 6/26/17.
   */
-
-
-abstract class CastExpression extends ASTExpression {
-  override def inputNames: Set[String] = Set()
-}
-
-case class CastAsDoubleExpression(arg: TypeWrapper[ASTExpression]) extends CastExpression {
+case class CastAsDoubleExpression(argument: TypeWrapper[ASTExpression]) extends SingleArgumentASSTExpression {
   override def execute(input: Map[String, Any]): Any = {
-    val x = arg.execute(input)
+    val x = argument.execute(input)
     x match {
       case x: Number => x.doubleValue()
       case x: String => x.toDouble
@@ -24,13 +20,13 @@ case class CastAsDoubleExpression(arg: TypeWrapper[ASTExpression]) extends CastE
   }
 
   override def toColumnarSQL(sqlGenerator: SQLGenerator): ColumnarSQLExpression = {
-    ColumnarSQLExpression(s"CAST(${arg.toColumnarSQL(sqlGenerator: SQLGenerator).sql} AS DOUBLE)")
+    ColumnarSQLExpression(s"CAST(${argument.toColumnarSQL(sqlGenerator: SQLGenerator).sql} AS DOUBLE)")
   }
 }
 
-case class CastAsIntegerExpression(arg: TypeWrapper[ASTExpression]) extends CastExpression {
+case class CastAsIntegerExpression(argument: TypeWrapper[ASTExpression]) extends SingleArgumentASSTExpression {
   override def execute(input: Map[String, Any]): Any = {
-    val x = arg.execute(input)
+    val x = argument.execute(input)
     x match {
       case x: Number => x.intValue()
       case x: String => x.toInt
@@ -39,13 +35,13 @@ case class CastAsIntegerExpression(arg: TypeWrapper[ASTExpression]) extends Cast
   }
 
   override def toColumnarSQL(sqlGenerator: SQLGenerator): ColumnarSQLExpression = {
-    ColumnarSQLExpression(s"CAST(${arg.toColumnarSQL(sqlGenerator: SQLGenerator).sql} AS INTEGER)")
+    ColumnarSQLExpression(s"CAST(${argument.toColumnarSQL(sqlGenerator: SQLGenerator).sql} AS INTEGER)")
   }
 }
 
-case class CastAsLongExpression(arg: TypeWrapper[ASTExpression]) extends CastExpression {
+case class CastAsLongExpression(argument: TypeWrapper[ASTExpression]) extends SingleArgumentASSTExpression {
   override def execute(input: Map[String, Any]): Any = {
-    val x = arg.execute(input)
+    val x = argument.execute(input)
     x match {
       case x: Number => x.longValue()
       case x: String => x.toLong
@@ -54,6 +50,6 @@ case class CastAsLongExpression(arg: TypeWrapper[ASTExpression]) extends CastExp
   }
 
   override def toColumnarSQL(sqlGenerator: SQLGenerator): ColumnarSQLExpression = {
-    ColumnarSQLExpression(s"CAST(${arg.toColumnarSQL(sqlGenerator: SQLGenerator).sql} AS LONG)")
+    ColumnarSQLExpression(s"CAST(${argument.toColumnarSQL(sqlGenerator: SQLGenerator).sql} AS LONG)")
   }
 }

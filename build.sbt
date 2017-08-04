@@ -2,7 +2,7 @@ import sbtassembly.Plugin.AssemblyKeys._
 import sbtassembly.Plugin._
 //import com.typesafe.sbt.SbtGit.GitKeys
 
-val sdkVersion = "1.9-beta-1"
+val sdkVersion = "1.9"
 val javaSourceVersion = "1.7"
 val javaTargetVersion = "1.7"
 val scalaMajorVersion = "2.10"
