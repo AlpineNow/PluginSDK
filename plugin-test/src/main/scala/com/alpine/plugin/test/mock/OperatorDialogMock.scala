@@ -45,7 +45,7 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   private val dialogElements = scala.collection.mutable.Map[String, DialogElement]()
   private val selectionGroupIdMap = scala.collection.mutable.Map[String, Set[String]]()
 
-  val schemas = getSchemas(input)
+  val schemas: Seq[(String, TabularSchema)] = getSchemas(input)
 
   private val operatorParametersMock = new OperatorParametersMock(
     overrideParams.operatorInfo().name,
@@ -136,33 +136,75 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
   override def getLabel: String = "Label"
 
-  override def addStringBox(id: String, label: String, defaultValue: String, regex: String, width: Int, height: Int): StringBox = {
-    addStringBox(id, label, defaultValue, regex, required = true)
-  }
+  def addStringBox(setup: StringDialogElementSetup): StringBox = {
+    val selected = setStringValue(setup.id, setup.defaultValue.get)
 
-  override def addStringBox(id: String, label: String, defaultValue: String, regex: String, required: Boolean): StringBox = {
-    val selected = setStringValue(id, defaultValue)
-
-    class StringBoxImpl extends DefaultDialogElementMock(id, label, required) with StringBox {
-      assert(selected.matches(regex), "The string: " + selected + "does not conform to regex: " + regex)
+    class StringBoxImpl extends DefaultDialogElementMock(setup.id, setup.label, setup.isRequired) with StringBox {
+      assert(selected.matches(setup.regex.get), "The string: " + selected + "does not conform to regex: " + setup.regex.get)
     }
 
     val de = new StringBoxImpl()
-    updateDialogElements(id, de)
+    updateDialogElements(setup.id, de)
+  }
+
+  override def addStringBox(id: String, label: String, defaultValue: String, regex: String, width: Int, height: Int): StringBox = {
+    addStringBox(new StringDialogElementSetup(id, label, isRequired = true, Option.apply(defaultValue), Option.apply(regex),
+      isLarge = false, isPassword = false))
+  }
+
+  override def addStringBox(id: String, label: String, defaultValue: String, regex: String, required: Boolean): StringBox = {
+    addStringBox(new StringDialogElementSetup(id, label, required, Option.apply(defaultValue), Option.apply(regex),
+      isLarge = false, isPassword = false))
   }
 
   override def addLargeStringBox(id: String, label: String, defaultValue: String, regex: String, required: Boolean): StringBox = {
-    addStringBox(id, label, defaultValue, regex, required)
+    addStringBox(new StringDialogElementSetup(id, label, required, Option.apply(defaultValue), Option.apply(regex),
+      isLarge = true, isPassword = false))
   }
 
-
   override def addPasswordBox(id: String, label: String, regex: String, required: Boolean): StringBox = {
-    addStringBox(id, label, "", regex, required)
+    addStringBox(new StringDialogElementSetup(id, label, required, Option.apply(""), Option.apply(regex),
+      isLarge = false, isPassword = true))
   }
 
   override def getDialogElement(id: String): DialogElement = dialogElements(id)
 
   override def getDialogElements: Seq[DialogElement] = dialogElements.values.toSeq
+
+  override def addDialogElement(des: DialogElementSetup): DialogElement = {
+    des match {
+      case n: NumericDialogElementSetup => {
+        addDoubleBox(n)
+      }
+      case i: IntegerDialogElementSetup => {
+        addIntegerBox(i)
+      }
+      case c: ChorusFileSelectorSetup => {
+        addChorusFileDropdownBox(c)
+      }
+      case s: StringDialogElementSetup => {
+        addStringBox(s)
+      }
+      case s: ScriptEditPopupSetup => {
+        addScriptEditPopup(s)
+      }
+      case p: ParentOperatorSelectorSetup => {
+        addParentOperatorDropdownBox(p)
+      }
+      case t: TabularDatasetColumnDropdownSetup => {
+        addTabularDatasetColumnDropdownBox(t)
+      }
+      case d: DropdownBoxSetup => {
+        addDropdownBox(d)
+      }
+      case r: RadioButtonSetup => {
+        addRadioButtons(r)
+      }
+      case r: RowDialogSetup => {
+        addRowDialog(r)
+      }
+    }
+  }
 
   override def addCheckboxes(id: String, label: String, values: Seq[String], defaultSelections: Seq[String], required: Boolean): Checkboxes = {
     val selections: Seq[String] = Try(overrideParams.getStringArrayValue(id)) match {
@@ -183,18 +225,22 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     addCheckboxesFromJavaList(id, label, asScalaBuffer(values).toList, asScalaBuffer(defaultSelections).toList, required)
   }
 
-  override def addDropdownBox(id: String, label: String, values: Seq[String], defaultSelection: String): DropdownBox = {
-    val s = setStringValue(id, defaultSelection)
-    class DropDownBoxImpl extends SingleElementSelectorMock(values, s, id, label) with
+  def addDropdownBox(setup: DropdownBoxSetup): DropdownBox = {
+    val s = setStringValue(setup.id, setup.defaultSelection.get)
+    class DropDownBoxImpl extends SingleElementSelectorMock(setup.values.get, s, setup.id, setup.label) with
       DropdownBox {
     }
     //toDo: ditch this sequence, do validation at object creation --> less mutable
     val de = new DropDownBoxImpl
-    updateDialogElements(id, de)
+    updateDialogElements(setup.id, de)
+  }
+
+  override def addDropdownBox(id: String, label: String, values: Seq[String], defaultSelection: String): DropdownBox = {
+    addDropdownBox(new DropdownBoxSetup(id, label, isRequired = true, Option.apply(values), Option.apply(defaultSelection)))
   }
 
   override def addDropdownBoxFromJavaList(id: String, label: String, values: java.util.List[String], defaultSelection: String): DropdownBox = {
-    addDropdownBox(id, label, asScalaBuffer(values).toList, defaultSelection)
+    addDropdownBox(new DropdownBoxSetup(id, label, isRequired = true, Option.apply(asScalaBuffer(values).toList), Option.apply(defaultSelection)))
   }
 
   override def addHdfsDirectorySelector(id: String, label: String, defaultPath: String): HdfsFileSelector = {
@@ -211,6 +257,13 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   }
 
 
+  override def addOutputDirectorySelector(id: String, label: String, required: Boolean): HdfsFileSelector = {
+    setStringValue(id, "@default_tempdir/tsds_out/@user_name/@flow_name")
+    class HdfsFileSelectorImp extends DefaultDialogElementMock(id, label, required) with HdfsFileSelector
+    val de = new HdfsFileSelectorImp
+    updateDialogElements(id, de)
+  }
+
   override def addDataSourceDropdownBox(id: String, label: String,
     dataSourceManager: OperatorDataSourceManager): DataSourceDropdownBox = {
     setStringValue(id, dataSourceManager.getRuntimeDataSource.getName)
@@ -222,41 +275,44 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
   }
 
 
-  override def addTabularDatasetColumnDropdownBox(id: String, label: String,
-    columnFilter: ColumnFilter,
-    selectionGroupId: String,
-    required: Boolean): TabularDatasetColumnDropdownBox = {
-    addTabularDatasetColumnDropdownBox(id,
-      label,
-      columnFilter,
-      selectionGroupId,
-      required,
-      None)
+  override def addTabularDatasetColumnDropdownBox(id: String,
+                                                  label: String,
+                                                  columnFilter: ColumnFilter,
+                                                  selectionGroupId: String,
+                                                  required: Boolean): TabularDatasetColumnDropdownBox = {
+    addTabularDatasetColumnDropdownBox(new TabularDatasetColumnDropdownSetup(id, label, required, columnFilter,
+      selectionGroupId, None))
   }
 
 
-  override def addTabularDatasetColumnDropdownBox(id: String, label: String,
-    columnFilter: ColumnFilter,
-    selectionGroupId: String,
-    required: Boolean,
-    parentBoxID: Option[String]): TabularDatasetColumnDropdownBox = {
-    val columnTypeMap = getTypeMapForColumnSelector(parentBoxID, id)
+  override def addTabularDatasetColumnDropdownBox(id: String,
+                                                  label: String,
+                                                  columnFilter: ColumnFilter,
+                                                  selectionGroupId: String,
+                                                  required: Boolean,
+                                                  parentBoxID: Option[String]): TabularDatasetColumnDropdownBox = {
+    addTabularDatasetColumnDropdownBox(new TabularDatasetColumnDropdownSetup(id, label, required, columnFilter,
+      selectionGroupId, parentBoxID))
+  }
 
-    val selection: String = Try(overrideParams.getTabularDatasetSelectedColumn(id)) match {
+  def addTabularDatasetColumnDropdownBox(setup: TabularDatasetColumnDropdownSetup) = {
+    val columnTypeMap = getTypeMapForColumnSelector(setup.parentBoxId, setup.id)
+
+    val selection: String = Try(overrideParams.getTabularDatasetSelectedColumn(setup.id)) match {
       case Success(s) =>
         val column = s._2
-        validateColumnSelectionAndUpdateSelectionGroup(column, selectionGroupId, columnFilter, columnTypeMap)
+        validateColumnSelectionAndUpdateSelectionGroup(column, setup.selectionGroupId, setup.columnFilter, columnTypeMap)
       case _ => ""
     }
 
-    assert(!(required && selection.equals("")))
+    assert(!(setup.isRequired && selection.equals("")))
 
-    OperatorParameterMockUtil.addTabularColumn(operatorParametersMock, id, selection)
+    OperatorParameterMockUtil.addTabularColumn(operatorParametersMock, setup.id, selection)
 
 
     class TabularDatasetColumnDropdownBoxImpl extends
       SingleElementSelectorMock(
-        columnTypeMap.keys.toSeq, selection, id, label, isRequired = required)
+        columnTypeMap.keys.toSeq, selection, setup.id, setup.label, isRequired = setup.isRequired)
       with TabularDatasetColumnDropdownBox {
 
       assert(columnTypeMap.keySet.contains(selection),
@@ -265,7 +321,7 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     }
 
     val de = new TabularDatasetColumnDropdownBoxImpl
-    updateDialogElements(id, de)
+    updateDialogElements(setup.id, de)
   }
 
   override def addDBSchemaDropdownBox(id: String, label: String, defaultSchema: String): DBSchemaDropdownBox = {
@@ -278,31 +334,40 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
   }
 
-  override def addRadioButtons(id: String, label: String, values: Seq[String], defaultSelection: String): RadioButtons = {
-    val selected = setStringValue(id, defaultSelection)
+  def addRadioButtons(setup: RadioButtonSetup): RadioButtons = {
+    val selected = setStringValue(setup.id, setup.defaultSelection)
 
-    class RadioButtonImpl extends SingleElementSelectorMock(values, selected, id, label) with RadioButtons
+    class RadioButtonImpl extends SingleElementSelectorMock(setup.values, selected, setup.id, setup.label) with RadioButtons
 
     val de = new RadioButtonImpl
-    updateDialogElements(id, de)
+    updateDialogElements(setup.id, de)
+  }
+
+  override def addRadioButtons(id: String, label: String, values: Seq[String], defaultSelection: String): RadioButtons = {
+    addRadioButtons(new RadioButtonSetup(id, label, isRequired = true, values, defaultSelection))
   }
 
   override def addRadioButtonsFromJavaList(id: String, label: String, values: java.util.List[String], defaultSelection: String): RadioButtons = {
-    addRadioButtons(id, label, asScalaBuffer(values).toList, defaultSelection)
+    addRadioButtons(new RadioButtonSetup(id, label, isRequired = true, asScalaBuffer(values).toList, defaultSelection))
+  }
+
+  def addIntegerBox(setup: IntegerDialogElementSetup): IntegerBox = {
+    val selection = Try(overrideParams.getIntValue(setup.id)) match {
+      case Success(s) => s
+      case _ => setup.defaultValue.get.toInt
+    }
+    require(selection >= setup.min.get.value || selection <= setup.max.get.value, "Selection:" + selection + " is not in range for integer parameter " + setup.label)
+    operatorParametersMock.setValue(setup.id, selection)
+
+    class IntegerBoxImpl extends DefaultDialogElementMock(setup.id, setup.label) with IntegerBox
+
+    val de = new IntegerBoxImpl
+    updateDialogElements(setup.id, de)
   }
 
   override def addIntegerBox(id: String, label: String, min: Int, max: Int, defaultValue: Int): IntegerBox = {
-    val selection = Try(overrideParams.getIntValue(id)) match {
-      case Success(s) => s
-      case _ => defaultValue
-    }
-    require(selection >= min || selection <= max, "Selection:" + selection + " is not in range for integer parameter " + label)
-    operatorParametersMock.setValue(id, selection)
-
-    class IntegerBoxImpl extends DefaultDialogElementMock(id, label) with IntegerBox
-
-    val de = new IntegerBoxImpl
-    updateDialogElements(id, de)
+    addIntegerBox(new IntegerDialogElementSetup(id,label, isRequired = true, Option.apply(new NumericBound(min, inclusive = true)),
+      Option.apply(new NumericBound(max, inclusive = true)), Option.apply(defaultValue.toString)))
   }
 
   override def addHdfsFileSelector(id: String, label: String, defaultPath: String): HdfsFileSelector = {
@@ -368,59 +433,69 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     updateDialogElements(id, de)
   }
 
+  def addParentOperatorDropdownBox(setup: ParentOperatorSelectorSetup): ParentOperatorDropdownBox = {
+    val userSet = overrideParams.getStringValue(setup.id)
+    operatorParametersMock.setValue(setup.id, userSet)
+
+    class ParentOperatorDropdownBoxMock extends
+      SingleElementSelectorMock(uuids, userSet, setup.id, setup.label) with ParentOperatorDropdownBox
+    val de = new ParentOperatorDropdownBoxMock()
+    updateDialogElements(setup.id, de)
+  }
+
   override def addParentOperatorDropdownBox(id: String, label: String): ParentOperatorDropdownBox = {
-    addParentOperatorDropdownBox(id, label, required = true)
+    addParentOperatorDropdownBox(new ParentOperatorSelectorSetup(id, label, isRequired = true))
   }
 
   override def addParentOperatorDropdownBox(id: String, label: String, required: Boolean): ParentOperatorDropdownBox = {
-    val userSet = overrideParams.getStringValue(id)
-    operatorParametersMock.setValue(id, userSet)
-
-    class ParentOperatorDropdownBoxMock extends
-      SingleElementSelectorMock(uuids, userSet, id, label) with ParentOperatorDropdownBox
-    val de = new ParentOperatorDropdownBoxMock()
-    updateDialogElements(id, de)
+    addParentOperatorDropdownBox(new ParentOperatorSelectorSetup(id, label, required))
   }
 
-  override def addDoubleBox(id: String, label: String, min: Double, max: Double,
-    inclusiveMin: Boolean, inclusiveMax: Boolean, defaultValue: Double): DoubleBox = {
+  def addDoubleBox(setup: NumericDialogElementSetup): DoubleBox = {
 
-    val selection: Double = Try(overrideParams.getDoubleValue(id)) match {
+    val selection: Double = Try(overrideParams.getDoubleValue(setup.id)) match {
       case Success(s) => s
-      case _ => defaultValue
+      case _ => setup.defaultValue.get.toDouble
     }
     //toDo: Move this to the
 
-    operatorParametersMock.setValue(id, selection)
+    operatorParametersMock.setValue(setup.id, selection)
 
-    class DoubleBoxImpl extends DefaultDialogElementMock(id, label) with DoubleBox {
-      assert(selection >= min && selection <= max, "Selection:" +
-        selection + " is not in range for integer parameter " + label)
-      assert(inclusiveMin || selection > min, "Selection : " +
-        selection + " is not in range for integer parameter " + label +
+    class DoubleBoxImpl extends DefaultDialogElementMock(setup.id, setup.label) with DoubleBox {
+      assert(selection >= setup.min.get.value && selection <= setup.max.get.value, "Selection:" +
+        selection + " is not in range for integer parameter " + setup.label)
+      assert(setup.min.get.inclusive || selection > setup.min.get.value, "Selection : " +
+        selection + " is not in range for integer parameter " + setup.label +
         " since the min is exclusive.")
-      assert(inclusiveMax || selection < max, "Selection : " +
-        selection + " is not in range for integer parameter " + label +
+      assert(setup.max.get.inclusive || selection < setup.max.get.value, "Selection : " +
+        selection + " is not in range for integer parameter " + setup.label +
         " since the max is exclusive.")
-
     }
 
     val de = new DoubleBoxImpl
-    updateDialogElements(id, de)
+    updateDialogElements(setup.id, de)
+  }
+
+  override def addDoubleBox(id: String, label: String, min: Double, max: Double,
+                            inclusiveMin: Boolean, inclusiveMax: Boolean, defaultValue: Double): DoubleBox ={
+    addDoubleBox(NumericDialogElementSetup(id, label, isRequired = true,
+      Option.apply(NumericBound(min, inclusiveMin)), Some(NumericBound(max, inclusiveMax)),
+      Option.apply(defaultValue.toString)))
+  }
+
+  def addChorusFileDropdownBox(setup: ChorusFileSelectorSetup): ChorusFileDropdown = {
+    class ChorusFileDropdownImpl extends ChorusFileDropdown
+    val de = new ChorusFileDropdownImpl()
+    operatorParametersMock.setValue(setup.id, overrideParams.getChorusFile(setup.id))
+    updateDialogElements(setup.id, de)
   }
 
   override def addChorusFileDropdownBox(id: String, label: String, extensionFilter: Set[String], isRequired: Boolean): ChorusFileDropdown = {
-    class ChorusFileDropdownImpl extends ChorusFileDropdown
-    val de = new ChorusFileDropdownImpl()
-    operatorParametersMock.setValue(id, overrideParams.getChorusFile(id))
-    updateDialogElements(id, de)
+    addChorusFileDropdownBox(ChorusFileSelectorSetup(id, label, isRequired, extensionFilter, None))
   }
 
   override def addChorusFileDropdownBox(id: String, label: String, extensionFilter: Set[String], isRequired: Boolean, linkText: Option[String]): ChorusFileDropdown = {
-    class ChorusFileDropdownImpl extends ChorusFileDropdown
-    val de = new ChorusFileDropdownImpl()
-    operatorParametersMock.setValue(id, overrideParams.getChorusFile(id))
-    updateDialogElements(id, de)
+    addChorusFileDropdownBox(ChorusFileSelectorSetup(id, label, isRequired, extensionFilter, linkText))
   }
 
   override def addAdvancedSparkSettingsBox(id: String, label: String, availableValues: List[SparkParameter]): DialogElement = {
@@ -429,6 +504,41 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
     updateDialogElements(id, de)
   }
 
+  def addScriptEditPopup(setup: ScriptEditPopupSetup): DialogElement = {
+    val script = overrideParams.getStringValue(setup.id)
+    operatorParametersMock.setValue(setup.id, script)
+    class ScriptEditPopupImpl extends DefaultDialogElementMock(setup.id, setup.label) with ScriptEditPopup {
+      if (setup.isRequired) {
+        assert(script.nonEmpty, s"ScriptEditPopup element ${setup.id} is required, but has empty script.")
+      }
+    }
+    val de = new ScriptEditPopupImpl
+    updateDialogElements(setup.id, de)
+  }
+
+  override def addScriptEditPopup(id: String, label: String, scriptType: String, required: Boolean): DialogElement = {
+    addScriptEditPopup(ScriptEditPopupSetup(id, label, required, scriptType))
+  }
+
+  def addRowDialog(setup: RowDialogSetup): DialogElement = {
+    val userSetRows = overrideParams.getDialogRowsAsArray(setup.id)
+    val nbElementsPerRow = setup.elements.length
+
+    assert(userSetRows.map(_.getRowDialogValues.length).forall(_.equals(nbElementsPerRow)), s"RowDialogSetup ${setup.id} requires $nbElementsPerRow values per row")
+    OperatorParameterMockUtil.addRowDialogElements(operatorParametersMock, setup.id, userSetRows:_*)
+
+    class RowDialogImpl extends DefaultDialogElementMock(setup.id, setup.label) with RowDialog {
+      if(setup.isRequired) {
+        assert(userSetRows.nonEmpty, s"The RowDialogSetup element with id ${setup.id} is required but has no row(s) defined.")
+      }
+      if (setup.validator.isDefined) {
+        val validation = setup.validator.get.validate(userSetRows.toList)
+        assert(validation.isValid, s"Validation failed for RowDialogSetup element with id ${setup.id}: " + validation.message)
+      }
+    }
+    val de = new RowDialogImpl
+    updateDialogElements(setup.id, de)
+  }
 }
 
 object OperatorDialogMock {

@@ -124,4 +124,15 @@ class SQLUtility$Test extends FunSuite {
     assert(expectedSQL === sql)
   }
 
+  test("Should wrap string containing single quotes in single quotes correctly") {
+    assert("""'It''s nice to meet you.'""" === SQLUtility.wrapInSingleQuotes("It's nice to meet you."))
+    assert("""'I''m I''ve I''d'""" === SQLUtility.wrapInSingleQuotes("I'm I've I'd"))
+    assert("""'No single quotes'""" === SQLUtility.wrapInSingleQuotes("No single quotes"))
+    assert("""'Haven''t didn''t can''t'""" === SQLUtility.wrapInSingleQuotes("Haven't didn't can't"))
+    assert("""''''""" === SQLUtility.wrapInSingleQuotes("'"))
+    assert("""'The ''80s'""" === SQLUtility.wrapInSingleQuotes("The '80s"))
+    assert("""'Double''''single''''quotes'""" === SQLUtility.wrapInSingleQuotes("Double''single''quotes"))
+    assert("""'''quote''''quote'''""" === SQLUtility.wrapInSingleQuotes("'quote''quote'"))
+  }
+
 }

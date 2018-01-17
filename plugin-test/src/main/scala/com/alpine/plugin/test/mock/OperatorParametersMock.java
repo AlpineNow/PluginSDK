@@ -6,6 +6,7 @@ package com.alpine.plugin.test.mock;
 
 import com.alpine.plugin.core.OperatorParameters;
 import com.alpine.plugin.core.dialog.ChorusFile;
+import com.alpine.plugin.core.dialog.IRowDialogRow;
 import com.alpine.plugin.core.io.OperatorInfo;
 import scala.Option;
 import scala.Tuple2;
@@ -15,6 +16,7 @@ import scala.collection.mutable.Map;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Plugin 1.0 operator parameters.
@@ -65,6 +67,29 @@ public class OperatorParametersMock implements OperatorParameters, Serializable 
             );
         }
     }
+
+    public IRowDialogRow[] getDialogRowsAsArray(String parameterId) {
+        Object o = this.parameterMap.get(parameterId);
+        if (o instanceof List) {
+            try {
+                List<IRowDialogRow> list = (List<IRowDialogRow>) o;
+                ArrayList<IRowDialogRow> dummy = new ArrayList<>();
+                for (int i = 0; i < list.size(); i++) {
+                    dummy.add(list.get(i));
+                }
+                IRowDialogRow[] vs = new IRowDialogRow[list.size()];
+                list.toArray(vs);
+                return vs;
+            }
+            catch (Exception e) {
+                throw new AssertionError("Could not retrieve RowDialogRowModel list for parameter id " + parameterId);
+            }
+        }
+        else {
+            throw new AssertionError("Could not retrieve RowDialogRowModel list for parameter id " + parameterId);
+        }
+    }
+
 
     public Tuple2<String, String[]> getTabularDatasetSelectedColumns(String parameterId) {
         // The hashmap or the linkedmap in this case is used as a pair.

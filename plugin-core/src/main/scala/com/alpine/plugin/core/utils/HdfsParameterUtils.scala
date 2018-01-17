@@ -5,8 +5,6 @@ package com.alpine.plugin.core.utils
 
 import com.alpine.plugin.core.OperatorParameters
 import com.alpine.plugin.core.dialog._
-import com.alpine.plugin.core.io.{TSVAttributes, TabularFormatAttributes}
-import com.alpine.plugin.core.utils.HdfsStorageFormat._
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -18,6 +16,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
   val outputDirectoryParameterID = "outputDirectory"
   val outputNameParameterID = "outputName"
   val storageFormatParameterID = "storageFormat"
+  val compressionTypeParameterID = "compressionType"
 
   /**
     * Adds
@@ -43,6 +42,35 @@ object HdfsParameterUtils extends OutputParameterUtils {
   }
 
   /**
+    * Adds
+    * -- "storageFormat": an Dropdown Box for storage format.
+    * -- "compressionType": a Dropdown Box for compression type.
+    *
+    * Note: The compression type selected must be supported by the storage format chosen, otherwise the CO will stay invalid at design time.
+    *
+    * @param operatorDialog The default value for the output name parameter.
+    * @param defaultStorageFormat The default format one wants to use.
+    * @param defaultCompression The default compression one wants to use.
+    * @return A sequence of the dialog elements added.
+    */
+  def addHdfsStorageAndCompressionParameters(operatorDialog: OperatorDialog,
+      defaultStorageFormat: HdfsStorageFormatType,
+      defaultCompression: HdfsCompressionType): Seq[DialogElement] = {
+    val storageParameter = addHdfsStorageFormatParameter(operatorDialog, defaultStorageFormat)
+    val compressionParameter = addHdfsCompressionParameter(operatorDialog, defaultCompression)
+    Seq(storageParameter, compressionParameter)
+  }
+
+  /***
+    * Same method as `addHdfsStorageAndCompressionParameters` defined above, with:
+    * - default storage format as Parquet
+    * - default compression as Gzip
+    */
+  def addHdfsStorageAndCompressionParameters(operatorDialog: OperatorDialog): Seq[DialogElement] = {
+    addHdfsStorageAndCompressionParameters(operatorDialog, HdfsStorageFormatType.Parquet, HdfsCompressionType.Gzip)
+  }
+
+  /**
     * Adds a dropdown menu to select the storage format for a tabular dataset output.
     * I.e., it'll add a dropdown menu with available selections 'CSV', 'Parquet' and 'Avro'.
     *
@@ -62,15 +90,22 @@ object HdfsParameterUtils extends OutputParameterUtils {
   }
 
 
-  @deprecated("Use method which takes HdfsStorageFormatType case class rather than HdfsStorageFormat enum")
-  def addHdfsStorageFormatParameter(operatorDialog: OperatorDialog,
-                                    defaultFormat: HdfsStorageFormat.HdfsStorageFormat = HdfsStorageFormat.TSV): DialogElement = {
-    val formats = HdfsStorageFormat.values.map(_.toString)
+  /**
+    * Adds a dropdown menu to select the compression Type for a tabular dataset output.
+    * I.e., it'll add a dropdown menu with available selections 'No Compression', 'Snappy', 'GZIP' and 'Deflate'.
+    *
+    * @param operatorDialog The operator dialog where you are going to add the dropdown menu.
+    * @param defaultCompression  The default compression one wants to use.
+    * @return The dropdown dialog element.
+    */
+  def addHdfsCompressionParameter(operatorDialog: OperatorDialog,
+                                  defaultCompression: HdfsCompressionType): DropdownBox = {
+    val formats = HdfsCompressionType.values.map(_.toString)
     operatorDialog.addDropdownBox(
-      storageFormatParameterID,
-      "Storage Format",
-      formats.toSeq,
-      defaultFormat.toString
+      compressionTypeParameterID,
+      "Compression",
+      formats,
+      defaultCompression.toString
     )
   }
 
@@ -101,10 +136,10 @@ object HdfsParameterUtils extends OutputParameterUtils {
     * @return
     */
   def addOutputDirectorySelector(operatorDialog: OperatorDialog): DialogElement = {
-    val outputDirectorySelector = operatorDialog.addHdfsDirectorySelector(
+    val outputDirectorySelector = operatorDialog.addOutputDirectorySelector(
       outputDirectoryParameterID,
       "Output Directory",
-      "@default_tempdir/alpine_out/@user_name/@flow_name"
+      isRequired = true
     )
     outputDirectorySelector
   }
@@ -154,7 +189,7 @@ object HdfsParameterUtils extends OutputParameterUtils {
     * Get the Hdfs storage format from the parameters object.
     *
     * @param parameters This must contain the format parameter. I.e., the user should've
-    *                   called addHdfsStorageFormatParameter before.
+    *                   called addHdfsStorageFormatParameter or addHdfsStorageAndCompressionParameters  before.
     * @return The selected Hdfs storage format.
     */
   def getHdfsStorageFormatType(parameters: OperatorParameters): HdfsStorageFormatType = {
@@ -169,86 +204,38 @@ object HdfsParameterUtils extends OutputParameterUtils {
     }
   }
 
-
   /**
-    * Get the Hdfs storage format from the parameters object.
+    * Get the Hdfs compression type from the parameters object.
     *
-    * @param parameters This must contain the format parameter. I.e., the user should've
-    *                   called addHdfsStorageFormatParameter before.
-    * @return The selected Hdfs storage format.
+    * @param parameters This must contain the compression parameter. I.e., the user should've
+    *                   called addHdfsCompressionParameter or addHdfsStorageAndCompressionParameters before.
+    * @return The selected Hdfs compression type.
     */
-  @deprecated("Use method which returns HdfsStorageFormatType case class rather than HdfsStorageFormat enum")
-  def getHdfsStorageFormat(parameters: OperatorParameters): HdfsStorageFormat = {
-    val parameterValue = parameters.getStringValue(storageFormatParameterID)
+  def getHdfsCompressionType(parameters: OperatorParameters): HdfsCompressionType = {
+    val parameterValue = parameters.getStringValue(compressionTypeParameterID)
     if (parameterValue == null) {
-      HdfsStorageFormat.TSV // Defaults to CSV if this parameter is missing.
+      HdfsCompressionType.NoCompression //Defaults to none if parameter is missing (and for compatibility with pre-6.4 operators)
     } else {
-      Try(HdfsStorageFormat.withName(parameterValue)) match {
+      Try(HdfsCompressionType.withName(parameterValue)) match {
         case Success(f) => f
-        case Failure(_) => HdfsStorageFormat.TSV // Defaults to CSV if the parameter value is strange.
+        case Failure(_) => HdfsCompressionType.NoCompression // Defaults to None if the parameter value is strange.
       }
-    }
-  }
-
-  /**
-    * Get default tabular format attributes to use (e.g., delimiter, quote information for CSV/CSV).
-    * This is useful if one wants to define output formats using default values.
-    *
-    * @param storageFormat The HdfsStorageFormatType
-    * @return Tabular format attributes.
-    */
-  @deprecated("Use method which takes HdfsStorageFormatType object rather than HdfsStorageFormat enum")
-  def getTabularFormatAttributes(storageFormat: HdfsStorageFormat): TabularFormatAttributes = {
-
-    storageFormat match {
-      case HdfsStorageFormat.Parquet => TabularFormatAttributes.createParquetFormat()
-      case HdfsStorageFormat.Avro => TabularFormatAttributes.createAvroFormat()
-      case HdfsStorageFormat.TSV => TabularFormatAttributes.createTSVFormat()
-      case h: HdfsStorageFormat => throw new MatchError("The HdfsStorageFormat enum " + h.toString + " is not an accepted enum.")
-    }
-  }
-
-  /**
-    * Get default tabular format attributes to use (e.g., delimiter, quote information for CSV/CSV).
-    * This is useful if one wants to define output formats using default values.
-    *
-    * @param storageFormat The HdfsStorageFormatType.
-    * @return Tabular format attributes.
-    */
-  @deprecated("Use the TabularSchema definition without TabularFormatAttributes, and then you will not need this method.")
-  def getTabularFormatAttributes(storageFormat: HdfsStorageFormatType): TabularFormatAttributes = {
-    storageFormat match {
-      case HdfsStorageFormatType.Parquet => TabularFormatAttributes.createParquetFormat()
-      case HdfsStorageFormatType.Avro => TabularFormatAttributes.createAvroFormat()
-      case HdfsStorageFormatType.TSV => TabularFormatAttributes.createTSVFormat()
-      case HdfsStorageFormatType.CSV => TabularFormatAttributes.createDelimitedFormat(
-        TSVAttributes.defaultCSV.delimiter.toString,
-        TSVAttributes.defaultCSV.escapeStr.toString,
-        TSVAttributes.defaultCSV.quoteStr.toString) //needed in case user is still using deprecated method
-      case t: HdfsStorageFormatType => throw new MatchError("The HdfsStorageFormatType " + t.toString + " is not supported.")
     }
   }
 
   //bad data Reporting:
   val badDataReportParameterID: String = "badData"
-  val badDataReportNO: String = "Do Not Write Null Rows to File"
-  val badDataReportALL: String = "Write All Null Rows to File"
-  val DEFAULT_NUMBER_ROWS: Int = 1000
-  val badDataReportNROWS: String = "Write Up to " + DEFAULT_NUMBER_ROWS + " Null Rows to File"
-  val badDataReportNO_COUNT: String = "Do Not Write or Count Null Rows (Fastest)"
-  val badDataParameterOptions: Seq[String] = Seq(badDataReportNO, badDataReportNROWS, badDataReportALL, badDataReportNO_COUNT)
-  val badDataLocation: String = "_BadData"
 
-  @deprecated("Use addNullDataReportParameter")
-  def addBadDataReportParameter(operatorDialog: OperatorDialog): DialogElement = {
-    val badDataSelector = operatorDialog.addDropdownBox(badDataReportParameterID,
-      "Write Rows Removed Due to Null Data To File", badDataParameterOptions, badDataReportNO)
-    badDataSelector
-  }
+  @deprecated()
+  val DEFAULT_NUMBER_ROWS: Int = 1000
+  @deprecated()
+  val badDataReportNROWS: String = "Write Up to " + DEFAULT_NUMBER_ROWS + " Null Rows to File"
+
+  val badDataLocation: String = "_BadData"
 
   def addNullDataReportParameter(operatorDialog: OperatorDialog, message: String = "Write Rows Removed Due to Null Data to File"): DialogElement = {
     val badDataSelector = operatorDialog.addDropdownBox(badDataReportParameterID,
-      "Write Rows Removed Due to Null Data To File", badDataParameterOptions, badDataReportNO)
+      "Write Rows Removed Due to Null Data To File", NullDataReportingStrategy.displayOptions, NullDataReportingStrategy.doNotWriteDisplay)
     badDataSelector
   }
 
@@ -256,37 +243,54 @@ object HdfsParameterUtils extends OutputParameterUtils {
     convertParameterValueFromLegacy(parameters.getStringValue(badDataReportParameterID))
   }
 
+  @deprecated("Use getNullDataStrategy")
   def getAmountOfBadDataToWrite(parameters: OperatorParameters): Option[Long] = {
     val paramValue = getNullDataReportParameter(parameters)
-    if (paramValue.equals(badDataReportNO)) {
+    if (paramValue.equals(NullDataReportingStrategy.doNotWriteDisplay)) {
       None
     } else if (paramValue.equals(badDataReportNROWS)) {
-      Some(DEFAULT_NUMBER_ROWS)
-    } else if (paramValue.equals(badDataReportALL)) {
+      Some(Long.MaxValue)
+    } else if (paramValue.equals(NullDataReportingStrategy.writeAndCountDisplay)) {
       Some(Long.MaxValue)
     } else {
       None
     }
   }
 
-  private def convertParameterValueFromLegacy(oldValue: String) = {
-    if (badDataParameterOptions.contains(oldValue)) {
+  def getNullDataStrategy(parameters: OperatorParameters,
+                          alternatePath : Option[String]): NullDataReportingStrategy = {
+    val paramValue = getNullDataReportParameter(parameters)
+    if (paramValue.equals(NullDataReportingStrategy.doNotWriteDisplay)) {
+      NullDataReportingStrategy.DoNotWrite
+    } else if (paramValue.equals(NullDataReportingStrategy.writeAndCountDisplay)) {
+      val path = alternatePath match {
+      case Some(s) => s
+      case None => HdfsParameterUtils.getBadDataPath(parameters)
+      }
+      NullDataReportingStrategy.WriteAndCount(path)
+    } else {
+      NullDataReportingStrategy.DoNotCount
+    }
+  }
+
+  private def convertParameterValueFromLegacy(oldValue: String): String = {
+    if (NullDataReportingStrategy.displayOptions.contains(oldValue)) {
       oldValue
     } else
       oldValue match {
-        case ("No") => badDataReportNO
-        case ("Yes") => badDataReportALL
-        case ("Partial (1000) Rows") => badDataReportNROWS
-        case ("No and Do Not Count Rows Removed (Fastest)") => badDataReportNO_COUNT
+        case ("No") => NullDataReportingStrategy.doNotWriteDisplay
+        case ("Yes") => NullDataReportingStrategy.writeAndCountDisplay
+        case ("Partial (1000) Rows") => NullDataReportingStrategy.writeAndCountDisplay
+        case ("No and Do Not Count Rows Removed (Fastest)") => NullDataReportingStrategy.noCountDisplay
         case (_) =>
           println(" Warning could not find reference for parameter value " + oldValue)
-          badDataReportNO
+           NullDataReportingStrategy.doNotWriteDisplay
       }
   }
 
   def countRowsRemovedDueToNullData(parameters: OperatorParameters): Boolean = {
     val paramValue = getNullDataReportParameter(parameters)
-    !paramValue.equals(badDataReportNO_COUNT)
+    !paramValue.equals(NullDataReportingStrategy.noCountDisplay)
   }
 
 
@@ -294,4 +298,5 @@ object HdfsParameterUtils extends OutputParameterUtils {
     val outputPath = HdfsParameterUtils.getOutputPath(parameters)
     outputPath + badDataLocation
   }
+
 }

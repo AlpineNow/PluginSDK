@@ -114,6 +114,9 @@ object SparkMetadataWriter {
     else if (colType == ColumnType.Sparse) {
       HadoopDataType.SPARSE
     }
+    else if (colType == ColumnType.Boolean) {
+      HadoopDataType.BOOLEAN
+    }
     else {
       HadoopDataType.CHARARRAY
     }

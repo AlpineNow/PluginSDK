@@ -111,10 +111,53 @@ trait SQLGenerator {
 		* Returns the name of the standard deviation function to be used for this database.
 		* For example, in PostgreSQL, this is "stddev". Note that this is just the function name,
 		* and does not include the argument. A typical SQL call would be "stddev(expression)".
-    *
+		*
     * @return name of the standard deviation function for the current database type
+		*
+		* @deprecated the standard deviation function is ambiguous, as it varies on different RDBMS platforms.
+		*            Replace with [[getStandardDeviationPopulationFunctionName]]
+		*                 or [[getStandardDeviationSampleFunctionName]]
 		*/
-  def getStandardDeviationFunctionName: String
+	@deprecated("use getStandardDeviationPopulationFunctionName or getStandardDeviationSampleFunctionName instead, which is unambiguous", "6.4")
+  @Deprecated def getStandardDeviationFunctionName: String
+
+	/**
+		* Returns the name of the entire population standard deviation function to be used for this database.
+		* This is defined as &sigma;=SQRT((1/N)&Sigma;<sub>i=1</sub><sup>N</sup> (x<sub>i</sub>)-&mu;)<sup>2</sup>).
+		* Note that this is a different function from the sample standard deviation function.
+		* Different RDBMSs have different names:
+		* <br/>
+		* PostgreSQL/GreenPlum: STDDEV_POP()
+		* MSSQL: STDEVP()
+		* MySQL/MariaDB: STD(), STDDEV(), or STDDEV_POP()
+		* Oracle: STDDEV_POP()
+		* Teradata: STDDEV_POP()
+		* Hive: STDDEV_POP()
+		* DB2: STDDEV()
+		* Sybase: STDDEV_POP()
+		*
+		* @return name of the standard deviation population function for the current database type
+		*/
+	def getStandardDeviationPopulationFunctionName: String
+
+	/**
+		* Returns the name of the sample standard deviation function to be used for this database.
+		* This is defined as s=SQRT((1/(n-1))&Sigma;<sub>i=1</sub><sup>N</sup> (x<sub>i</sub>-x&#x2c9;)<sup>2</sup>).
+		* Note that this is a different function from the entire population standard deviation function.
+		* Different RDBMSs have different names:
+		* <br/>
+		* PostgreSQL/GreenPlum: STDDEV_SAMP()
+		* MSSQL: STDEV()
+		* MySQL/MariaDB: STDDEV_SAMP()
+		* Oracle: STDDEV_SAMP(), STDDEV()
+		* Teradata: STDDEV_SAMP()
+		* Hive: STDDEV_SAMP()
+		* DB2: STDDEV_SAMP()
+		* Sybase: STDDEV_SAMP(), STDDEVIATION(), STDDEV()
+		*
+		* @return name of the standard deviation population function for the current database type
+		*/
+	def getStandardDeviationSampleFunctionName: String
 
   /**
 		* Returns the name of the variance function to be used for this database.
@@ -122,10 +165,65 @@ trait SQLGenerator {
 		* and does not include the argument. A typical call would be "variance(expression)".
     *
     * @return name of the variance function for the current database type
+		*
+		* @deprecated the variance function is ambiguous, as it varies on different RDBMS platforms.
+		*            Replace with [[getVariancePopulationFunctionName]]
+		*                 or [[getVarianceSampleFunctionName]]
 		*/
-  def getVarianceFunctionName: String
+	@deprecated("use getVariancePopulationFunctionName or getVarianceSampleFunctionName instead, which is unambiguous", "6.4")
+  @Deprecated def getVarianceFunctionName: String
 
-  /**
+	/**
+		* Returns the name of the entire population standard deviation function to be used for this database.
+		* This is defined as &sigma;<sup>2</sup>=(1/N)&Sigma;<sub>i=1</sub><sup>N</sup> (x<sub>i</sub>)-&mu;)<sup>2</sup>.
+		* Note that this is a different function from the sample standard deviation function.
+		* Different RDBMSs have different names:
+		* <br/>
+		* PostgreSQL/GreenPlum: VAR_POP()
+		* MSSQL: VARP()
+		* MySQL/MariaDB: VARIANCE(), VAR_POP()
+		* Oracle: VAR_POP()
+		* Teradata: VAR_POP()
+		* Hive: VARIANCE(), VAR_POP()
+		* DB2: VARIANCE()
+		* Sybase: VAR_POP()
+		*
+		* @return name of the standard deviation population function for the current database type
+		*/
+	def getVariancePopulationFunctionName: String
+
+	/**
+		* Returns the name of the sample variance function to be used for this database.
+		* This is defined as s<sup>2</sup>=(1/(n-1))&Sigma;(i=1..n (x<sub>i</sub>)-x&#x2c9;))<sup>2</sup>).
+		* Note that this is a different function from the entire population standard deviation function.
+		* Different RDBMSs have different names:
+		* <br/>
+		* PostgreSQL/GreenPlum: , "VAR_POP"(), VARIANCE()
+		* MSSQL: VAR()
+		* MySQL/MariaDB: VAR_SAMP()
+		* Oracle: VAR_SAMP(), VARIANCE()
+		* Teradata: VAR_SAMP()
+		* Hive: VAR_SAMP()
+		* DB2: VARIANCE_SAMP()
+		* Sybase: VAR_SAMP()
+		*
+		* @return name of the standard deviation population function for the current database type
+		*/
+	def getVarianceSampleFunctionName: String
+
+	/**
+		* Returns the expression for the correlation function to be used for this database.
+		* Most RDBMSs have a CORR(X,Y) function, but some do not.
+		* For those that do not have a built-in function, we substitute it with the expression
+		* (AVG(XY)-AVG(X)AVG(Y))/(STDDEV_POP(X)*STDDEV_POP(Y)) where both X and Y are NOT NULL.
+		*
+		* @param columnX expression used for column X, typically a column name
+		* @param columnY expression used for column Y, typically a column name
+		* @return an expression returning the Pearson correlation coefficient, typically CORR(columnX, columnY)
+		*/
+	def getCorrelationExpression(columnX: String, columnY: String): String
+
+	/**
 		* Returns the expression for modulo division for this database. This differs widely among databases.
 		* For example, in PostgreSQL, this is "dividend % divisor".
 		* But in Oracle, this is "MODULO(dividend, divisor)".

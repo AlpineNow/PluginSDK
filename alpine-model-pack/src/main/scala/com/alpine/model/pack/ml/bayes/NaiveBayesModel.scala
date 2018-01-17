@@ -49,17 +49,25 @@ case class GaussianLikelihood(mu: Double, sigma: Double) extends BayesLikelihood
     }
     // leave out the root(2*pi) because it is a constant multiplier.
   }
+
+  def variance: Double = sigma * sigma
 }
 
 case class CategoryCount(category: String, prob: Double)
 
-case class CategoricalLikelihood(counts: Seq[CategoryCount]) extends BayesLikelihood {
+case class CategoricalLikelihood(counts: Set[CategoryCount]) extends BayesLikelihood {
 
-  @transient lazy val map: Map[String, Double] = (counts.map(_.category) zip normalizedProbabilities).toMap
-
-  private def normalizedProbabilities: Array[Double] = {
+  @transient lazy val normalizedProbabilities: Map[String, Double] = {
     val totalCount = counts.map(_.prob).sum
-    counts.map(_.prob / totalCount).toArray
+    counts.map {
+      case CategoryCount(category, prob) => category -> prob / totalCount
+    }.toMap
+  }
+}
+
+object CategoricalLikelihood { // Keep this for backwards compatibility with the DB Naive Bayes CO.
+  def apply(counts: Seq[CategoryCount]): CategoricalLikelihood = {
+    CategoricalLikelihood(counts.toSet)
   }
 }
 
@@ -74,7 +82,7 @@ case class Distribution(classLabel: String, priorProbability: Double, likelihood
         // Skip feature if value is null. This is natural for Naive Bayes.
         val multiplier = likelihoods(i) match {
           case TypeWrapper(g: GaussianLikelihood) => g.likelihood(TransformerUtil.anyToDouble(value))
-          case TypeWrapper(c: CategoricalLikelihood) => c.map.getOrElse(value.toString, 0d) // If unseen in training set, then it counts as 0 prob.
+          case TypeWrapper(c: CategoricalLikelihood) => c.normalizedProbabilities.getOrElse(value.toString, 0d) // If unseen in training set, then it counts as 0 prob.
         }
         start *= math.max(multiplier, threshold)
       }
@@ -120,7 +128,7 @@ class NaiveBayesSQLTransformer(val model: NaiveBayesModel, sqlGenerator: SQLGene
                   s"""CASE $whenNullThen1 WHEN $quotedFeatureName = ${sqlGenerator.doubleToString(mu)} THEN 1 ELSE ${sqlGenerator.doubleToString(model.threshold)} END"""
                 }
               case c: CategoricalLikelihood =>
-                val innards = c.map.map {
+                val innards = c.normalizedProbabilities.map {
                   case (category: String, prob: Double) =>
                     s"""WHEN $quotedFeatureName = ${SQLUtility.wrapInSingleQuotes(category)} THEN ${sqlGenerator.doubleToString(prob)}"""
                 }.mkString(" ")

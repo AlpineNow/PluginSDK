@@ -9,9 +9,8 @@ import com.alpine.plugin.core.datasource.OperatorDataSourceManager
 import com.alpine.plugin.core.dialog.OperatorDialog
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.spark.utils._
-import com.alpine.plugin.core.spark.{SparkIOTypedPluginJob, SparkRuntimeWithIOTypedJob}
-import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormatType}
-import org.apache.spark.SparkContext
+import com.alpine.plugin.core.spark.{AlpineSparkEnvironment, SparkIOTypedPluginJob, SparkRuntimeWithIOTypedJob}
+import com.alpine.plugin.core.utils.{HdfsCompressionType, HdfsParameterUtils, HdfsStorageFormatType}
 import org.apache.spark.sql.{DataFrame, SQLContext}
 
 import scala.collection.mutable
@@ -31,23 +30,22 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
   extends SparkIOTypedPluginJob[HdfsTabularDataset, OutputType] {
 
   @throws[Exception]
-  override def onExecution(sparkContext: SparkContext,
-                           appConf: mutable.Map[String, String],
+  override def onExecution(alpineSparkEnvironment: AlpineSparkEnvironment,
                            input: HdfsTabularDataset,
                            operatorParameters: OperatorParameters,
                            listener: OperatorListener): OutputType = {
-    val sparkUtils = new SparkRuntimeUtils(sparkContext)
+    val sparkUtils = alpineSparkEnvironment.getSparkUtils
     val dataFrame = sparkUtils.getDataFrame(input)
     listener.notifyMessage("Starting transformation")
     val (results, addendum) = transformWithAddendum(operatorParameters,
       dataFrame, sparkUtils, listener)
-    val storageFormat = operatorParameters.getStringValue("storageFormat")
+    val storageFormat = HdfsParameterUtils.getHdfsStorageFormatType(operatorParameters)
+    val compressionType = HdfsParameterUtils.getHdfsCompressionType(operatorParameters)
     val outputPath = HdfsParameterUtils.getOutputPath(operatorParameters)
-    listener.notifyMessage(s"Saving results to $outputPath in $storageFormat")
+    listener.notifyMessage(s"Saving results to $outputPath in ${storageFormat.toString} with compression ${compressionType.toString}.")
     val overwrite = HdfsParameterUtils.getOverwriteParameterValue(operatorParameters)
     val output = saveResults(
-      results, sparkUtils, storageFormat, outputPath, overwrite,
-      Some(operatorParameters.operatorInfo), addendum, TSVAttributes.defaultCSV
+      results, sparkUtils, storageFormat, compressionType, outputPath, overwrite, addendum, TSVAttributes.defaultCSV
     )
     output
   }
@@ -77,19 +75,20 @@ abstract class TemplatedSparkDataFrameJob[ReturnType, OutputType <: IOBase]
     * @param results       - the data to write
     * @param sparkUtils    - Spark utils object with utility methods to write data and transform
     *                      between Alpine header types and Spark SQL schema types
-    * @param storageFormat - Parquet, Avro, and CSV
+    * @param storageFormat - HdfsStorageFormat
+    * @param compressionType - HdfsCompressionType
     * @param path          full HDFS output path
     * @param overwrite     Boolean indicating whether to overwrite existing results at that location.
     * @return
     */
   def saveResults(results: ReturnType,
-                  sparkUtils: SparkRuntimeUtils,
-                  storageFormat: String,
-                  path: String,
-                  overwrite: Boolean,
-                  sourceOperatorInfo: Option[OperatorInfo],
-                  addendum: Map[String, AnyRef] = Map[String, AnyRef](),
-                  tSVAttributes: TSVAttributes): OutputType
+      sparkUtils: SparkRuntimeUtils,
+      storageFormat: HdfsStorageFormatType,
+      compressionType: HdfsCompressionType,
+      path: String,
+      overwrite: Boolean,
+      addendum: Map[String, AnyRef] = Map[String, AnyRef](),
+      tSVAttributes: TSVAttributes): OutputType
 
 }
 
@@ -163,20 +162,20 @@ abstract class SparkDataFrameJob extends TemplatedSparkDataFrameJob[DataFrame, H
     */
   override def saveResults(transformedDataFrame: DataFrame,
                            sparkUtils: SparkRuntimeUtils,
-                           storageFormat: String,
+                           storageFormat: HdfsStorageFormatType,
+                           compressionType: HdfsCompressionType,
                            outputPath: String,
                            overwrite: Boolean,
-                           sourceOperatorInfo: Option[OperatorInfo],
-                           addendum: Map[String, AnyRef] = Map[String, AnyRef](), tSVAttributes: TSVAttributes = TSVAttributes.default): HdfsTabularDataset = {
-    sparkUtils.saveDataFrame(
+                           addendum: Map[String, AnyRef] = Map[String, AnyRef](),
+                           tSVAttributes: TSVAttributes = TSVAttributes.defaultCSV): HdfsTabularDataset = {
+    sparkUtils.saveDataFrame[HdfsStorageFormatType, HdfsCompressionType](
       outputPath,
       transformedDataFrame,
-      HdfsStorageFormatType.withName(storageFormat),
+      storageFormat,
       overwrite,
-      sourceOperatorInfo,
       addendum,
-      tSVAttributes
-    )
+      tSVAttributes,
+      compressionType)
   }
 }
 
@@ -250,7 +249,7 @@ abstract class SparkDataFrameGUINode[Job <: SparkDataFrameJob]()
                             operatorDataSourceManager: OperatorDataSourceManager,
                             operatorSchemaManager: OperatorSchemaManager): Unit = {
 
-    HdfsParameterUtils.addHdfsStorageFormatParameter(operatorDialog, HdfsStorageFormatType.CSV)
+    HdfsParameterUtils.addHdfsStorageAndCompressionParameters(operatorDialog)
     HdfsParameterUtils.addStandardHdfsOutputParameters(operatorDialog)
   }
 

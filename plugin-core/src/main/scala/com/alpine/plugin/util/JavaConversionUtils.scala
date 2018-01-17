@@ -3,7 +3,6 @@
   */
 package com.alpine.plugin.util
 
-import java.lang.Iterable
 import java.util
 
 import scala.collection.JavaConversions
@@ -44,12 +43,34 @@ object JavaConversionUtils {
     toSeq(javaList).toList
   }
 
+  @Deprecated // Use toCollection instead.
+  @deprecated("Use toCollection instead.")
   def toList[T](scalaList: Seq[T]): util.Collection[T] = {
     JavaConversions.asJavaCollection(scalaList)
   }
 
-  def toIterable[T](scalaList: Seq[T]): Iterable[T] = {
+  def toJavaList[T](scalaList: Seq[T]): util.List[T] = {
+    JavaConversions.seqAsJavaList(scalaList)
+  }
+
+  def toCollection[T](scalaList: Iterable[T]): util.Collection[T] = {
+    JavaConversions.asJavaCollection(scalaList)
+  }
+
+  def toIterable[T](scalaList: Seq[T]): java.lang.Iterable[T] = {
     JavaConversions.asJavaIterable(scalaList)
+  }
+
+  def toSet[T](javaSet: java.util.Set[T]): Set[T] = {
+    JavaConversions.asScalaSet(javaSet).toSet
+  }
+
+  def toJavaSet[T](set: Set[T]): java.util.Set[T] = {
+    JavaConversions.setAsJavaSet(set)
+  }
+
+  def toJavaMap[K, V](map: Map[K, V]): java.util.Map[K, V] = {
+    JavaConversions.mapAsJavaMap(map)
   }
 
   /**

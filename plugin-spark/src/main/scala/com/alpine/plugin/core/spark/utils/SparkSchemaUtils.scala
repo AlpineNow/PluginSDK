@@ -51,13 +51,14 @@ trait SparkSchemaUtils {
   /**
     * Converts from a Spark SQL data type to an Alpine-specific ColumnType
     */
-  @deprecated("This doesn't properly handle date formats. Use convertColumnTypeToSparkSQLDataType instead")
+  @deprecated("This doesn't properly handle date formats. Use convertSparkSQLDataTypeToColumnType instead")
   def convertSparkSQLDataTypeToColumnType(dataType: DataType): ColumnType.TypeValue = {
     dataType match {
       case IntegerType => ColumnType.Int
       case LongType => ColumnType.Long
       case FloatType => ColumnType.Float
       case DoubleType => ColumnType.Double
+      case DecimalType() => ColumnType.Double // Best to avoid this. It doesn't work well with Parquet.
       case StringType => ColumnType.String
       case DateType => ColumnType.DateTime
       case BooleanType => ColumnType.Boolean
@@ -81,6 +82,7 @@ trait SparkSchemaUtils {
       case LongType => ColumnDef(name, ColumnType.Long)
       case FloatType => ColumnDef(name, ColumnType.Float)
       case DoubleType => ColumnDef(name, ColumnType.Double)
+      case DecimalType() => ColumnDef(name, ColumnType.Double) // Best to avoid this. It doesn't work well with Parquet.
       case StringType => ColumnDef(name, ColumnType.String)
       case BooleanType => ColumnDef(name, ColumnType.Boolean)
       case DateType =>
@@ -159,16 +161,9 @@ trait SparkSchemaUtils {
     * @return the equivalent Alpine schema for that dataset
     */
   def convertSparkSQLSchemaToTabularSchema(schema: StructType): TabularSchema = {
-
-    val columnDefs = new mutable.ArrayBuffer[ColumnDef]()
-
-    val schemaItr = schema.iterator
-    while (schemaItr.hasNext) {
-      val colInfo = schemaItr.next()
-      val colDef = convertSparkSQLDataTypeToColumnType(colInfo)
-      columnDefs += colDef
-    }
-
+    val columnDefs: Seq[ColumnDef] = schema.iterator.map {
+      convertSparkSQLDataTypeToColumnType
+    }.toSeq
     TabularSchema(columnDefs)
   }
 
@@ -221,6 +216,7 @@ object SparkSqlDateTimeUtils {
       None
   }
 
+
   /**
     * Add a custom date format to a column definition so that the date will be re-formatted by the
     * 'saveDataFrame method.
@@ -230,8 +226,12 @@ object SparkSqlDateTimeUtils {
       name = field.name,
       dataType = field.dataType,
       nullable = field.nullable,
-      metadata = new MetadataBuilder().putString(DATE_METADATA_KEY, format).build()
+      metadata = createDateTimeMetadata(format)
     )
+  }
+
+  def createDateTimeMetadata(format: String): Metadata = {
+    new MetadataBuilder().putString(DATE_METADATA_KEY, format).build()
   }
 }
 

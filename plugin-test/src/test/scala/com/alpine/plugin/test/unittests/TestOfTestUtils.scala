@@ -1,10 +1,11 @@
 package com.alpine.plugin.test.unittests
 
+import com.alpine.plugin.core.dialog.{IRowDialogRow, IRowDialogValue}
 import com.alpine.plugin.core.spark.templates.SparkDataFrameJob
 import com.alpine.plugin.core.spark.utils.SparkRuntimeUtils
 import com.alpine.plugin.core.utils.{HdfsParameterUtils, HdfsStorageFormatType}
 import com.alpine.plugin.core.{OperatorListener, OperatorParameters}
-import com.alpine.plugin.test.mock.{OperatorParametersMock, SimpleOperatorListener}
+import com.alpine.plugin.test.mock.{IRowDialogRowMock, IRowDialogRowValueMock, OperatorParametersMock, SimpleOperatorListener}
 import com.alpine.plugin.test.utils.{OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row}
@@ -31,7 +32,7 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
     val input = sc.parallelize(inputRows)
 
     //create a dataFrame using that test data
-    val dataFrameInput = sqlContext.createDataFrame(input, inputSchema)
+    val dataFrameInput = sparkSession.createDataFrame(input, inputSchema)
     val uuid = "1"
     val colFilterName = "TestColumnSelector"
     val parameters = new OperatorParametersMock(colFilterName, uuid)
@@ -42,7 +43,7 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
     OperatorParameterMockUtil.addHdfsParamsDefault(parameters, "ColumnSelector")
 
     val result = operator.transform(parameters, dataFrame = dataFrameInput,
-      new SparkRuntimeUtils(sc), new SimpleOperatorListener)
+      sparkUtils, new SimpleOperatorListener)
     assert(!result.schema.fieldNames.contains("age"))
 
     assert(result.collect().sameElements(expectedRows))
@@ -78,6 +79,16 @@ class TestOfTestUtils extends SimpleAbstractSparkJobSuite {
     OperatorParameterMockUtil.addTabularColumns(operatorParametersMock, "id", "col1", "col2")
     val (_, parameterValue) = operatorParametersMock.getTabularDatasetSelectedColumns("id")
     assert(parameterValue.toSet.equals(Set("col1", "col2")))
+  }
+
+  test("Test Add RowDialogPopup Method") {
+    val operatorParametersMock = new OperatorParametersMock("123", "smth")
+    val firstRowValues = List(IRowDialogRowValueMock("elem_1", "val_11" ), IRowDialogRowValueMock("elem_2", "val_12"))
+    val secondRowValues = List(IRowDialogRowValueMock("elem_1", "val_21" ), IRowDialogRowValueMock("elem_2", "val_22"))
+    OperatorParameterMockUtil.addRowDialogElements(operatorParametersMock, "id", IRowDialogRowMock(firstRowValues), IRowDialogRowMock(secondRowValues))
+
+    val parameterRowValues: Array[IRowDialogRow] = operatorParametersMock.getDialogRowsAsArray("id")
+    assert(parameterRowValues.map(_.getRowDialogValues).sameElements(Array(firstRowValues, secondRowValues)))
   }
 
 }

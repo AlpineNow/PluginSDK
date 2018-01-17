@@ -2,7 +2,7 @@ package com.alpine.plugin.core.spark.utils
 
 import java.sql.Timestamp
 
-import org.apache.spark.sql.UserDefinedFunction
+import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.DateTime
 
@@ -25,7 +25,7 @@ object DateTimeUdfs extends Serializable {
         joda.toString(DateTimeFormat.forPattern(format))
       }
       catch {
-        case e: Throwable => {
+        case e: Throwable =>
           if (e.isInstanceOf[NullPointerException] ||
             e.isInstanceOf[NumberFormatException] ||
             e.isInstanceOf[IllegalArgumentException]) {
@@ -35,7 +35,6 @@ object DateTimeUdfs extends Serializable {
             println(e.getMessage)
           }
           null
-        }
       }
     })
   }
@@ -52,7 +51,7 @@ object DateTimeUdfs extends Serializable {
         val millis = DateTimeFormat.forPattern(format).parseDateTime(dateString).getMillis
         new Timestamp(millis)
       } catch {
-        case (e: Throwable) => {
+        case (e: Throwable) =>
           if (e.isInstanceOf[NullPointerException] ||
             e.isInstanceOf[NumberFormatException] ||
             e.isInstanceOf[IllegalArgumentException]) {
@@ -62,7 +61,6 @@ object DateTimeUdfs extends Serializable {
             println(e.getMessage)
           }
           null
-        }
       }
     })
   }

@@ -28,7 +28,7 @@ object SparkParameterUtils {
     val list = List(
       SparkParameter(disableDynamicAllocationParamId,
         "Disable Dynamic Allocation", false.toString, userSpecified = false, overridden = false),
-      SparkParameter(sparkNumExecutorsElementId, "Number of Executors", "3", userSpecified = false, overridden = false),
+      SparkParameter(sparkNumExecutorsElementId, "Number of Executors", "-1", userSpecified = false, overridden = false),
       SparkParameter(sparkExecutorMBElementId, "Executor Memory in MB", "-1", userSpecified = false, overridden = false),
       SparkParameter(sparkDriverMBElementId, "Driver Memory in MB", "-1", userSpecified = false, overridden = false),
       SparkParameter(sparkNumExecutorCoresElementId, "Number of Executor Cores", "-1", userSpecified = false, overridden = false)
@@ -115,13 +115,13 @@ object SparkParameterUtils {
     * be used either when repartitioning the data (controlled by above param) or in when shuffling
     * generally.
     * If this parameter is not set, a value will be selected by auto tuning. If a value is selected
-    * this value will be used to set the "spark.default.parallelism" parameter which controls the
-    * default number of parameter used in a wide transformation in Spark.
+    * this value will be used to set the "spark.default.parallelism" (or "spark.sql.shuffle.partitions" for Spark SQL)
+    * parameters which controls the default number of parameter used in a wide transformation in Spark.
     *
     * @return
     */
   def makeNumPartitionsParam: SparkParameter =
-    SparkParameter(numPartitionsId, "Number of Partitions", "", userSpecified = false, overridden = true)
+    SparkParameter(numPartitionsId, "Number of Partitions", "", userSpecified = false, overridden = false)
 
 
   /**

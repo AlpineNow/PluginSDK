@@ -6,9 +6,7 @@ package com.alpine.plugin.core.spark
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.{OperatorListener, OperatorParameters}
-import org.apache.spark.SparkContext
 
-import scala.collection.mutable
 
 /**
   * :: AlpineSdkApi ::
@@ -37,14 +35,15 @@ import scala.collection.mutable
   */
 @AlpineSdkApi
 abstract class SparkIOTypedPluginJob[I, O] {
+
   /**
     * The driver function for the Spark job.
     * Unlike the corresponding function in the parent class, this function allows you to work with
-    * IOBase types directly.
+    * IOBase types directly. YOU MUST Override one of the two 'onExecution' methods.
     *
-    * @param sparkContext       Spark context created when the Spark job was submitted
-    * @param appConf            a map containing system related parameters (rather than operator parameters)
-    *                           including all Spark parameters, workflow-level variables
+    * @param alpineSparkEnvironment   Information about the spark job including the
+    *                                 Spark session (unified spark context) created when job was submitted
+
     * @param input              the ioBase object which you have defined as the input to your plugin.
     *                           For example, if the GUI node of the plugin takes an HDFSTabularDataset,
     *                           this input parameter will be that dataset.
@@ -56,9 +55,9 @@ abstract class SparkIOTypedPluginJob[I, O] {
     * @return the output of your plugin
     */
   @throws[Exception]
-  def onExecution(sparkContext: SparkContext,
-                  appConf: mutable.Map[String, String],
-                  input: I,
-                  operatorParameters: OperatorParameters,
-                  listener: OperatorListener): O
+  def onExecution(
+    alpineSparkEnvironment: AlpineSparkEnvironment,
+    input: I,
+    operatorParameters: OperatorParameters,
+    listener: OperatorListener): O
 }

@@ -5,7 +5,7 @@
 package com.alpine.plugin.core.spark
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
-import com.alpine.plugin.core.io.{HdfsParquetDataset, IOBase}
+import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.{OperatorRuntime, _}
 import com.alpine.plugin.generics.GenericUtils
 
@@ -142,12 +142,10 @@ O <: IOBase] extends OperatorRuntime[SparkExecutionContext, I, O] {
     * 'getSparkJobConfiguration' and this method will be ignored.
     */
   def getAutoTuningOptions(parameters: OperatorParameters, input: I): AutoTunerOptions = {
-    val fileSizeMultiplier = input match {
-      case p: HdfsParquetDataset => 6.0 //compressed data is smaller in memory
-      case _ => 4.0
-    }
-    AutoTunerOptions(1.0, fileSizeMultiplier)
+    val inputCachedSizeMultiplier = 1.0
+    AutoTunerOptions(1.0, inputCachedSizeMultiplier, minExecutorMemory = 0L)
   }
+
 
   def onStop(
               context: SparkExecutionContext,

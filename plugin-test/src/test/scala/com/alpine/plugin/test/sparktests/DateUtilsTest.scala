@@ -1,22 +1,25 @@
 package com.alpine.plugin.test.sparktests
 
+import java.io.File
+
 import com.alpine.plugin.core.io.defaults.HdfsDelimitedTabularDatasetDefault
 import com.alpine.plugin.core.io.{ColumnDef, ColumnType, TSVAttributes, TabularSchema}
 import com.alpine.plugin.core.spark.utils.{SparkRuntimeUtils, SparkSchemaUtils, SparkSqlDateTimeUtils}
 import com.alpine.plugin.test.utils.TestSparkContexts
+import org.apache.commons.io.FileUtils
 import org.apache.spark._
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 import org.joda.time.format.ISODateTimeFormat
 import org.scalatest.FunSuite
 
+import scala.util.Random
+
 class DateUtilsTest extends FunSuite {
 
   import TestSparkContexts._
 
-  val sparkUtils = new SparkRuntimeUtils(sc)
-
-  val path = "plugin-test/src/test/resources/WeirdDates.csv"
+ val sparkUtils = new SparkRuntimeUtils(sparkSession)
 
   val justDateType = ColumnType.DateTime("dd/MM/yyyy")
   val justTime = ColumnType.DateTime("HH:mm")
@@ -43,7 +46,7 @@ class DateUtilsTest extends FunSuite {
     "07/07/1991,5:25,2,1991-07-07").map(r => sql.Row.fromSeq(r.split(",")))
 
   test("DateCorrect Method ") {
-    val df = sqlContext.createDataFrame(sc.parallelize(rows), sqlSchema)
+    val df = sparkSession.createDataFrame(sc.parallelize(rows), sqlSchema)
 
     val asDates = sparkUtils.mapDFtoUnixDateTime(df, dateFormatMap)
 
@@ -52,20 +55,32 @@ class DateUtilsTest extends FunSuite {
   }
 
   test("Read in Date Dataframe") {
-    val df = sparkUtils.getDataFrame(HdfsDelimitedTabularDatasetDefault(path, dateSchema, TSVAttributes.defaultCSV))
+    val weirdDatesFile = new File("target/test-results", s"WeirdDates${Random.nextInt()}.csv")
+    val testData = """12/07/1991,6:30,1,1991-12-07
+                     |07/07/1991,5:25,2,1991-07-07""".stripMargin
+    FileUtils.write(weirdDatesFile, testData)
+    weirdDatesFile.deleteOnExit()
+
+    val df = sparkUtils.getDataFrame(HdfsDelimitedTabularDatasetDefault(weirdDatesFile.getPath, dateSchema, TSVAttributes.defaultCSV))
     val result = df.collect()
     assert(!result.exists(_.anyNull))
   }
 
   test("Print pretty dates ") {
-    val df = sparkUtils.getDataFrame(HdfsDelimitedTabularDatasetDefault(path, dateSchema, TSVAttributes.defaultCSV))
+    val weirdDatesFile = new File("target/test-results", s"WeirdDates${Random.nextInt()}.csv")
+    val testData = """12/07/1991,6:30,1,1991-12-07
+                     |07/07/1991,5:25,2,1991-07-07""".stripMargin
+    FileUtils.write(weirdDatesFile, testData)
+    weirdDatesFile.deleteOnExit()
+
+    val df = sparkUtils.getDataFrame(HdfsDelimitedTabularDatasetDefault(weirdDatesFile.getPath, dateSchema, TSVAttributes.defaultCSV))
     sparkUtils.deleteFilePathIfExists("target/test-results/sparkUtilsDateTest")
     val result = sparkUtils.saveAsCSV("target/test-results/sparkUtilsDateTest",
-      df, TSVAttributes.defaultCSV, None, Map[String, AnyRef]())
+      df, TSVAttributes.defaultCSV, Map[String, AnyRef]())
   }
 
   test("Round trip date conversion") {
-    val df = sqlContext.createDataFrame(sc.parallelize(rows), sqlSchema)
+    val df = sparkSession.createDataFrame(sc.parallelize(rows), sqlSchema)
     val asDates = sparkUtils.mapDFtoUnixDateTime(df, dateFormatMap)
     val map = sparkUtils.getDateMap(dateSchema)
     val correctedDF = sparkUtils.mapDFtoCustomDateTimeFormat(asDates, map)
@@ -79,7 +94,7 @@ class DateUtilsTest extends FunSuite {
     val rows_badData = Seq("rg/07/1991,6:30,1,1991-12-07",
       "1045/074,5:25,2,1991-07-07").map(r => sql.Row.fromSeq(r.split(",")))
 
-    val df = sqlContext.createDataFrame(sc.parallelize(rows_badData), sqlSchema)
+    val df = sparkSession.createDataFrame(sc.parallelize(rows_badData), sqlSchema)
     val asDates = sparkUtils.mapDFtoUnixDateTime(df, dateFormatMap)
     val map = sparkUtils.getDateMap(dateSchema)
     val correctedDF = sparkUtils.mapDFtoCustomDateTimeFormat(asDates, map)
@@ -159,15 +174,20 @@ class DateUtilsTest extends FunSuite {
   }
 
   test("Pig Date Time Format") {
+    val pigDatesFile = new File("target/test-results", s"PigDates${Random.nextInt()}.csv")
+    val testData = """2016-09-06T09:46:44.191-07:00,2016-09-06T09:46:44.222-07:00
+                     |2016-09-06T09:46:44.191-07:00,2016-09-06T09:46:44.222-07:00""".stripMargin
+    FileUtils.write(pigDatesFile, testData)
+    pigDatesFile.deleteOnExit()
     val schema = TabularSchema(Seq(
       ColumnDef("ISOFormat", ColumnType.DateTime("yyyy-MM-dd'T'HH:mm:ss.SSSZZ")),
       ColumnDef("DefaultDateFormat", ColumnType.DateTime)))
-    val input = HdfsDelimitedTabularDatasetDefault("plugin-test/src/test/resources/PigDates.csv",
+    val input = HdfsDelimitedTabularDatasetDefault(pigDatesFile.getPath,
       schema, TSVAttributes.defaultCSV)
     val df = sparkUtils.getDataFrame(input)
     val withNullsRemoved = df.na.drop()
     assert(withNullsRemoved.count() == 2)
-    val writeDates = sparkUtils.saveDataFrameDefault("target/test-results/pigDatesTest", df, None)
+    val writeDates = sparkUtils.saveDataFrameDefault("target/test-results/pigDatesTest", df)
     val roundTripAsString = sc.textFile(writeDates.path)
     val isoFormat = ISODateTimeFormat.dateOptionalTimeParser.withOffsetParsed
     // The machine running this test will produce ISO strings in its local time zone, which may not be

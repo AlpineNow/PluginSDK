@@ -1,18 +1,21 @@
 package com.alpine.plugin.test.sparktests
 
 import com.alpine.plugin.core.spark.utils.BadDataReportingUtils
-import com.alpine.plugin.core.utils.HdfsParameterUtils
+import com.alpine.plugin.core.utils.{HdfsParameterUtils, NullDataReportingStrategy}
 import com.alpine.plugin.test.mock.OperatorParametersMock
 import com.alpine.plugin.test.utils.{OperatorParameterMockUtil, SimpleAbstractSparkJobSuite, TestSparkContexts}
 import org.apache.spark.sql
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Row, SQLContext}
+import org.apache.spark.sql.{DataFrame, Row}
 
 import scala.reflect.io.File
 import scala.util.Try
 
 
 class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
+
+  val badDataReportALL = NullDataReportingStrategy.writeAndCountDisplay
+  val badDataReportNO_COUNT = NullDataReportingStrategy.noCountDisplay
 
   import TestSparkContexts._
 
@@ -26,9 +29,9 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
 
   test("Test reporting bad data as String RDD ") {
     val rdd = sc.parallelize(List("", "some"))
-    val sqlContext = new SQLContext(rdd.sparkContext)
+
     val dummySchema = StructType(Array(StructField("String", StringType, nullable = true)))
-    val badDataAsDF = sqlContext.createDataFrame(rdd.map(r => Row.fromSeq(Seq(r))), dummySchema)
+    val badDataAsDF = sparkSession.createDataFrame(rdd.map(r => Row.fromSeq(Seq(r))), dummySchema)
     val (data, msg) = BadDataReportingUtils.getBadDataToWriteAndMessage(Some(3), outputPath,
       6, 3, Some(badDataAsDF))
     assert(data.get.count() == 2)
@@ -36,7 +39,7 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   }
 
   test("Reporting bad data as DataFrame ") {
-    val badDF = sqlContext.createDataFrame(sc.parallelize(badData), inputSchema)
+    val badDF = sparkSession.createDataFrame(sc.parallelize(badData), inputSchema)
     val writeBadDataParam: Option[Long] = Some(Int.MaxValue)
     val badDataPath = outputPath + "/test2"
     val (data, report) = BadDataReportingUtils.getBadDataToWriteAndMessage(writeBadDataParam, badDataPath,
@@ -46,7 +49,7 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   }
 
   test("Reporting bad data as DataFrame with new method ") {
-    val badDF = sqlContext.createDataFrame(sc.parallelize(badData), inputSchema)
+    val badDF = sparkSession.createDataFrame(sc.parallelize(badData), inputSchema)
     val writeBadDataParam: Option[Long] = Some(Int.MaxValue)
     val badDataPath = outputPath + "/test2"
     val (data, report) = BadDataReportingUtils.getNullDataToWriteMessage(writeBadDataParam, badDataPath,
@@ -56,9 +59,9 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   }
 
   test("test method to filter bad data from data frame ") {
-    val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows), inputSchema)
-    val badInputData = sqlContext.createDataFrame(sc.parallelize(badData), inputSchema)
-    val allData = goodInputData.unionAll(badInputData)
+    val goodInputData = sparkSession.createDataFrame(sc.parallelize(inputRows), inputSchema)
+    val badInputData = sparkSession.createDataFrame(sc.parallelize(badData), inputSchema)
+    val allData = goodInputData.union(badInputData)
     val (goodDataOutput, badDataOutput) = BadDataReportingUtils.removeDataFromDataFrame(
       row => row.anyNull, allData,
       Some(2))
@@ -72,9 +75,9 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   test("test the remove zeros and nulls function used in the bad data reporting plugin ") {
     val badData2: List[sql.Row] = List(Row("Sofya", 0), Row("Natasha", null),
       Row("Olga", null))
-    val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows), inputSchema)
-    val badInputData = sqlContext.createDataFrame(sc.parallelize(badData2), inputSchema)
-    val allData = goodInputData.unionAll(badInputData)
+    val goodInputData = sparkSession.createDataFrame(sc.parallelize(inputRows), inputSchema)
+    val badInputData = sparkSession.createDataFrame(sc.parallelize(badData2), inputSchema)
+    val allData = goodInputData.union(badInputData)
     val (goodDataOutput, badDataOutput) = BadDataReportingUtils.removeDataFromDataFrame(
       RowProcessingUtil.containsZeros,
       allData, Some(2))
@@ -85,16 +88,16 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   }
 
   test("NullDataAndReportGeneralMethod") {
-    val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
+    val goodInputData = sparkSession.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
 
-    val (badDataFile, df, message) = testBadDataReporting(HdfsParameterUtils.badDataReportALL, goodInputData)
+    val (badDataFile, df, message) = testBadDataReporting(badDataReportALL, goodInputData)
     assert(badDataFile.isDirectory)
     assert(message.contains("Input size after removing rows because it is evil: </td><td style = \"padding-right:10px;\" >3 rows"))
   }
 
   test("Bad data with nothing in it ") {
-    val goodInputData = sqlContext.createDataFrame(sc.parallelize(inputRows), inputSchema)
-    val (badDataFile, badDataDf, message) = testBadDataReporting(HdfsParameterUtils.badDataReportALL, goodInputData)
+    val goodInputData = sparkSession.createDataFrame(sc.parallelize(inputRows), inputSchema)
+    val (badDataFile, badDataDf, message) = testBadDataReporting(badDataReportALL, goodInputData)
     assert(!badDataFile.isDirectory)
     assert(message.contains("No data removed because it is evil"))
     assert(!message.contains("null"))
@@ -105,15 +108,15 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   }
 
   test("Test Null Data Reporting NOT counting the rows ") {
-    val inputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
+    val inputData = sparkSession.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
 
-    val (badDataFile, df, msg) = testBadDataReporting(HdfsParameterUtils.badDataReportNO_COUNT, inputData)
+    val (badDataFile, df, msg) = testBadDataReporting(badDataReportNO_COUNT, inputData)
     testNotRemovingTheRows(badDataFile, df, msg)
   }
 
 
   test("Bad Data Reporting with old parameter values  ") {
-    val inputData = sqlContext.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
+    val inputData = sparkSession.createDataFrame(sc.parallelize(inputRows ++ badData), inputSchema)
 
     val badDataReportNO_COUNT = {
       //Testing in the not counting and not writing to file case
@@ -163,7 +166,7 @@ class BadDataReportingUtilsTest extends SimpleAbstractSparkJobSuite {
   }
 
 
-  def testNotRemovingTheRows(badDataFile: File, badDataDF: DataFrame, msg: String) = {
+  def testNotRemovingTheRows(badDataFile: File, badDataDF: DataFrame, msg: String): Unit = {
     assert(badDataDF.count() == inputRows.length)
     assert(!badDataFile.isDirectory)
     assert(msg.contains("You have selected not to count the number" +

@@ -13,9 +13,15 @@ import com.alpine.plugin.core.io.IOBase
  * A wrapper around objects that implement the Alpine Model APIs.
  */
 @AlpineSdkApi
+@SerialVersionUID(4744122529490953736L)
 abstract class ModelWrapper[M <: MLModel](
   val model: M,
   val addendum: Map[String, AnyRef]) extends IOBase {
+
+  override def toString: String = s"${this.getClass.getSimpleName}(" +
+      s"model=$model, " +
+      s"addendum=$addendum" +
+      s")"
 }
 
 /**

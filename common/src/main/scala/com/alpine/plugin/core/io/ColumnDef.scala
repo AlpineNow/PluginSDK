@@ -48,3 +48,12 @@ object ColumnType {
   */
 @AlpineSdkApi
 case class ColumnDef(columnName: String, columnType: ColumnType.TypeValue)
+
+object ColumnDef {
+
+  def string(name: String): ColumnDef = ColumnDef(name, ColumnType.String)
+
+  def double(name: String): ColumnDef = ColumnDef(name, ColumnType.Double)
+
+  def long(name: String): ColumnDef = ColumnDef(name, ColumnType.Long)
+}

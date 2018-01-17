@@ -3,7 +3,6 @@ package com.alpine.plugin.core.spark.utils
 import com.alpine.plugin.core.OperatorParameters
 import com.alpine.plugin.core.io.{TSVAttributes, OperatorInfo}
 import com.alpine.plugin.core.utils._
-import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SQLContext}
@@ -125,28 +124,7 @@ object BadDataReportingUtils {
     reportNullDataAsStringRDD(amountOfDataToWriteParam, badDataPath, inputDataSize, outputSize, badData, defaultDataRemovedMessage)
   }
 
-  /**
-    *
-    * @deprecated Use the method with the signature that includes a value of type
-    *             HDFSStorageFormatType rather than the HdfsStorage format enum. Or handleBadDataAsDataFrameDefault
-    */
-  @deprecated("Use signature with HdfsStorageFormatType or handelNullDataAsDataFrame")
-  def handleBadDataAsDataFrame(amountOfDataToWriteParam: Option[Long], badDataPath: String,
-                               inputDataSize: Long,
-                               outputSize: Long, badData: Option[DataFrame],
-                               sparkRuntimeUtils: SparkRuntimeUtils,
-                               hdfsStorageFormat: HdfsStorageFormat = HdfsStorageFormat.TSV,
-                               overwrite: Boolean = true,
-                               operatorInfo: Option[OperatorInfo] = None): String = {
-    val (dataToWrite, message) = getNullDataToWriteMessage(amountOfDataToWriteParam, badDataPath,
-      inputDataSize, outputSize, badData, defaultDataRemovedMessage)
-    //save the dataToWrite
-    if (dataToWrite.nonEmpty) {
-      val df: DataFrame = dataToWrite.get
-      sparkRuntimeUtils.saveDataFrame(badDataPath, df, HdfsStorageFormat.TSV, overwrite, operatorInfo)
-    }
-    message
-  }
+
 
   /**
     * If specified by Params will write data containing null values to a file. Regardless return a message
@@ -165,7 +143,7 @@ object BadDataReportingUtils {
     if (dataToWrite.nonEmpty) {
       val df: DataFrame = dataToWrite.get
       sparkRuntimeUtils.saveDataFrame(badDataPath, df, hdfsStorageFormatType, overwrite,
-        operatorInfo, Map[String, AnyRef](), TSVAttributes.default)
+        Map[String, AnyRef](), TSVAttributes.defaultCSV, HdfsCompressionType.NoCompression)
     }
     message
   }
@@ -249,7 +227,7 @@ object BadDataReportingUtils {
     val schema = inputDataFrame.schema
     val sqlContext = inputDataFrame.sqlContext
     val tagInputData: RDD[(Boolean, Row)] =
-      inputDataFrame.map(row => (removeRow(row), row))
+      inputDataFrame.rdd.map(row => (removeRow(row), row))
     val badDataFrame = dataToWriteParam match {
       case Some(n) =>
         val badRowRDD = tagInputData.filter(_._1).values

@@ -1,13 +1,16 @@
-import sbtassembly.Plugin.AssemblyKeys._
+import java.io.Serializable
+
 import sbtassembly.Plugin._
+import sbtassembly.Plugin.AssemblyKeys._
+import sbt.Keys.resolvers
 //import com.typesafe.sbt.SbtGit.GitKeys
 
-val sdkVersion = "1.9"
+val sdkVersion = "1.10-beta"
 val javaSourceVersion = "1.7"
 val javaTargetVersion = "1.7"
-val scalaMajorVersion = "2.10"
-val scalaFullVersion = "2.10.4"
-val sparkVersion = "1.6.1"
+val scalaMajorVersion = "2.11"
+val scalaFullVersion = "2.11.8"
+val sparkVersion = "2.1.2"
 
 scalaVersion := scalaFullVersion
 
@@ -40,8 +43,7 @@ def publishParameters(module: String) = Seq(
   crossPaths := false
 )
 
-resolvers += "opendatagroup" at "http://repository.opendatagroup.com/maven"
-val hadrianDependency = "com.opendatagroup" % "hadrian" % "0.8.3"
+val hadrianDependency = "com.opendatagroup" % "hadrian_SNAPSHOT_2.11" % "0.8.5"
 
 // javax.servlet signing issues can be tricky, we can just exclude the dep
 def excludeFromAll(items: Seq[ModuleID], group: String, artifact: String) =
@@ -72,8 +74,7 @@ def sparkDependencies = excludeJPMML({
     "org.apache.spark" % s"spark-network-yarn_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-network-common_$scalaMajorVersion" % sparkVersion,
     "org.apache.spark" % s"spark-network-shuffle_$scalaMajorVersion" % sparkVersion,
-    "com.databricks" % s"spark-avro_$scalaMajorVersion" % "1.0.0",
-    "com.databricks" % s"spark-csv_$scalaMajorVersion" % "1.3.0"
+    "com.databricks" % s"spark-avro_$scalaMajorVersion" % "3.2.0"
   )
 })
 
@@ -81,7 +82,8 @@ val scalaTestDep = "org.scalatest" % s"scalatest_$scalaMajorVersion" % "2.2.4"
 val gsonDependency = "com.google.code.gson" % "gson" % "2.3.1"
 val jodaTimeDependency = "joda-time" % "joda-time" % "2.1"
 val commonsIODependency = "commons-io" % "commons-io" % "2.4"
-val apacheCommonsDependency = "org.apache.commons" % "commons-lang3" % "3.4"
+val commonsLang3Dependency = "org.apache.commons" % "commons-lang3" % "3.5"
+val commonsDBUtilsDependency = "commons-dbutils" % "commons-dbutils" % "1.6"
 //val prestoParserDependency = "com.facebook.presto" % "presto-parser" % "0.79" // Versions after this use Java 8.
 
 lazy val Common = Project(
@@ -100,7 +102,8 @@ lazy val PluginCore = Project(
   base = file("plugin-core"),
   settings = Seq(
     libraryDependencies ++= Seq(
-      scalaTestDep
+      scalaTestDep,
+      commonsDBUtilsDependency // Not directly used by this project, but included so that CO projects get it transitively.
     )
   ) ++ publishParameters("plugin-core")
 ).dependsOn(Common)
@@ -111,7 +114,7 @@ lazy val PluginIOImpl = Project(
   settings = Seq(
     libraryDependencies ++= Seq(
       commonsIODependency,
-      apacheCommonsDependency,
+      commonsLang3Dependency,
       scalaTestDep % "test",
       gsonDependency
     )
@@ -147,7 +150,7 @@ lazy val ModelAPI = Project(
       gsonDependency,
       jodaTimeDependency,
       scalaTestDep % "test",
-      apacheCommonsDependency
+      commonsLang3Dependency
     )
   ) ++ publishParameters("alpine-model-api")
 ).dependsOn(Common)
@@ -161,7 +164,10 @@ lazy val ModelPack = Project(
       hadrianDependency % "test"
       //  prestoParserDependency
     )
-  ) ++ publishParameters("alpine-model-pack")
+  ) ++ publishParameters("alpine-model-pack") ++ Seq(
+    // For Hadrian
+    resolvers += "Artifactory" at "http://artifactory.alpinedata.tech/artifactory/repo"
+  )
 ).dependsOn(ModelAPI % "compile->compile;test->test")
 
 lazy val PluginTest = Project(
@@ -182,7 +188,10 @@ lazy val CompleteModule = Project(
     test in assembly := {},
     jarName in assembly := s"alpine-sdk-assembly-$sdkVersion.jar",
     mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) => {
+      case PathList("org", "objenesis", xs@_*) => MergeStrategy.last
+      case PathList("org", "aopalliance", xs@_*) => MergeStrategy.last
       case PathList("javax", "servlet", xs@_*) => MergeStrategy.last
+      case PathList("javax", "inject", xs@_*) => MergeStrategy.last
       case PathList("javax", "activation", xs@_*) => MergeStrategy.last
       case PathList("org", "apache", xs@_*) => MergeStrategy.last
       case PathList("com", "google", xs@_*) => MergeStrategy.last

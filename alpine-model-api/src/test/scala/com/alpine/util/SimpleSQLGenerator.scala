@@ -47,12 +47,22 @@ class SimpleSQLGenerator extends SQLGenerator {
 
   override def getStandardDeviationFunctionName: String = "stddev"
 
+  override def getStandardDeviationPopulationFunctionName: String = "STDDEV_POP"
+
+  override def getStandardDeviationSampleFunctionName: String = "STDDEV_SAMP"
+
   override def getVarianceFunctionName: String = "variance"
+
+  override def getVariancePopulationFunctionName: String = "VAR_POP"
+
+  override def getVarianceSampleFunctionName: String = "VAR_SAMP"
+
+  override def getCorrelationExpression(columnX: String, columnY: String): String = "CORR(" + columnX + ", " + columnY + ")"
 
   override def getModuloExpression(dividend: String, divisor: String): String = dividend + " % " + divisor
 
   override def getCreateTableAsSelectSQL(columns: String, sourceTable: String, destinationTable: String, whereClause: String): String = {
-    s"""CREATE TABLE $destinationTable AS (SELECT $columns FROM $sourceTable $whereClause"""
+    s"""CREATE TABLE $destinationTable AS (SELECT $columns FROM $sourceTable $whereClause)"""
   }
 
   override def getCreateTableAsSelectSQL(columns: String, sourceTable: String, destinationTable: String): String = {
@@ -64,7 +74,7 @@ class SimpleSQLGenerator extends SQLGenerator {
   }
 
   override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String, whereClause: String): String = {
-    s"""CREATE VIEW $destinationView AS (SELECT $columns FROM $sourceTable $whereClause"""
+    s"""CREATE VIEW $destinationView AS (SELECT $columns FROM $sourceTable $whereClause)"""
   }
 
   override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String): String = {

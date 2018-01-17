@@ -10,6 +10,8 @@ import java.util
 import com.google.gson._
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl
 
+import scala.collection.mutable.ListBuffer
+
 /**
   * Gson adapter to be used to serialize and serialize [[scala.collection.Seq]] to and from JSON
   * with Gson.
@@ -22,7 +24,12 @@ case class GsonSeqAdapter() extends JsonSerializer[Seq[_]] with JsonDeserializer
   def deserialize(jsonElement: JsonElement, t: Type, jdc: JsonDeserializationContext): Seq[_] = {
     val p = scalaListTypeToJava(t)
     val javaList: java.util.List[_] = jdc.deserialize(jsonElement, p)
-    javaList.asScala.toList
+    // Tempting to use t.asInstanceOf[ParameterizedType].getRawType.getTypeName here, but getTypeName is from Java 1.8.
+    if (t.isInstanceOf[ParameterizedType] && t.asInstanceOf[ParameterizedType].getRawType.toString.contains("Buffer")) {
+      ListBuffer[Any]().++=(javaList.asScala)
+    } else {
+      javaList.asScala.toList
+    }
   }
 
   def serialize(obj: Seq[_], t: Type, jdc: JsonSerializationContext): JsonElement = {

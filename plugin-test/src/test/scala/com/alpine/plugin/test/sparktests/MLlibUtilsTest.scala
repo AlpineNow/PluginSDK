@@ -54,7 +54,7 @@ class MLlibUtilsTest extends FunSuite {
 
     val parallelSequence = sc.parallelize(sequence)
     val newRDD = MLlibUtils.mapSeqToCorrectType(parallelSequence, schema)
-    val newDF = sqlContext.createDataFrame(newRDD, schema)
+    val newDF = sparkSession.createDataFrame(newRDD, schema)
     val result = newDF.collect().map(_.mkString(" "))
     assert(result.length == sequence.length)
     assert(result.toSet == expectedRow)
