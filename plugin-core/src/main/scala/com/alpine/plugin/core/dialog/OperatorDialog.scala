@@ -39,6 +39,8 @@ trait OperatorDialog {
     */
   def getDialogElement(id: String): DialogElement
 
+  def addDialogElement(des: DialogElementSetup): DialogElement
+
   def addAdvancedSparkSettingsBox(id: String, label: String, availableValues: List[SparkParameter]): DialogElement
 
   /**
@@ -92,6 +94,10 @@ trait OperatorDialog {
                                label: String,
                                defaultPath: String,
                                isRequired: Boolean): HdfsFileSelector
+
+  def addOutputDirectorySelector(id: String,
+                                 label: String,
+                                 isRequired: Boolean): HdfsFileSelector
 
   /**
     * Add a Hdfs file selection box. This can be used to select an Hdfs file
@@ -523,6 +529,17 @@ trait OperatorDialog {
                                           parentBoxId: Option[String]
                                         ): TabularDatasetColumnDropdownBox
 
+  /**
+    * Add a script edit dialog accessed via a button. The scriptType parameter determines
+    * what language will be used for pretty printing and keyword completion.
+    *
+    * @param id
+    * @param label
+    * @param scriptType Allowed values - "sql", "r", "pig", "python"
+    * @param required
+    * @return
+    */
+  def addScriptEditPopup(id: String, label: String, scriptType: String, required: Boolean): DialogElement
 }
 
 /**
@@ -604,6 +621,7 @@ object ColumnFilter {
   def CategoricalOnly: ColumnFilter = {
     ColumnFilter(
       Set[ColumnType.TypeValue](
+        ColumnType.Boolean,
         ColumnType.String
       )
     )

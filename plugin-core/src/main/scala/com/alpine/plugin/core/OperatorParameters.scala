@@ -5,7 +5,7 @@
 package com.alpine.plugin.core
 
 import com.alpine.plugin.core.annotation.AlpineSdkApi
-import com.alpine.plugin.core.dialog.ChorusFile
+import com.alpine.plugin.core.dialog.{ChorusFile, IRowDialogRow}
 import com.alpine.plugin.core.io.OperatorInfo
 
 /**
@@ -126,4 +126,12 @@ trait OperatorParameters extends Serializable {
   def getChorusFile(parameterId: String): Option[ChorusFile]
 
   def getAdvancedSparkParameters: scala.collection.mutable.Map[String, String]
+
+  /**
+    * Get the array of IRowDialogRows defined in the pop-up window added by a "RowDialogSetup" parameter.
+    * @param parameterId The parameter Id of the pop up RowDialogSetup defined.
+    * @return An array of rows [IRowDialogRow] defined in the pop up RowDialogSetup dialog.
+    */
+  def getDialogRowsAsArray(parameterId: String): Array[IRowDialogRow]
+
 }

@@ -1,37 +1,20 @@
-/*
- * COPYRIGHT (C) 2016 Alpine Data Labs Inc. All Rights Reserved.
- */
+package com.alpine.plugin.test.mock
 
-package com.alpine.util
-
-import com.alpine.sql.DatabaseType._
 import com.alpine.sql.{DatabaseType, SQLGenerator}
 
-/**
-  * Provides very basic methods for SQL code generation, based on PostgreSQL.
-  * Aside from Test classes, this class should not be instantiated.
-  * Instead, use SQLGeneratorFactory.getSQLGenerator or DBExecutionContext.getSQLGenerator
-  */
-class SimpleSQLGenerator extends SQLGenerator {
+class SimpleSQLGenerator(val dbType: DatabaseType.TypeValue = DatabaseType.postgres) extends SQLGenerator {
 
-  private var databaseType: TypeValue = postgres
-  private var quoteString: String = "\""
-  private var isAliasRequired: Boolean = true
-
-  // single arg constructor for DatabaseType
-  def this(dbType: TypeValue) = {
-    this()
-    databaseType = dbType
+  private val quoteString: String = {
     if (dbType == DatabaseType.hive) {
-      quoteString = "`"
+      "`"
+    } else {
+      "\""
     }
   }
 
-  override def dbType: TypeValue = databaseType
-
   override def quoteChar: String = quoteString
 
-  override def useAliasForSelectSubQueries: Boolean = isAliasRequired
+  override def useAliasForSelectSubQueries: Boolean = true
 
   @deprecated("Please use quoteIdentifier instead [Paul]", "2016-04-22")
   override def escapeColumnName(s: String): String = quoteIdentifier(s)
@@ -74,7 +57,7 @@ class SimpleSQLGenerator extends SQLGenerator {
   }
 
   override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String, whereClause: String): String = {
-    s"""CREATE VIEW $destinationView AS (SELECT $columns FROM $sourceTable $whereClause)"""
+    s"""CREATE VIEW $destinationView AS (SELECT $columns FROM $sourceTable $whereClause"""
   }
 
   override def getCreateViewAsSelectSQL(columns: String, sourceTable: String, destinationView: String): String = {
@@ -128,4 +111,5 @@ class SimpleSQLGenerator extends SQLGenerator {
   override def getCreateTempTableAsSelectSQL(selectQuery: String, destinationTable: String): String = {
     s"""CREATE TEMP TABLE $destinationTable AS ($selectQuery)"""
   }
+
 }

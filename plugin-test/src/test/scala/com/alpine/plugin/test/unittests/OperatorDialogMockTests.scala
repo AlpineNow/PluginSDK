@@ -1,6 +1,6 @@
 package com.alpine.plugin.test.unittests
 
-import com.alpine.plugin.core.dialog.{ChorusFile, ColumnFilter}
+import com.alpine.plugin.core.dialog._
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsDelimitedTabularDatasetDefault, IOListDefault, IOStringDefault, Tuple2Default}
 import com.alpine.plugin.test.mock._
@@ -27,7 +27,7 @@ class OperatorDialogMockTests extends FunSuite {
 
   val operatorDataSourceManagerMock = new OperatorDataSourceManagerMock(dataSourceMock)
 
-  val hdfIOInput = HdfsDelimitedTabularDatasetDefault("path", golfInputSchema, TSVAttributes.default)
+  val hdfIOInput = HdfsDelimitedTabularDatasetDefault("path", golfInputSchema, TSVAttributes.defaultCSV)
 
   test("Test Column Selectors") {
 
@@ -36,9 +36,9 @@ class OperatorDialogMockTests extends FunSuite {
 
     val mockDialog = new OperatorDialogMock(inputParams, hdfIOInput)
     mockDialog.addTabularDatasetColumnDropdownBox(id, "Single Column Outlook",
-      ColumnFilter.All, "main", required = true)
+      ColumnFilter.All, "main")
     val t = Try(mockDialog.addTabularDatasetColumnDropdownBox(id,
-      "Single Column Outlook", ColumnFilter.All, "main", required = true))
+      "Single Column Outlook", ColumnFilter.All, "main"))
     assert(t.isFailure, "adding two things with the same name ")
 
     OperatorParameterMockUtil.addTabularColumn(inputParams, "id2", "outlook")
@@ -95,8 +95,8 @@ class OperatorDialogMockTests extends FunSuite {
 
   test("Test Multiple Column selectors for io list") {
     val secondInput = HdfsDelimitedTabularDatasetDefault("path",
-      TabularSchema(golfInputSchema.getDefinedColumns.map(c => new ColumnDef(c.columnName + "_2",
-        c.columnType))), TSVAttributes.default)
+      TabularSchema(golfInputSchema.getDefinedColumns.map(c => ColumnDef(c.columnName + "_2",
+        c.columnType))), TSVAttributes.defaultCSV)
     val input = IOListDefault(Seq(hdfIOInput, secondInput),
       Seq(OperatorInfo("1", "golf"),
         OperatorInfo("2", "golf_1")))
@@ -116,8 +116,8 @@ class OperatorDialogMockTests extends FunSuite {
 
   test("Test Single Column selectors for io list") {
     val secondInput = HdfsDelimitedTabularDatasetDefault("path",
-      TabularSchema(golfInputSchema.getDefinedColumns.map(c => new ColumnDef(c.columnName + "_2",
-        c.columnType))), TSVAttributes.default)
+      TabularSchema(golfInputSchema.getDefinedColumns.map(c => ColumnDef(c.columnName + "_2",
+        c.columnType))), TSVAttributes.defaultCSV)
     val input = IOListDefault(Seq(hdfIOInput, secondInput),
       Seq(OperatorInfo("1", "golf"),
         OperatorInfo("2", "golf_1")))
@@ -135,7 +135,7 @@ class OperatorDialogMockTests extends FunSuite {
     assert(dialog.getNewParameters.contains("col_select2"))
   }
 
-  test("Test schema method for tuple  "){
+  test("Test schema method for tuple  ") {
 
     val tupleInput = Tuple2Default(hdfIOInput, IOStringDefault("I am just a string"), hdfIOInput.addendum)
     val p = new OperatorParametersMock("name", "uuid")
@@ -144,7 +144,7 @@ class OperatorDialogMockTests extends FunSuite {
 
     val mockDialog = new OperatorDialogMock(
       overrideParams = p,
-      input = tupleInput )
+      input = tupleInput)
 
     mockDialog.addTabularDatasetColumnDropdownBox("tabularColumn", "label", ColumnFilter.All, "a")
     mockDialog.addTabularDatasetColumnCheckboxes("tabularColumns", "label", ColumnFilter.All, "b")
@@ -153,6 +153,28 @@ class OperatorDialogMockTests extends FunSuite {
     assert(p1 === "outlook")
     val p3 = p.getStringArrayValue("tabularColumns")
     assert(p3.contains("outlook") && p3.contains("play"))
+  }
+
+  test("Row Dialog Pop Up") {
+    val p = new OperatorParametersMock("name", "uuid")
+
+    val firstRowValues = List(IRowDialogRowValueMock("elem_1", "val_11"), IRowDialogRowValueMock("elem_2", "val_12"))
+    val secondRowValues = List(IRowDialogRowValueMock("elem_1", "val_21"), IRowDialogRowValueMock("elem_2", "val_22"))
+    OperatorParameterMockUtil.addRowDialogElements(p, "id", IRowDialogRowMock(firstRowValues), IRowDialogRowMock(secondRowValues))
+
+    val mockDialog = new OperatorDialogMock(
+      overrideParams = p,
+      input = hdfIOInput)
+
+    val rowDialogSetup = RowDialogSetup("id", "RowDialog", "Label", isRequired = true, Seq(
+      RowDialogElement("1", "String1", StringDialogElementSetup("s1", "String_1", true, None, Some(".+"), false, false), 10, 100),
+      RowDialogElement("2", "String2", StringDialogElementSetup("s2", "String_2", true, None, Some(".+"), false, false), 10, 100)), None)
+
+    mockDialog.addRowDialog(rowDialogSetup)
+
+
+    val parameterRowValues: Array[IRowDialogRow] = p.getDialogRowsAsArray("id")
+    assert(parameterRowValues.map(_.getRowDialogValues).sameElements(Array(firstRowValues, secondRowValues)))
   }
 
 }

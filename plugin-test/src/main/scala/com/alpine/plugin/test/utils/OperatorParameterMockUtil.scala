@@ -5,8 +5,8 @@ package com.alpine.plugin.test.utils
 
 import java.util
 
+import com.alpine.plugin.core.dialog.IRowDialogRow
 import com.alpine.plugin.core.utils._
-import com.alpine.plugin.core.utils.HdfsStorageFormat.HdfsStorageFormat
 import com.alpine.plugin.test.mock.OperatorParametersMock
 
 
@@ -35,21 +35,12 @@ object OperatorParameterMockUtil {
   }
 
   /**
-   * Use to add all the standard HDFS parameters to the mock parameters object
-    * @deprecated use the method with the following signature:
-    *             addHdfsParams( OperatorParametersMock, String, String, HdfsStorageFormatType, Boolean)
-    *             or the addHdfsParamsDefault method
-   */
-  @deprecated("use HdfsStorageFormatType or addHdfsParamsDefault")
-  def addHdfsParams(operatorParametersMock: OperatorParametersMock, outputName: String,
-                    outputDirectory: String = defaultOutputDirectory, storageFormat: HdfsStorageFormat
-                    = HdfsStorageFormat.TSV,
-                    overwrite: Boolean = true): OperatorParametersMock = {
-    operatorParametersMock.setValue(HdfsParameterUtils.outputDirectoryParameterID, outputDirectory)
-    operatorParametersMock.setValue(HdfsParameterUtils.outputNameParameterID, outputName)
-    operatorParametersMock.setValue(HdfsParameterUtils.storageFormatParameterID, storageFormat)
-    operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, OutputParameterUtils.toTrueFalseString(overwrite))
-    operatorParametersMock
+    * Use to set the value of a "RowDialogSetup" parameter.
+    */
+  def addRowDialogElements(params: OperatorParametersMock, paramId: String, rows: IRowDialogRow*): Unit = {
+    val arrayList = new util.ArrayList[IRowDialogRow]()
+    rows.foreach(row => arrayList.add(arrayList.size(), row))
+    params.setValue(paramId,arrayList)
   }
 
   /**
@@ -57,11 +48,12 @@ object OperatorParameterMockUtil {
     */
   def addHdfsParams(operatorParametersMock: OperatorParametersMock, outputName: String,
                     outputDirectory: String, storageFormat: HdfsStorageFormatType,
-                    overwrite: Boolean): OperatorParametersMock = {
+                    overwrite: Boolean, compressionType: HdfsCompressionType = HdfsCompressionType.NoCompression): OperatorParametersMock = {
     operatorParametersMock.setValue(HdfsParameterUtils.outputDirectoryParameterID, outputDirectory)
     operatorParametersMock.setValue(HdfsParameterUtils.outputNameParameterID, outputName)
     operatorParametersMock.setValue(HdfsParameterUtils.storageFormatParameterID, storageFormat)
-    operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, OutputParameterUtils.toTrueFalseString(overwrite))
+    operatorParametersMock.setValue(HdfsParameterUtils.compressionTypeParameterID, compressionType)
+    operatorParametersMock.setValue(HdfsParameterUtils.overwriteParameterID, overwrite.toString)
     operatorParametersMock
   }
 
@@ -72,7 +64,7 @@ object OperatorParameterMockUtil {
     * overwrite = true
     */
   def addHdfsParamsDefault(operatorParametersMock: OperatorParametersMock, outputName: String): OperatorParametersMock = {
-    addHdfsParams(operatorParametersMock, outputName, defaultOutputDirectory, HdfsStorageFormatType.CSV, overwrite = true)
+    addHdfsParams(operatorParametersMock, outputName, defaultOutputDirectory, HdfsStorageFormatType.CSV, overwrite = true, compressionType = HdfsCompressionType.NoCompression)
   }
 
   def makeArrayList(selections: String*): util.ArrayList[String] = {

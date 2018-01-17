@@ -3,6 +3,7 @@
 */
 package com.alpine.plugin.core.visualization
 
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -12,7 +13,7 @@ import scala.collection.mutable.ListBuffer
   */
 class CompositeVisualModel extends VisualModel {
 
-  private val modelList = ListBuffer[(String, VisualModel)]()
+  private val modelList: mutable.Buffer[(String, VisualModel)] = ListBuffer[(String, VisualModel)]()
 
   /**
     * Adds a sub-model to the composite model.
@@ -30,4 +31,21 @@ class CompositeVisualModel extends VisualModel {
     * @return List of (name, sub-model) pairs.
     */
   def subModels: Seq[(String, VisualModel)] = modelList
+
+  // Add equals and hash code methods for tests.
+  // We don't want to make this a case class because it contains a mutable data structure.
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[CompositeVisualModel]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: CompositeVisualModel =>
+      (that canEqual this) &&
+          modelList == that.modelList
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(modelList)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
 }

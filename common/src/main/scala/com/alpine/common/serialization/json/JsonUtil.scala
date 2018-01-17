@@ -24,6 +24,7 @@ object JsonUtil {
       .addDeserializationExclusionStrategy(new SuperClassExclusionStrategy)
       .addSerializationExclusionStrategy(new SuperClassExclusionStrategy())
       .registerTypeHierarchyAdapter(classOf[Seq[_]], GsonSeqAdapter())
+      .registerTypeHierarchyAdapter(classOf[Set[_]], GsonSetAdapter())
       .registerTypeHierarchyAdapter(classOf[Map[_, _]], new GsonMapAdapter())
       .registerTypeHierarchyAdapter(classOf[Option[_]], GsonOptionAdapter())
       .registerTypeHierarchyAdapter(classOf[TypeWrapper[_]], new GsonTypeAdapter(classLoaderUtil))

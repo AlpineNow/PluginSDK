@@ -21,6 +21,13 @@ case class TabularSchema(
   def getNumDefinedColumns: Int = definedColumns.length
   def getDefinedColumns: Seq[ColumnDef] = definedColumns
   def getDefinedColumnsAsJavaList: util.List[ColumnDef] = JavaConversions.seqAsJavaList(definedColumns)
+  def columnNames: Seq[String] = definedColumns.map(_.columnName)
+  def columnTypes: Seq[ColumnType.TypeValue] = definedColumns.map(_.columnType)
+  def nameDefMap: Map[String, ColumnDef] = Map[String, ColumnDef](definedColumns.map(colDef => colDef.columnName -> colDef): _*)
+  // Returns the selected subset of columns
+  def select(namesToSelect: Seq[String]): Seq[ColumnDef] = {
+    definedColumns.filter(colDef => namesToSelect.contains(colDef.columnName))
+  }
 
 }
 
@@ -73,6 +80,10 @@ object TabularSchema {
     isPartial: Boolean,
     expectedOutputFormatAttributes: TabularFormatAttributes): TabularSchema = {
     TabularSchema(columnDefs, isPartial)
+  }
+
+  def empty(isPartial: Boolean): TabularSchema = {
+    TabularSchema(Seq(), isPartial)
   }
 
 }

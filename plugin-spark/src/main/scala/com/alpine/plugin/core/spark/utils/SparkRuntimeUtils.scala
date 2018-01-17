@@ -8,15 +8,14 @@ import com.alpine.plugin.core.annotation.AlpineSdkApi
 import com.alpine.plugin.core.io._
 import com.alpine.plugin.core.io.defaults.{HdfsAvroDatasetDefault, HdfsDelimitedTabularDatasetDefault, HdfsParquetDatasetDefault}
 import com.alpine.plugin.core.spark.OperatorFailedException
-import com.alpine.plugin.core.utils.{HdfsStorageFormat, HdfsStorageFormatType}
-import com.databricks.spark.csv._
+import com.alpine.plugin.core.utils.{HdfsCompressionType, HdfsStorageFormatType}
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.catalyst.encoders.RowEncoder
-import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.sql.types.TimestampType
-import org.apache.spark.sql.{DataFrame, Dataset, Row, SQLContext}
+import org.apache.spark.sql.types.{MetadataBuilder, TimestampType}
+import org.apache.spark.sql._
 import org.joda.time.format.DateTimeFormat
+import HdfsCompressionType._
+import com.alpine.plugin.core.spark.utils.SparkSqlDateTimeUtils.DATE_METADATA_KEY
 
 import scala.util.Try
 
@@ -24,38 +23,43 @@ import scala.util.Try
   * :: AlpineSdkApi ::
   */
 @AlpineSdkApi
-class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
+class SparkRuntimeUtils(sparkSession: SparkSession) extends SparkSchemaUtils {
 
-  lazy val driverHdfs: FileSystem = FileSystem.get(sc.hadoopConfiguration)
+  @deprecated(" Use constructor with Spark Session ")
+  def this(sparkContext : SparkContext) = {
+    this(SparkRuntimeUtils.createSparkSession(sparkContext))
+  }
+
+  lazy val driverHdfs: FileSystem = FileSystem.get(sparkSession.sparkContext.hadoopConfiguration)
 
   // ======================================================================
   // Storage util functions.
   // ======================================================================
 
   /**
-    * Save a data frame to a path using the given storage format, and return
+    * Save a data frame to a path using the given storage format and compression type, and return
     * a corresponding HdfsTabularDataset object that points to the path.
     *
     * @param path               The path to which we'll save the data frame.
     * @param dataFrame          The data frame that we want to save.
     * @param storageFormat      The format that we want to store in. Defaults to CSV
     * @param overwrite          Whether to overwrite any existing file at the path.
-    * @param sourceOperatorInfo Mandatory source operator information to be included
     *                           in the output object.
     *                           Note: Only set to None in testing. This information is required for
     *                           Touchpoints and if this is an output to an operator with multiple inputs.
     * @param addendum           Mandatory addendum information to be included in the output
     *                           object.
+    * @param compressionType    HdfsCompressionType to save the dataFrame to HDFS. The compression type must be compatible with the storage format selected.
     * @return After saving the data frame, returns an HdfsTabularDataset object.
     */
-  def saveDataFrame[T <: HdfsStorageFormatType](
-                                                 path: String,
-                                                 dataFrame: DataFrame,
-                                                 storageFormat: T,
-                                                 overwrite: Boolean,
-                                                 sourceOperatorInfo: Option[OperatorInfo],
-                                                 addendum: Map[String, AnyRef],
-                                                 tSVAttributes: TSVAttributes): HdfsTabularDataset = {
+  def saveDataFrame[T <: HdfsStorageFormatType, C <: HdfsCompressionType](
+      path: String,
+      dataFrame: DataFrame,
+      storageFormat: T,
+      overwrite: Boolean,
+      addendum: Map[String, AnyRef],
+      tSVAttributes: TSVAttributes,
+      compressionType: C): HdfsTabularDataset = {
 
     deleteOrFailIfExists(path, overwrite)
 
@@ -64,16 +68,16 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
         saveAsParquet(
           path,
           dataFrame,
-          sourceOperatorInfo,
-          addendum
+          addendum,
+          compressionType
         )
 
       case HdfsStorageFormatType.Avro =>
         saveAsAvro(
           path,
           dataFrame,
-          sourceOperatorInfo,
-          addendum
+          addendum,
+          compressionType
         )
 
       case _ =>
@@ -81,122 +85,105 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
           path,
           dataFrame,
           tSVAttributes,
-          sourceOperatorInfo,
-          addendum
+          addendum,
+          compressionType
         )
     }
   }
 
   /**
-    * Calls above method but defaults to saving as a comma-seperated file with overwrite = true,
+    * Save a data frame to a path using the given storage format with no compression, and return
+    * a corresponding HdfsTabularDataset object that points to the path.
+    */
+  def saveDataFrame[T <: HdfsStorageFormatType](
+      path: String,
+      dataFrame: DataFrame,
+      storageFormat: T,
+      overwrite: Boolean,
+      addendum: Map[String, AnyRef],
+      tSVAttributes: TSVAttributes): HdfsTabularDataset = {
+    saveDataFrame(path, dataFrame, storageFormat, overwrite, addendum, tSVAttributes, compressionType = HdfsCompressionType.NoCompression)
+  }
+
+  /**
+    * Calls above method but defaults to saving as a comma-separated file with overwrite = true,
     * and no addendum
     *
     * @param path               The path to which we'll save the data frame.
     * @param dataFrame          The data frame that we want to save.
-    * @param sourceOperatorInfo Mandatory source operator information to be included
     *                           in the output object.
     *                           Note: Only set to None in testing. This information is required for
     *                           Touchpoints and if this is an output to an operator with multiple inputs.
+    * @param compressionType HdfsCompressionType to save the dataFrame to HDFS. The compression type must be compatible with the storage format selected.
     * @return the HdfsTabularData object corresponding to the output
     */
-  def saveDataFrameDefault[T <: HdfsStorageFormatType](
-                                                        path: String,
-                                                        dataFrame: DataFrame,
-                                                        sourceOperatorInfo: Option[OperatorInfo]): HdfsTabularDataset = {
+  def saveDataFrameDefault[T <: HdfsStorageFormatType, C <: HdfsCompressionType](
+      path: String,
+      dataFrame: DataFrame,
+      compressionType: C = HdfsCompressionType.NoCompression): HdfsTabularDataset = {
     saveDataFrame(path, dataFrame, HdfsStorageFormatType.CSV, overwrite = true,
-      sourceOperatorInfo, Map[String, AnyRef](), TSVAttributes.defaultCSV)
-  }
-
-
-  /**
-    * Save a data frame to a path using the given storage format, and return
-    * a corresponding HdfsTabularDataset object that points to the path.
-    *
-    * @param path               The path to which we'll save the data frame.
-    * @param dataFrame          The data frame that we want to save.
-    * @param storageFormat      The format that we want to store in.
-    * @param overwrite          Whether to overwrite any existing file at the path.
-    * @param sourceOperatorInfo Mandatory source operator information to be included
-    *                           in the output object.
-    *                           Only set to None in testing, this is required for Touchpoints and if this is an output to an operator with multiple inputs.
-    * @param addendum           Mandatory addendum information to be included in the output
-    *                           object.
-    * @return After saving the data frame, returns an HdfsTabularDataset object.
-    * @deprecated use saveDataFrame(String, dataFrame, HdfsStorageFormatType, Option[OperatorInfo], boolean). or
-    *             SaveDataFrameDefault.
-    */
-  @deprecated("Use signature with HdfsStorageFormatType rather than HdfsStorageFormat enum or saveDataFrameDefault")
-  def saveDataFrame(
-                     path: String,
-                     dataFrame: DataFrame,
-                     storageFormat: HdfsStorageFormat.HdfsStorageFormat,
-                     overwrite: Boolean,
-                     sourceOperatorInfo: Option[OperatorInfo],
-                     addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsTabularDataset = {
-
-    deleteOrFailIfExists(path, overwrite)
-
-    storageFormat match {
-      case HdfsStorageFormat.Parquet =>
-        saveAsParquet(
-          path,
-          dataFrame,
-          sourceOperatorInfo,
-          addendum
-        )
-
-      case HdfsStorageFormat.Avro =>
-        saveAsAvro(
-          path,
-          dataFrame,
-          sourceOperatorInfo,
-          addendum
-        )
-
-      case HdfsStorageFormat.TSV =>
-        saveAsCSV(
-          path,
-          dataFrame,
-          TSVAttributes.defaultCSV,
-          sourceOperatorInfo,
-          addendum
-        )
-    }
+      Map[String, AnyRef](), TSVAttributes.defaultCSV, compressionType)
   }
 
   /**
-    * Write a DataFrame to HDFS as a Parquet file, and return an instance of the
+    * Write a DataFrame to HDFS as a Parquet file with compression specified, and return an instance of the
     * HDFSParquet IO base type which contains the Alpine 'TabularSchema' definition (created by
     * converting the DataFrame schema) and the path to the saved data.
+    * Supported compression types for Parquet are: HdfsCompressionType.None, HdfsCompressionType.Snappy, HdfsCompressionType.Gzip
     */
-  def saveAsParquet(path: String,
-                    dataFrame: DataFrame,
-                    sourceOperatorInfo: Option[OperatorInfo],
-                    addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsParquetDataset = {
+  def saveAsParquet[C <: HdfsCompressionType](
+      path: String,
+      dataFrame: DataFrame,
+      addendum: Map[String, AnyRef],
+      compressionType: C) = {
+
+    if (!HdfsCompressionType.parquetSupportedValues.contains(compressionType)) {
+      throw new UnsupportedOperationException(s"Compression type `${compressionType.toString}` is not supported for Parquet.")
+    }
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
-    withDatesChanged.write.parquet(path)
+    withDatesChanged.write.option(COMPRESSION_OPTION_PARAM, compressionType.toSparkName).parquet(path)
     new HdfsParquetDatasetDefault(path, tabularSchema, addendum)
   }
 
-  def saveDatasetAsParquet(path: String,
-    dataset: Dataset[Row],
-    addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsParquetDataset = {
-    saveAsParquet(path, dataset.toDF(), None, addendum)
+  /**
+    * Same as `saveAsParquet` method defined above, but with no compression.
+    */
+  def saveAsParquet(path: String,
+      dataFrame: DataFrame,
+      addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsParquetDataset = {
+    saveAsParquet(path, dataFrame, addendum, HdfsCompressionType.NoCompression)
   }
 
+
   /**
-    * Write a DataFrame as an HDFSAvro dataset, and return the an instance of the Alpine
+    * Write a DataFrame as an HDFSAvro dataset with compression specified, and return the an instance of the Alpine
     * HDFSAvroDataset type which contains the  'TabularSchema' definition
     * (created by converting the DataFrame schema) and the path to the saved data.
+    * Supported compression types for Avro are: HdfsCompressionType.None, HdfsCompressionType.Snappy, HdfsCompressionType.Deflate
     */
   def saveAsAvro(path: String,
-                 dataFrame: DataFrame,
-                 sourceOperatorInfo: Option[OperatorInfo],
-                 addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsAvroDataset = {
+      dataFrame: DataFrame,
+      addendum: Map[String, AnyRef],
+      compressionType: HdfsCompressionType): HdfsAvroDataset = {
+    if (!HdfsCompressionType.avroSupportedValues.contains(compressionType)) {
+      throw new UnsupportedOperationException(s"Compression type `${compressionType.toString}` is not supported for Avro.")
+    }
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
+    dataFrame.sqlContext.setConf(AVRO_COMPRESSION_SPARK_PARAM, compressionType.toSparkName)
     withDatesChanged.write.format("com.databricks.spark.avro").save(path)
     new HdfsAvroDatasetDefault(path, tabularSchema, addendum)
   }
+
+  /**
+    * Same as `saveAsAvro` method defined above, but with no compression.
+    */
+  def saveAsAvro(path: String,
+      dataFrame: DataFrame,
+      addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsAvroDataset = {
+    saveAsAvro(path, dataFrame, addendum, HdfsCompressionType.NoCompression)
+  }
+
+
 
   // ======================================================================
   // Storage util functions for delimited data.
@@ -204,8 +191,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
 
 
   /**
-    * More general version of saveAsCSV.
-    * Write a DataFrame to HDFS as a Tabular Delimited file, and return an instance of the Alpine
+    * Write a DataFrame to HDFS as a Tabular Delimited file with compression specified, and return an instance of the Alpine
     * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
     * the DataFrame schema) and the path to the saved data. Also writes the ".alpine_metadata"
     * to the result directory so that the user can drag and drop the result output and use it without
@@ -214,74 +200,60 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     * @param path               where file will be written (this function will create a directory of part files)
     * @param dataFrame          - data to write
     * @param tSVAttributes      - an object which specifies how the file should be written
-    * @param sourceOperatorInfo from parameters. Includes name and UUID
     *                           Same as 'saveAsCSV' but also writes the ".alpine_metadata" to the result so  that
     *                           the user can drag and drop the result output and use it without
     *                           configuring the dataset
+    * @param compressionType HdfsCompressionType which specifies how the file should be compressed.
+    *                        Supported compression types for CSV are: HdfsCompressionType.None, HdfsCompressionType.Snappy, HdfsCompressionType.Deflate, HdfsCompressionType.Gzip.
     */
-  def saveAsCSV(path: String, dataFrame: DataFrame,
-                tSVAttributes: TSVAttributes,
-                sourceOperatorInfo: Option[OperatorInfo],
-                addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsDelimitedTabularDatasetDefault = {
-    val dataset = saveAsCSVoMetadata(path, dataFrame, tSVAttributes, sourceOperatorInfo, addendum)
-    val fileSystem = FileSystem.get(sc.hadoopConfiguration)
-    SparkMetadataWriter.writeMetadataForDataset(dataset, fileSystem)
+  def saveAsCSV[C <: HdfsCompressionType](
+      path: String,
+      dataFrame: DataFrame,
+      tSVAttributes: TSVAttributes,
+      addendum: Map[String, AnyRef],
+      compressionType: C): HdfsDelimitedTabularDatasetDefault = {
+
+    if (!HdfsCompressionType.csvSupportedValues.contains(compressionType)) {
+      throw new UnsupportedOperationException(s"Compression type `${compressionType.toString}` is not supported for CSV.")
+    }
+    val dataset = saveAsCSVoMetadata(path, dataFrame, tSVAttributes, addendum, compressionType)
+    //val fileSystem = FileSystem.get(sc.hadoopConfiguration)
+    SparkMetadataWriter.writeMetadataForDataset(dataset, driverHdfs)
     dataset
   }
 
-
   /**
-    * Write a DataFrame to HDFS as a Tab Delimited file, and return an instance of the Alpine
-    * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
-    * the DataFrame schema) and the path to the saved data. Uses the default TSVAttributes object
-    * which specifies that the data be written as a Tab Delimited File. See TSVAAttributes for more
-    * information and use the saveAsCSV file to customize csv options such as null string and delimiters.
-    *
-    * Also writes the ".alpine_metadata"
-    * to the result directory so that the user can drag and drop the result output and use it without
-    * configuring the dataset
+    * Same as `saveAsCSV` method defined above, but with no compression.
     */
-  def saveAsTSV(path: String,
-                dataFrame: DataFrame,
-                sourceOperatorInfo: Option[OperatorInfo],
-                addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsDelimitedTabularDataset = {
-
-    val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
-    withDatesChanged.saveAsCsvFile(
-      path,
-      Map(
-        "delimiter" -> "\t",
-        "escape" -> "\\",
-        "quote" -> "\"",
-        "header" -> "false"
-      )
-    )
-
-    new HdfsDelimitedTabularDatasetDefault(
-      path,
-      tabularSchema,
-      TSVAttributes.default,
-      addendum
-    )
+  def saveAsCSV(path: String, dataFrame: DataFrame,
+      tSVAttributes: TSVAttributes,
+      addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsDelimitedTabularDatasetDefault = {
+    saveAsCSV(path, dataFrame, tSVAttributes, addendum, HdfsCompressionType.NoCompression)
   }
 
+
   /**
-    * More general version of saveAsTSV.
-    * Write a DataFrame to HDFS as a Tabular Delimited file, and return an instance of the Alpine
+    * More general version of saveAsCSV.
+    * Write a DataFrame to HDFS as a Tabular Delimited file with compression specified, and return an instance of the Alpine
     * HDFSDelimitedTabularDataset type  which contains the Alpine 'TabularSchema' definition (created by converting
     * the DataFrame schema) and the path to the saved data.
     *
     * @param path               where file will be written (this function will create a directory of part files)
     * @param dataFrame          - data to write
     * @param tSVAttributes      - an object which specifies how the file should be written
-    * @param sourceOperatorInfo from parameters. Includes name and UUID
+    * @param compressionType    - HdfsCompressionType which specifies how the file should be compressed.
+    *                           Supported compression types for CSV are: HdfsCompressionType.None, HdfsCompressionType.Snappy, HdfsCompressionType.Deflate, HdfsCompressionType.Gzip.
     */
-  def saveAsCSVoMetadata(path: String, dataFrame: DataFrame,
-                         tSVAttributes: TSVAttributes,
-                         sourceOperatorInfo: Option[OperatorInfo],
-                         addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsDelimitedTabularDatasetDefault = {
+  def saveAsCSVoMetadata[C <: HdfsCompressionType](
+      path: String, dataFrame: DataFrame,
+      tSVAttributes: TSVAttributes,
+      addendum: Map[String, AnyRef],
+      compressionType: C): HdfsDelimitedTabularDatasetDefault = {
+    if (!HdfsCompressionType.csvSupportedValues.contains(compressionType)) {
+      throw new UnsupportedOperationException(s"Compression type `${compressionType.toString}` is not supported for CSV.")
+    }
     val (withDatesChanged, tabularSchema) = dealWithDates(dataFrame)
-    withDatesChanged.saveAsCsvFile(path, tSVAttributes.toMap)
+    withDatesChanged.write.options(tSVAttributes.toMap ++ TSVAttributes.additionalReadOptions).option(COMPRESSION_OPTION_PARAM, compressionType.toSparkName).csv(path)
     new HdfsDelimitedTabularDatasetDefault(
       path,
       tabularSchema,
@@ -290,6 +262,16 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     )
   }
 
+  /**
+    * Same as `saveAsCSVoMetadata` above, with no compression when saving the CSV file.
+    */
+  def saveAsCSVoMetadata(
+      path: String,
+      dataFrame: DataFrame,
+      tSVAttributes: TSVAttributes,
+      addendum: Map[String, AnyRef] = Map[String, AnyRef]()): HdfsDelimitedTabularDatasetDefault = {
+  saveAsCSVoMetadata(path, dataFrame, tSVAttributes, addendum, HdfsCompressionType.NoCompression)
+  }
 
   /**
     * Checks if the given file path already exists (and would cause a 'PathAlreadyExists'
@@ -328,7 +310,7 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
   /**
     * Returns a DataFrame from an Alpine HdfsTabularDataset. The DataFrame's schema will
     * correspond to the column header of the Alpine dataset.
-    * Uses the databricks csv parser from spark-csv with the following options:
+    * Uses the Dataframe Reader with the following options:
     * 1.withParseMode("DROPMALFORMED"): Catch parse errors such as number format exception caused by a
     * string value in a numeric column and remove those rows rather than fail.
     * 2.withTreatEmptyValuesAsNulls(true) -> the empty string will represent a null value in char columns as it does in alpine
@@ -345,74 +327,27 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     val tabularSchema = dataset.tabularSchema
     val schema = convertTabularSchemaToSparkSQLSchema(tabularSchema, keepDatesAsStrings = true)
     val dateFormats = getDateMap(tabularSchema)
-    val sqlContext = new SQLContext(sc)
     val path = dataset.path
 
     val tabularData = dataset match {
       case _: HdfsAvroDataset =>
-        sqlContext.read.format("com.databricks.spark.avro").load(path)
+        sparkSession.read.format("com.databricks.spark.avro").load(path)
       case _: HdfsParquetDataset =>
-        sqlContext.read.load(path)
+        sparkSession.read.load(path)
       case _ =>
         val delimitedDataset = dataset.asInstanceOf[HdfsDelimitedTabularDataset]
         val tsvAttributes: TSVAttributes = delimitedDataset.tsvAttributes
 
-        //TODO: Set up mirror with new parser to match behavior of alpine.
-        new CsvParser()
-          .withParseMode("DROPMALFORMED")
-          .withTreatEmptyValuesAsNulls(true)
-          .withUseHeader(tsvAttributes.containsHeader)
-          .withDelimiter(tsvAttributes.delimiter)
-          .withQuoteChar(tsvAttributes.quoteStr)
-          .withEscape(tsvAttributes.escapeStr)
-          .withSchema(schema)
-          .csvFile(sqlContext, path)
+        //TODO: I don't see an equivalent of withTreatEmptyValuesAsNulls in DataFrame csv reader API
+        // I am not sure what behavior will be but we should keep an eye on it.
+        val dfReader = sparkSession.read.schema(schema)
+                       .options(tsvAttributes.toMap ++ TSVAttributes.additionalReadOptions)
+        dfReader.csv(path)
     }
     //map dateTime columns from string to java.sql.Date objects. Will appear in schema as TimeStampType objects
     mapDFtoUnixDateTime(tabularData, dateFormats)
   }
 
-  /**
-    * Returns a DataFrame from an Alpine HdfsTabularDataset, created using a HiveContext (vs SQLContext in getDataFrame).
-    * Using a Hive Context allows for window function calls on the DataFrame and Hive UDFs access.
-    * It does not require a previous Hive setup, but creating a Hive Context comes with large dependencies, hence this method
-    * should not be used if there is no need to leverage Hive UDFs.
-    *
-    * (NOTE: loading the Hive dependencies might require to modify the "spark.driver.extraJavaOptions" by increasing MaxPermSize and enabling
-    * CMSClassUnloadingEnabled, UseConcMarkSweepGC. This parameter can be added in the "Advanced Spark Settings" dialog window of the operator).
-    *
-    * @param dataset Alpine specific object. Usually input or output of operator.
-    * @return Spark SQL DataFrame that allows window function calls and Hive UDFs access.
-    */
-  def getDataFrameHiveContext(dataset: HdfsTabularDataset) = {
-    val tabularSchema = dataset.tabularSchema
-    val schema = convertTabularSchemaToSparkSQLSchema(tabularSchema, keepDatesAsStrings = true)
-    val dateFormats = getDateMap(tabularSchema)
-    val hiveContext = new HiveContext(sc)
-    val path = dataset.path
-
-    val tabularData = dataset match {
-      case _: HdfsAvroDataset =>
-        hiveContext.read.format("com.databricks.spark.avro").load(path)
-      case _: HdfsParquetDataset =>
-        hiveContext.read.load(path)
-      case _ =>
-        val delimitedDataset = dataset.asInstanceOf[HdfsDelimitedTabularDataset]
-        val tsvAttributes: TSVAttributes = delimitedDataset.tsvAttributes
-
-        new CsvParser()
-          .withParseMode("DROPMALFORMED")
-          .withTreatEmptyValuesAsNulls(true)
-          .withUseHeader(tsvAttributes.containsHeader)
-          .withDelimiter(tsvAttributes.delimiter)
-          .withQuoteChar(tsvAttributes.quoteStr)
-          .withEscape(tsvAttributes.escapeStr)
-          .withSchema(schema)
-          .csvFile(hiveContext, path)
-    }
-    //map dateTime columns from string to java.sql.Date objects. Will appear in schema as TimeStampType objects
-    mapDFtoUnixDateTime(tabularData, dateFormats)
-  }
 
   /**
     * Returns the dataframe corresponding to a given tabular dataset (can be Hive, or a HDFS path).
@@ -427,18 +362,12 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     }
   }
 
-  def getSparkDataset(dataset: TabularDataset): Dataset[Row] = {
-    val frame = getDataFrameGeneral(dataset)
-    val encoder = RowEncoder(frame.schema)
-    frame.as[Row](encoder)
-  }
-
   /**
     * For use with hive. Returns a Spark data frame given a hive table.
     */
   def getDataFrame(dataset: HiveTable): DataFrame = {
-    val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
-    hiveContext.table(dataset.getConcatenatedName)
+   // val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
+    sparkSession.table(dataset.getConcatenatedName)
   }
 
   /**
@@ -480,7 +409,8 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
               val nulled = when(javaTimestamp.isNull, lit(null))
                 .otherwise(javaTimestamp)
               nulled.cast(TimestampType
-              ).as(columnName, dataFrame.schema(columnName).metadata)
+                //we have to rebuild the metadata field as DF loaded from Parquet/Avro won't have it
+              ).as(columnName, SparkSqlDateTimeUtils.createDateTimeMetadata(format))
           })
 
         dataFrame.select(selectExpression: _*)
@@ -546,4 +476,9 @@ class SparkRuntimeUtils(sc: SparkContext) extends SparkSchemaUtils {
     val map = getDateMap(alpineSchema)
     (mapDFtoCustomDateTimeFormat(dataFrame, map), alpineSchema)
   }
+}
+
+object SparkRuntimeUtils{
+  def createSparkSession(sc : SparkContext): SparkSession = SparkSession.builder().config(sc.getConf).getOrCreate()
+
 }

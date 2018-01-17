@@ -1,7 +1,7 @@
 package com.alpine.model.pack.ast.expressions
-import com.alpine.common.serialization.json.TypeWrapper
 import com.alpine.sql.SQLGenerator
 import com.alpine.transformer.sql.ColumnarSQLExpression
+import com.alpine.common.serialization.json.TypeWrapper
 
 /**
   * TODO: Add DB Specific types to SQL Generator and use them here.

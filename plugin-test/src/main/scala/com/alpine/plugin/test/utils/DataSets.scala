@@ -1,10 +1,10 @@
 package com.alpine.plugin.test.utils
 
+import java.io.InputStream
 
-import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
-import org.apache.spark.sql.{Row, DataFrame, SQLContext}
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.{DataFrame, Row, SQLContext, SparkSession}
 
 /**
   * This show cases an alternate way of creating the DataFrame
@@ -12,16 +12,17 @@ import org.apache.spark.sql.{Row, DataFrame, SQLContext}
   * to the dataFrames schema
   */
 case class IrisFlower(
-                       sepalLength: Double,
-                       sepalWidth: Double,
-                       petaLlength: Double,
-                       petalWidth: Double)
-
+    sepalLength: Double,
+    sepalWidth: Double,
+    petalLength: Double,
+    petalWidth: Double
+)
 
 object IrisFlowerPrediction {
   /**
     * Creates a DataFrame of the iris dataset given an RDD of the String rows
     */
+  @deprecated("Use createIrisDataFrame")
   def convertIrisRDDtoDF(input: RDD[String], sQLContext: SQLContext): DataFrame = {
     val inputWithType = input.map(_.split(",")).map(flower =>
       IrisFlower(
@@ -31,6 +32,19 @@ object IrisFlowerPrediction {
         flower(3).trim.toDouble)
     )
     sQLContext.createDataFrame(inputWithType)
+  }
+
+  def createIrisDataFrame(sparkSession: SparkSession, partitions: Int = 2): DataFrame = {
+    val stream: InputStream = this.getClass.getResourceAsStream("/iris.txt")
+    val lines: Seq[IrisFlower] = scala.io.Source.fromInputStream(stream).getLines().map(_.split(",")).map(flower =>
+      IrisFlower(
+        flower(0).trim.toDouble,
+        flower(1).trim.toDouble,
+        flower(2).trim.toDouble,
+        flower(3).trim.toDouble)
+    ).toSeq
+    val rowRDD = sparkSession.sparkContext.parallelize(lines, partitions)
+    sparkSession.createDataFrame(rowRDD)
   }
 }
 
@@ -64,39 +78,35 @@ object GolfData {
     Row.fromTuple("sunny", 75L, 0L, "false", "yes")
   )
 
-
   val golfSchema = StructType(Array(
     StructField("outlook", StringType),
-    StructField("humidity", LongType, nullable = true),
     StructField("temperature", LongType, nullable = true),
-    StructField("wind", StringType), StructField("play", StringType)))
+    StructField("humidity", LongType, nullable = true),
+    StructField("wind", StringType),
+    StructField("play", StringType)
+  ))
 
-  def createGolfDFWithNullRows(sc: SparkContext): DataFrame = {
-    val sqlContext = new SQLContext(sc)
-    val rowRDD = sc.parallelize(nullRows)
-    val badData = sqlContext.createDataFrame(rowRDD, golfSchema)
+  def createGolfDFWithNullRows(sparkSession: SparkSession): DataFrame = {
+    val rowRDD = sparkSession.sparkContext.parallelize(nullRows)
+    val badData = sparkSession.createDataFrame(rowRDD, golfSchema)
     //union of the bad and good rows
-    createGolfDF(sc).unionAll(badData)
+    createGolfDF(sparkSession).union(badData)
   }
 
-  def createGolfDFWithNullAndZeroRows(sc: SparkContext): DataFrame = {
-    val sqlContext = new SQLContext(sc)
-    val rowRDD = sc.parallelize(zeroRows)
-    val badData = sqlContext.createDataFrame(rowRDD, golfSchema)
+  def createGolfDFWithNullAndZeroRows(sparkSession: SparkSession): DataFrame = {
+    val rowRDD = sparkSession.sparkContext.parallelize(zeroRows)
+    val badData = sparkSession.createDataFrame(rowRDD, golfSchema)
     //union of the bad and good rows
-    createGolfDFWithNullRows(sc).unionAll(badData)
+    createGolfDFWithNullRows(sparkSession).union(badData)
   }
 
-  def createGolfDF(sc: SparkContext): DataFrame = {
-    val sqlContext = new SQLContext(sc)
+  def createGolfDF(sparkSession: SparkSession, partitions: Int = 2): DataFrame = {
     val rows = golfRows.map(s => {
       val split = s.split(",")
       Row.fromTuple(split(0), split(1).toLong, split(2).toLong, split(3), split(4))
     })
-    val rowRDD = sc.parallelize(rows)
-
-    sqlContext.createDataFrame(rowRDD, golfSchema)
+    val rowRDD = sparkSession.sparkContext.parallelize(rows, partitions)
+    sparkSession.createDataFrame(rowRDD, golfSchema)
   }
-
 
 }

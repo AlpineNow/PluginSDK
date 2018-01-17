@@ -45,7 +45,7 @@ class TestNewStorageFormatMethods extends SimpleAbstractSparkJobSuite {
     val inputRows = sc.parallelize(List(Row("Masha", 22), Row("Ulia", 21), Row("Nastya", 23)))
     val inputSchema =
       StructType(List(StructField("name", StringType), StructField("age", IntegerType)))
-    val dataFrameInput = sqlContext.createDataFrame(inputRows, inputSchema)
+    val dataFrameInput = sparkSession.createDataFrame(inputRows, inputSchema)
 
     val parameters = new OperatorParametersMock(inputDataName, uuid)
 

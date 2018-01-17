@@ -13,7 +13,7 @@ object SQLUtility {
     others.map(o => name.escape(sqlGenerator) + " " + comparator + " " + o.escape(sqlGenerator)).mkString(" AND ")
   }
 
-  def wrapInSingleQuotes(s: String): String = "'" + s + "'"
+  def wrapInSingleQuotes(s: String): String = "'"  + s.replace("'", "''")+  "'"
 
   /**
     * Expect numeric or String.
