@@ -102,7 +102,7 @@ object HdfsCompressionType {
   val values = Seq(NoCompression, Deflate, Snappy, Gzip)
 
   val parquetSupportedValues = Seq(Snappy, Gzip, NoCompression)
-  val csvSupportedValues = Seq(Snappy, Gzip, NoCompression, Deflate)
+  val csvSupportedValues = Seq(Gzip, NoCompression, Deflate) // removing Snappy support for CSV as we couldn't make it work
   val avroSupportedValues = Seq(Snappy, Deflate, NoCompression)
 
   def withName(s: String): HdfsCompressionType = {

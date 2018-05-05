@@ -5,7 +5,7 @@ import sbtassembly.Plugin.AssemblyKeys._
 import sbt.Keys.resolvers
 //import com.typesafe.sbt.SbtGit.GitKeys
 
-val sdkVersion = "1.10-beta"
+val sdkVersion = "1.10"
 val javaSourceVersion = "1.7"
 val javaTargetVersion = "1.7"
 val scalaMajorVersion = "2.11"
@@ -166,7 +166,7 @@ lazy val ModelPack = Project(
     )
   ) ++ publishParameters("alpine-model-pack") ++ Seq(
     // For Hadrian
-    resolvers += "Artifactory" at "http://artifactory.alpinedata.tech/artifactory/repo"
+    resolvers += "Artifactory" at "https://repo.alpinedata.tech/alpine-local-mvn"
   )
 ).dependsOn(ModelAPI % "compile->compile;test->test")
 
