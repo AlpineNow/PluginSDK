@@ -1,5 +1,5 @@
 # PluginSDK
-This contains the source code for the Plugin SDK of the TIBCO Spotfire Data Science analytics engine. The jars from this project are published to Maven Central Repository under the name-space com.alpinenow.
+This contains the source code for the Plugin SDK of the TIBCO Team Studio analytics engine. The jars from this project are published to Maven Central Repository under the name-space com.alpinenow.
 
 This project is written in scala, and built using sbt.
 
