@@ -34,4 +34,4 @@ To generate the Scaladoc, run
 ```
 ./sbt unidoc
 ```
-Then the documentation will appear in ``` target/scala-2.10/unidoc```
+Then the documentation will appear in ``` target/scala-2.11/unidoc```
