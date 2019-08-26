@@ -1,0 +1,308 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>sql - com.alpine.model.pack.multiple.sql</title>
+          <meta name="description" content="sql - com.alpine.model.pack.multiple.sql" />
+          <meta name="keywords" content="sql com.alpine.model.pack.multiple.sql" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'com.alpine.model.pack.multiple.sql.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="com">com</a>.<a href="../../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../../package.html" class="extype" name="com.alpine.model">model</a>.<a href="../../package.html" class="extype" name="com.alpine.model.pack">pack</a>.<a href="../package.html" class="extype" name="com.alpine.model.pack.multiple">multiple</a></p>
+        <h1>sql</h1><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sql</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.model.pack.multiple.sql.CombinerSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CombinerSQLTransformerextendsSQLTransformerwithProductwithSerializable"></a>
+      <a id="CombinerSQLTransformer:CombinerSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CombinerSQLTransformer.html"><span class="name">CombinerSQLTransformer</span></a><span class="params">(<span name="model">model: <a href="../CombinerModel.html" class="extype" name="com.alpine.model.pack.multiple.CombinerModel">CombinerModel</a></span>, <span name="sqlGenerator">sqlGenerator: <a href="../../../../sql/SQLGenerator.html" class="extype" name="com.alpine.sql.SQLGenerator">SQLGenerator</a></span>)</span><span class="result"> extends <a href="../../../../transformer/sql/SQLTransformer.html" class="extype" name="com.alpine.transformer.sql.SQLTransformer">SQLTransformer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@CombinerSQLTransformerextendsSQLTransformerwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.multiple.sql.GroupByClassificationSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupByClassificationSQLTransformerextendsClassificationSQLTransformer"></a>
+      <a id="GroupByClassificationSQLTransformer:GroupByClassificationSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupByClassificationSQLTransformer.html"><span class="name">GroupByClassificationSQLTransformer</span></a><span class="result"> extends <a href="../../../../transformer/sql/ClassificationSQLTransformer.html" class="extype" name="com.alpine.transformer.sql.ClassificationSQLTransformer">ClassificationSQLTransformer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@GroupByClassificationSQLTransformerextendsClassificationSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Created by Jennifer Thompson on 2/12/16.</p>
+    </li><li name="com.alpine.model.pack.multiple.sql.GroupByRegressionSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GroupByRegressionSQLTransformerextendsRegressionSQLTransformer"></a>
+      <a id="GroupByRegressionSQLTransformer:GroupByRegressionSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="GroupByRegressionSQLTransformer.html"><span class="name">GroupByRegressionSQLTransformer</span></a><span class="result"> extends <a href="../../../../transformer/sql/RegressionSQLTransformer.html" class="extype" name="com.alpine.transformer.sql.RegressionSQLTransformer">RegressionSQLTransformer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@GroupByRegressionSQLTransformerextendsRegressionSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Created by Jennifer Thompson on 2/9/16.</p>
+    </li><li name="com.alpine.model.pack.multiple.sql.PipelineClassificationSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineClassificationSQLTransformerextendsClassificationSQLTransformer"></a>
+      <a id="PipelineClassificationSQLTransformer:PipelineClassificationSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineClassificationSQLTransformer.html"><span class="name">PipelineClassificationSQLTransformer</span></a><span class="result"> extends <a href="../../../../transformer/sql/ClassificationSQLTransformer.html" class="extype" name="com.alpine.transformer.sql.ClassificationSQLTransformer">ClassificationSQLTransformer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@PipelineClassificationSQLTransformerextendsClassificationSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.multiple.sql.PipelineClusteringSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineClusteringSQLTransformerextendsClusteringSQLTransformer"></a>
+      <a id="PipelineClusteringSQLTransformer:PipelineClusteringSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineClusteringSQLTransformer.html"><span class="name">PipelineClusteringSQLTransformer</span></a><span class="result"> extends <a href="../../../../transformer/sql/ClusteringSQLTransformer.html" class="extype" name="com.alpine.transformer.sql.ClusteringSQLTransformer">ClusteringSQLTransformer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@PipelineClusteringSQLTransformerextendsClusteringSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Created by Jennifer Thompson on 1/28/16.</p>
+    </li><li name="com.alpine.model.pack.multiple.sql.PipelineRegressionSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineRegressionSQLTransformerextendsRegressionSQLTransformer"></a>
+      <a id="PipelineRegressionSQLTransformer:PipelineRegressionSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineRegressionSQLTransformer.html"><span class="name">PipelineRegressionSQLTransformer</span></a><span class="result"> extends <a href="../../../../transformer/sql/RegressionSQLTransformer.html" class="extype" name="com.alpine.transformer.sql.RegressionSQLTransformer">RegressionSQLTransformer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@PipelineRegressionSQLTransformerextendsRegressionSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Created by Jennifer Thompson on 1/28/16.</p>
+    </li><li name="com.alpine.model.pack.multiple.sql.PipelineSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineSQLTransformerextendsSQLTransformerwithProductwithSerializable"></a>
+      <a id="PipelineSQLTransformer:PipelineSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineSQLTransformer.html"><span class="name">PipelineSQLTransformer</span></a><span class="params">(<span name="model">model: <a href="../PipelineRowModel.html" class="extype" name="com.alpine.model.pack.multiple.PipelineRowModel">PipelineRowModel</a></span>, <span name="sqlGenerator">sqlGenerator: <a href="../../../../sql/SQLGenerator.html" class="extype" name="com.alpine.sql.SQLGenerator">SQLGenerator</a></span>)</span><span class="result"> extends <a href="../../../../transformer/sql/SQLTransformer.html" class="extype" name="com.alpine.transformer.sql.SQLTransformer">SQLTransformer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@PipelineSQLTransformerextendsSQLTransformerwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.model.pack.multiple.sql.CombinerSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CombinerSQLTransformer"></a>
+      <a id="CombinerSQLTransformer:CombinerSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CombinerSQLTransformer$.html"><span class="name">CombinerSQLTransformer</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@CombinerSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.multiple.sql.PipelineClassificationSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineClassificationSQLTransformer"></a>
+      <a id="PipelineClassificationSQLTransformer:PipelineClassificationSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineClassificationSQLTransformer$.html"><span class="name">PipelineClassificationSQLTransformer</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@PipelineClassificationSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.multiple.sql.PipelineClusteringSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineClusteringSQLTransformer"></a>
+      <a id="PipelineClusteringSQLTransformer:PipelineClusteringSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineClusteringSQLTransformer$.html"><span class="name">PipelineClusteringSQLTransformer</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@PipelineClusteringSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.multiple.sql.PipelineRegressionSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineRegressionSQLTransformer"></a>
+      <a id="PipelineRegressionSQLTransformer:PipelineRegressionSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineRegressionSQLTransformer$.html"><span class="name">PipelineRegressionSQLTransformer</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@PipelineRegressionSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.multiple.sql.PipelineSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PipelineSQLTransformer"></a>
+      <a id="PipelineSQLTransformer:PipelineSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PipelineSQLTransformer$.html"><span class="name">PipelineSQLTransformer</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.multiple.sql.package@PipelineSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>GroupByRegressionTransformer - com.alpine.model.pack.multiple.GroupByRegressionTransformer</title>
+          <meta name="description" content="GroupByRegressionTransformer - com.alpine.model.pack.multiple.GroupByRegressionTransformer" />
+          <meta name="keywords" content="GroupByRegressionTransformer com.alpine.model.pack.multiple.GroupByRegressionTransformer" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.alpine.model.pack.multiple.GroupByRegressionTransformer';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img alt="Class" src="../../../../../lib/class_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../package.html" class="extype" name="com.alpine.model">model</a>.<a href="../package.html" class="extype" name="com.alpine.model.pack">pack</a>.<a href="package.html" class="extype" name="com.alpine.model.pack.multiple">multiple</a></p>
+        <h1>GroupByRegressionTransformer</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="com.alpine.model.pack.multiple">package multiple</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">GroupByRegressionTransformer</span><span class="params">(<span name="model">model: <a href="GroupByRegressionModel.html" class="extype" name="com.alpine.model.pack.multiple.GroupByRegressionModel">GroupByRegressionModel</a></span>)</span><span class="result"> extends <a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a> with <a href="GroupByTransformer.html" class="extype" name="com.alpine.model.pack.multiple.GroupByTransformer">GroupByTransformer</a>[<a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <a href="GroupByTransformer.html" class="extype" name="com.alpine.model.pack.multiple.GroupByTransformer">GroupByTransformer</a>[<a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a>], <a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a>, <a href="../../../transformer/MLTransformer.html" class="extype" name="com.alpine.transformer.MLTransformer">MLTransformer</a>[<a href="../../../result/RealResult.html" class="extype" name="com.alpine.result.RealResult">RealResult</a>], <a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a>, <span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By Inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="com.alpine.model.pack.multiple.GroupByRegressionTransformer"><span>GroupByRegressionTransformer</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="com.alpine.model.pack.multiple.GroupByTransformer"><span>GroupByTransformer</span></li><li class="in" name="com.alpine.transformer.RegressionTransformer"><span>RegressionTransformer</span></li><li class="in" name="com.alpine.transformer.MLTransformer"><span>MLTransformer</span></li><li class="in" name="com.alpine.transformer.Transformer"><span>Transformer</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show All</span></li>
+            </ol>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="com.alpine.model.pack.multiple.GroupByRegressionTransformer#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(model:com.alpine.model.pack.multiple.GroupByRegressionModel):com.alpine.model.pack.multiple.GroupByRegressionTransformer"></a>
+      <a id="&lt;init&gt;:GroupByRegressionTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">GroupByRegressionTransformer</span><span class="params">(<span name="model">model: <a href="GroupByRegressionModel.html" class="extype" name="com.alpine.model.pack.multiple.GroupByRegressionModel">GroupByRegressionModel</a></span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@&lt;init&gt;(model:com.alpine.model.pack.multiple.GroupByRegressionModel):com.alpine.model.pack.multiple.GroupByRegressionTransformer" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.transformer.Transformer.Row" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Row=Seq[Any]"></a>
+      <a id="Row:Row"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Row</span><span class="result"> = <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Any">Any</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@Row=Seq[Any]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Shorthand for the input / output type of the apply method.</p><div class="fullcomment"><div class="comment cmt"><p>Shorthand for the input / output type of the apply method.
+Equivalent to Seq[Any].
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@##():Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.alpine.transformer.Transformer#allowNullValues" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="allowNullValues:Boolean"></a>
+      <a id="allowNullValues:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">allowNullValues</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@allowNullValues:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Allows the transformer to specify if the apply method can handle null values
+in the input row.</p><div class="fullcomment"><div class="comment cmt"><p>Allows the transformer to specify if the apply method can handle null values
+in the input row.</p><p>e.g. a Null value replacement transformer, or a Naive Bayes transformer
+would naturally handle null values, but a Linear Regression transformer would not.</p><p>Default value is false.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>Boolean indicating tolerance for null values in input.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a></dd></dl></div>
+    </li><li name="com.alpine.transformer.RegressionTransformer#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(row:RegressionTransformer.this.Row):RegressionTransformer.this.Row"></a>
+      <a id="apply(Row):Row"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="row">row: <a href="#Row=Seq[Any]" class="extmbr" name="com.alpine.model.pack.multiple.GroupByRegressionTransformer.Row">Row</a></span>)</span><span class="result">: <a href="#Row=Seq[Any]" class="extmbr" name="com.alpine.model.pack.multiple.GroupByRegressionTransformer.Row">Row</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@apply(row:RegressionTransformer.this.Row):RegressionTransformer.this.Row" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This method should be implemented with speed and garbage collection in mind,
+as it called once per row on potentially huge data-sets.</p><div class="fullcomment"><div class="comment cmt"><p>This method should be implemented with speed and garbage collection in mind,
+as it called once per row on potentially huge data-sets.</p><p>This method is not required to be thread-safe.
+</p></div><dl class="paramcmts block"><dt class="param">row</dt><dd class="cmt"><p>The row of input to be scored.</p></dd><dt>returns</dt><dd class="cmt"><p>The result from applying the trained model to the row.</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a> → <a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a></dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="com.alpine.model.pack.multiple.GroupByTransformer#getGroupByValue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getGroupByValue:Any=&gt;Any"></a>
+      <a id="getGroupByValue:(Any)⇒Any"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">lazy val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getGroupByValue</span><span class="result">: (<span class="extype" name="scala.Any">Any</span>) ⇒ <span class="extype" name="scala.Any">Any</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@getGroupByValue:Any=&gt;Any" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="GroupByTransformer.html" class="extype" name="com.alpine.model.pack.multiple.GroupByTransformer">GroupByTransformer</a></dd></dl></div>
+    </li><li name="com.alpine.model.pack.multiple.GroupByTransformer#indicesToUse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="indicesToUse(subModel:M):Array[Int]"></a>
+      <a id="indicesToUse(RegressionRowModel):Array[Int]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">indicesToUse</span><span class="params">(<span name="subModel">subModel: <a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a></span>)</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@indicesToUse(subModel:M):Array[Int]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="GroupByTransformer.html" class="extype" name="com.alpine.model.pack.multiple.GroupByTransformer">GroupByTransformer</a></dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.alpine.model.pack.multiple.GroupByRegressionTransformer#model" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="model:com.alpine.model.pack.multiple.GroupByRegressionModel"></a>
+      <a id="model:GroupByRegressionModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">model</span><span class="result">: <a href="GroupByRegressionModel.html" class="extype" name="com.alpine.model.pack.multiple.GroupByRegressionModel">GroupByRegressionModel</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@model:com.alpine.model.pack.multiple.GroupByRegressionModel" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.alpine.model.pack.multiple.GroupByRegressionTransformer">GroupByRegressionTransformer</a> → <a href="GroupByTransformer.html" class="extype" name="com.alpine.model.pack.multiple.GroupByTransformer">GroupByTransformer</a></dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="com.alpine.model.pack.multiple.GroupByRegressionTransformer#predict" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="predict(row:GroupByRegressionTransformer.this.Row):Double"></a>
+      <a id="predict(Row):Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">predict</span><span class="params">(<span name="row">row: <a href="#Row=Seq[Any]" class="extmbr" name="com.alpine.model.pack.multiple.GroupByRegressionTransformer.Row">Row</a></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@predict(row:GroupByRegressionTransformer.this.Row):Double" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="com.alpine.model.pack.multiple.GroupByRegressionTransformer">GroupByRegressionTransformer</a> → <a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a></dd></dl></div>
+    </li><li name="com.alpine.transformer.RegressionTransformer#score" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="score(row:RegressionTransformer.this.Row):com.alpine.result.RealResult"></a>
+      <a id="score(Row):RealResult"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">score</span><span class="params">(<span name="row">row: <a href="#Row=Seq[Any]" class="extmbr" name="com.alpine.model.pack.multiple.GroupByRegressionTransformer.Row">Row</a></span>)</span><span class="result">: <a href="../../../result/RealResult.html" class="extype" name="com.alpine.result.RealResult">RealResult</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@score(row:RegressionTransformer.this.Row):com.alpine.result.RealResult" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a> → <a href="../../../transformer/MLTransformer.html" class="extype" name="com.alpine.transformer.MLTransformer">MLTransformer</a></dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.alpine.model.pack.multiple.GroupByRegressionTransformer@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.Product">
+              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
+            </div><div class="parent" name="com.alpine.model.pack.multiple.GroupByTransformer">
+              <h3>Inherited from <a href="GroupByTransformer.html" class="extype" name="com.alpine.model.pack.multiple.GroupByTransformer">GroupByTransformer</a>[<a href="../../RegressionRowModel.html" class="extype" name="com.alpine.model.RegressionRowModel">RegressionRowModel</a>]</h3>
+            </div><div class="parent" name="com.alpine.transformer.RegressionTransformer">
+              <h3>Inherited from <a href="../../../transformer/RegressionTransformer.html" class="extype" name="com.alpine.transformer.RegressionTransformer">RegressionTransformer</a></h3>
+            </div><div class="parent" name="com.alpine.transformer.MLTransformer">
+              <h3>Inherited from <a href="../../../transformer/MLTransformer.html" class="extype" name="com.alpine.transformer.MLTransformer">MLTransformer</a>[<a href="../../../result/RealResult.html" class="extype" name="com.alpine.result.RealResult">RealResult</a>]</h3>
+            </div><div class="parent" name="com.alpine.transformer.Transformer">
+              <h3>Inherited from <a href="../../../transformer/Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a></h3>
+            </div><div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

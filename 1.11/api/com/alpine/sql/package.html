@@ -1,0 +1,226 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>sql - com.alpine.sql</title>
+          <meta name="description" content="sql - com.alpine.sql" />
+          <meta name="keywords" content="sql com.alpine.sql" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.alpine.sql.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.alpine">alpine</a></p>
+        <h1>sql</h1><span class="permalink">
+      <a href="../../../index.html#com.alpine.sql.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sql</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.sql.AliasGenerator" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AliasGeneratorextendsAnyRef"></a>
+      <a id="AliasGenerator:AliasGenerator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="AliasGenerator.html"><span class="name">AliasGenerator</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.sql.package@AliasGeneratorextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Used to generate a series of unique aliases for use in sub-queries.</p><div class="fullcomment"><div class="comment cmt"><p>Used to generate a series of unique aliases for use in sub-queries.
+Behaviour is deterministic, for ease of use in tests.</p><p>The value of &quot;stem&quot; defaults to &quot;alias&quot;.
+Bear in mind that this should be short to avoid hitting the 30
+character limit in Oracle.
+</p></div></div>
+    </li><li name="com.alpine.sql.SQLExecutor" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SQLExecutorextendsAnyRef"></a>
+      <a id="SQLExecutor:SQLExecutor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SQLExecutor.html"><span class="name">SQLExecutor</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.sql.package@SQLExecutorextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Created by Paul Chang 2016-07-12 (6.1 release)</p><div class="fullcomment"><div class="comment cmt"><p>Created by Paul Chang 2016-07-12 (6.1 release)</p><p>The purpose of SQLExecutor is to provide an object to facilitate the execution of commonly used SQL queries.
+All DDL (data definition language) methods are prefixed with &quot;ddl...&quot;. These are methods that create, modify, or
+drop database objects (tables, views, etc.).</p><p>Each SQLExecutor is instantiated with a SQLGenerator, URL, and JDBC Connection. The SQLGenerator is used to
+generate SQL, and the Connection is used to execute SQL. The URL is informational. Several of the methods in
+SQLGenerator are called by corresponding methods in SQLExecutor and have similar signatures, but unlike
+SQLGenerator, SQLExecutor will actually execute SQL. SQLGenerator objects are database-type specific, so
+different SQLGenerator objects are instantiated for different database types.</p><p>Once instantiated, the SQLGenerator, URL, and Connection for a SQLExecutor do not change. Aside from database
+changes, this object has no side-effects once instantiated.</p><p>For certain methods, when specifying table names, fully qualify and delimit as necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot;). Delimiting is required for table names with non-standard characters
+([A-Za-z][A-Za-z0-9]*). Not all databases support delimiters or non-standard characters (such as Teradata).
+For those databases that support schemas, specifying the schema name is recommended.</p><p>For certain methods, when specifying column names, these must be a comma-separated string of columns
+that one would find in a SELECT query. This can include expressions that are aliased
+(i.e. sqlexpression AS aliasname). Any columns with non-standard characters should be delimited
+(i.e. &quot;columnname&quot;). When SELECTing from more than one table, if column names are not unique,
+then columns should be fully qualified (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;columnalias&quot;).</p><p>For certain methods, when specifying a source table, it is permissible to specify more than one table as a join
+(i.e. table1 INNER JOIN table2 ON ...).</p><p>For certain methods, when specifying a whereClause, the literal &quot;WHERE&quot; should be included.
+Note that we can include anything that follows a FROM clause here, such as GROUP BY, ORDER BY, etc.
+</p></div></div>
+    </li><li name="com.alpine.sql.SQLExecutorResultSetParser" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SQLExecutorResultSetParser[R]extendsAnyRef"></a>
+      <a id="SQLExecutorResultSetParser[R]:SQLExecutorResultSetParser[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SQLExecutorResultSetParser.html"><span class="name">SQLExecutorResultSetParser</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.sql.package@SQLExecutorResultSetParser[R]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Helper interface for Java to parse ResultSet objects.</p><div class="fullcomment"><div class="comment cmt"><p>Helper interface for Java to parse ResultSet objects. For Scala, we simply use
+executeQuery[R](String, (ResultSet =&gt; R)): R</p><p>For Java, passing lambda functions is more complicated until Java 8.
+So instead, we have a helper interface. Create an object that will parse the ResultSet
+and pass it to SQLExecutor.executeQuery().
+</p></div></div>
+    </li><li name="com.alpine.sql.SQLGenerator" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SQLGeneratorextendsAnyRef"></a>
+      <a id="SQLGenerator:SQLGenerator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="SQLGenerator.html"><span class="name">SQLGenerator</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.sql.package@SQLGeneratorextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The purpose of SQLGenerator is to provide an object to facilitate the construction of commonly used SQL queries.</p><div class="fullcomment"><div class="comment cmt"><p>The purpose of SQLGenerator is to provide an object to facilitate the construction of commonly used SQL queries.
+Because SQL generation can vary between different database types, each SQLGenerator is instantiated for a
+particular database type.</p><p>For certain methods, when specifying table names, fully qualify and delimit as necessary
+(i.e. &quot;schemaname&quot;.&quot;tablename&quot;). Delimiting is required for table names with non-standard characters
+([A-Za-z][A-Za-z0-9]*). Not all databases support delimiters or non-standard characters (such as Teradata).
+For those databases that support schemas, specifying the schema name is recommended.</p><p>For certain methods, when specifying column names, these must be a comma-separated string of columns
+that one would find in a SELECT query. This can include expressions that are aliased
+(i.e. sqlexpression AS aliasname). Any columns with non-standard characters should be delimited
+(i.e. &quot;columnname&quot;). When SELECTing from more than one table, if column names are not unique,
+then columns should be fully qualified (i.e. &quot;schemaname&quot;.&quot;tablename&quot;.&quot;columnname&quot; AS &quot;columnalias&quot;).</p><p>For certain methods, when specifying a source table, it is permissible to specify more than one table as a join
+(i.e. table1 INNER JOIN table2 ON ...).</p><p>For certain methods, when specifying a whereClause, the literal &quot;WHERE&quot; should be included.
+Note that we can include anything that follows a FROM clause here, such as GROUP BY, ORDER BY, etc.
+</p></div></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.sql.DatabaseType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DatabaseType"></a>
+      <a id="DatabaseType:DatabaseType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DatabaseType$.html"><span class="name">DatabaseType</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.sql.package@DatabaseType" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

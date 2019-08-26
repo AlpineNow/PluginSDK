@@ -1,0 +1,742 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>core - com.alpine.plugin.core</title>
+          <meta name="description" content="core - com.alpine.plugin.core" />
+          <meta name="keywords" content="core com.alpine.plugin.core" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.alpine.plugin.core.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../package.html" class="extype" name="com.alpine.plugin">plugin</a></p>
+        <h1>core</h1><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">core</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.plugin.core.ChorusDBSourceInfo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ChorusDBSourceInfoextendsProductwithSerializable"></a>
+      <a id="ChorusDBSourceInfo:ChorusDBSourceInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ChorusDBSourceInfo.html"><span class="name">ChorusDBSourceInfo</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="id">id: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@ChorusDBSourceInfoextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.ChorusUserInfo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ChorusUserInfoextendsProductwithSerializable"></a>
+      <a id="ChorusUserInfo:ChorusUserInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ChorusUserInfo.html"><span class="name">ChorusUserInfo</span></a><span class="params">(<span name="userID">userID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="userName">userName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="sessionID">sessionID: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@ChorusUserInfoextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">ChorusUserInfo
+</p><div class="fullcomment"><div class="comment cmt"><p>ChorusUserInfo
+</p></div><dl class="paramcmts block"><dt class="param">userID</dt><dd class="cmt"><p>-- Chorus UserId (should be an integer).</p></dd><dt class="param">userName</dt><dd class="cmt"><p>-- User Display Name, Chorus user name, not userId.</p></dd><dt class="param">sessionID</dt><dd class="cmt"><p>-- Chorus Session ID, can be used to make requests to Chorus.</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.ExecutionContext" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ExecutionContextextendsAnyRef"></a>
+      <a id="ExecutionContext:ExecutionContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutionContext.html"><span class="name">ExecutionContext</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@ExecutionContextextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The context for a plugin execution.</p><div class="fullcomment"><div class="comment cmt"><p>The context for a plugin execution. This contains information about the
+underlying platform, such as connection information and/or job submission,
+the working directory, etc.
+</p></div></div>
+    </li><li name="com.alpine.plugin.core.NotebookDetails" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NotebookDetailsextendsProductwithSerializable"></a>
+      <a id="NotebookDetails:NotebookDetails"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NotebookDetails.html"><span class="name">NotebookDetails</span></a><span class="params">(<span name="readyToExecuteDB">readyToExecuteDB: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="readyToExecuteHD">readyToExecuteHD: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="useSpark">useSpark: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="inputsMetadata">inputsMetadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="NotebookIOInfo.html" class="extype" name="com.alpine.plugin.core.NotebookIOInfo">NotebookIOInfo</a>]</span>, <span name="outputsMetadata">outputsMetadata: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="NotebookIOInfo.html" class="extype" name="com.alpine.plugin.core.NotebookIOInfo">NotebookIOInfo</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@NotebookDetailsextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.NotebookIOForExecution" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="NotebookIOForExecutionextendsAnyRef"></a>
+      <a id="NotebookIOForExecution:NotebookIOForExecution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NotebookIOForExecution.html"><span class="name">NotebookIOForExecution</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@NotebookIOForExecutionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Created by emiliedelongueau on 7/4/17.</p>
+    </li><li name="com.alpine.plugin.core.NotebookIOInfo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NotebookIOInfoextendsProductwithSerializable"></a>
+      <a id="NotebookIOInfo:NotebookIOInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NotebookIOInfo.html"><span class="name">NotebookIOInfo</span></a><span class="params">(<span name="dataSourceName">dataSourceName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isHdfsInput">isHdfsInput: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="delimiter">delimiter: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="quote">quote: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="escape">escape: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="columns">columns: <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>, <span name="usesSpark">usesSpark: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="inputName">inputName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@NotebookIOInfoextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.NotebookInputDBForExecution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NotebookInputDBForExecutionextendsNotebookIOForExecutionwithProductwithSerializable"></a>
+      <a id="NotebookInputDBForExecution:NotebookInputDBForExecution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NotebookInputDBForExecution.html"><span class="name">NotebookInputDBForExecution</span></a><span class="params">(<span name="executionLabel">executionLabel: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="schemaName">schemaName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="databaseName">databaseName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="NotebookIOForExecution.html" class="extype" name="com.alpine.plugin.core.NotebookIOForExecution">NotebookIOForExecution</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@NotebookInputDBForExecutionextendsNotebookIOForExecutionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.NotebookInputHDForExecution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NotebookInputHDForExecutionextendsNotebookIOForExecutionwithProductwithSerializable"></a>
+      <a id="NotebookInputHDForExecution:NotebookInputHDForExecution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NotebookInputHDForExecution.html"><span class="name">NotebookInputHDForExecution</span></a><span class="params">(<span name="executionLabel">executionLabel: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="header">header: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="delimiter">delimiter: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="quote">quote: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="escape">escape: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="columnNames">columnNames: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="columnTypes">columnTypes: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <a href="NotebookIOForExecution.html" class="extype" name="com.alpine.plugin.core.NotebookIOForExecution">NotebookIOForExecution</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@NotebookInputHDForExecutionextendsNotebookIOForExecutionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.NotebookOutputDBForExecution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NotebookOutputDBForExecutionextendsNotebookIOForExecutionwithProductwithSerializable"></a>
+      <a id="NotebookOutputDBForExecution:NotebookOutputDBForExecution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NotebookOutputDBForExecution.html"><span class="name">NotebookOutputDBForExecution</span></a><span class="params">(<span name="executionLabel">executionLabel: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="tableName">tableName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="schemaName">schemaName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="databaseName">databaseName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="overwrite">overwrite: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <a href="NotebookIOForExecution.html" class="extype" name="com.alpine.plugin.core.NotebookIOForExecution">NotebookIOForExecution</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@NotebookOutputDBForExecutionextendsNotebookIOForExecutionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.NotebookOutputHDForExecution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NotebookOutputHDForExecutionextendsNotebookIOForExecutionwithProductwithSerializable"></a>
+      <a id="NotebookOutputHDForExecution:NotebookOutputHDForExecution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NotebookOutputHDForExecution.html"><span class="name">NotebookOutputHDForExecution</span></a><span class="params">(<span name="executionLabel">executionLabel: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="outputPath">outputPath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="delimiter">delimiter: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="quote">quote: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="escape">escape: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="overwrite">overwrite: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="storageFormat">storageFormat: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <a href="NotebookIOForExecution.html" class="extype" name="com.alpine.plugin.core.NotebookIOForExecution">NotebookIOForExecution</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@NotebookOutputHDForExecutionextendsNotebookIOForExecutionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.OperatorGUINode" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="OperatorGUINode[I&lt;:com.alpine.plugin.core.io.IOBase,O&lt;:com.alpine.plugin.core.io.IOBase]extendsAnyRef"></a>
+      <a id="OperatorGUINode[I&lt;:IOBase,O&lt;:IOBase]:OperatorGUINode[I,O]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorGUINode.html"><span class="name">OperatorGUINode</span></a><span class="tparams">[<span name="I">I &lt;: <a href="io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="O">O &lt;: <a href="io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorGUINode[I&lt;:com.alpine.plugin.core.io.IOBase,O&lt;:com.alpine.plugin.core.io.IOBase]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">:: AlpineSdkApi ::
+Control the behavior of the operator GUI node within the editor.</p><div class="fullcomment"><div class="comment cmt"><p>:: AlpineSdkApi ::
+Control the behavior of the operator GUI node within the editor.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@<a href="annotation/AlpineSdkApi.html" class="extype" name="com.alpine.plugin.core.annotation.AlpineSdkApi">AlpineSdkApi</a></span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.alpine.plugin.core.OperatorListener" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="OperatorListenerextendsAnyRef"></a>
+      <a id="OperatorListener:OperatorListener"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorListener.html"><span class="name">OperatorListener</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorListenerextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A listener can be used to pass messages from the plugin operators to the
+UI console.</p><div class="fullcomment"><div class="comment cmt"><p>A listener can be used to pass messages from the plugin operators to the
+UI console.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@<a href="annotation/AlpineSdkApi.html" class="extype" name="com.alpine.plugin.core.annotation.AlpineSdkApi">AlpineSdkApi</a></span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.alpine.plugin.core.OperatorMetadata" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="OperatorMetadataextendsProductwithSerializable"></a>
+      <a id="OperatorMetadata:OperatorMetadata"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorMetadata.html"><span class="name">OperatorMetadata</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="category">category: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="author">author: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="version">version: <span class="extype" name="scala.Int">Int</span></span>, <span name="helpURL">helpURL: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="icon">icon: <span class="extype" name="scala.Option">Option</span>[<a href="icon/OperatorIcon.html" class="extype" name="com.alpine.plugin.core.icon.OperatorIcon">OperatorIcon</a>]</span>, <span name="toolTipText">toolTipText: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="usesJavascript">usesJavascript: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorMetadataextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">:: AlpineSdkApi ::
+Object that is returned by the &quot;get metadata&quot; method in the plugin signature class.</p><div class="fullcomment"><div class="comment cmt"><p>:: AlpineSdkApi ::
+Object that is returned by the &quot;get metadata&quot; method in the plugin signature class.
+And is used by the plugin engine to define how the operator will show up in the GUI.
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>the name of the operator as it shows up in the GUI</p></dd><dt class="param">category</dt><dd class="cmt"><p>the category of operator i.e. &quot;transformation&quot;.
+                   Used to filter operator in the left hand panel of the workflow GUI.</p></dd><dt class="param">author</dt><dd class="cmt"><p>the writer of the operator</p></dd><dt class="param">version</dt><dd class="cmt"><p>the version number of this operator.</p></dd><dt class="param">helpURL</dt><dd class="cmt"><p>A link to documentation about the operator</p></dd><dt class="param">icon</dt><dd class="cmt"><p>Name and shape of the custom icon. To use the default icon,
+                   use Option.empty().</p></dd><dt class="param">toolTipText</dt><dd class="cmt"><p>The text of the tool tip which appears when the user hovers over the icon
+                   for the operator in the left hand &quot;operators&quot; dropdown.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@<a href="annotation/AlpineSdkApi.html" class="extype" name="com.alpine.plugin.core.annotation.AlpineSdkApi">AlpineSdkApi</a></span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.alpine.plugin.core.OperatorParameters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="OperatorParametersextendsSerializable"></a>
+      <a id="OperatorParameters:OperatorParameters"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorParameters.html"><span class="name">OperatorParameters</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorParametersextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">:: AlpineSdkApi ::
+Interface for accessing the parameter values for an operator.</p><div class="fullcomment"><div class="comment cmt"><p>:: AlpineSdkApi ::
+Interface for accessing the parameter values for an operator.
+This is the argument to the 'onExecution' callback function.
+The developers can extract operator parameter values through this interface.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@<a href="annotation/AlpineSdkApi.html" class="extype" name="com.alpine.plugin.core.annotation.AlpineSdkApi">AlpineSdkApi</a></span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.alpine.plugin.core.OperatorRuntime" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="OperatorRuntime[CTX&lt;:com.alpine.plugin.core.ExecutionContext,I&lt;:com.alpine.plugin.core.io.IOBase,O&lt;:com.alpine.plugin.core.io.IOBase]extendsAnyRef"></a>
+      <a id="OperatorRuntime[CTX&lt;:ExecutionContext,I&lt;:IOBase,O&lt;:IOBase]:OperatorRuntime[CTX,I,O]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorRuntime.html"><span class="name">OperatorRuntime</span></a><span class="tparams">[<span name="CTX">CTX &lt;: <a href="ExecutionContext.html" class="extype" name="com.alpine.plugin.core.ExecutionContext">ExecutionContext</a></span>, <span name="I">I &lt;: <a href="io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>, <span name="O">O &lt;: <a href="io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorRuntime[CTX&lt;:com.alpine.plugin.core.ExecutionContext,I&lt;:com.alpine.plugin.core.io.IOBase,O&lt;:com.alpine.plugin.core.io.IOBase]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">:: AlpineSdkApi ::
+A separate instance of operator plugin runtime gets instantiated for each
+'run' of the workflow (or a 'step-run').</p><div class="fullcomment"><div class="comment cmt"><p>:: AlpineSdkApi ::
+A separate instance of operator plugin runtime gets instantiated for each
+'run' of the workflow (or a 'step-run'). When the run is finished, the
+instance will get deleted/garbage-collected without reuses for subsequent
+runs.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@<a href="annotation/AlpineSdkApi.html" class="extype" name="com.alpine.plugin.core.annotation.AlpineSdkApi">AlpineSdkApi</a></span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.alpine.plugin.core.OperatorSignature" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="OperatorSignature[G&lt;:com.alpine.plugin.core.OperatorGUINode[_&lt;:com.alpine.plugin.core.io.IOBase,_&lt;:com.alpine.plugin.core.io.IOBase],R&lt;:com.alpine.plugin.core.OperatorRuntime[_&lt;:com.alpine.plugin.core.ExecutionContext,_&lt;:com.alpine.plugin.core.io.IOBase,_&lt;:com.alpine.plugin.core.io.IOBase]]extendsAnyRef"></a>
+      <a id="OperatorSignature[G&lt;:OperatorGUINode[_&lt;:IOBase,_&lt;:IOBase],R&lt;:OperatorRuntime[_&lt;:ExecutionContext,_&lt;:IOBase,_&lt;:IOBase]]:OperatorSignature[G,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorSignature.html"><span class="name">OperatorSignature</span></a><span class="tparams">[<span name="G">G &lt;: <a href="OperatorGUINode.html" class="extype" name="com.alpine.plugin.core.OperatorGUINode">OperatorGUINode</a>[_ &lt;: <a href="io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a>, _ &lt;: <a href="io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a>]</span>, <span name="R">R &lt;: <a href="OperatorRuntime.html" class="extype" name="com.alpine.plugin.core.OperatorRuntime">OperatorRuntime</a>[_ &lt;: <a href="ExecutionContext.html" class="extype" name="com.alpine.plugin.core.ExecutionContext">ExecutionContext</a>, _ &lt;: <a href="io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a>, _ &lt;: <a href="io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a>]</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorSignature[G&lt;:com.alpine.plugin.core.OperatorGUINode[_&lt;:com.alpine.plugin.core.io.IOBase,_&lt;:com.alpine.plugin.core.io.IOBase],R&lt;:com.alpine.plugin.core.OperatorRuntime[_&lt;:com.alpine.plugin.core.ExecutionContext,_&lt;:com.alpine.plugin.core.io.IOBase,_&lt;:com.alpine.plugin.core.io.IOBase]]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">:: AlpineSdkApi ::
+Bundles operator types and metadata used to host the operator
+in the running system.</p><div class="fullcomment"><div class="comment cmt"><p>:: AlpineSdkApi ::
+Bundles operator types and metadata used to host the operator
+in the running system. Descendants must have a no-arguments
+constructor</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@<a href="annotation/AlpineSdkApi.html" class="extype" name="com.alpine.plugin.core.annotation.AlpineSdkApi">AlpineSdkApi</a></span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.alpine.plugin.core.OperatorStatus" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="OperatorStatusextendsProductwithSerializable"></a>
+      <a id="OperatorStatus:OperatorStatus"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorStatus.html"><span class="name">OperatorStatus</span></a><span class="params">(<span name="isValid">isValid: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="msg">msg: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="outputMetadata">outputMetadata: <a href="io/IOMetadata.html" class="extype" name="com.alpine.plugin.core.io.IOMetadata">IOMetadata</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorStatusextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This is the required return type for the onInputOrParameterChange function
+in OperatorGUINode class.</p><div class="fullcomment"><div class="comment cmt"><p>This is the required return type for the onInputOrParameterChange function
+in OperatorGUINode class. If the schemas of connected inputs or selected
+parameters are invalid, this should be false, along with an optional message
+about why this is false.
+</p></div><dl class="paramcmts block"><dt class="param">isValid</dt><dd class="cmt"><p>true if the operator is valid. false otherwise.</p></dd><dt class="param">msg</dt><dd class="cmt"><p>An optional message that will show up in the UI. You can return a
+               message even if the operator is valid.</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.PythonNotebook" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PythonNotebookextendsProductwithSerializable"></a>
+      <a id="PythonNotebook:PythonNotebook"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PythonNotebook.html"><span class="name">PythonNotebook</span></a><span class="params">(<span name="chorusFile">chorusFile: <a href="dialog/ChorusFile.html" class="extype" name="com.alpine.plugin.core.dialog.ChorusFile">ChorusFile</a></span>, <span name="userModifiedAt">userModifiedAt: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="serverStatus">serverStatus: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@PythonNotebookextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.PythonNotebookExecution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PythonNotebookExecutionextendsProductwithSerializable"></a>
+      <a id="PythonNotebookExecution:PythonNotebookExecution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PythonNotebookExecution.html"><span class="name">PythonNotebookExecution</span></a><span class="params">(<span name="notebookId">notebookId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="executionId">executionId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="status">status: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="response">response: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="error">error: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="isFinished">isFinished: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@PythonNotebookExecutionextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.WorkflowInfo" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="WorkflowInfoextendsProductwithSerializable"></a>
+      <a id="WorkflowInfo:WorkflowInfo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="WorkflowInfo.html"><span class="name">WorkflowInfo</span></a><span class="params">(<span name="workflowID">workflowID: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@WorkflowInfoextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">workflowID</dt><dd class="cmt"><p>-- ID of the workfile where the operator is run. This can be usd in the
+                  ChorusAPICaller to get the workspace ID.</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.plugin.core.OperatorCategories" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OperatorCategories"></a>
+      <a id="OperatorCategories:OperatorCategories"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorCategories$.html"><span class="name">OperatorCategories</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorCategories" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.OperatorMetadata" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OperatorMetadata"></a>
+      <a id="OperatorMetadata:OperatorMetadata"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorMetadata$.html"><span class="name">OperatorMetadata</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorMetadata" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.OperatorStatus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OperatorStatus"></a>
+      <a id="OperatorStatus:OperatorStatus"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OperatorStatus$.html"><span class="name">OperatorStatus</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@OperatorStatus" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.annotation" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="annotation"></a>
+      <a id="annotation:annotation"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="annotation/package.html"><span class="name">annotation</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@annotation" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.config" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="config"></a>
+      <a id="config:config"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="config/package.html"><span class="name">config</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@config" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.datasource" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="datasource"></a>
+      <a id="datasource:datasource"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="datasource/package.html"><span class="name">datasource</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@datasource" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.db" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="db"></a>
+      <a id="db:db"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="db/package.html"><span class="name">db</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@db" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.dialog" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="dialog"></a>
+      <a id="dialog:dialog"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="dialog/package.html"><span class="name">dialog</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@dialog" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.icon" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="icon"></a>
+      <a id="icon:icon"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="icon/package.html"><span class="name">icon</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@icon" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.io" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="io"></a>
+      <a id="io:io"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="io/package.html"><span class="name">io</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@io" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.serialization" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="serialization"></a>
+      <a id="serialization:serialization"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="serialization/package.html"><span class="name">serialization</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@serialization" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.spark" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="spark"></a>
+      <a id="spark:spark"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="spark/package.html"><span class="name">spark</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@spark" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.utils" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="utils"></a>
+      <a id="utils:utils"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="utils/package.html"><span class="name">utils</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@utils" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.plugin.core.visualization" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="visualization"></a>
+      <a id="visualization:visualization"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="visualization/package.html"><span class="name">visualization</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.alpine.plugin.core.package@visualization" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
