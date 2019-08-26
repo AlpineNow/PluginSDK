@@ -1,0 +1,241 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>model - com.alpine.model</title>
+          <meta name="description" content="model - com.alpine.model" />
+          <meta name="keywords" content="model com.alpine.model" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.alpine.model.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.alpine">alpine</a></p>
+        <h1>model</h1><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">model</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.model.CategoricalRowModel" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CategoricalRowModelextendsRowModel"></a>
+      <a id="CategoricalRowModel:CategoricalRowModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CategoricalRowModel.html"><span class="name">CategoricalRowModel</span></a><span class="result"> extends <a href="RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package@CategoricalRowModelextendsRowModel" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A model that predicts values in a predefined set of classes.</p>
+    </li><li name="com.alpine.model.ClassificationRowModel" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClassificationRowModelextendsCategoricalRowModel"></a>
+      <a id="ClassificationRowModel:ClassificationRowModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassificationRowModel.html"><span class="name">ClassificationRowModel</span></a><span class="result"> extends <a href="CategoricalRowModel.html" class="extype" name="com.alpine.model.CategoricalRowModel">CategoricalRowModel</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package@ClassificationRowModelextendsCategoricalRowModel" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.ClusteringRowModel" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClusteringRowModelextendsCategoricalRowModel"></a>
+      <a id="ClusteringRowModel:ClusteringRowModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClusteringRowModel.html"><span class="name">ClusteringRowModel</span></a><span class="result"> extends <a href="CategoricalRowModel.html" class="extype" name="com.alpine.model.CategoricalRowModel">CategoricalRowModel</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package@ClusteringRowModelextendsCategoricalRowModel" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.MLModel" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MLModelextendsSerializable"></a>
+      <a id="MLModel:MLModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MLModel.html"><span class="name">MLModel</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package@MLModelextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">These objects are serialized to JSON via GSON, augmented with type adapters for known interfaces,
+scala Seq collections and Options.</p>
+    </li><li name="com.alpine.model.RegressionRowModel" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="RegressionRowModelextendsRowModel"></a>
+      <a id="RegressionRowModel:RegressionRowModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RegressionRowModel.html"><span class="name">RegressionRowModel</span></a><span class="result"> extends <a href="RowModel.html" class="extype" name="com.alpine.model.RowModel">RowModel</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package@RegressionRowModelextendsRowModel" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.RowModel" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="RowModelextendsMLModel"></a>
+      <a id="RowModel:RowModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RowModel.html"><span class="name">RowModel</span></a><span class="result"> extends <a href="MLModel.html" class="extype" name="com.alpine.model.MLModel">MLModel</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package@RowModelextendsMLModel" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">RowModels are models that will produce a single result per row of data.</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.model.export" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="export"></a>
+      <a id="export:export"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="export/package.html"><span class="name">export</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package@export" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="pack"></a>
+      <a id="pack:pack"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="pack/package.html"><span class="name">pack</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.model.package@pack" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

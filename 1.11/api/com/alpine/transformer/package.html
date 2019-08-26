@@ -1,0 +1,224 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>transformer - com.alpine.transformer</title>
+          <meta name="description" content="transformer - com.alpine.transformer" />
+          <meta name="keywords" content="transformer com.alpine.transformer" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../index.html';
+            var hash = 'com.alpine.transformer.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../lib/package_big.png" />
+        <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.alpine">alpine</a></p>
+        <h1>transformer</h1><span class="permalink">
+      <a href="../../../index.html#com.alpine.transformer.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">transformer</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.transformer.CategoricalTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CategoricalTransformer[A&lt;:com.alpine.result.CategoricalResult]extendsMLTransformer[A]"></a>
+      <a id="CategoricalTransformer[A&lt;:CategoricalResult]:CategoricalTransformer[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CategoricalTransformer.html"><span class="name">CategoricalTransformer</span></a><span class="tparams">[<span name="A">A &lt;: <a href="../result/CategoricalResult.html" class="extype" name="com.alpine.result.CategoricalResult">CategoricalResult</a></span>]</span><span class="result"> extends <a href="MLTransformer.html" class="extype" name="com.alpine.transformer.MLTransformer">MLTransformer</a>[<span class="extype" name="com.alpine.transformer.CategoricalTransformer.A">A</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.transformer.package@CategoricalTransformer[A&lt;:com.alpine.result.CategoricalResult]extendsMLTransformer[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.transformer.ClassificationTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClassificationTransformerextendsCategoricalTransformer[com.alpine.result.ClassificationResult]"></a>
+      <a id="ClassificationTransformer:ClassificationTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClassificationTransformer.html"><span class="name">ClassificationTransformer</span></a><span class="result"> extends <a href="CategoricalTransformer.html" class="extype" name="com.alpine.transformer.CategoricalTransformer">CategoricalTransformer</a>[<a href="../result/ClassificationResult.html" class="extype" name="com.alpine.result.ClassificationResult">ClassificationResult</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.transformer.package@ClassificationTransformerextendsCategoricalTransformer[com.alpine.result.ClassificationResult]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.transformer.ClusteringTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ClusteringTransformerextendsCategoricalTransformer[com.alpine.result.ClusteringResult]"></a>
+      <a id="ClusteringTransformer:ClusteringTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ClusteringTransformer.html"><span class="name">ClusteringTransformer</span></a><span class="result"> extends <a href="CategoricalTransformer.html" class="extype" name="com.alpine.transformer.CategoricalTransformer">CategoricalTransformer</a>[<a href="../result/ClusteringResult.html" class="extype" name="com.alpine.result.ClusteringResult">ClusteringResult</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.transformer.package@ClusteringTransformerextendsCategoricalTransformer[com.alpine.result.ClusteringResult]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.transformer.MLTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MLTransformer[A&lt;:com.alpine.result.MLResult]extendsTransformer"></a>
+      <a id="MLTransformer[A&lt;:MLResult]:MLTransformer[A]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MLTransformer.html"><span class="name">MLTransformer</span></a><span class="tparams">[<span name="A">A &lt;: <a href="../result/MLResult.html" class="extype" name="com.alpine.result.MLResult">MLResult</a></span>]</span><span class="result"> extends <a href="Transformer.html" class="extype" name="com.alpine.transformer.Transformer">Transformer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.transformer.package@MLTransformer[A&lt;:com.alpine.result.MLResult]extendsTransformer" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.transformer.RegressionTransformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="RegressionTransformerextendsMLTransformer[com.alpine.result.RealResult]"></a>
+      <a id="RegressionTransformer:RegressionTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="RegressionTransformer.html"><span class="name">RegressionTransformer</span></a><span class="result"> extends <a href="MLTransformer.html" class="extype" name="com.alpine.transformer.MLTransformer">MLTransformer</a>[<a href="../result/RealResult.html" class="extype" name="com.alpine.result.RealResult">RealResult</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.transformer.package@RegressionTransformerextendsMLTransformer[com.alpine.result.RealResult]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.transformer.Transformer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TransformerextendsSerializable"></a>
+      <a id="Transformer:Transformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Transformer.html"><span class="name">Transformer</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.transformer.package@TransformerextendsSerializable" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Serialization doesn't have to be maintained between different versions for this object, since it it always created by a model,
+but it does need to be serializable for use in Spark jobs (for sending to worker nodes).</p>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.transformer.sql" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="sql"></a>
+      <a id="sql:sql"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="sql/package.html"><span class="name">sql</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#com.alpine.transformer.package@sql" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

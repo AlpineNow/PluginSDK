@@ -1,0 +1,260 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>templates - com.alpine.plugin.core.spark.templates</title>
+          <meta name="description" content="templates - com.alpine.plugin.core.spark.templates" />
+          <meta name="keywords" content="templates com.alpine.plugin.core.spark.templates" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'com.alpine.plugin.core.spark.templates.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="com">com</a>.<a href="../../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../../package.html" class="extype" name="com.alpine.plugin">plugin</a>.<a href="../../package.html" class="extype" name="com.alpine.plugin.core">core</a>.<a href="../package.html" class="extype" name="com.alpine.plugin.core.spark">spark</a></p>
+        <h1>templates</h1><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">templates</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.plugin.core.spark.templates.InferredSparkDataFrameGUINode" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="InferredSparkDataFrameGUINode[Job&lt;:com.alpine.plugin.core.spark.templates.InferredSparkDataFrameJob]extendsSparkDataFrameGUINode[Job]"></a>
+      <a id="InferredSparkDataFrameGUINode[Job&lt;:InferredSparkDataFrameJob]:InferredSparkDataFrameGUINode[Job]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="InferredSparkDataFrameGUINode.html"><span class="name">InferredSparkDataFrameGUINode</span></a><span class="tparams">[<span name="Job">Job &lt;: <a href="InferredSparkDataFrameJob.html" class="extype" name="com.alpine.plugin.core.spark.templates.InferredSparkDataFrameJob">InferredSparkDataFrameJob</a></span>]</span><span class="result"> extends <a href="SparkDataFrameGUINode.html" class="extype" name="com.alpine.plugin.core.spark.templates.SparkDataFrameGUINode">SparkDataFrameGUINode</a>[<span class="extype" name="com.alpine.plugin.core.spark.templates.InferredSparkDataFrameGUINode.Job">Job</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package@InferredSparkDataFrameGUINode[Job&lt;:com.alpine.plugin.core.spark.templates.InferredSparkDataFrameJob]extendsSparkDataFrameGUINode[Job]" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Control the GUI of your Spark job, through this you can specify
+any visualization for the output of your job, and what params
+the user will need to specify.</p><div class="fullcomment"><div class="comment cmt"><p>Control the GUI of your Spark job, through this you can specify
+any visualization for the output of your job, and what params
+the user will need to specify. Uses the provided operator to generate
+an updated schema, this should work for most operators but if not
+(e.g. your operator doesn't handle empty data or output schema depends
+on input data) then you will have to perform your own schema update.
+</p></div></div>
+    </li><li name="com.alpine.plugin.core.spark.templates.InferredSparkDataFrameJob" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="InferredSparkDataFrameJobextendsSparkDataFrameJob"></a>
+      <a id="InferredSparkDataFrameJob:InferredSparkDataFrameJob"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="InferredSparkDataFrameJob.html"><span class="name">InferredSparkDataFrameJob</span></a><span class="result"> extends <a href="SparkDataFrameJob.html" class="extype" name="com.alpine.plugin.core.spark.templates.SparkDataFrameJob">SparkDataFrameJob</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package@InferredSparkDataFrameJobextendsSparkDataFrameJob" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A class for plugins which will use Schema inference
+</p>
+    </li><li name="com.alpine.plugin.core.spark.templates.SparkDataFrameGUINode" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SparkDataFrameGUINode[Job&lt;:com.alpine.plugin.core.spark.templates.SparkDataFrameJob]extendsTemplatedSparkDataFrameGUINode[com.alpine.plugin.core.io.HdfsTabularDataset]"></a>
+      <a id="SparkDataFrameGUINode[Job&lt;:SparkDataFrameJob]:SparkDataFrameGUINode[Job]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkDataFrameGUINode.html"><span class="name">SparkDataFrameGUINode</span></a><span class="tparams">[<span name="Job">Job &lt;: <a href="SparkDataFrameJob.html" class="extype" name="com.alpine.plugin.core.spark.templates.SparkDataFrameJob">SparkDataFrameJob</a></span>]</span><span class="result"> extends <a href="TemplatedSparkDataFrameGUINode.html" class="extype" name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameGUINode">TemplatedSparkDataFrameGUINode</a>[<a href="../../io/HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package@SparkDataFrameGUINode[Job&lt;:com.alpine.plugin.core.spark.templates.SparkDataFrameJob]extendsTemplatedSparkDataFrameGUINode[com.alpine.plugin.core.io.HdfsTabularDataset]" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Control the GUI of your Spark job, through this you can specify
+any visualization for the output of your job, and what params
+the user will need to specify.</p>
+    </li><li name="com.alpine.plugin.core.spark.templates.SparkDataFrameJob" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SparkDataFrameJobextendsTemplatedSparkDataFrameJob[org.apache.spark.sql.DataFrame,com.alpine.plugin.core.io.HdfsTabularDataset]"></a>
+      <a id="SparkDataFrameJob:SparkDataFrameJob"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkDataFrameJob.html"><span class="name">SparkDataFrameJob</span></a><span class="result"> extends <a href="TemplatedSparkDataFrameJob.html" class="extype" name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameJob">TemplatedSparkDataFrameJob</a>[<span class="extype" name="org.apache.spark.sql.DataFrame">DataFrame</span>, <a href="../../io/HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package@SparkDataFrameJobextendsTemplatedSparkDataFrameJob[org.apache.spark.sql.DataFrame,com.alpine.plugin.core.io.HdfsTabularDataset]" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Job base for non-inferred Spark plugin jobs taking and returning DataFrames.</p><div class="fullcomment"><div class="comment cmt"><p>Job base for non-inferred Spark plugin jobs taking and returning DataFrames.
+Note: This WILL NOT work with hive.
+</p></div></div>
+    </li><li name="com.alpine.plugin.core.spark.templates.SparkDataFrameRuntime" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SparkDataFrameRuntime[JobType&lt;:com.alpine.plugin.core.spark.templates.SparkDataFrameJob]extendsSparkRuntimeWithIOTypedJob[JobType,com.alpine.plugin.core.io.HdfsTabularDataset,com.alpine.plugin.core.io.HdfsTabularDataset]"></a>
+      <a id="SparkDataFrameRuntime[JobType&lt;:SparkDataFrameJob]:SparkDataFrameRuntime[JobType]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SparkDataFrameRuntime.html"><span class="name">SparkDataFrameRuntime</span></a><span class="tparams">[<span name="JobType">JobType &lt;: <a href="SparkDataFrameJob.html" class="extype" name="com.alpine.plugin.core.spark.templates.SparkDataFrameJob">SparkDataFrameJob</a></span>]</span><span class="result"> extends <a href="../SparkRuntimeWithIOTypedJob.html" class="extype" name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob">SparkRuntimeWithIOTypedJob</a>[<span class="extype" name="com.alpine.plugin.core.spark.templates.SparkDataFrameRuntime.JobType">JobType</span>, <a href="../../io/HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a>, <a href="../../io/HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package@SparkDataFrameRuntime[JobType&lt;:com.alpine.plugin.core.spark.templates.SparkDataFrameJob]extendsSparkRuntimeWithIOTypedJob[JobType,com.alpine.plugin.core.io.HdfsTabularDataset,com.alpine.plugin.core.io.HdfsTabularDataset]" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A class controlling the runtime behavior of your plugin.</p><div class="fullcomment"><div class="comment cmt"><p>A class controlling the runtime behavior of your plugin.
+To use the default implementation, which launches a Spark job according to the default
+Spark settings  you will not need to add any code beyond the class definition with the
+appropriate type parameters.
+</p></div><dl class="paramcmts block"><dt class="tparam">JobType</dt><dd class="cmt"><p>your implementation of SparkDataFrameJob</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameGUINode" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TemplatedSparkDataFrameGUINode[StorageType&lt;:com.alpine.plugin.core.io.IOBase]extendsOperatorGUINode[com.alpine.plugin.core.io.HdfsTabularDataset,StorageType]"></a>
+      <a id="TemplatedSparkDataFrameGUINode[StorageType&lt;:IOBase]:TemplatedSparkDataFrameGUINode[StorageType]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TemplatedSparkDataFrameGUINode.html"><span class="name">TemplatedSparkDataFrameGUINode</span></a><span class="tparams">[<span name="StorageType">StorageType &lt;: <a href="../../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="../../OperatorGUINode.html" class="extype" name="com.alpine.plugin.core.OperatorGUINode">OperatorGUINode</a>[<a href="../../io/HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a>, <span class="extype" name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameGUINode.StorageType">StorageType</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package@TemplatedSparkDataFrameGUINode[StorageType&lt;:com.alpine.plugin.core.io.IOBase]extendsOperatorGUINode[com.alpine.plugin.core.io.HdfsTabularDataset,StorageType]" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Control the GUI of your Spark job, through this you can specify any visualization for the
+output of your job, and what params the user will need to specify.</p>
+    </li><li name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameJob" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="TemplatedSparkDataFrameJob[ReturnType,OutputType&lt;:com.alpine.plugin.core.io.IOBase]extendsSparkIOTypedPluginJob[com.alpine.plugin.core.io.HdfsTabularDataset,OutputType]"></a>
+      <a id="TemplatedSparkDataFrameJob[ReturnType,OutputType&lt;:IOBase]:TemplatedSparkDataFrameJob[ReturnType,OutputType]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TemplatedSparkDataFrameJob.html"><span class="name">TemplatedSparkDataFrameJob</span></a><span class="tparams">[<span name="ReturnType">ReturnType</span>, <span name="OutputType">OutputType &lt;: <a href="../../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="../SparkIOTypedPluginJob.html" class="extype" name="com.alpine.plugin.core.spark.SparkIOTypedPluginJob">SparkIOTypedPluginJob</a>[<a href="../../io/HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a>, <span class="extype" name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameJob.OutputType">OutputType</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package@TemplatedSparkDataFrameJob[ReturnType,OutputType&lt;:com.alpine.plugin.core.io.IOBase]extendsSparkIOTypedPluginJob[com.alpine.plugin.core.io.HdfsTabularDataset,OutputType]" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Templated base for Spark plugin jobs operating on DataFrames.</p><div class="fullcomment"><div class="comment cmt"><p>Templated base for Spark plugin jobs operating on DataFrames.
+Most jobs will want to use SparkDataFrameJob which takes
+and returns Spark DataFrames. This version does not support schema
+inference.
+</p></div><dl class="paramcmts block"><dt class="tparam">ReturnType</dt><dd class="cmt"><p>The return type of the transformation method (most commonly a DataFrame)</p></dd><dt class="tparam">OutputType</dt><dd class="cmt"><p>The return type of the actual operator, extending IOBase.
+                   Most commonly will be an HDFS dataset of some flavor (see SparkDataFrame)</p></dd></dl></div>
+    </li><li name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameRuntime" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TemplatedSparkDataFrameRuntime[JobType&lt;:com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameJob[_,O],O&lt;:com.alpine.plugin.core.io.IOBase]extendsSparkRuntimeWithIOTypedJob[JobType,com.alpine.plugin.core.io.HdfsTabularDataset,O]"></a>
+      <a id="TemplatedSparkDataFrameRuntime[JobType&lt;:TemplatedSparkDataFrameJob[_,O],O&lt;:IOBase]:TemplatedSparkDataFrameRuntime[JobType,O]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="TemplatedSparkDataFrameRuntime.html"><span class="name">TemplatedSparkDataFrameRuntime</span></a><span class="tparams">[<span name="JobType">JobType &lt;: <a href="TemplatedSparkDataFrameJob.html" class="extype" name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameJob">TemplatedSparkDataFrameJob</a>[_, <span class="extype" name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameRuntime.O">O</span>]</span>, <span name="O">O &lt;: <a href="../../io/IOBase.html" class="extype" name="com.alpine.plugin.core.io.IOBase">IOBase</a></span>]</span><span class="result"> extends <a href="../SparkRuntimeWithIOTypedJob.html" class="extype" name="com.alpine.plugin.core.spark.SparkRuntimeWithIOTypedJob">SparkRuntimeWithIOTypedJob</a>[<span class="extype" name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameRuntime.JobType">JobType</span>, <a href="../../io/HdfsTabularDataset.html" class="extype" name="com.alpine.plugin.core.io.HdfsTabularDataset">HdfsTabularDataset</a>, <span class="extype" name="com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameRuntime.O">O</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.plugin.core.spark.templates.package@TemplatedSparkDataFrameRuntime[JobType&lt;:com.alpine.plugin.core.spark.templates.TemplatedSparkDataFrameJob[_,O],O&lt;:com.alpine.plugin.core.io.IOBase]extendsSparkRuntimeWithIOTypedJob[JobType,com.alpine.plugin.core.io.HdfsTabularDataset,O]" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

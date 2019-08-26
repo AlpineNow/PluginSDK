@@ -1,0 +1,261 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>bayes - com.alpine.model.pack.ml.bayes</title>
+          <meta name="description" content="bayes - com.alpine.model.pack.ml.bayes" />
+          <meta name="keywords" content="bayes com.alpine.model.pack.ml.bayes" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'com.alpine.model.pack.ml.bayes.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="com">com</a>.<a href="../../../../package.html" class="extype" name="com.alpine">alpine</a>.<a href="../../../package.html" class="extype" name="com.alpine.model">model</a>.<a href="../../package.html" class="extype" name="com.alpine.model.pack">pack</a>.<a href="../package.html" class="extype" name="com.alpine.model.pack.ml">ml</a></p>
+        <h1>bayes</h1><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bayes</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.alpine.model.pack.ml.bayes.BayesLikelihood" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BayesLikelihoodextendsAnyRef"></a>
+      <a id="BayesLikelihood:BayesLikelihood"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="BayesLikelihood.html"><span class="name">BayesLikelihood</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@BayesLikelihoodextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.ml.bayes.CategoricalLikelihood" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CategoricalLikelihoodextendsBayesLikelihoodwithProductwithSerializable"></a>
+      <a id="CategoricalLikelihood:CategoricalLikelihood"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CategoricalLikelihood.html"><span class="name">CategoricalLikelihood</span></a><span class="params">(<span name="counts">counts: <span class="extype" name="scala.Predef.Set">Set</span>[<a href="CategoryCount.html" class="extype" name="com.alpine.model.pack.ml.bayes.CategoryCount">CategoryCount</a>]</span>)</span><span class="result"> extends <a href="BayesLikelihood.html" class="extype" name="com.alpine.model.pack.ml.bayes.BayesLikelihood">BayesLikelihood</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@CategoricalLikelihoodextendsBayesLikelihoodwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.ml.bayes.CategoryCount" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CategoryCountextendsProductwithSerializable"></a>
+      <a id="CategoryCount:CategoryCount"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CategoryCount.html"><span class="name">CategoryCount</span></a><span class="params">(<span name="category">category: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="prob">prob: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@CategoryCountextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.ml.bayes.Distribution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DistributionextendsProductwithSerializable"></a>
+      <a id="Distribution:Distribution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Distribution.html"><span class="name">Distribution</span></a><span class="params">(<span name="classLabel">classLabel: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="priorProbability">priorProbability: <span class="extype" name="scala.Double">Double</span></span>, <span name="likelihoods">likelihoods: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../../common/serialization/json/TypeWrapper.html" class="extype" name="com.alpine.common.serialization.json.TypeWrapper">TypeWrapper</a>[<a href="BayesLikelihood.html" class="extype" name="com.alpine.model.pack.ml.bayes.BayesLikelihood">BayesLikelihood</a>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@DistributionextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.ml.bayes.GaussianLikelihood" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GaussianLikelihoodextendsBayesLikelihoodwithProductwithSerializable"></a>
+      <a id="GaussianLikelihood:GaussianLikelihood"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GaussianLikelihood.html"><span class="name">GaussianLikelihood</span></a><span class="params">(<span name="mu">mu: <span class="extype" name="scala.Double">Double</span></span>, <span name="sigma">sigma: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result"> extends <a href="BayesLikelihood.html" class="extype" name="com.alpine.model.pack.ml.bayes.BayesLikelihood">BayesLikelihood</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@GaussianLikelihoodextendsBayesLikelihoodwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.ml.bayes.NaiveBayesModel" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="NaiveBayesModelextendsClassificationRowModelwithProductwithSerializable"></a>
+      <a id="NaiveBayesModel:NaiveBayesModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NaiveBayesModel.html"><span class="name">NaiveBayesModel</span></a><span class="params">(<span name="inputFeatures">inputFeatures: <span class="extype" name="scala.Seq">Seq</span>[<a href="../../../../plugin/core/io/ColumnDef.html" class="extype" name="com.alpine.plugin.core.io.ColumnDef">ColumnDef</a>]</span>, <span name="dependentFeatureName">dependentFeatureName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="distributions">distributions: <span class="extype" name="scala.Seq">Seq</span>[<a href="Distribution.html" class="extype" name="com.alpine.model.pack.ml.bayes.Distribution">Distribution</a>]</span>, <span name="threshold">threshold: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result"> extends <a href="../../../ClassificationRowModel.html" class="extype" name="com.alpine.model.ClassificationRowModel">ClassificationRowModel</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@NaiveBayesModelextendsClassificationRowModelwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Created by Jennifer Thompson on 7/7/16.</p><div class="fullcomment"><div class="comment cmt"><p>Created by Jennifer Thompson on 7/7/16.
+</p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@SerialVersionUID</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="com.alpine.model.pack.ml.bayes.NaiveBayesSQLTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NaiveBayesSQLTransformerextendsClassificationSQLTransformer"></a>
+      <a id="NaiveBayesSQLTransformer:NaiveBayesSQLTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NaiveBayesSQLTransformer.html"><span class="name">NaiveBayesSQLTransformer</span></a><span class="result"> extends <a href="../../../../transformer/sql/ClassificationSQLTransformer.html" class="extype" name="com.alpine.transformer.sql.ClassificationSQLTransformer">ClassificationSQLTransformer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@NaiveBayesSQLTransformerextendsClassificationSQLTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.alpine.model.pack.ml.bayes.NaiveBayesTransformer" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NaiveBayesTransformerextendsClassificationTransformer"></a>
+      <a id="NaiveBayesTransformer:NaiveBayesTransformer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NaiveBayesTransformer.html"><span class="name">NaiveBayesTransformer</span></a><span class="result"> extends <a href="../../../../transformer/ClassificationTransformer.html" class="extype" name="com.alpine.transformer.ClassificationTransformer">ClassificationTransformer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@NaiveBayesTransformerextendsClassificationTransformer" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.alpine.model.pack.ml.bayes.CategoricalLikelihood" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CategoricalLikelihood"></a>
+      <a id="CategoricalLikelihood:CategoricalLikelihood"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CategoricalLikelihood$.html"><span class="name">CategoricalLikelihood</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../../index.html#com.alpine.model.pack.ml.bayes.package@CategoricalLikelihood" title="Permalink" target="_top">
+        <img src="../../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
