@@ -109,6 +109,7 @@ class NaiveBayesSQLTransformer(val model: NaiveBayesModel, sqlGenerator: SQLGene
 
     val aliasGenerator = new AliasGenerator("conf")
     val labelValuesToColumnNames = model.distributions.map(d => (d.classLabel, ColumnName(aliasGenerator.getNextAlias))).toMap
+    lazy val columnNamesToTypes = model.inputFeatures.map(cdef => (cdef.columnName, cdef.columnType)).toMap  //Need to look up types to handle booleans
 
     val unNormalizedConfs: Seq[(ColumnarSQLExpression, ColumnName)] = model.distributions.map {
       case Distribution(classLabel: String, priorProbability: Double, likelihoods: Seq[TypeWrapper[BayesLikelihood]]) =>
@@ -130,7 +131,15 @@ class NaiveBayesSQLTransformer(val model: NaiveBayesModel, sqlGenerator: SQLGene
               case c: CategoricalLikelihood =>
                 val innards = c.normalizedProbabilities.map {
                   case (category: String, prob: Double) =>
-                    s"""WHEN $quotedFeatureName = ${SQLUtility.wrapInSingleQuotes(category)} THEN ${sqlGenerator.doubleToString(prob)}"""
+                    var quotedCat: String = SQLUtility.wrapInSingleQuotes(category)
+                    if (!sqlGenerator.quoteBooleanValues()) { //Essentially a BigQuery use-case - but if we can't quote booleans, we need to check type
+                      val dataType = columnNamesToTypes.get(columnName.rawName).get //but we'd rather not do this if we don't have to
+                      if (dataType == ColumnType.Boolean) {
+                        // Results in unquoted TRUE or FALSE as per BQ spec if BQ
+                        quotedCat = sqlGenerator.convertStringToBoolean(category).toString.toUpperCase
+                      }
+                    }
+                    s"""WHEN $quotedFeatureName = ${quotedCat} THEN ${sqlGenerator.doubleToString(prob)}"""
                 }.mkString(" ")
                 // Null values go to 1, unseen values go to model.threshold (i.e. rare probability in training set).
                 s"""CASE $whenNullThen1 $innards ELSE ${sqlGenerator.doubleToString(model.threshold)} END"""

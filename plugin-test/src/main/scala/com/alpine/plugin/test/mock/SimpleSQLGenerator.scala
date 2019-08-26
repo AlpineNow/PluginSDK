@@ -112,4 +112,21 @@ class SimpleSQLGenerator(val dbType: DatabaseType.TypeValue = DatabaseType.postg
     s"""CREATE TEMP TABLE $destinationTable AS ($selectQuery)"""
   }
 
+  /**
+    * Should one put quotes around boolean values
+    *
+    * introduced in 2019 mainly to support BigQuery
+    *
+    * @return Boolean telling whether or not to put quotes around Boollean values
+    */
+  override def quoteBooleanValues(): Boolean = false
+
+  /**
+    * Convert strings read from table into boolean
+    *
+    * introduced in 2019 mainly to support BigQuery
+    *
+    * @return Boolean corresponding to the string value
+    */
+  override def convertStringToBoolean(input: String): Boolean = false
 }

@@ -18,6 +18,25 @@ class SimpleSQLGenerator extends SQLGenerator {
   private var quoteString: String = "\""
   private var isAliasRequired: Boolean = true
 
+  /**
+    * Should one put quotes around boolean values
+    *
+    * introduced in 2019 mainly to support BigQuery
+    *
+    * @return Boolean telling whether or not to put quotes around Boollean values
+    */
+  override def quoteBooleanValues(): Boolean = true
+
+  /**
+    * Convert strings read from table into boolean
+    *
+    * introduced in 2019 mainly to support BigQuery
+    *
+    * @return Boolean corresponding to the string value
+    */
+  override def convertStringToBoolean(input: String): Boolean = input.equalsIgnoreCase("TRUE") || input.equalsIgnoreCase("T") ||
+                                                                input == "1"
+
   // single arg constructor for DatabaseType
   def this(dbType: TypeValue) = {
     this()

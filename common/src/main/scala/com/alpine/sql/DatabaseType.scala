@@ -30,6 +30,7 @@ object DatabaseType {
   val DB2Name        = "db2"
   val MongoName      = "mongo"
   val CassandraName  = "cassandra"
+  val BigQueryName   = "bigquery"
 
   val postgres  = TypeValue(PostgresName) // There is no TypeValue for PostgreSQLName
   val oracle    = TypeValue(OracleName)
@@ -46,4 +47,27 @@ object DatabaseType {
   val db2       = TypeValue(DB2Name)
   val mongo     = TypeValue(MongoName)
   val cassandra = TypeValue(CassandraName)
+  val bigquery  = TypeValue(BigQueryName)
+
+  // All key entries in the map should be lower-case
+  // When we search for entries in the map, we first cast keys to lower-case
+  val dbTypeMap = Map(
+    PostgresName   -> postgres,
+    PostgreSQLName -> postgres,
+    OracleName     -> oracle,
+    GreenplumName  -> greenplum,
+    HAWQName       -> hawq,
+    TeradataName   -> teradata,
+    SQLServerName  -> sqlserver,
+    VerticaName    -> vertica,
+    MariaDBName    -> mariadb,
+    MySQLName      -> mysql,
+    HiveName       -> hive,
+    Hive2Name      -> hive2,
+    SybaseName     -> sybase,
+    DB2Name        -> db2,
+    MongoName      -> mongo,
+    CassandraName  -> cassandra,
+    BigQueryName   -> bigquery
+  )
 }

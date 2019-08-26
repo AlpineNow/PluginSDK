@@ -258,7 +258,8 @@ class OperatorDialogMock(overrideParams: OperatorParametersMock,
 
 
   override def addOutputDirectorySelector(id: String, label: String, required: Boolean): HdfsFileSelector = {
-    setStringValue(id, "@default_tempdir/tsds_out/@user_name/@flow_name")
+    //TODO: Genericize this so that the "tds" part is not hard-coded?
+    setStringValue(id, "@default_tempdir/tds_out/@user_name/@flow_name")
     class HdfsFileSelectorImp extends DefaultDialogElementMock(id, label, required) with HdfsFileSelector
     val de = new HdfsFileSelectorImp
     updateDialogElements(id, de)
