@@ -471,4 +471,22 @@ trait SQLGenerator {
 		*/
 	def getCreateTempTableAsSelectSQL(selectQuery: String, destinationTable: String): String
 
+	/**
+		* Should one put quotes around boolean values
+		*
+		* introduced in 2019 mainly to support BigQuery
+		*
+		* @return Boolean telling whether or not to put quotes around Boollean values
+		*/
+	def quoteBooleanValues(): Boolean
+
+	/**
+		* Convert strings read from table into boolean
+		*
+		* introduced in 2019 mainly to support BigQuery
+		*
+		* @return Boolean corresponding to the string value
+		*/
+	def convertStringToBoolean(input : String): Boolean
+
 }

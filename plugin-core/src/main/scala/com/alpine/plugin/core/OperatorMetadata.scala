@@ -30,7 +30,7 @@ case class OperatorMetadata(name: String,
                             category: String,
                             author: Option[String],
                             version: Int,
-                            helpURL: Option[String],
+                            helpURL: Option[String], // operator/plugin meta data help links deprecated (except with SDK)
                             icon: Option[OperatorIcon],
                             toolTipText: Option[String],
                             usesJavascript: Boolean) {
@@ -142,7 +142,8 @@ object OperatorMetadata {
     }
   }
 
-  val alpineHelpLinkPrefix: String = "https://alpine.atlassian.net/wiki/display/V6/"
+  // operator/plugin meta data help links deprecated (except with SDK)
+  val alpineHelpLinkPrefix: String = ""
 
   def alpineHelpLink(helpLinkSuffix: String): String = alpineHelpLinkPrefix + helpLinkSuffix
 }
