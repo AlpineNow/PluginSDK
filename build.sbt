@@ -5,9 +5,9 @@ import sbtassembly.Plugin.AssemblyKeys._
 import sbt.Keys.resolvers
 //import com.typesafe.sbt.SbtGit.GitKeys
 
-val sdkVersion = "1.11"
-val javaSourceVersion = "1.7"
-val javaTargetVersion = "1.7"
+val sdkVersion = "1.12"
+val javaSourceVersion = "1.8"
+val javaTargetVersion = "1.8"
 val scalaMajorVersion = "2.11"
 val scalaFullVersion = "2.11.8"
 val sparkVersion = "2.1.2"

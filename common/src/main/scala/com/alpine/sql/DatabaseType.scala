@@ -1,6 +1,6 @@
 /*
- * COPYRIGHT (C) Jan 26 2016 Alpine Data Labs Inc. All Rights Reserved.
- */
+* COPYRIGHT (C) Jan 26 2016 Alpine Data Labs Inc. All Rights Reserved.
+*/
 
 package com.alpine.sql
 
@@ -31,6 +31,7 @@ object DatabaseType {
   val MongoName      = "mongo"
   val CassandraName  = "cassandra"
   val BigQueryName   = "bigquery"
+  val TDVName        = "compositesw"
 
   val postgres  = TypeValue(PostgresName) // There is no TypeValue for PostgreSQLName
   val oracle    = TypeValue(OracleName)
@@ -48,6 +49,7 @@ object DatabaseType {
   val mongo     = TypeValue(MongoName)
   val cassandra = TypeValue(CassandraName)
   val bigquery  = TypeValue(BigQueryName)
+  val compositesw = TypeValue(TDVName)
 
   // All key entries in the map should be lower-case
   // When we search for entries in the map, we first cast keys to lower-case
@@ -68,6 +70,7 @@ object DatabaseType {
     DB2Name        -> db2,
     MongoName      -> mongo,
     CassandraName  -> cassandra,
-    BigQueryName   -> bigquery
+    BigQueryName   -> bigquery,
+    TDVName        -> compositesw
   )
 }
